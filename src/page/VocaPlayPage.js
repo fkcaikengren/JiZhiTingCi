@@ -92,7 +92,7 @@ export default class VocaPlayPage extends React.Component {
         return(
 
 
-            <Container style={{backgroundColor:'#77A3F0'}}>
+            <Container style={{backgroundColor:'#1890FFCC'}}>
                 <StatusBar
                     translucent={true}
                     // hidden

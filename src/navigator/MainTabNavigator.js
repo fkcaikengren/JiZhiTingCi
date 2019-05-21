@@ -7,6 +7,7 @@ import ReadPage from '../page/ReadPage';
 import VocaPlayPage from '../page/VocaPlayPage';
 import VocaLibPage from '../page/VocaLibPage';
 import VocaListPage from '../page/VocaListPage';
+import StatisticsPage from '../page/StatisticsPage';
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -32,6 +33,10 @@ const HomeStackNav = createStackNavigator(
     //单词列表
     VocaList:{
       screen:VocaListPage,
+    },
+    //学习统计
+    Statistics:{
+      screen:StatisticsPage,
     }
   
   },
@@ -96,7 +101,7 @@ export default createMaterialTopTabNavigator(
       inactiveTintColor:'#CBE4FD',
       pressColor:'#CBE4FD',
       style:{
-        backgroundColor:'#77A3F0',
+        backgroundColor:'#1890FF',
         marginLeft:60,
         width:width-120,
         borderWidth:0,

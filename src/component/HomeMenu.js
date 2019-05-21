@@ -76,7 +76,9 @@ export default class Menu extends React.Component {
                     flexDirection:'column',
                     justifyContent:'center',
                     alignItems:'center',
-                    width:width/4}}>
+                    width:width/4}} onPress={()=>{
+                        this.props.navigation.navigate('Statistics');
+                    }}>
                     <AliIcon name='rili' size={26} color='#D572E0'></AliIcon>
                     <Text style={styles.basicFont}>学习统计</Text>
                 </Col>
@@ -97,11 +99,11 @@ export default class Menu extends React.Component {
   
     bookName:{
         fontSize: 18,
-        color: '#39668D',
+        color: '#101010',
     },
     basicFont:{
         fontSize:14, 
-        color:'#39668D'
+        color:'#101010'
     }
 
   });

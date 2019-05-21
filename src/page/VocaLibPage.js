@@ -84,7 +84,7 @@ export default class VocaLibPage extends Component {
                 <Text style={[styles.iconText,{color:'#FFF'}]}>
                     4
                 </Text>
-                <Text style={{color:'#39668D', fontSize:16, marginLeft:16}}>
+                <Text style={{color:'#2D4150', fontSize:16, marginLeft:16, fontWeight:'500'}}>
                 {" "}{item.title}
                 </Text>
             </View>
@@ -106,7 +106,7 @@ export default class VocaLibPage extends Component {
                     <Text onPress={()=>{
                         this._show();
                     }}
-                    style={{ color:'#77A3F0', fontSize:16 , paddingLeft:30}}>{it.bookName}</Text>
+                    style={{ color:'#39668D', fontSize:16 , paddingLeft:30}}>{it.bookName}</Text>
                     <Text style={{ fontSize:16 , color:'#AAAAAA', paddingRight:10}}>3900</Text>
             </View>
         })

@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
 
     bookName:{
         fontSize: 18,
-        color: '#39668D',
+        color: '#101010',
     },
     learnedNum:{
         fontSize: 14,
-        color: '#39668D'
+        color: '#101010'
     }
 });
 
@@ -67,7 +67,7 @@ class HomePage extends Component {
                     <Col>
                         <Row size={1}>
                             <View style={[styles.center,{alignItems:'flex-end'}]}>
-                                <Progress.Bar progress={0.3} height={2} width={280} color='#77A3F0' unfilledColor='#DEDEDE' borderWidth={0}/>
+                                <Progress.Bar progress={0.3} height={2} width={280} color='#1890FF' unfilledColor='#DEDEDE' borderWidth={0}/>
                             </View>
                         </Row>
                         <Row size={4} style={{
@@ -75,16 +75,16 @@ class HomePage extends Component {
                             justifyContent:'space-between',
                             alignItems:'center',}}>
                             <View >
-                                <Text style={{fontSize:16, color:'#77A3F0'}}>List-001</Text>
+                                <Text style={{fontSize:16, color:'#1890FF'}}>List-001</Text>
                             </View>
                             <View style={{
                                 flexDirection:'row',
                                 justifyContent:'flex-end',
                                 alignItems:'center',
                             }}>
-                                <AliIcon name='bofang1' size={24} color='#77A3F0' style={{paddingRight:20}}></AliIcon>
-                                <AliIcon name='xiayige' size={22} color='#77A3F0'  style={{paddingRight:20}}></AliIcon>
-                                <AliIcon name='bofangliebiaoicon' size={22} color='#77A3F0'  style={{paddingRight:10}}></AliIcon>
+                                <AliIcon name='bofang1' size={22} color='#1890FF' style={{paddingRight:20}}></AliIcon>
+                                <AliIcon name='xiayige' size={20} color='#1890FF'  style={{paddingRight:20}}></AliIcon>
+                                <AliIcon name='bofangliebiaoicon' size={20} color='#1890FF'  style={{paddingRight:10}}></AliIcon>
                             </View>
                             
                         </Row>

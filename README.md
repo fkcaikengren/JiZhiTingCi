@@ -80,6 +80,12 @@ $ pod install
 yarn add react-native-check-box
 ```
 
+### 安装react-native-calendars
+
+```
+yarn add react-native-calendars
+```
+
 
 
 # JiZhiTingCi

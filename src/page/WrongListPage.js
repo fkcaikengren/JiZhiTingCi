@@ -93,7 +93,7 @@ export default class WrongListPage extends React.Component {
               checkedImage={<Image source={selectedImg} style={styles.iconStyle}/>}
               unCheckedImage={<Image source={circleImg} style={styles.iconStyle}/>}
               />
-            <Text style={{ color:'#404040', fontSize:16, fontWeight:'500'}}>{item.name}</Text>
+            <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>{item.name}</Text>
           </Body>
           <Right>
               <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>

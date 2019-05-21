@@ -5,6 +5,20 @@ import { ListItem,Container, Header, Left, Body, Right,
 
 import HomeMenu from './HomeMenu';
 
+const styles = StyleSheet.create({
+  listButton : {
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    color:'#1890FF', 
+    backgroundColor:'#1890FF22', 
+    width:60, 
+    elevation:0,
+    borderWidth:0,
+
+  },
+});
+
 
 class VocaTaskList extends React.Component {
   constructor(props) {
@@ -34,15 +48,15 @@ class VocaTaskList extends React.Component {
   
   _renderItem = ({ item, index }) => {
     let bodyStyle = {};
-    let buttonStyle = {};
+    let buttonContent = {color:'#1890FF', fontSize:14, fontWeight:'500'};
     let iconName = 'square-o';
-    let iconStyle = {color:'#3F51B5'};
-    let buttonName = '开始'
+    let iconStyle = {color:'#1890FF'};
+    let buttonName = '开始';
+    
     if(item.isCompleted==true){
         bodyStyle = {textDecorationLine:'line-through'}
-        buttonStyle = {color:'#444444'}
         iconName = 'check-square';
-        iconStyle = {color:'#3F51B5'};
+        iconStyle = {color:'#1890FF'};
         buttonName = '已完成';
     }
 
@@ -66,7 +80,7 @@ class VocaTaskList extends React.Component {
     }else if(item.type == 'title') {
       return (
         <View style={{backgroundColor:'#FDFDFD', paddingLeft:15, paddingVertical:15}}>
-          <Text style={{fontSize:14, color:'#39668D'}}>
+          <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>
             {item.name}
           </Text>
         </View>          
@@ -80,14 +94,13 @@ class VocaTaskList extends React.Component {
                 <Icon type='FontAwesome' name={iconName} size={30} style={[iconStyle]}/>
             </Left>
             <Body >
-                <Text style={[{color:'#39668D'},]}>学习List{item.listID}</Text>
+                <Text style={[{ color:'#2D4150', fontSize:14, fontWeight:'500'}]}>学习List{item.listID}</Text>
                 <Text note numberOfLines={1} >{note}</Text>
             </Body>
             <Right>
-                <Button transparent onPress={()=>{
-                  
+                <Button rounded style={styles.listButton} onPress={()=>{
                 }}>
-                    <Text style={[buttonStyle]}>{buttonName}</Text>
+                    <Text style={[buttonContent]}>{buttonName}</Text>
                 </Button>
             </Right>
         </ListItem>
