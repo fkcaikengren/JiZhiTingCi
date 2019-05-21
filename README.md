@@ -74,4 +74,12 @@ $ pod install
 
 ```
 
+### 安装 react-native-check-box
+
+```
+yarn add react-native-check-box
+```
+
+
+
 # JiZhiTingCi
