@@ -5,8 +5,8 @@ import { Container, Header, Content, Footer, Button, Icon, Left, Right, Body, Ti
 import * as Progress from 'react-native-progress';
 // import {connect} from 'react-redux';
 
-import VocaPlayList from '../component/VocaPlayList';
-import AliIcon from '../component/AliIcon';
+import VocaPlayList from '../../component/VocaPlayList';
+import AliIcon from '../../component/AliIcon';
 // import {changeSelectedPlayIndex , changePlayType,} from '../redux/actions/wordReview'
 // import { PlayType } from '../constant/VocConstant';
 

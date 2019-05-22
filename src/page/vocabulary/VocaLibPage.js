@@ -5,7 +5,7 @@ import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title,
 import Picker from 'react-native-picker';
     
 
-import AliIcon from '../component/AliIcon';
+import AliIcon from '../../component/AliIcon';
 
 const dataArray = [
   { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     iconText:{
         width:32,
         height:32, 
-        backgroundColor:'#C0E5FF', 
+        backgroundColor:'#1890FF', 
         textAlign:'center', 
         lineHeight:32, 
         borderRadius:50,
@@ -84,7 +84,7 @@ export default class VocaLibPage extends Component {
                 <Text style={[styles.iconText,{color:'#FFF'}]}>
                     4
                 </Text>
-                <Text style={{color:'#2D4150', fontSize:16, marginLeft:16, fontWeight:'500'}}>
+                <Text style={{color:'#303030', fontSize:16, marginLeft:16, fontWeight:'500'}}>
                 {" "}{item.title}
                 </Text>
             </View>
@@ -122,21 +122,21 @@ export default class VocaLibPage extends Component {
                     // hidden
                 />
 
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#77A3F0'}}></View>
+                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#FDFDFD'}}></View>
                 {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#77A3F0', elevation:0,}}>
+                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
                     <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui-copy-copy' size={26} color='#fff' onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
                             this.props.navigation.goBack();
                         }}></AliIcon>
                     </Button>
                     <Body style={{flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',}}>
-                        <Title>词汇书库</Title>
+                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词列表</Text>
                     </Body>
-                    
-                </Header>
+                </Header> 
+
                 <Content padder style={{ backgroundColor:'#EFEFEF', }}>
                 <Accordion style={{backgroundColor:'#FDFDFD', borderRadius:5}}
                     dataArray={dataArray}

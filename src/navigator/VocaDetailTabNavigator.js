@@ -3,11 +3,8 @@ import {Platform, StatusBar, ScrollView, StyleSheet,Text, View} from 'react-nati
 import { createAppContainer, createMaterialTopTabNavigator, Button } from 'react-navigation';
 
 
-import WrongListPage from '../page/vocabulary/WrongListPage';
-import PassListPage from '../page/vocabulary/PassListPage';
-import LearnedListPage from '../page/vocabulary/LearnedListPage';
-import NewListPage from '../page/vocabulary/NewListPage';
-
+import DetailDictPage from '../page/vocabulary/DetailDictPage';
+import DetailRootPage from '../page/vocabulary/DetailRootPage';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
@@ -15,23 +12,17 @@ let {width, height} = Dimensions.get('window');
 
 export default createAppContainer(createMaterialTopTabNavigator(
   {
-    '错词':{
-        screen:WrongListPage
+    '详情词典':{
+        screen:DetailDictPage,
     },
-    'Pass':{
-        screen:PassListPage
-    },
-    '已学':{
-        screen:LearnedListPage
-    },
-    '未学':{
-        screen:NewListPage
+    '词根词缀':{
+        screen:DetailRootPage,
     },
 
   },
   {
     
-    initialRouteName: '错词',
+    initialRouteName: '详情词典',
     tabBarOptions: {
       activeTintColor:'#1890FF',
       inactiveTintColor:'#101010',
@@ -42,7 +33,7 @@ export default createAppContainer(createMaterialTopTabNavigator(
         elevation: 0,
       },
       labelStyle: {fontSize:16,margin:0},
-      indicatorStyle: {width:width/4-40, marginLeft:20, backgroundColor:'#1890FF'},
+      indicatorStyle: { backgroundColor:'#1890FF'},
 
     },
    

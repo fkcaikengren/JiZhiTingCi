@@ -99,6 +99,8 @@ class VocaTaskList extends React.Component {
             </Body>
             <Right>
                 <Button rounded style={styles.listButton} onPress={()=>{
+                  //跳转到卡片学习页面
+                  this.props.navigation.navigate('LearnCard');
                 }}>
                     <Text style={[buttonContent]}>{buttonName}</Text>
                 </Button>

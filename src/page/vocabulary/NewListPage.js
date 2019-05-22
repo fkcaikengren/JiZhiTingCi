@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList , View, Text} from "react-native";
 import { ListItem, Left, Body, Icon, Right, Title } from "native-base";
 
-import AliIcon from '../component/AliIcon';
+import AliIcon from '../../component/AliIcon';
 
 export default class NewListPage extends React.Component {
   constructor() {

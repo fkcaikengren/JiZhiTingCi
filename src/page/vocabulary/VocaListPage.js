@@ -4,8 +4,8 @@ import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title,
     ListItem, Left, Right , Button} from "native-base";
     
 
-import AliIcon from '../component/AliIcon';
-import VocaListTabNavgator from "../navigator/VocaListTabNavgator";
+import AliIcon from '../../component/AliIcon';
+import VocaListTabNavgator from "../../navigator/VocaListTabNavgator";
 
 
 
@@ -42,21 +42,21 @@ export default class VocaListPage extends Component {
                     // hidden
                 />
 
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#77A3F0'}}></View>
+                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#FDFDFD'}}></View>
                 {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#77A3F0', elevation:0,}}>
+                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
                     <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui-copy-copy' size={26} color='#fff' onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
                             this.props.navigation.goBack();
                         }}></AliIcon>
                     </Button>
                     <Body style={{flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',}}>
-                        <Title>单词列表</Title>
+                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词列表</Text>
                     </Body>
                     <Button transparent style={{position:'absolute', right:10}}>
-                        <Text style={{color:'#FFF', fontSize:18, fontWeight:'normal'}}>编辑</Text>
+                        <Text style={{color:'#1890FF', fontSize:18, fontWeight:'normal'}}>编辑</Text>
                     </Button>
                 </Header> 
                 <VocaListTabNavgator />

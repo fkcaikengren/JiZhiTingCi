@@ -2,9 +2,9 @@ import React from "react";
 import { FlatList , View, Text} from "react-native";
 import { ListItem, Left, Body, Icon, Right, Title } from "native-base";
 
-import AliIcon from '../component/AliIcon';
+import AliIcon from '../../component/AliIcon';
 
-export default class PassListPage extends React.Component {
+export default class LearnedListPage extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -67,7 +67,7 @@ export default class PassListPage extends React.Component {
         backgroundColor:'#C0E5FF'
         }}
         >
-            <Text style={{ color:'#101010', fontSize:14}}>List 2</Text>
+            <Text style={{ color:'#101010', fontSize:14}}>List 1</Text>
         </View>
       );
     } else if (!item.header) {          //单词

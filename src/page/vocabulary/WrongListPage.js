@@ -3,8 +3,8 @@ import { FlatList , View, Text, StyleSheet, Image} from "react-native";
 import { ListItem, Left, Body, Icon, Right, Title } from "native-base";
 import CheckBox from 'react-native-check-box'
 
-import AliIcon from '../component/AliIcon';
-import {selectedImg , circleImg} from '../image';
+import AliIcon from '../../component/AliIcon';
+import {selectedImg , circleImg} from '../../image';
 
 const styles = StyleSheet.create({
   iconStyle:{
@@ -74,7 +74,7 @@ export default class WrongListPage extends React.Component {
         alignItems:'center',
         paddingVertical:4,
         paddingLeft:10,
-        backgroundColor:'#C0E5FF'
+        backgroundColor:'#F0F0F0'
         }}
         >
           <Text style={{ color:'#101010', fontSize:14}}>答错5次，共12词</Text>

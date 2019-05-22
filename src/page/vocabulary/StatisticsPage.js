@@ -3,7 +3,7 @@ import {StyleSheet, StatusBar} from 'react-native';
 import { Container, Header, Text, View, Body,Title,Button} from "native-base";
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
-import AliIcon from '../component/AliIcon';
+import AliIcon from '../../component/AliIcon';
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -32,19 +32,19 @@ export default class StatisticsPage extends Component {
 
                 <View style={{width:width, height:StatusBarHeight, backgroundColor:'#77A3F0'}}></View>
                 {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#77A3F0', elevation:0,}}>
+                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
                     <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui-copy-copy' size={26} color='#fff' onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
                             this.props.navigation.goBack();
                         }}></AliIcon>
                     </Button>
                     <Body style={{flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',}}>
-                        <Title>打卡日历</Title>
+                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>打卡日历</Text>
                     </Body>
                     <Button transparent style={{position:'absolute', right:10}}>
-                        <AliIcon name='fenxiang' size={26} color='#FFF'></AliIcon>
+                        <AliIcon name='fenxiang' size={26} color='#1890FF'></AliIcon>
                     </Button>
                 </Header> 
                 
@@ -64,7 +64,7 @@ export default class StatisticsPage extends Component {
                 // 切换月份箭头
                 renderArrow={(direction) => {
                     if(direction == 'left'){
-                        return <AliIcon name='youjiantou' size={26} color='#1890FF'></AliIcon>;
+                        return <AliIcon name='youjiantou-copy-copy' size={26} color='#1890FF'></AliIcon>;
                     }else{
                         return <AliIcon name='youjiantou' size={26} color='#1890FF'></AliIcon>;
                     }
@@ -102,7 +102,7 @@ export default class StatisticsPage extends Component {
                 }}
                   // 日历样式
                 theme={{
-                    calendarBackground: '#FFF',
+                    calendarBackground: '#FDFDFD',
                     textSectionTitleColor: '#2D4150',
                     dayTextColor: '#2D4150',
                     todayTextColor: '#F79131',

@@ -5,9 +5,9 @@ import { Container, Header, Left, Body, Right,Content, Title, Grid, Col, Row,
 import * as Progress from 'react-native-progress';
 
 
-import VocaTaskList from '../component/VocaTaskList';
-import AliIcon from '../component/AliIcon';
-import {turnLogoImg} from '../image';
+import VocaTaskList from '../../component/VocaTaskList';
+import AliIcon from '../../component/AliIcon';
+import {turnLogoImg} from '../../image';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -38,6 +38,9 @@ class HomePage extends Component {
     return (
         
         <Container style={{ backgroundColor: '#FDFDFD',}}> 
+
+
+        
             <Content >
                 
                 {/* 首页菜单和任务列表 */}

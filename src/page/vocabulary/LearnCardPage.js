@@ -1,0 +1,143 @@
+import React, { Component } from "react";
+import {StyleSheet, StatusBar} from 'react-native';
+import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title, Grid, Col, Row,
+    ListItem, Left, Right , Button, Footer} from "native-base";
+import * as Progress from 'react-native-progress';
+    
+
+import AliIcon from '../../component/AliIcon';
+
+const dataArray = [
+  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
+  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}, {bookName:'六级乱序'}, {bookName:'六级正序'}, {bookName:'六级词根词缀'}] },
+  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
+  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
+  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
+  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
+  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
+  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
+  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
+  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
+  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
+  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
+];
+
+
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
+const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+const StatusBarHeight = StatusBar.currentHeight;
+
+const styles = StyleSheet.create({
+    center:{
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    row:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'center',
+    },
+    col:{
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+    },
+    iconText:{
+        width:32,
+        height:32, 
+        backgroundColor:'#1890FF', 
+        textAlign:'center', 
+        lineHeight:32, 
+        borderRadius:50,
+    }
+});
+
+
+export default class LearnCardPage extends Component {
+
+    render() {
+        return (
+            <Container>
+                <StatusBar
+                    translucent={true}
+                    // hidden
+                />
+
+                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#1890FF'}}></View>
+                {/* 头部 */}
+                <Header translucent noLeft noShadow style={{backgroundColor:'#1890FF', elevation:0,}}>
+                    <Button transparent style={{position:'absolute', left:10}}>
+                        <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
+                            this.props.navigation.goBack();
+                        }}></AliIcon>
+                    </Button>
+                    <Body style={{flexDirection:'row',
+                    justifyContent:'center',
+                    alignItems:'center',}}>
+                        <View style={[styles.center,]}>
+                            <Progress.Bar progress={0.9} height={10} width={width-120} color='#F6B056' unfilledColor='#FFF' borderWidth={0} >
+                                <Text style={{fontSize:8, position:'absolute', left:(width-120)/2}}>3/15</Text> 
+                            </Progress.Bar>
+                        </View>
+                    </Body>
+                </Header> 
+
+                <Content padder style={{ backgroundColor:'#FDFDFD', }}>
+                    <Grid>
+                        <Row>
+                            <Text style={{fontSize:20, fontWeight:'500', color:'#F6B056'}}>abolish</Text>
+                        </Row>
+                        <Row style={[styles.row, ]}>
+                            <View style={styles.row}>
+                                <Text>/əˈbɒlɪʃ/</Text>
+                                <AliIcon name='shengyin' size={26} color='#E59AAA'></AliIcon>
+                            </View>
+                            <View style={[{marginLeft:20}, styles.row]}>
+                                <Text>/əˈbɑːlɪʃ/</Text>
+                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                            </View>
+                        </Row>
+                        <Row style={[styles.col, {marginTop:16}]}>
+                            <View style={[styles.row]}>
+                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                                <Text>英英释义</Text>
+                            </View>
+                            <View style={{flex:1, backgroundColor:'#C0E5FF', padding:4, borderRadius:4,}}>
+                                <Text>to officially end a law, system etc, especially one that has existed for a long time.</Text>
+                            </View>
+                        </Row>
+                        <Row style={[styles.col, {marginTop:16,}]}>
+                            <View style={[styles.row]}>
+                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                                <Text>例句</Text>
+                            </View>
+                            <View style={{flex:1, backgroundColor:'#C0E5FF', padding:5, borderRadius:4,}}>
+                                <Text>Slavery was abolished in the US in the 19th century.</Text>
+                            </View>
+                        </Row>
+                        
+                    </Grid>
+                </Content>
+
+                
+
+                    <View style={{
+                        paddingHorizontal:20,
+                        paddingBottom:10,
+                    }}>
+                        <Button block style={[{backgroundColor:'#1890FF', marginBottom:10}] }>
+                            <Text>下一个</Text>
+                        </Button>
+                        <Button block style={[{backgroundColor:'#1890FF', }] } onPress={()=>{
+                            this.props.navigation.navigate('VocaDetail');
+                        }}>
+                            <Text>详情</Text>
+                        </Button>
+                    </View>
+                
+            </Container>
+        );
+    }
+}
