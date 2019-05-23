@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, StyleSheet, Text} from 'react-native';
+import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
 import {
-  Container,Button, Icon,
+  Container,Root,
 } from "native-base";
 
 const styles = StyleSheet.create({
@@ -19,9 +19,11 @@ import AliIcon from './src/component/AliIcon';
 export default class App extends React.Component {
   render(){
     return(
-      <Container style={styles.container}>
-        <AppNavigator/>
-      </Container>
+      <Root>
+        <Container style={styles.container}>
+          <AppNavigator/>
+        </Container>
+      </Root>
     );
   }
 }

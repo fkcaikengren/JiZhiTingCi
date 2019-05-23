@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {View, StyleSheet,Image} from 'react-native';
 import { Container, Header, Left, Body, Right,Content, Title, Grid, Col, Row,
-    Badge ,Icon ,Button,Text, Footer,Drawer } from 'native-base';
+    Icon ,Button,Text, Footer,Drawer } from 'native-base';
 import * as Progress from 'react-native-progress';
 
 
@@ -13,6 +13,20 @@ const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+    header:{
+        backgroundColor:'#FDFDFD',
+        elevation:0,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        paddingLeft:20,
+        
+    },
+    title:{
+        fontSize:24,
+        fontWeight:'500',
+        color:'#1890FF',
+    },
     center:{
         flexDirection:'row',
         justifyContent: 'center',
@@ -26,6 +40,15 @@ const styles = StyleSheet.create({
     learnedNum:{
         fontSize: 14,
         color: '#101010'
+    },
+    searchBtn:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'center',
+        backgroundColor: '#F0F0F0',
+        paddingVertical: 1,
+        paddingHorizontal: 10,
+        borderRadius: 100,
     }
 });
 
@@ -39,12 +62,19 @@ class HomePage extends Component {
         
         <Container style={{ backgroundColor: '#FDFDFD',}}> 
 
-
+            {/* 头部 */}
+            <Header style={styles.header}>
+                <Text style={styles.title}>极致英语</Text>
+                <View style={styles.searchBtn}>
+                    <Icon name='search'  style={{color:'#303030', fontSize:20, paddingRight:5}}></Icon>
+                    <Text style={{color:'#909090'}}>查词</Text>
+                </View>
+                    
+            </Header>
         
             <Content >
-                
                 {/* 首页菜单和任务列表 */}
-                <Grid style={{height:500}}>
+                <Grid style={{height:440}}>
                     <Col>
                     <VocaTaskList {...this.props}/>
                     </Col>

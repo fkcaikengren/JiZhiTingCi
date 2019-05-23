@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, ScrollView, StyleSheet, View, Text} from 'react-native';
 import { Container, Header, Content, Footer, Button, Icon, Left, Right, Body, Title,
- Grid, Col, Row} from 'native-base';
+ Grid, Col, Row, ActionSheet} from 'native-base';
 import * as Progress from 'react-native-progress';
 // import {connect} from 'react-redux';
 
@@ -9,7 +9,6 @@ import VocaPlayList from '../../component/VocaPlayList';
 import AliIcon from '../../component/AliIcon';
 // import {changeSelectedPlayIndex , changePlayType,} from '../redux/actions/wordReview'
 // import { PlayType } from '../constant/VocConstant';
-
 
 
 
@@ -89,9 +88,10 @@ export default class VocaPlayPage extends React.Component {
 
     render(){
 
+        const BUTTONS = ["英英释义选词", "例句选词", "看词选中义", "听音选词", "单词发音", "取消"];
+        const CANCEL_INDEX = 5;
+
         return(
-
-
             <Container style={{backgroundColor:'#1890FFCC'}}>
                 <StatusBar
                     translucent={true}
@@ -102,7 +102,7 @@ export default class VocaPlayPage extends React.Component {
                 {/* 头部 */}
                 <Header translucent noLeft noShadow style={{backgroundColor:'#77A3F000', elevation:0,}}>
                     <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui-copy-copy' size={26} color='#fff' onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
                             this.props.navigation.goBack();
                         }}></AliIcon>
                     </Button>
@@ -113,17 +113,17 @@ export default class VocaPlayPage extends React.Component {
                     </Body>
                     
                 </Header>
-                {/* 内容 */}
+
+                {/* 内容列表 */}
                 <Content style={{marginTop:30}}>
-                     {/* 列表 */}
                     <View 
                     style={styles.container}>
                         <VocaPlayList {...this.props}/>
                     </View>
-                    {/* <BottomPlayControl/> */}
+
                 </Content>
 
-                {/* 页脚 */}
+                {/* 底部控制 */}
                 <Grid style={{width:width, position:'absolute', bottom:5}}>
                     <Row style={{
                         flexDirection:'row',
@@ -136,7 +136,25 @@ export default class VocaPlayPage extends React.Component {
                         <Button bordered style={[styles.outlineButton, styles.center]}>
                             <Text style={styles.buttonText}> 主题 </Text>
                         </Button>
-                        <Button bordered style={[styles.outlineButton, styles.center]}>
+                        <Button bordered style={[styles.outlineButton, styles.center]} onPress={()=>{
+                            //选择测试类型
+                            ActionSheet.show(
+                                {
+                                    options: BUTTONS,
+                                    cancelButtonIndex: CANCEL_INDEX,
+                                    title: "选择测试类型",
+                                },
+                                buttonIndex => {
+                                    alert(buttonIndex);
+                                    if(buttonIndex == 0){
+                                        this.props.navigation.navigate('TestEnTran');
+                                    }else if(buttonIndex == 1){
+                                        this.props.navigation.navigate('TestSentence');
+                                    }
+                                    this.setState({ clicked: BUTTONS[buttonIndex] });
+                                }
+                              );
+                        }}>
                             <Text style={styles.buttonText}> 测试 </Text>
                         </Button>
                         <Button style={[styles.button, styles.center]}>
@@ -207,7 +225,7 @@ export default class VocaPlayPage extends React.Component {
                             
                     </Row>
                 </Grid>
-
+                
             </Container>
 
         );

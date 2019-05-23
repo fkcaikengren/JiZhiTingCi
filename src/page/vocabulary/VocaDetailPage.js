@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar} from 'react-native';
 import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title, Grid, Col, Row,
-    ListItem, Left, Right , Button, Footer} from "native-base";
+    ListItem, Left, Right , Button, Footer, FooterTab} from "native-base";
 
 import AliIcon from '../../component/AliIcon';
 import VocaDetailTabNavigator from '../../navigator/VocaDetailTabNavigator';
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
+   
    
 });
 
@@ -50,7 +51,13 @@ export default class VocaDetailPage extends Component {
                 </Header> 
 
                 <VocaDetailTabNavigator/>
-
+                <Footer >
+                    <FooterTab style={{backgroundColor:'#FDFDFD'}}>
+                        <Button >
+                            <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>下一个</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
                 
             </Container>
         );

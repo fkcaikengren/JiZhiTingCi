@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar} from 'react-native';
 import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title, Grid, Col, Row,
-    ListItem, Left, Right , Button, Footer} from "native-base";
+    Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
     
 
@@ -51,6 +51,12 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         lineHeight:32, 
         borderRadius:50,
+    },
+    bottomBtn:{
+        width: (width-80)/2,
+        elevation: 0,
+        backgroundColor: '#1890FF',
+
     }
 });
 
@@ -78,7 +84,7 @@ export default class LearnCardPage extends Component {
                     alignItems:'center',}}>
                         <View style={[styles.center,]}>
                             <Progress.Bar progress={0.9} height={10} width={width-120} color='#F6B056' unfilledColor='#FFF' borderWidth={0} >
-                                <Text style={{fontSize:8, position:'absolute', left:(width-120)/2}}>3/15</Text> 
+                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>3/15</Text> 
                             </Progress.Bar>
                         </View>
                     </Body>
@@ -121,21 +127,30 @@ export default class LearnCardPage extends Component {
                     </Grid>
                 </Content>
 
+                <Footer >
+                    <FooterTab style={{backgroundColor:'#FDFDFD'}}>
+                        <Button >
+                            <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>下一个</Text>
+                        </Button>
+                        <Button onPress={()=>{
+                            this.props.navigation.navigate('VocaDetail');
+                        }}>
+                            <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>详情</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
                 
-
-                    <View style={{
+                    {/* <View style={{
                         paddingHorizontal:20,
                         paddingBottom:10,
                     }}>
                         <Button block style={[{backgroundColor:'#1890FF', marginBottom:10}] }>
                             <Text>下一个</Text>
                         </Button>
-                        <Button block style={[{backgroundColor:'#1890FF', }] } onPress={()=>{
-                            this.props.navigation.navigate('VocaDetail');
-                        }}>
+                        <Button block style={[{backgroundColor:'#1890FF', }] } }>
                             <Text>详情</Text>
                         </Button>
-                    </View>
+                    </View> */}
                 
             </Container>
         );

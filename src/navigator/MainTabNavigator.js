@@ -13,6 +13,8 @@ import VocaListPage from '../page/vocabulary/VocaListPage';
 import StatisticsPage from '../page/vocabulary/StatisticsPage';
 import LearnCardPage from '../page/vocabulary/LearnCardPage';
 import VocaDetailPage from '../page/vocabulary/VocaDetailPage';
+import TestEnTranPage from '../page/vocabulary/TestEnTranPage';
+import TestSentencePage from '../page/vocabulary/TestSentencePage';
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -49,11 +51,18 @@ const HomeStackNav = createStackNavigator(
     LearnCard: {
       screen: LearnCardPage,
     },
-    //单词详情
+    // 单词详情
     VocaDetail: {
       screen: VocaDetailPage,
+    },
+    // 英英释义选词测试
+    TestEnTran: {
+      screen: TestEnTranPage,
+    },
+    // 例句选词测试
+    TestSentence: {
+      screen: TestSentencePage,
     }
-    
   
   },
   {
