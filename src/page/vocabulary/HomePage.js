@@ -65,10 +65,13 @@ class HomePage extends Component {
             {/* 头部 */}
             <Header style={styles.header}>
                 <Text style={styles.title}>极致英语</Text>
-                <View style={styles.searchBtn}>
-                    <Icon name='search'  style={{color:'#303030', fontSize:20, paddingRight:5}}></Icon>
-                    <Text style={{color:'#909090'}}>查词</Text>
-                </View>
+                <TouchableOpacity onPress={()=>{this.props.navigation.navigate('VocaSearch', { transition: 'forHorizontal' });}}>
+                    <View style={styles.searchBtn} >
+                        <Icon name='search'  style={{color:'#303030', fontSize:20, paddingRight:5}}></Icon>
+                        <Text style={{color:'#909090'}}>查词</Text>
+                    </View>
+                </TouchableOpacity>
+                
                     
             </Header>
         

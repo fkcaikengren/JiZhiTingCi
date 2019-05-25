@@ -74,7 +74,7 @@ export default class WrongListPage extends React.Component {
         alignItems:'center',
         paddingVertical:4,
         paddingLeft:10,
-        backgroundColor:'#F0F0F0'
+        backgroundColor:'#EFEFEF'
         }}
         >
           <Text style={{ color:'#101010', fontSize:14}}>答错5次，共12词</Text>

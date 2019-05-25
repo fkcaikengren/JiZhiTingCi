@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius:5, 
         borderBottomRightRadius:5,
         padding:5,
-
+        
     },
     iconText:{
         width:36,
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
         alignItems:'flex-start',
         paddingLeft:20,
         borderBottomWidth:1,
+        borderColor:'#F0F0F0',
         paddingVertical:10,
 
     },
@@ -82,8 +83,8 @@ export default class DictCard extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 5,
-            borderWidth: 1,
             backgroundColor: '#FDFDFD',
+            
             }}>
 
                 {/* 卡片上半部分 */}

@@ -69,7 +69,6 @@ export default class DictCard extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 5,
-            borderWidth: 1,
             backgroundColor: '#FDFDFD',
             }}>
 

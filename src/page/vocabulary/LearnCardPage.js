@@ -1,26 +1,11 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar} from 'react-native';
-import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title, Grid, Col, Row,
+import {StyleSheet, StatusBar, View, Text} from 'react-native';
+import { Container, Header, Content, Icon, Accordion, Body,Title, Grid, Col, Row,
     Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
     
 
 import AliIcon from '../../component/AliIcon';
-
-const dataArray = [
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}, {bookName:'六级乱序'}, {bookName:'六级正序'}, {bookName:'六级词根词缀'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-];
 
 
 const Dimensions = require('Dimensions');
@@ -57,6 +42,15 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: '#1890FF',
 
+    }, 
+    fonts:{
+        fontSize:16,
+        color:'#404040',
+        lineHeight:24,
+    },
+    phonetic:{
+        fontSize: 16,
+        color: '#101010',
     }
 });
 
@@ -97,11 +91,11 @@ export default class LearnCardPage extends Component {
                         </Row>
                         <Row style={[styles.row, ]}>
                             <View style={styles.row}>
-                                <Text>/əˈbɒlɪʃ/</Text>
+                                <Text style={styles.phonetic}>/əˈbɒlɪʃ/</Text>
                                 <AliIcon name='shengyin' size={26} color='#E59AAA'></AliIcon>
                             </View>
                             <View style={[{marginLeft:20}, styles.row]}>
-                                <Text>/əˈbɑːlɪʃ/</Text>
+                                <Text style={styles.phonetic}>/əˈbɑːlɪʃ/</Text>
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
                             </View>
                         </Row>
@@ -111,7 +105,7 @@ export default class LearnCardPage extends Component {
                                 <Text>英英释义</Text>
                             </View>
                             <View style={{flex:1, backgroundColor:'#C0E5FF', padding:4, borderRadius:4,}}>
-                                <Text>to officially end a law, system etc, especially one that has existed for a long time.</Text>
+                                <Text style={styles.fonts}>to officially end a law, system etc, especially one that has existed for a long time.</Text>
                             </View>
                         </Row>
                         <Row style={[styles.col, {marginTop:16,}]}>
@@ -120,7 +114,7 @@ export default class LearnCardPage extends Component {
                                 <Text>例句</Text>
                             </View>
                             <View style={{flex:1, backgroundColor:'#C0E5FF', padding:5, borderRadius:4,}}>
-                                <Text>Slavery was abolished in the US in the 19th century.</Text>
+                                <Text style={styles.fonts}>Slavery was abolished in the US in the 19th century.</Text>
                             </View>
                         </Row>
                         

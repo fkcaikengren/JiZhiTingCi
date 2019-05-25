@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar} from 'react-native';
-import { Container, Header, Content, Icon, Accordion, Text, View, Body,Title,
+import {StyleSheet, StatusBar, View, Text} from 'react-native';
+import { Container, Header, Content, Icon, Accordion,Body,Title,
     ListItem, Left, Right , Button} from "native-base";
 import Picker from 'react-native-picker';
     
@@ -29,8 +29,16 @@ const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
+    container:{
+        backgroundColor:'#EFEFEF'
+    },
     center:{
         flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    c_center:{
+        flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
     },
@@ -89,8 +97,8 @@ export default class VocaLibPage extends Component {
                 </Text>
             </View>
             {expanded
-            ? <Icon style={{ fontSize: 18 , alignSelf:'flex-end'}} name="remove-circle" />
-            : <Icon style={{ fontSize: 18 , alignSelf:'flex-end'}} name="add-circle" />}
+            ? <AliIcon name='youjiantou-copy' size={26} color='#A0A0A0'></AliIcon>
+            : <AliIcon name='youjiantou' size={26} color='#A0A0A0'></AliIcon>}
         </View>
         );
     }
@@ -116,7 +124,7 @@ export default class VocaLibPage extends Component {
         
 
         return (
-            <Container>
+            <Container style={styles.container}>
                 <StatusBar
                     translucent={true}
                     // hidden
@@ -133,12 +141,38 @@ export default class VocaLibPage extends Component {
                     <Body style={{flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',}}>
-                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词列表</Text>
+                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词书库</Text>
                     </Body>
                 </Header> 
 
+
+
                 <Content padder style={{ backgroundColor:'#EFEFEF', }}>
-                <Accordion style={{backgroundColor:'#FDFDFD', borderRadius:5}}
+
+                {/* 选中的单词书 */}
+                <View style={{
+                    flexDirection:'row',
+                    justifyContent:'space-between',
+                    alignItems:'center',
+                    backgroundColor:'#FDFDFD',
+                    borderRadius:5,
+                    marginTop:10,
+                    padding:5,
+                }}>
+                    <View style={[styles.center, { paddingLeft:10}]}>
+                        <AliIcon name='yixue' size={26} color='#1890FF'></AliIcon>
+                        <View style={[styles.c_center, {alignItems:'flex-start', paddingLeft:20}]}>
+                            <Text style={{fontSize:16, color:'#303030', fontWeight:'500' }}>专四词汇乱序版</Text>
+                            <Text style={{fontSize:12}}>已掌握23/3090</Text>
+                        </View>
+                    </View>
+                    <View style={[styles.c_center,]}>
+                        <AliIcon name='xiazai' size={24} color='#A0A0A0'></AliIcon>
+                        <Text style={{fontSize:12}}>下载词汇音频包</Text>
+                    </View>
+                </View>
+                {/* 单词书列表 */}
+                <Accordion style={{backgroundColor:'#FDFDFD', borderRadius:5, marginTop:20,}}
                     dataArray={dataArray}
                     animation={true}
                     expanded={true}

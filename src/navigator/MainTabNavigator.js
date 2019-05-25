@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import {Platform, StatusBar, ScrollView, StyleSheet,Text, View} from 'react-native';
 import { createStackNavigator, Button, createBottomTabNavigator } from 'react-navigation';
 
+
 import AliIcon from '../component/AliIcon';
-import HomePage from '../page/vocabulary/HomePage';
+
 import ReadPage from '../page/reading/ReadPage';
 import GrammaPage from '../page/gramma/GrammaPage';
-import MinePage from '../page/mine/MinePage';
+
+import HomePage from '../page/vocabulary/HomePage';
+import VocaSearchPage from '../page/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../page/vocabulary/VocaPlayPage';
 import VocaLibPage from '../page/vocabulary/VocaLibPage';
 import VocaListPage from '../page/vocabulary/VocaListPage';
@@ -15,6 +18,9 @@ import LearnCardPage from '../page/vocabulary/LearnCardPage';
 import VocaDetailPage from '../page/vocabulary/VocaDetailPage';
 import TestEnTranPage from '../page/vocabulary/TestEnTranPage';
 import TestSentencePage from '../page/vocabulary/TestSentencePage';
+
+import MinePage from '../page/mine/MinePage';
+import AccountPage from '../page/mine/AccountPage';
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -28,6 +34,12 @@ const HomeStackNav = createStackNavigator(
     // 首页
     Home: {
       screen: HomePage,
+    },
+    // 查词页面
+    VocaSearch: {
+      screen: VocaSearchPage,
+      
+
     },
     // 单词库
     VocaLib:{
@@ -67,7 +79,7 @@ const HomeStackNav = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
-    headerMode:'none'
+    headerMode:'none',
   }
 );
 
@@ -109,8 +121,11 @@ const MineStackNav = createStackNavigator(
   {
     // 我的
     Mine: {
-      screen:MinePage,
-     
+      screen: MinePage,
+    },
+    // 账号资料
+    Account:{
+      screen: AccountPage,
     }
   },
   {
@@ -132,25 +147,25 @@ export default createBottomTabNavigator(
         }
       },
      
-      '阅读':{
-        screen: ReadPage,
-        navigationOptions: {
-          tabBarLabel: '阅读',
-          tabBarIcon: ({tintColor, focused}) => (
-              <AliIcon name='yuedureading19-copy' size={24} color={tintColor}></AliIcon>
-          ),
-        }
-      },
+      // '阅读':{
+      //   screen: ReadPage,
+      //   navigationOptions: {
+      //     tabBarLabel: '阅读',
+      //     tabBarIcon: ({tintColor, focused}) => (
+      //         <AliIcon name='yuedureading19-copy' size={24} color={tintColor}></AliIcon>
+      //     ),
+      //   }
+      // },
 
-      '语法':{
-        screen: GrammaStackNav,
-        navigationOptions: {
-          tabBarLabel: '语法',
-          tabBarIcon: ({tintColor, focused}) => (
-              <AliIcon name='yingyu' size={24} color={tintColor}></AliIcon>
-          ),
-        }
-      },
+      // '语法':{
+      //   screen: GrammaStackNav,
+      //   navigationOptions: {
+      //     tabBarLabel: '语法',
+      //     tabBarIcon: ({tintColor, focused}) => (
+      //         <AliIcon name='yingyu' size={24} color={tintColor}></AliIcon>
+      //     ),
+      //   }
+      // },
       '我的':{
         screen: MineStackNav,
         navigationOptions: {

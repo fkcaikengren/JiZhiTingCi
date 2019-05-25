@@ -83,7 +83,7 @@ export default class Menu extends React.Component {
                     <Text style={styles.basicFont}>学习统计</Text>
                 </Col>
             </Row>
-            <Row style={{width:width, height:6, backgroundColor:'#C9C9C9AA'}}>
+            <Row style={{width:width, height:6, backgroundColor:'#EFEFEF'}}>
 
             </Row>
         </Grid>
