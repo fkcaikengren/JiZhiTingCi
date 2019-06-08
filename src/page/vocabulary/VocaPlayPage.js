@@ -1,25 +1,24 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, ScrollView, StyleSheet, View, Text} from 'react-native';
+import {Platform, StatusBar, ScrollView, StyleSheet, View, Text, FlatList} from 'react-native';
 import { Container, Header, Content, Footer, Button, Icon, Left, Right, Body, Title,
  Grid, Col, Row, ActionSheet} from 'native-base';
 import * as Progress from 'react-native-progress';
-// import {connect} from 'react-redux';
+import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
+import {connect} from 'react-redux';
+import * as vocaPlayAction from '../../action/vocabulary/vocaPlayAction';
 
-import VocaPlayList from '../../component/VocaPlayList';
+
 import AliIcon from '../../component/AliIcon';
-// import {changeSelectedPlayIndex , changePlayType,} from '../redux/actions/wordReview'
-// import { PlayType } from '../constant/VocConstant';
-
-
-
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
+const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
 
 
 const styles = StyleSheet.create({
+  
     container:{
         width:width,
         height:height-50-STATUSBAR_HEIGHT,
@@ -68,31 +67,127 @@ const styles = StyleSheet.create({
         borderColor:'#fff',
         height:22,
         elevation:0
+    },
+
+
+    //列表样式
+    item: {
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+
+        width:width,
+        height: ITEM_H,
+        backgroundColor:'#FFFFFF00'
+    },
+
+    itemText:{
+        color:'#FFFFFFAA',
+    },
+
+    triggerText:{
+        color:'#FFF',  
+        paddingHorizontal:3,
+        fontSize:14,
+        textAlign:'center', 
+        lineHeight:20, 
+        borderWidth:1,
+        borderColor:'#FFF',
+        borderRadius:1
     }
 
 });
 
-/**
- *Created by Jacy on 19/03/29.
- */
-export default class VocaPlayPage extends React.Component {
+
+class VocaPlayPage extends React.Component {
     constructor(props){
         super(props);
         this.state={iconName:'pause'}
     }
-
-
     componentDidMount(){
        
     }
 
+    _renderItem = ({item, index})=>{
+        let {showWord,showTran} = this.props.vocaPlay;
+        console.log(`word id: ${item.id}`);
+        return (
+            <View style={styles.item}>
+                <Text style={[styles.itemText,]}>{showWord?item.word:''}</Text>
+                    <Text note numberOfLines={1} style={[styles.itemText,]}>
+                    {showTran?item.tran:''}
+                </Text>
+            </View>
+        );
+    };
+
+    _keyExtractor = (item, index) => index.toString();
+
+    _onScrollToIndexFailed = info => {
+        setTimeout(() => this._scrollToIndex( false, info.index, info.vocs));
+    };
+
+
+
+    // length: item高度； offset: item的父组件的偏移量
+    _getItemLayout = (data, index) =>{
+        return ({ length: ITEM_H, offset: ITEM_H * index, index });
+    } 
+
+    _chooseTest = (value) =>{
+        switch(value){
+            case 0:
+                this.props.navigation.navigate('TestEnTran');
+                break;
+            case 1:
+                this.props.navigation.navigate('TestSentence');
+                break;
+            case 2:
+                alert(value);
+                break;
+            case 3:
+                alert(value);
+                break;
+        }
+    }
+
+    _chooseTheme = (themeId)=>{
+        let {changeTheme} = this.props;
+        changeTheme(themeId);
+    }
+
+
     render(){
 
-        const BUTTONS = ["英英释义选词", "例句选词", "看词选中义", "听音选词", "单词发音", "取消"];
-        const CANCEL_INDEX = 5;
+        let {wordList, themeId, themes} = this.props.vocaPlay;
+        let {toggleWord, toggleTran} = this.props;
+        let bgStyle = {backgroundColor: themes[themeId].bgColor};
 
+        let flatListProps = {
+            ref: component => {
+                this._flatListRef = component;
+            },
+
+            horizontal: false,
+            showsHorizontalScrollIndicator: false,
+            showsVerticalScrollIndicator: false,
+            pagingEnabled: false,
+
+            extraData: this.props.vocaPlay,
+            keyExtractor: this._keyExtractor,
+
+            data:wordList,
+            renderItem: this._renderItem,
+            
+            // onScrollToIndexFailed: this._onScrollToIndexFailed,
+            // initialNumToRender: 16,
+            // getItemLayout: this._getItemLayout,
+            
+        }
+
+        
         return(
-            <Container style={{backgroundColor:'#1890FFCC'}}>
+            <Container style={bgStyle}>
                 <StatusBar
                     translucent={true}
                     // hidden
@@ -116,11 +211,7 @@ export default class VocaPlayPage extends React.Component {
 
                 {/* 内容列表 */}
                 <Content style={{marginTop:30}}>
-                    <View 
-                    style={styles.container}>
-                        <VocaPlayList {...this.props}/>
-                    </View>
-
+                  <FlatList {...flatListProps}/>
                 </Content>
 
                 {/* 底部控制 */}
@@ -130,34 +221,41 @@ export default class VocaPlayPage extends React.Component {
                         justifyContent:'space-around',
                         alignItems:'center',
                     }}>
-                        <Button style={[styles.button, styles.center]}>
+                        <Button style={[styles.button, styles.center]} onPress={()=>{toggleWord()}}>
                             <Text style={styles.buttonText}> en </Text>
                         </Button>
-                        <Button bordered style={[styles.outlineButton, styles.center]}>
-                            <Text style={styles.buttonText}> 主题 </Text>
-                        </Button>
-                        <Button bordered style={[styles.outlineButton, styles.center]} onPress={()=>{
-                            //选择测试类型
-                            ActionSheet.show(
+                        <Menu onSelect={this._chooseTheme} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
+                            <MenuTrigger text='主题' customStyles={{triggerText: styles.triggerText,}}/>
+                            <MenuOptions>
                                 {
-                                    options: BUTTONS,
-                                    cancelButtonIndex: CANCEL_INDEX,
-                                    title: "选择测试类型",
-                                },
-                                buttonIndex => {
-                                    alert(buttonIndex);
-                                    if(buttonIndex == 0){
-                                        this.props.navigation.navigate('TestEnTran');
-                                    }else if(buttonIndex == 1){
-                                        this.props.navigation.navigate('TestSentence');
-                                    }
-                                    this.setState({ clicked: BUTTONS[buttonIndex] });
+                                    themes.map((item, index)=>{
+                                        return (
+                                            <MenuOption key={item.id} value={item.id}>
+                                                <Text style={{color: 'red'}}>{item.name}</Text>
+                                            </MenuOption>
+                                        );
+                                    })
                                 }
-                              );
-                        }}>
-                            <Text style={styles.buttonText}> 测试 </Text>
-                        </Button>
-                        <Button style={[styles.button, styles.center]}>
+                                
+                            </MenuOptions>
+                        </Menu>
+                        <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
+                            <MenuTrigger text='测试' customStyles={{triggerText: styles.triggerText,}}/>
+                            <MenuOptions>
+                                <MenuOption value={0} text='英英释义选词' />
+                                <MenuOption value={1}>
+                                    <Text style={{color: 'red'}}>例句选词</Text>
+                                </MenuOption>
+                                <MenuOption value={2}>
+                                    <Text style={{color: 'red'}}>看词选中义</Text>
+                                </MenuOption>
+                                <MenuOption value={3}>
+                                    <Text style={{color: 'red'}}>听音选词</Text>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                       
+                        <Button style={[styles.button, styles.center]} onPress={()=>{toggleTran()}}>
                             <Text style={styles.buttonText}> zh </Text>
                         </Button>
                     </Row>
@@ -234,11 +332,16 @@ export default class VocaPlayPage extends React.Component {
 
 
 
-// const mapStateToProps = state =>({
-//     playType : state.wordReview.playType,
-// });
+const mapStateToProps = state =>({
+    vocaPlay : state.vocaPlay,
+});
 
-// const mapDispatchToProps = {
-//     changePlayType,
-// };
+const mapDispatchToProps = {
+    toggleWord : vocaPlayAction.toggleWord,
+    toggleTran : vocaPlayAction.toggleTran,
+    loadTheme : vocaPlayAction.loadThemes,
+    changeTheme : vocaPlayAction.changeTheme,
 
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

@@ -86,6 +86,85 @@ yarn add react-native-check-box
 yarn add react-native-calendars
 ```
 
+### 安装react-native-popup-menu
+
+```
+yarn add react-native-popup-menu
+```
+
+
+
+
+
+### 安装prop-types
+
+```
+yarn add prop-types
+```
+
+
+
+### 安装redux
+
+```
+yarn add redux
+```
+
+
+
+### 安装react-redux
+
+```
+yarn add react-redux
+```
+
+
+
+### 开发依赖安装redux-devtools
+
+```
+yarn add redux-devtools --dev
+```
+
+
+
+### 安装redux-promise
+
+```
+yarn add redux-promise
+```
+
+
+
+### 安装redux-actions
+
+```
+yarn add redux-actions
+```
+
+### 安装redux-logger
+
+```
+yarn add redux-logger
+```
+
+
+
+### 安装react-native-sound
+
+```
+yarn add react-native-sound
+手动link
+```
+
+
+
+
+
+
+
+
+
 
 
 # JiZhiTingCi

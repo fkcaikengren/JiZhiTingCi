@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import {View, StyleSheet,Image} from 'react-native';
-import { Container, Header, Left, Body, Right,Content, Title, Grid, Col, Row,
+import { Container, Header,Content,  Grid, Col, Row,
     Icon ,Button,Text, Footer,Drawer } from 'native-base';
 import * as Progress from 'react-native-progress';
+import {connect} from 'react-redux';
+import * as VocaPlayAction from '../../action/vocabulary/vocaPlayAction';
+
 
 
 import VocaTaskList from '../../component/VocaTaskList';
@@ -54,12 +57,9 @@ const styles = StyleSheet.create({
 
 class HomePage extends Component {
 
-
-
-
     render() {
+    let {loadWordList} = this.props;
     return (
-        
         <Container style={{ backgroundColor: '#FDFDFD',}}> 
 
             {/* 头部 */}
@@ -89,6 +89,7 @@ class HomePage extends Component {
                 <TouchableOpacity
                     style={styles.touch}
                     onPress={()=>{
+                        loadWordList();
                         this.props.navigation.navigate('VocaPlay');
                     }}
                     activeOpacity={0.7}
@@ -134,5 +135,15 @@ class HomePage extends Component {
 }
 
 
-export default HomePage;
+
+const mapStateToProps = state =>({
+    home:state.home,
+});
+
+const mapDispatchToProps = {
+    loadWordList: VocaPlayAction.loadList,
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
 

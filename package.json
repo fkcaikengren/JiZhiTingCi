@@ -15,9 +15,15 @@
     "react-native-check-box": "^2.1.7",
     "react-native-gesture-handler": "^1.2.1",
     "react-native-picker": "^4.3.7",
+    "react-native-popup-menu": "^0.15.6",
     "react-native-progress": "^3.6.0",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.9.1"
+    "react-navigation": "^3.9.1",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.6.5",
+    "redux-logger": "^3.0.6",
+    "redux-promise": "^0.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
@@ -25,7 +31,8 @@
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.54.0",
-    "react-test-renderer": "16.8.3"
+    "react-test-renderer": "16.8.3",
+    "redux-devtools": "^3.5.0"
   },
   "jest": {
     "preset": "react-native"
