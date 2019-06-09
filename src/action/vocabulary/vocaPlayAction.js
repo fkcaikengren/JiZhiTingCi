@@ -3,7 +3,7 @@
 import { createActions } from 'redux-actions';
 
 export const LOAD_LIST = 'LOAD_LIST';                //1下/上一首（播放指定列表）
-export const CHANGE_WORD_INDEX = 'CHANGE_WORD_INDEX';    //2 顺序播放单词
+export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';    //2 顺序播放单词
 export const TOGGLE_PLAY = 'TOGGLE_PLAY';              //3暂停/播放
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';      //4控制时间间隔
 export const GET_LEARNED_LISTS = 'GET_LEARNED_LISTS';          //5查看已学列表
@@ -18,26 +18,65 @@ export const PASS_WORD = 'PASS_WORD';              //11Pass单词
 
 
 
-export const {loadList, toggleWord, toggleTran,loadThemes, changeTheme, changeWordIndex} = createActions({
+export const {loadList,togglePlay, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex} = createActions({
     [LOAD_LIST]: () => {
         const wordList = [{
-            id: 1,
-            word: 'bad',
+            id: 0,
+            word: 'accommodation',
             tran: 'adj. 坏的',
           }, {
-            id: 2,
-            word: 'good',
+            id: 1,
+            word: 'acute',
             tran: 'adj. 好的',
           },{
-            id: 3,
-            word: 'popular',
+            id: 2,
+            word: 'calorie',
             tran: 'adj. 流行的',
           }, {
-            id: 4,
-            word: 'thank',
+            id: 3,
+            word: 'decent',
             tran: 'v. 谢谢',
+          },{
+            id: 4,
+            word: 'ensue',
+            tran: 'n. 吉他',
+          }, {
+            id: 5,
+            word: 'feeble',
+            tran: 'n. 苹果',
+          },{
+            id: 6,
+            word: 'harmony',
+            tran: 'adj. 死亡的',
+          }, {
+            id: 7,
+            word: 'hostile',
+            tran: 'v. xx',
+          },{
+            id: 8,
+            word: 'limp',
+            tran: 'n. 其他',
+          },{
+            id: 9,
+            word: 'maintain',
+            tran: 'adj. 哈哈',
+          }, {
+            id: 10,
+            word: 'notion',
+            tran: 'v. 嘻嘻',
+          },{
+            id: 11,
+            word: 'poverty',
+            tran: 'v. 嘻嘻',
+          },{
+            id: 12,
+            word: 'premier',
+            tran: 'v. 嘻嘻',
           }];
           return {wordList};
+    },
+    [TOGGLE_PLAY]: ()=>{
+
     },
     [TOGGLE_WORD]: ()=>{
 
@@ -60,9 +99,9 @@ export const {loadList, toggleWord, toggleTran,loadThemes, changeTheme, changeWo
     [CHANGE_THEME]: (themeId)=>{ //改变主题
       return {themeId};
     },
-    [CHANGE_WORD_INDEX]: (wordIndex)=> {
+    [CHANGE_CUR_INDEX]: (curIndex)=> {
       console.info(`当前单词index`);
-      return { wordIndex };
+      return { curIndex };
     },
    
   });

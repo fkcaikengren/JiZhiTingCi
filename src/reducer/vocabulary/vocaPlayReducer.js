@@ -8,13 +8,9 @@ const defaultState ={
         id: 0,
         word: 'xx',
         tran: 'adj. 坏的',
-    }, {
-        id: 1,
-        word: 'gg',
-        tran: 'adj. 好的',
-    }],
+    },],
     //2当前正在播放的单词id
-    wordIndex:1,
+    curIndex:0,
     //3是否播放
     autoPlay:false,
     //4时间间隔
@@ -55,10 +51,11 @@ const defaultState ={
 export const vocaPlay =  handleActions({
 
     [vpAction.LOAD_LIST] : (state, action) => ({ ...state, wordList:action.payload.wordList }),
+    [vpAction.TOGGLE_PLAY] : (state, action) => ({ ...state, autoPlay:!state.autoPlay }),
     [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
     [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
     [vpAction.LOAD_THEMES] : (state, action) => ({ ...state, themes:action.payload.themes }),
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
-    [vpAction.CHANGE_WORD_INDEX] : (state, action) => ({ ...state, wordIndex:action.payload.wordIndex }),
+    [vpAction.CHANGE_CUR_INDEX] : (state, action) => ({ ...state, curIndex:action.payload.curIndex }),
 
 }, defaultState);

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, ScrollView, StyleSheet, View, Text, FlatList} from 'react-native';
+import {Platform, StatusBar, ScrollView, StyleSheet, View, Text, FlatList, TouchableNativeFeedback} from 'react-native';
 import { Container, Header, Content, Footer, Button, Icon, Left, Right, Body, Title,
  Grid, Col, Row, ActionSheet} from 'native-base';
 import * as Progress from 'react-native-progress';
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import {connect} from 'react-redux';
 import * as vocaPlayAction from '../../action/vocabulary/vocaPlayAction';
-
+const Sound = require('react-native-sound');
 
 import AliIcon from '../../component/AliIcon';
 const Dimensions = require('Dimensions');
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   
     container:{
         width:width,
-        height:height-50-STATUSBAR_HEIGHT,
+        height:height-240-STATUSBAR_HEIGHT,
     },
     backgroundVideo: {
         position: 'absolute',
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
         height:22,
         elevation:0
     },
+    
 
 
     //列表样式
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-
         width:width,
         height: ITEM_H,
         backgroundColor:'#FFFFFF00'
@@ -83,6 +83,11 @@ const styles = StyleSheet.create({
 
     itemText:{
         color:'#FFFFFFAA',
+    },
+
+    playText:{
+        fontSize:20,
+        color:'red'
     },
 
     triggerText:{
@@ -102,30 +107,96 @@ const styles = StyleSheet.create({
 class VocaPlayPage extends React.Component {
     constructor(props){
         super(props);
-        this.state={iconName:'pause'}
     }
     componentDidMount(){
-       
+        const {curIndex, autoPlay} = this.props.vocaPlay;
+        if(!autoPlay){
+            alert(curIndex);
+            let params = { animated:true, index:curIndex, viewPosition:0.5 };
+            if (this._flatListRef) {
+                this._flatListRef.scrollToIndex(params);
+            }
+        }
+    }
+
+
+
+
+    /**
+     * @description 自动播放 
+     * @memberof SwiperFlatList
+     */
+    _autoplay = (index) => {
+        const {interval, wordList} = this.props.vocaPlay;
+
+        if (this.autoplayTimer) {
+            clearTimeout(this.autoplayTimer);
+        }
+
+        // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
+        let params = { animated:true, index, viewPosition:0.5 };
+        if (this._flatListRef) {
+            this._flatListRef.scrollToIndex(params);
+        }
+
+
+        //2.播放单词音频
+        let wordAudio = new Sound(wordList[index].word+'.wav', Sound.MAIN_BUNDLE, (error) => {
+            if (error) {
+              console.log('failed to load the sound', error);
+              return;
+            }
+            // loaded successfully
+            // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+          
+            // Play the sound with an onEnd callback
+            wordAudio.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+                wordAudio.release();
+              } else {
+                console.log('playback failed due to audio decoding errors');
+            }
+            });
+        });
+        //3.循环回调
+        this.autoplayTimer = setTimeout(() => {
+            const nextIndex = (index + 1) % wordList.length;
+            this._replay(  nextIndex);
+            
+        }, interval * 1000);
+    };
+  
+    _replay = (index) => {
+        let { autoPlay, } = this.props.vocaPlay;
+        let { changeCurIndex } = this.props;
+        
+        changeCurIndex(index);
+        // 回调自动播放
+        if (autoPlay) {
+            this._autoplay(index);  
+        }
+
+        
     }
 
     _renderItem = ({item, index})=>{
-        let {showWord,showTran} = this.props.vocaPlay;
+        let {showWord,showTran,curIndex} = this.props.vocaPlay;
+        let playStyle = {}
+        if(curIndex == item.id){
+            playStyle = styles.playText;
+        }
         console.log(`word id: ${item.id}`);
         return (
             <View style={styles.item}>
-                <Text style={[styles.itemText,]}>{showWord?item.word:''}</Text>
-                    <Text note numberOfLines={1} style={[styles.itemText,]}>
-                    {showTran?item.tran:''}
-                </Text>
+                <Text style={[styles.itemText,playStyle]}>{showWord?item.word:''}</Text>
+                <Text note numberOfLines={1} style={[styles.itemText,playStyle]}>
+                    {showTran?item.tran:''}</Text>
             </View>
         );
     };
 
     _keyExtractor = (item, index) => index.toString();
-
-    _onScrollToIndexFailed = info => {
-        setTimeout(() => this._scrollToIndex( false, info.index, info.vocs));
-    };
 
 
 
@@ -156,11 +227,28 @@ class VocaPlayPage extends React.Component {
         changeTheme(themeId);
     }
 
+    _togglePlay = ()=>{
+        let {autoPlay, curIndex, } = this.props.vocaPlay;
+        let {togglePlay} = this.props;
+        if(autoPlay){
+            //暂停
+            this.setState({iconName:'play'});
+            if(this.autoplayTimer){
+                clearTimeout(this.autoplayTimer);
+            }
+        }else {
+            //播放
+            this._autoplay(curIndex);
+            this.setState({iconName:'pause'});
+        }
+        togglePlay();
+
+    }
 
     render(){
 
-        let {wordList, themeId, themes} = this.props.vocaPlay;
-        let {toggleWord, toggleTran} = this.props;
+        const {wordList, themeId, themes, autoPlay} = this.props.vocaPlay;
+        const {toggleWord, toggleTran} = this.props;
         let bgStyle = {backgroundColor: themes[themeId].bgColor};
 
         let flatListProps = {
@@ -179,9 +267,8 @@ class VocaPlayPage extends React.Component {
             data:wordList,
             renderItem: this._renderItem,
             
-            // onScrollToIndexFailed: this._onScrollToIndexFailed,
-            // initialNumToRender: 16,
-            // getItemLayout: this._getItemLayout,
+            initialNumToRender: 16,
+            getItemLayout: this._getItemLayout,
             
         }
 
@@ -210,8 +297,10 @@ class VocaPlayPage extends React.Component {
                 </Header>
 
                 {/* 内容列表 */}
-                <Content style={{marginTop:30}}>
-                  <FlatList {...flatListProps}/>
+                <Content style={[{marginTop:30},]}>
+                    <View style={ styles.container}>
+                        <FlatList {...flatListProps}/>
+                    </View>
                 </Content>
 
                 {/* 底部控制 */}
@@ -275,51 +364,37 @@ class VocaPlayPage extends React.Component {
                             <Text style={{color:'#fff' ,  marginLeft:10}}>20</Text>
                         </View>
                     </Row>
+                    {/* 播放按钮 */}
                     <Row style={{
                         flexDirection:'row',
                         justifyContent:'space-around',
                         alignItems:'center',
                         marginBottom:10,
                     }}>
-                            {/* onPress={()=>{
-                                const {playType} = this.props;
-                                if(playType === PlayType.PLAYING){
-                                    //暂停
-                                    this
-                                    this.props.pause();
-                                    //改变图标
-                                    let icon = this.state.iconName;
-                                    if(icon == 'play'){
-                                        this.setState({iconName:'pause'});
-                                    }else if(icon == 'pause'){
-                                        this.setState({iconName:'play'});
-                                    }
-                                }else if(playType === PlayType.PAUSED){
-                                    //播放
-                                    this.props.play();
-                                } */}
+                        <Button transparent style={{ borderColor:'#fff'}}>
+                            <Text  style={{
+                                color:'#fff' , 
+                                borderColor:'#fff',
+                                fontSize:16,
+                                }}>
+                            1.0s
+                            </Text>
+                        </Button>
+                        <View style={{
+                            width:width*(1/2),
+                            flexDirection:'row',
+                            justifyContent:'space-around',
+                            alignItems:'center',
+                        }}>
+                            <AliIcon name='icon-2' size={32} color='#FFF'></AliIcon>
+                            <TouchableNativeFeedback onPress={this._togglePlay}>
+                                <AliIcon name={autoPlay?'zanting':'icon-'} size={50} color='#FFF'></AliIcon>
+                            </TouchableNativeFeedback>
                             
-                            <Button transparent style={{ borderColor:'#fff'}}>
-                                <Text  style={{
-                                    color:'#fff' , 
-                                    borderColor:'#fff',
-                                    fontSize:16,
-                                    }}>
-                                1.0s
-                                </Text>
-                            </Button>
-                            <View style={{
-                                width:width*(1/2),
-                                flexDirection:'row',
-                                justifyContent:'space-around',
-                                alignItems:'center',
-                            }}>
-                                <AliIcon name='icon-2' size={32} color='#FFF'></AliIcon>
-                                <AliIcon name='icon-' size={50} color='#FFF'></AliIcon>
-                                <AliIcon name='icon-1' size={32} color='#FFF'></AliIcon>
-                            </View>
-                            
-                            <AliIcon name='bofangliebiao1' size={30} color='#FFF'></AliIcon>
+                            <AliIcon name='icon-1' size={32} color='#FFF'></AliIcon>
+                        </View>
+                        
+                        <AliIcon name='bofangliebiao1' size={30} color='#FFF'></AliIcon>
                             
                     </Row>
                 </Grid>
@@ -337,6 +412,8 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
+    togglePlay : vocaPlayAction.togglePlay,
+    changeCurIndex : vocaPlayAction.changeCurIndex,
     toggleWord : vocaPlayAction.toggleWord,
     toggleTran : vocaPlayAction.toggleTran,
     loadTheme : vocaPlayAction.loadThemes,
