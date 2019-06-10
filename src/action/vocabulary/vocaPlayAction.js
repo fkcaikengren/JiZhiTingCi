@@ -4,7 +4,7 @@ import { createActions } from 'redux-actions';
 
 export const LOAD_LIST = 'LOAD_LIST';                //1下/上一首（播放指定列表）
 export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';    //2 顺序播放单词
-export const TOGGLE_PLAY = 'TOGGLE_PLAY';              //3暂停/播放
+export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';              //3暂停/播放
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';      //4控制时间间隔
 export const GET_LEARNED_LISTS = 'GET_LEARNED_LISTS';          //5查看已学列表
 export const TOGGLE_WORD = 'TOGGLE_WORD';         //6控制英文单词显示
@@ -15,10 +15,9 @@ export const GET_WORD_INFO = 'GET_WORD_INFO';        //10查词
 export const PASS_WORD = 'PASS_WORD';              //11Pass单词
 
 
+//驼峰式命名，不可以更改(与变量名必须对应)
 
-
-
-export const {loadList,togglePlay, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex} = createActions({
+export const {loadList,changePlayTimer,changeInterval, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex, } = createActions({
     [LOAD_LIST]: () => {
         const wordList = [{
             id: 0,
@@ -75,8 +74,11 @@ export const {loadList,togglePlay, toggleWord, toggleTran,loadThemes, changeThem
           }];
           return {wordList};
     },
-    [TOGGLE_PLAY]: ()=>{
-
+    [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{
+      return {autoPlayTimer};
+    },
+    [CHANGE_INTERVAL]: (interval)=>{
+      return {interval};
     },
     [TOGGLE_WORD]: ()=>{
 
@@ -103,6 +105,7 @@ export const {loadList,togglePlay, toggleWord, toggleTran,loadThemes, changeThem
       console.info(`当前单词index`);
       return { curIndex };
     },
+    
    
   });
 

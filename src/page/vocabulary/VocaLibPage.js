@@ -3,24 +3,10 @@ import {StyleSheet, StatusBar, View, Text} from 'react-native';
 import { Container, Header, Content, Icon, Accordion,Body,Title,
     ListItem, Left, Right , Button} from "native-base";
 import Picker from 'react-native-picker';
-    
+import {connect} from 'react-redux';
+import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
 
 import AliIcon from '../../component/AliIcon';
-
-const dataArray = [
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}, {bookName:'六级乱序'}, {bookName:'六级正序'}, {bookName:'六级词根词缀'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-  { title: "四级词汇", content: [{bookName:'火星四级'}, {bookName:'新东方四级'}] },
-  { title: "六级词汇", content: [{bookName:'火星六级'}, {bookName:'新东方六级'}] },
-  { title: "雅思词汇", content: [{bookName:'雅思分类词汇'}, {bookName:'雅思核心词汇'}]  },
-];
 
 
 const Dimensions = require('Dimensions');
@@ -49,13 +35,27 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         lineHeight:32, 
         borderRadius:50,
+    },
+    planBook:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        backgroundColor:'#FDFDFD',
+        borderRadius:5,
+        marginTop:10,
+        padding:5,
     }
 });
 
 
-export default class VocaLibPage extends Component {
+class VocaLibPage extends Component {
 
-    _show = ()=>{
+    constructor(props){
+        super(props)
+    }
+
+    _show = (name)=>{
+        const {changeVocaBook} = this.props
         let data = [
             [1,2,3,4,5],    //新学列表数
             [10,11,12,13,14,15,16,17,18,19,20], //列表单词数
@@ -65,9 +65,11 @@ export default class VocaLibPage extends Component {
         Picker.init({
             pickerData: data,
             selectedValue: selectedValue,
-            pickerTitleText: '新学列表数*列表单词数',
+            pickerTitleText: name,
             onPickerConfirm: data => {
-                alert(data);
+                const {listCount,listWordCount} = data;
+                changeVocaBook(name, listCount,  listWordCount);
+                alert('恭喜你，计划设置成功');
             },
             onPickerCancel: data => {
                 console.log(data);
@@ -90,10 +92,10 @@ export default class VocaLibPage extends Component {
             },{borderBottomWidth:1}]}>
             <View style={[styles.center,{justifyContent:'flex-start'}]}>
                 <Text style={[styles.iconText,{color:'#FFF'}]}>
-                    4
+                    {item.section[0]}
                 </Text>
                 <Text style={{color:'#303030', fontSize:16, marginLeft:16, fontWeight:'500'}}>
-                {" "}{item.title}
+                {" "}{item.section}
                 </Text>
             </View>
             {expanded
@@ -104,25 +106,26 @@ export default class VocaLibPage extends Component {
     }
     _renderContent = (item)=> {
         return (
-        item.content.map((it, index)=>{
-            return <View style={{flexDirection: "row", 
+        item.books.map((it, index)=>{
+            return <View key={index} style={{flexDirection: "row", 
             justifyContent: "space-between",
             alignItems: "center" ,
             backgroundColor: "#F7F7F7" ,
             paddingLeft:10,
             paddingVertical:10}} >
                     <Text onPress={()=>{
-                        this._show();
+                        this._show(it.name);
                     }}
-                    style={{ color:'#39668D', fontSize:16 , paddingLeft:30}}>{it.bookName}</Text>
-                    <Text style={{ fontSize:16 , color:'#AAAAAA', paddingRight:10}}>3900</Text>
+                    style={{ color:'#39668D', fontSize:16 , paddingLeft:30}}>{it.name}</Text>
+                    <Text style={{ fontSize:16 , color:'#AAAAAA', paddingRight:10}}>{it.count}</Text>
             </View>
         })
         );
     }
     render() {
         
-
+        //数据
+        const {vocaBooks, curBookName} = this.props.vocaLib
         return (
             <Container style={styles.container}>
                 <StatusBar
@@ -149,21 +152,13 @@ export default class VocaLibPage extends Component {
 
                 <Content padder style={{ backgroundColor:'#EFEFEF', }}>
 
-                {/* 选中的单词书 */}
-                <View style={{
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    alignItems:'center',
-                    backgroundColor:'#FDFDFD',
-                    borderRadius:5,
-                    marginTop:10,
-                    padding:5,
-                }}>
+                {/* 计划中的单词书 */}
+                <View style={styles.planBook}>
                     <View style={[styles.center, { paddingLeft:10}]}>
                         <AliIcon name='yixue' size={26} color='#1890FF'></AliIcon>
                         <View style={[styles.c_center, {alignItems:'flex-start', paddingLeft:20}]}>
-                            <Text style={{fontSize:16, color:'#303030', fontWeight:'500' }}>专四词汇乱序版</Text>
-                            <Text style={{fontSize:12}}>已掌握23/3090</Text>
+                            <Text style={{fontSize:16, color:'#303030', fontWeight:'500' }}>{curBookName}</Text>
+                            {/* <Text style={{fontSize:12}}>已掌握23/3090</Text> */}
                         </View>
                     </View>
                     <View style={[styles.c_center,]}>
@@ -173,7 +168,7 @@ export default class VocaLibPage extends Component {
                 </View>
                 {/* 单词书列表 */}
                 <Accordion style={{backgroundColor:'#FDFDFD', borderRadius:5, marginTop:20,}}
-                    dataArray={dataArray}
+                    dataArray={vocaBooks}
                     animation={true}
                     expanded={true}
                     renderHeader={this._renderHeader}
@@ -184,3 +179,13 @@ export default class VocaLibPage extends Component {
         );
     }
 }
+const mapStateToProps = state =>({
+    vocaLib : state.vocaLib,
+});
+
+const mapDispatchToProps = {
+    changeVocaBook: VocaLibAction.changeVocaBook,
+};
+
+
+export default connect(mapStateToProps,mapDispatchToProps )(VocaLibPage);

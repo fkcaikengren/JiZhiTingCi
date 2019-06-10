@@ -56,7 +56,7 @@ export default class VocaListPage extends Component {
                         <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词列表</Text>
                     </Body>
                     <Button transparent style={{position:'absolute', right:10}}>
-                        <Text style={{color:'#1890FF', fontSize:18, fontWeight:'normal'}}>编辑</Text>
+                        <Text style={{color:'#1890FF', fontSize:16, fontWeight:'normal'}}>编辑</Text>
                     </Button>
                 </Header> 
                 <VocaListTabNavgator />

@@ -96,6 +96,16 @@ yarn add react-native-popup-menu
 
 
 
+
+
+### 安装react-native-modalbox
+
+```
+yarn add react-native-modalbox@latest
+```
+
+
+
 ### 安装prop-types
 
 ```
@@ -161,9 +171,14 @@ yarn add react-native-sound
 
 
 
+### 实现带可选索引的列表
 
+[参考：带字母检索的SectionList](<https://www.jianshu.com/p/09dd60d7b34f>)
 
-
+```
+方式一：如果使用scrollToIndex()需要修改SectionList和VirtualizedSectionList的代码.
+方式二：用scrollToLocation()替换scrollToIndex()
+```
 
 
 

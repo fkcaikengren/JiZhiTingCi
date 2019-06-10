@@ -15,7 +15,8 @@ const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
-
+global.VocaPlayFlatList = null; //声明全局遍历对象
+global.VocaPlayInterval = 1.0;
 
 const styles = StyleSheet.create({
   
@@ -58,8 +59,17 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         lineHeight:22, 
     },
-    button:{
+    selectedButton:{
+        borderColor:'#E59AAA',
+        borderWidth:1,
         backgroundColor:'#E59AAA',
+        height:22,
+        elevation:0,
+    },
+    unSelectedButton:{
+        borderColor:'#FFFFFF',
+        borderWidth:1,
+        backgroundColor:'#FFFFFF00',
         height:22,
         elevation:0,
     },
@@ -99,6 +109,20 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'#FFF',
         borderRadius:1
+    },
+    intervalButton: {
+        width:26,
+        color:'#FFF',  
+        paddingHorizontal:3,
+        fontSize:14,
+        textAlign:'center', 
+        lineHeight:20, 
+        borderWidth:1,
+        borderColor:'#FFF',
+        borderRadius:5
+    },
+    intervalFont:{
+        fontSize:12,
     }
 
 });
@@ -109,14 +133,8 @@ class VocaPlayPage extends React.Component {
         super(props);
     }
     componentDidMount(){
-        const {curIndex, autoPlay} = this.props.vocaPlay;
-        if(!autoPlay){
-            alert(curIndex);
-            let params = { animated:true, index:curIndex, viewPosition:0.5 };
-            if (this._flatListRef) {
-                this._flatListRef.scrollToIndex(params);
-            }
-        }
+        const {curIndex, autoPlayTimer} = this.props.vocaPlay;
+
     }
 
 
@@ -127,16 +145,14 @@ class VocaPlayPage extends React.Component {
      * @memberof SwiperFlatList
      */
     _autoplay = (index) => {
-        const {interval, wordList} = this.props.vocaPlay;
-
-        if (this.autoplayTimer) {
-            clearTimeout(this.autoplayTimer);
-        }
+        const { wordList} = this.props.vocaPlay;
+        const {changePlayTimer} = this.props;
 
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated:true, index, viewPosition:0.5 };
-        if (this._flatListRef) {
-            this._flatListRef.scrollToIndex(params);
+        if (VocaPlayFlatList ) { //this._flatListRef
+            console.log('move');
+            VocaPlayFlatList.scrollToIndex(params);
         }
 
 
@@ -160,20 +176,21 @@ class VocaPlayPage extends React.Component {
             });
         });
         //3.循环回调
-        this.autoplayTimer = setTimeout(() => {
+        let timer = setTimeout(() => {
             const nextIndex = (index + 1) % wordList.length;
             this._replay(  nextIndex);
             
-        }, interval * 1000);
+        }, VocaPlayInterval * 1000);
+        changePlayTimer(timer);
     };
   
     _replay = (index) => {
-        let { autoPlay, } = this.props.vocaPlay;
-        let { changeCurIndex } = this.props;
+        const { autoPlayTimer, } = this.props.vocaPlay;
+        const { changeCurIndex } = this.props;
         
         changeCurIndex(index);
         // 回调自动播放
-        if (autoPlay) {
+        if (autoPlayTimer) {
             this._autoplay(index);  
         }
 
@@ -186,7 +203,7 @@ class VocaPlayPage extends React.Component {
         if(curIndex == item.id){
             playStyle = styles.playText;
         }
-        console.log(`word id: ${item.id}`);
+
         return (
             <View style={styles.item}>
                 <Text style={[styles.itemText,playStyle]}>{showWord?item.word:''}</Text>
@@ -223,53 +240,55 @@ class VocaPlayPage extends React.Component {
     }
 
     _chooseTheme = (themeId)=>{
-        let {changeTheme} = this.props;
+        const {autoPlayTimer} = this.props.vocaPlay;
+        const {changeTheme} = this.props;
         changeTheme(themeId);
     }
 
+    _chooseInterval = (interval)=>{
+        const {changeInterval } = this.props;
+        VocaPlayInterval = interval;
+        changeInterval(VocaPlayInterval);
+        
+    }
+
     _togglePlay = ()=>{
-        let {autoPlay, curIndex, } = this.props.vocaPlay;
-        let {togglePlay} = this.props;
-        if(autoPlay){
+        const {autoPlayTimer, curIndex, } = this.props.vocaPlay;
+        const {changePlayTimer} = this.props;
+        if(autoPlayTimer){
             //暂停
-            this.setState({iconName:'play'});
-            if(this.autoplayTimer){
-                clearTimeout(this.autoplayTimer);
+            if(autoPlayTimer){
+                clearTimeout(autoPlayTimer);
+                changePlayTimer(0);
             }
         }else {
             //播放
             this._autoplay(curIndex);
-            this.setState({iconName:'pause'});
         }
-        togglePlay();
 
     }
 
     render(){
 
-        const {wordList, themeId, themes, autoPlay} = this.props.vocaPlay;
-        const {toggleWord, toggleTran} = this.props;
+        const {wordList, themeId, themes, autoPlayTimer,showWord, showTran, interval } = this.props.vocaPlay;
+        const {toggleWord, toggleTran, } = this.props;
         let bgStyle = {backgroundColor: themes[themeId].bgColor};
+        
 
         let flatListProps = {
             ref: component => {
-                this._flatListRef = component;
+                VocaPlayFlatList = component;
             },
-
             horizontal: false,
             showsHorizontalScrollIndicator: false,
             showsVerticalScrollIndicator: false,
             pagingEnabled: false,
-
             extraData: this.props.vocaPlay,
             keyExtractor: this._keyExtractor,
-
             data:wordList,
             renderItem: this._renderItem,
-            
             initialNumToRender: 16,
             getItemLayout: this._getItemLayout,
-            
         }
 
         
@@ -310,7 +329,7 @@ class VocaPlayPage extends React.Component {
                         justifyContent:'space-around',
                         alignItems:'center',
                     }}>
-                        <Button style={[styles.button, styles.center]} onPress={()=>{toggleWord()}}>
+                        <Button style={[showWord?styles.selectedButton:styles.unSelectedButton, styles.center]} onPress={()=>{toggleWord()}}>
                             <Text style={styles.buttonText}> en </Text>
                         </Button>
                         <Menu onSelect={this._chooseTheme} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
@@ -344,7 +363,7 @@ class VocaPlayPage extends React.Component {
                             </MenuOptions>
                         </Menu>
                        
-                        <Button style={[styles.button, styles.center]} onPress={()=>{toggleTran()}}>
+                        <Button style={[showTran?styles.selectedButton:styles.unSelectedButton, styles.center]} onPress={()=>{toggleTran()}}>
                             <Text style={styles.buttonText}> zh </Text>
                         </Button>
                     </Row>
@@ -371,15 +390,28 @@ class VocaPlayPage extends React.Component {
                         alignItems:'center',
                         marginBottom:10,
                     }}>
-                        <Button transparent style={{ borderColor:'#fff'}}>
-                            <Text  style={{
-                                color:'#fff' , 
-                                borderColor:'#fff',
-                                fontSize:16,
-                                }}>
-                            1.0s
-                            </Text>
-                        </Button>
+                        
+                        <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
+                            <MenuTrigger text={interval+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
+                            <MenuOptions>
+                            <MenuOption value={5.0}>
+                                    <Text>5.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={4.0}>
+                                    <Text>4.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={3.0}>
+                                    <Text>3.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={2.0}>
+                                    <Text>2.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={1.0}>
+                                    <Text>1.0s</Text>
+                                </MenuOption>
+                                
+                            </MenuOptions>
+                        </Menu>
                         <View style={{
                             width:width*(1/2),
                             flexDirection:'row',
@@ -387,14 +419,15 @@ class VocaPlayPage extends React.Component {
                             alignItems:'center',
                         }}>
                             <AliIcon name='icon-2' size={32} color='#FFF'></AliIcon>
+                            
                             <TouchableNativeFeedback onPress={this._togglePlay}>
-                                <AliIcon name={autoPlay?'zanting':'icon-'} size={50} color='#FFF'></AliIcon>
+                                <AliIcon name={autoPlayTimer?'icon-3':'icon-'} size={50} color='#FFF'></AliIcon>
                             </TouchableNativeFeedback>
                             
                             <AliIcon name='icon-1' size={32} color='#FFF'></AliIcon>
                         </View>
                         
-                        <AliIcon name='bofangliebiao1' size={30} color='#FFF'></AliIcon>
+                        <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
                             
                     </Row>
                 </Grid>
@@ -412,13 +445,14 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
-    togglePlay : vocaPlayAction.togglePlay,
+    changePlayTimer : vocaPlayAction.changePlayTimer,
     changeCurIndex : vocaPlayAction.changeCurIndex,
     toggleWord : vocaPlayAction.toggleWord,
     toggleTran : vocaPlayAction.toggleTran,
     loadTheme : vocaPlayAction.loadThemes,
     changeTheme : vocaPlayAction.changeTheme,
-
+    changeInterval : vocaPlayAction.changeInterval,
+    
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

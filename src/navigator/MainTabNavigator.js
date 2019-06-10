@@ -13,11 +13,13 @@ import VocaSearchPage from '../page/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../page/vocabulary/VocaPlayPage';
 import VocaLibPage from '../page/vocabulary/VocaLibPage';
 import VocaListPage from '../page/vocabulary/VocaListPage';
+import VocaGroupPage from '../page/vocabulary/VocaGroupPage'
 import StatisticsPage from '../page/vocabulary/StatisticsPage';
 import LearnCardPage from '../page/vocabulary/LearnCardPage';
 import VocaDetailPage from '../page/vocabulary/VocaDetailPage';
 import TestEnTranPage from '../page/vocabulary/TestEnTranPage';
 import TestSentencePage from '../page/vocabulary/TestSentencePage';
+import GroupVocaPage from '../page/vocabulary/GroupVocaPage';
 
 import MinePage from '../page/mine/MinePage';
 import AccountPage from '../page/mine/AccountPage';
@@ -49,7 +51,10 @@ const HomeStackNav = createStackNavigator(
     VocaList:{
       screen:VocaListPage,
     },
-    // 我的单词
+    // 生词本
+    VocaGroup:{
+      screen:VocaGroupPage,
+    },
 
     // 学习统计
     Statistics:{
@@ -66,6 +71,10 @@ const HomeStackNav = createStackNavigator(
     // 单词详情
     VocaDetail: {
       screen: VocaDetailPage,
+    },
+    // 生词本的生词页
+    GroupVoca: {
+      screen: GroupVocaPage,
     },
     // 英英释义选词测试
     TestEnTran: {

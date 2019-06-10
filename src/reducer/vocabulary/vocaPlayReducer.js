@@ -12,9 +12,9 @@ const defaultState ={
     //2当前正在播放的单词id
     curIndex:0,
     //3是否播放
-    autoPlay:false,
+    autoPlayTimer:0,
     //4时间间隔
-    interval:1,
+    interval:1.0,
     //5已学列表id数组
     learnedLists: [{
         id:0,
@@ -39,7 +39,7 @@ const defaultState ={
         bgColor: 'pink'
     }],
     //8.2当前主题id
-    themeId: 1,
+    themeId: 0,
     //9.单词信息
     wordInfo:{
         word:'',
@@ -51,11 +51,12 @@ const defaultState ={
 export const vocaPlay =  handleActions({
 
     [vpAction.LOAD_LIST] : (state, action) => ({ ...state, wordList:action.payload.wordList }),
-    [vpAction.TOGGLE_PLAY] : (state, action) => ({ ...state, autoPlay:!state.autoPlay }),
+    [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
     [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
     [vpAction.LOAD_THEMES] : (state, action) => ({ ...state, themes:action.payload.themes }),
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
     [vpAction.CHANGE_CUR_INDEX] : (state, action) => ({ ...state, curIndex:action.payload.curIndex }),
-
+    [vpAction.CHANGE_INTERVAL] : (state, action) => ({ ...state, interval:action.payload.interval }),
+    
 }, defaultState);
