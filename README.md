@@ -171,6 +171,57 @@ yarn add react-native-sound
 
 
 
+### 安装rn-fetch-blob
+
+```
+yarn add rn-fetch-blob
+手动link
+```
+
+
+
+### 安装react-native-storage
+
+```
+yarn add react-native-storage
+yarn add @react-native-community/async-storage
+react-native link @react-native-community/async-storage
+```
+
+
+
+
+
+### 实现数据模拟-安装mockjs
+
+```
+yarn add mockjs --dev
+```
+
+
+
+
+
+### 安装axios
+
+```
+yarn add axios
+```
+
+
+
+
+
+### 安装querystring
+
+```
+yarn add querystring
+```
+
+
+
+
+
 ### 实现带可选索引的列表
 
 [参考：带字母检索的SectionList](<https://www.jianshu.com/p/09dd60d7b34f>)

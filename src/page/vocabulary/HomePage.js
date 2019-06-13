@@ -7,7 +7,9 @@ import {connect} from 'react-redux';
 import * as VocaPlayAction from '../../action/vocabulary/vocaPlayAction';
 import * as VocaGroupAction from '../../action/vocabulary/vocaGroupAction'
 import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
-
+import * as HomeAtion from '../../action/vocabulary/homeAction'
+import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
+import {IN_PLAY , IN_CARD , IN_TEST1 , IN_RETEST1 , IN_TEST2, IN_RETEST2,} from '../../constant'
 
 import AliIcon from '../../component/AliIcon';
 import {turnLogoImg} from '../../image';
@@ -78,58 +80,65 @@ class HomePage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            data:  [
-                {type:'header', name:''},
-                {type:'title', name:'今日新学'},
-                {type:'newLearn', listID:4, isCompleted:true}, 
-                {type:'newLearn', listID:5, isCompleted:false}, 
-                {type:'newLearn', listID:6, isCompleted:false},
-                {type:'title', name:'今日复习'},
-                {type:'todayReview1', listID:4, isLocked:false, isCompleted:true}, 
-                {type:'todayReview1', listID:5, isLocked:true, isCompleted:false}, 
-                {type:'todayReview1', listID:6, isLocked:true, isCompleted:false},
-                {type:'todayReview2', listID:4, isLocked:false, isCompleted:true}, 
-                {type:'todayReview2', listID:5, isLocked:false, isCompleted:false}, 
-                {type:'todayReview2', listID:6, isLocked:false, isCompleted:false},
-                {type:'title', name:'往日回顾'},
-                {type:'pastReview', listID:1, isCompleted:true}, 
-                {type:'pastReview', listID:2, isCompleted:false}, 
-                {type:'pastReview', listID:3, isCompleted:false}
-            ],
-            stickyHeaderIndices: [0, 1, 5, 12],
-        };
+       
       }
 
+    componentDidMount(){
+        const {loadTaskLists, } = this.props
+        loadTaskLists();
+    }
+
+    _start = (item)=>{
+        const { loadTask} = this.props;
+        const {task} = this.props.learnNew
+         //默认task为{},若learnStatus不存在 首次加载任务数据
+         if(!task.learnStatus){
+            //加载任务单词数据
+            loadTask(item.taskOrder)
+            .then(action =>{
+                //根据learnStatus 判断处于哪一学习阶段
+                if(action.payload.task.learnStatus === IN_CARD){  //跳转到卡片学习页面
+                    this.props.navigation.navigate('LearnCard');
+                }else if(action.payload.task.learnStatus === IN_TEST1){ //跳转到测试1 页面
+                    this.props.navigation.navigate('TestEnTran');
+                }
+                console.log('判断是否改变状态后，才返回');
+                console.log(task); //这个时候还没有dispatch, 当then结束后才dispatch
+            })
+        }else{
+            
+            //根据learnStatus 判断处于哪一学习阶段
+            if(task.learnStatus === IN_CARD){  //跳转到卡片学习页面
+                this.props.navigation.navigate('LearnCard');
+            }else if(task.learnStatus === IN_TEST1){ //跳转到测试1 页面
+                this.props.navigation.navigate('TestEnTran');
+            }
+        }
+
+         
+       
+    }
+
     _renderItem = ({ item, index }) => {
-        const {loadVocaGroups, loadVocaBooks} = this.props;
+        const {loadVocaGroups, loadVocaBooks, loadTask} = this.props;
+
         let bodyStyle = {};
         let buttonContent = {color:'#1890FF', fontSize:14, fontWeight:'500'};
         let iconName = 'square-o';
         let iconStyle = {color:'#1890FF'};
         let buttonName = '开始';
         
-        if(item.isCompleted==true){
+        if(item.finished == true){
             bodyStyle = {textDecorationLine:'line-through'}
             iconName = 'check-square';
             iconStyle = {color:'#1890FF'};
             buttonName = '已完成';
         }
-    
+
+        let type='item' //menu, header, item
         let note = '';
-        switch(item.type){
-            case 'newLearn':
-                note = '约10min可完成'; break;
-            case 'todayReview1':
-                note = '建议3min后复习'; break;
-            case 'todayReview2':
-                note = '建议12h后复习'; break;
-            case 'pastReview':
-                note = '约12min可完成'; break;
-            default:
-                break;
-        }
-        if(item.type == 'header'){
+
+        if(index == 0){
             return (
                 //菜单
                 <Grid style={{height:155,}}>
@@ -182,136 +191,155 @@ class HomePage extends Component {
 
                     </Row>
                 </Grid>
-        );
-        }else if(item.type == 'title') {
-          return (
-            //分类头
-            <View style={{backgroundColor:'#FDFDFD', paddingLeft:15, paddingVertical:15}}>
-              <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>
-                {item.name}
-              </Text>
-            </View>          
-          
-            
-          );
-        } else{
-          return (
-              //任务列表项
-            <ListItem  thumbnail style={{ padding:0}}>
-                <Left >
-                    <Icon type='FontAwesome' name={iconName} size={30} style={[iconStyle]}/>
-                </Left>
-                <Body >
-                    <Text style={[{ color:'#2D4150', fontSize:14, fontWeight:'500'}]}>学习List{item.listID}</Text>
-                    <Text note numberOfLines={1} >{note}</Text>
-                </Body>
-                <Right>
-                    <Button rounded style={styles.listButton} onPress={()=>{
-                      //跳转到卡片学习页面
-                      this.props.navigation.navigate('LearnCard');
-                    }}>
-                        <Text style={[buttonContent]}>{buttonName}</Text>
-                    </Button>
-                </Right>
-            </ListItem>
-          );
+            );
+        }else{
+            if(item.status==-1){
+                type = 'header'
+            }else if(item.status==0){
+                
+            }else if(item.status==10 || item.status==11 || item.status==12){
+
+            }else if(item.status==22 || item.status==24 || item.status==27 || item.status==215){
+
+            }else if(item.status==200){
+
+            }else{
+                console.log('taskList的status不对')
+                type=''
+            }
+
+            if (type === 'header') {
+            return (
+                //分类头
+                <View style={{backgroundColor:'#FDFDFD', paddingLeft:15, paddingVertical:15}}>
+                <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>
+                    {item.title}
+                </Text>
+                </View>          
+            );
+            } else if(type === "item"){
+                return (
+                    //任务列表项
+                    <ListItem  thumbnail style={{ padding:0}}>
+                        <Left >
+                            <Icon type='FontAwesome' name={iconName} size={30} style={[iconStyle]}/>
+                        </Left>
+                        <Body >
+                            <Text style={[{ color:'#2D4150', fontSize:14, fontWeight:'500'}]}>学习List{item.taskOrder}</Text>
+                            <Text note numberOfLines={1} >{note}</Text>
+                        </Body>
+                        <Right>
+                            <Button rounded style={styles.listButton} onPress={()=>{this._start(item)}}>
+                                <Text style={[buttonContent]}>{buttonName}</Text>
+                            </Button>
+                        </Right>
+                    </ListItem>
+                );
+            }
+
         }
+
+    
+        
       };
 
-
-
     render() {
-    let {loadPlayWordList} = this.props;
-    return (
-        <Container style={{ backgroundColor: '#FDFDFD',}}> 
-
-            {/* 头部 */}
-            <Header style={styles.header}>
-                <Text style={styles.title}>极致英语</Text>
-                <TouchableOpacity onPress={()=>{this.props.navigation.navigate('VocaSearch', { transition: 'forHorizontal' });}}>
-                    <View style={styles.searchBtn} >
-                        <Icon name='search'  style={{color:'#303030', fontSize:20, paddingRight:5}}></Icon>
-                        <Text style={{color:'#909090'}}>查词</Text>
-                    </View>
-                </TouchableOpacity>
-                
-                    
-            </Header>
+        const {taskList, stickyHeaderIndices} = this.props.home;
+        const {loadPlayWordList, loadTask} = this.props;
         
-            <Content >
-                {/* 首页菜单和任务列表 */}
-                <Grid style={{height:440}}>
-                    <Col>
-                        <FlatList
-                            data={this.state.data}
-                            renderItem={this._renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                            stickyHeaderIndices={this.state.stickyHeaderIndices}
-                        />
-                    </Col>
-                </Grid>
-            </Content>
+        return (
+            <Container style={{ backgroundColor: '#FDFDFD',}}> 
 
-            <Footer style={{backgroundColor:'#FFF'}} >
-                <Grid >
-                <TouchableOpacity
-                    style={styles.touch}
-                    onPress={()=>{
-                        loadPlayWordList();
-                        this.props.navigation.navigate('VocaPlay');
-                    }}
-                    activeOpacity={0.7}
-                        >
-                    <Col style={{width:70, height:50, }}>
-                        <Row style={styles.center}>
-                            <Image style={{width:50, height:50, borderRadius:50}} source={turnLogoImg} />
-                        </Row>
+                {/* 头部 */}
+                <Header style={styles.header}>
+                    <Text style={styles.title}>极致英语</Text>
+                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('VocaSearch', { transition: 'forHorizontal' });}}>
+                        <View style={styles.searchBtn} >
+                            <Icon name='search'  style={{color:'#303030', fontSize:20, paddingRight:5}}></Icon>
+                            <Text style={{color:'#909090'}}>查词</Text>
+                        </View>
+                    </TouchableOpacity>
                     
-                    </Col>
-                </TouchableOpacity>
-                    <Col>
-                        <Row size={1}>
-                            <View style={[styles.center,{alignItems:'flex-end'}]}>
-                                <Progress.Bar progress={0.3} height={2} width={280} color='#1890FF' unfilledColor='#DEDEDE' borderWidth={0}/>
-                            </View>
-                        </Row>
-                        <Row size={4} style={{
-                            flexDirection:'row',
-                            justifyContent:'space-between',
-                            alignItems:'center',}}>
-                            <View >
-                                <Text style={{fontSize:16, color:'#1890FF'}}>List-001</Text>
-                            </View>
-                            <View style={{
+                        
+                </Header>
+            
+                <Content >
+                    {/* 首页菜单和任务列表 */}
+                    <Grid style={{height:440}}>
+                        <Col>
+                            <FlatList
+                                data={taskList}
+                                renderItem={this._renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                stickyHeaderIndices={stickyHeaderIndices}
+                            />
+                        </Col>
+                    </Grid>
+                </Content>
+
+                <Footer style={{backgroundColor:'#FFF'}} >
+                    <Grid >
+                    <TouchableOpacity
+                        style={styles.touch}
+                        onPress={()=>{
+                            loadPlayWordList();
+                            this.props.navigation.navigate('VocaPlay');
+                        }}
+                        activeOpacity={0.7}
+                            >
+                        <Col style={{width:70, height:50, }}>
+                            <Row style={styles.center}>
+                                <Image style={{width:50, height:50, borderRadius:50}} source={turnLogoImg} />
+                            </Row>
+                        
+                        </Col>
+                    </TouchableOpacity>
+                        <Col>
+                            <Row size={1}>
+                                <View style={[styles.center,{alignItems:'flex-end'}]}>
+                                    <Progress.Bar progress={0.3} height={2} width={280} color='#1890FF' unfilledColor='#DEDEDE' borderWidth={0}/>
+                                </View>
+                            </Row>
+                            <Row size={4} style={{
                                 flexDirection:'row',
-                                justifyContent:'flex-end',
-                                alignItems:'center',
-                            }}>
-                                <AliIcon name='bofang1' size={22} color='#1890FF' style={{paddingRight:20}}></AliIcon>
-                                <AliIcon name='xiayige' size={20} color='#1890FF'  style={{paddingRight:20}}></AliIcon>
-                                <AliIcon name='bofangliebiaoicon' size={20} color='#1890FF'  style={{paddingRight:10}}></AliIcon>
-                            </View>
-                            
-                        </Row>
-                    </Col>
-                </Grid>
-            </Footer>
-        </Container>
-       
-    );
+                                justifyContent:'space-between',
+                                alignItems:'center',}}>
+                                <View >
+                                    <Text style={{fontSize:16, color:'#1890FF'}}>List-001</Text>
+                                </View>
+                                <View style={{
+                                    flexDirection:'row',
+                                    justifyContent:'flex-end',
+                                    alignItems:'center',
+                                }}>
+                                    <AliIcon name='bofang1' size={22} color='#1890FF' style={{paddingRight:20}}></AliIcon>
+                                    <AliIcon name='xiayige' size={20} color='#1890FF'  style={{paddingRight:20}}></AliIcon>
+                                    <AliIcon name='bofangliebiaoicon' size={20} color='#1890FF'  style={{paddingRight:10}}></AliIcon>
+                                </View>
+                                
+                            </Row>
+                        </Col>
+                    </Grid>
+                </Footer>
+            </Container>
+        
+        );
   }
 }
 
 
 
 const mapStateToProps = state =>({
-    home:state.home,
+    home : state.home,
+    learnNew : state.learnNew,
 });
 
 const mapDispatchToProps = {
     loadPlayWordList: VocaPlayAction.loadList,
     loadVocaGroups : VocaGroupAction.loadVocaGroups,
     loadVocaBooks : VocaLibAction.loadVocaBooks,
+    loadTaskLists : HomeAtion.loadTaskLists,
+    loadTask: LearnNewAction.loadTask,
 };
 
 

@@ -10,11 +10,15 @@ const styles = StyleSheet.create({
     backgroundColor:'#FDFDFD',
   }
 });
-
 // import HomePage from './src/page/HomePage';
 import AppNavigator from './src/navigator/AppNavigator';
-import AliIcon from './src/component/AliIcon';
+import configureStore from './src/dao/configureStorage';
+import Axios from './src/dao/Axios'
 
+
+//设置全局变量
+global.Storage = configureStore;
+global.Http = new Axios();
 
 /**
  *Created by Jacy on 19/05/11.
@@ -25,7 +29,6 @@ export default class App extends React.Component {
       <Provider store={store}>
         <MenuProvider>
           <Root>
-          
             <Container style={styles.container}>
               <AppNavigator/>
             </Container>

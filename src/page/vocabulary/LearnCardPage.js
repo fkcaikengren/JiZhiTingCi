@@ -3,9 +3,11 @@ import {StyleSheet, StatusBar, View, Text} from 'react-native';
 import { Container, Header, Content, Icon, Accordion, Body,Title, Grid, Col, Row,
     Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
+import {connect} from 'react-redux'
     
 
 import AliIcon from '../../component/AliIcon';
+import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
 
 
 const Dimensions = require('Dimensions');
@@ -55,9 +57,33 @@ const styles = StyleSheet.create({
 });
 
 
-export default class LearnCardPage extends Component {
+
+
+class LearnCardPage extends Component {
+
+
+    constructor(props){
+        super(props)
+    }
+
+
+    _nextWord = ()=>{
+        //跳到下一个单词
+        const {nextWord, finishCardLearn} = this.props
+        const {curIndex, task} = this.props.learnNew
+        if(curIndex < task.words.length-1){
+            nextWord();
+        }else{
+            //完成卡片学习
+            finishCardLearn();
+            //导航到测试页面
+            this.props.navigation.navigate('TestEnTran');
+        }
+    }
 
     render() {
+        const {task, curIndex} = this.props.learnNew
+        const {words} = task;
         return (
             <Container>
                 <StatusBar
@@ -78,7 +104,7 @@ export default class LearnCardPage extends Component {
                     alignItems:'center',}}>
                         <View style={[styles.center,]}>
                             <Progress.Bar progress={0.9} height={10} width={width-120} color='#F6B056' unfilledColor='#FFF' borderWidth={0} >
-                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>3/15</Text> 
+                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>{words?`${curIndex+1}/${(words.length)}`:'0/0'}</Text> 
                             </Progress.Bar>
                         </View>
                     </Body>
@@ -86,9 +112,11 @@ export default class LearnCardPage extends Component {
 
                 <Content padder style={{ backgroundColor:'#FDFDFD', }}>
                     <Grid>
+                        {/* 单词 */}
                         <Row>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#F6B056'}}>abolish</Text>
+                            <Text style={{fontSize:20, fontWeight:'500', color:'#F6B056'}}>{words?words[curIndex].word:''}</Text>
                         </Row>
+                        {/* 音标 */}
                         <Row style={[styles.row, ]}>
                             <View style={styles.row}>
                                 <Text style={styles.phonetic}>/əˈbɒlɪʃ/</Text>
@@ -99,6 +127,7 @@ export default class LearnCardPage extends Component {
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
                             </View>
                         </Row>
+                        {/* 英英释义 */}
                         <Row style={[styles.col, {marginTop:16}]}>
                             <View style={[styles.row]}>
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
@@ -108,6 +137,7 @@ export default class LearnCardPage extends Component {
                                 <Text style={styles.fonts}>to officially end a law, system etc, especially one that has existed for a long time.</Text>
                             </View>
                         </Row>
+                        {/* 例句 */}
                         <Row style={[styles.col, {marginTop:16,}]}>
                             <View style={[styles.row]}>
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
@@ -123,7 +153,7 @@ export default class LearnCardPage extends Component {
 
                 <Footer >
                     <FooterTab style={{backgroundColor:'#FDFDFD'}}>
-                        <Button >
+                        <Button onPress={this._nextWord}>
                             <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>下一个</Text>
                         </Button>
                         <Button onPress={()=>{
@@ -134,19 +164,19 @@ export default class LearnCardPage extends Component {
                     </FooterTab>
                 </Footer>
                 
-                    {/* <View style={{
-                        paddingHorizontal:20,
-                        paddingBottom:10,
-                    }}>
-                        <Button block style={[{backgroundColor:'#1890FF', marginBottom:10}] }>
-                            <Text>下一个</Text>
-                        </Button>
-                        <Button block style={[{backgroundColor:'#1890FF', }] } }>
-                            <Text>详情</Text>
-                        </Button>
-                    </View> */}
+                   
                 
             </Container>
         );
     }
 }
+const mapStateToProps = state =>({
+    learnNew : state.learnNew
+});
+
+const mapDispatchToProps = {
+    nextWord: LearnNewAction.nextWord,
+    finishCardLearn : LearnNewAction.finishCardLearn
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LearnCardPage);

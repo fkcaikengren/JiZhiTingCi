@@ -5,6 +5,7 @@ const home = require('./vocabulary/homeReducer');
 const vocaGroup = require('./vocabulary/vocaGroupReducer');
 const groupVoca = require('./vocabulary/groupVocaReducer');
 const vocaLib = require('./vocabulary/vocaLibReducer');
+const learnNew = require('./vocabulary/learnNewReducer');
 
 const reducers =  combineReducers({
     // nav:navReducer,
@@ -13,6 +14,7 @@ const reducers =  combineReducers({
     ...vocaGroup,
     ...groupVoca,
     ...vocaLib,
+    ...learnNew
 });
 
 export default reducers;

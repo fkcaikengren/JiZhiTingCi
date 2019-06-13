@@ -1,21 +1,18 @@
 import {  handleActions } from 'redux-actions';
-import * as homeAction from '../../action/vocabulary/homeAction';
+import * as ha from '../../action/vocabulary/homeAction';
 
 const defaultState ={
 
     //1 查看任务列表
-    taskLists:[
-        {
-            id:1,
-            name: '任务1'
-        },
-    ]
-    
+    taskList: [{}],
+    stickyHeaderIndices: [0]
 }
 
 
 export const home =  handleActions({
 
-    [homeAction.LOAD_TASK_LISTS] : (state, action) => ({ ...state, wordList:action.payload.taskLists }),
+    [ha.LOAD_TASK_LISTS] : (state, action) => (
+        { ...state, ...action.payload }
+    ),
 
 }, defaultState);

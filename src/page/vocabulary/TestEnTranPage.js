@@ -3,9 +3,11 @@ import {StyleSheet, StatusBar, Text, View,} from 'react-native';
 import { Container, Header, Content, Icon, Accordion,  Body,Title, Grid, Col, Row,
     Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
+import {connect} from 'react-redux'
     
 
-import AliIcon from '../../component/AliIcon';
+import AliIcon from '../../component/AliIcon'
+import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
 
 
 
@@ -57,8 +59,7 @@ const styles = StyleSheet.create({
     
 });
 
-
-export default class TestEnTranPage extends Component {
+class TestEnTranPage extends Component {
 
     render() {
         return (
@@ -137,3 +138,14 @@ export default class TestEnTranPage extends Component {
         );
     }
 }
+
+
+const mapStateToProps = state =>({
+    learnNew : state.learnNew
+});
+
+const mapDispatchToProps = {
+    nextWord: LearnNewAction.nextWord
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TestEnTranPage);
