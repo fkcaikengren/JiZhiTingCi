@@ -9,7 +9,8 @@ import * as VocaGroupAction from '../../action/vocabulary/vocaGroupAction'
 import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
 import * as HomeAtion from '../../action/vocabulary/homeAction'
 import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
-import {IN_PLAY , IN_CARD , IN_TEST1 , IN_RETEST1 , IN_TEST2, IN_RETEST2,} from '../../constant'
+import {IN_PLAY , IN_CARD , IN_TEST1 , IN_RETEST1 , IN_TEST2, IN_RETEST2, PLAY_LEARN,  PLAY_REVIEW} from '../../constant'
+
 
 import AliIcon from '../../component/AliIcon';
 import {turnLogoImg} from '../../image';
@@ -88,31 +89,38 @@ class HomePage extends Component {
         loadTaskLists();
     }
 
+
+    //根据任务处于哪一学习阶段，跳到指定页面
+    _startSelection(task){
+        const { loadLearnList} = this.props;
+        const {navigate} = this.props.navigation
+         //根据learnStatus 判断处于哪一学习阶段
+         if(task.learnStatus === IN_PLAY){          //单词轮播页面
+            //加载学习单词列表
+            loadLearnList()
+            navigate('VocaPlay', {playMode:PLAY_LEARN});
+        }else if(task.learnStatus === IN_CARD){  //跳转到卡片学习页面
+            navigate('LearnCard');
+        }else if(task.learnStatus === IN_TEST1){ //跳转到测试1 页面
+            navigate('TestEnTran');
+        }
+    }
+
+    //开始任务
     _start = (item)=>{
         const { loadTask} = this.props;
         const {task} = this.props.learnNew
          //默认task为{},若learnStatus不存在 首次加载任务数据
          if(!task.learnStatus){
-            //加载任务单词数据
             loadTask(item.taskOrder)
             .then(action =>{
-                //根据learnStatus 判断处于哪一学习阶段
-                if(action.payload.task.learnStatus === IN_CARD){  //跳转到卡片学习页面
-                    this.props.navigation.navigate('LearnCard');
-                }else if(action.payload.task.learnStatus === IN_TEST1){ //跳转到测试1 页面
-                    this.props.navigation.navigate('TestEnTran');
-                }
-                console.log('判断是否改变状态后，才返回');
-                console.log(task); //这个时候还没有dispatch, 当then结束后才dispatch
+                this._startSelection(action.payload.task);
+                
+                // console.log('判断是否改变状态后，才返回');
+                // console.log(task);          //这个时候还没有dispatch, 当then结束后才dispatch
             })
         }else{
-            
-            //根据learnStatus 判断处于哪一学习阶段
-            if(task.learnStatus === IN_CARD){  //跳转到卡片学习页面
-                this.props.navigation.navigate('LearnCard');
-            }else if(task.learnStatus === IN_TEST1){ //跳转到测试1 页面
-                this.props.navigation.navigate('TestEnTran');
-            }
+            this._startSelection(task);
         }
 
          
@@ -245,7 +253,7 @@ class HomePage extends Component {
 
     render() {
         const {taskList, stickyHeaderIndices} = this.props.home;
-        const {loadPlayWordList, loadTask} = this.props;
+        const {loadReviewList, loadTask} = this.props;
         
         return (
             <Container style={{ backgroundColor: '#FDFDFD',}}> 
@@ -281,9 +289,11 @@ class HomePage extends Component {
                     <Grid >
                     <TouchableOpacity
                         style={styles.touch}
-                        onPress={()=>{
-                            loadPlayWordList();
-                            this.props.navigation.navigate('VocaPlay');
+                        onPress={()=>{      //播放
+                            if(!this.props.vocaPlay.isDataLoaded){ //没有数据则加载
+                                loadReviewList();
+                            }
+                            this.props.navigation.navigate('VocaPlay',{playMode:PLAY_REVIEW});
                         }}
                         activeOpacity={0.7}
                             >
@@ -332,14 +342,17 @@ class HomePage extends Component {
 const mapStateToProps = state =>({
     home : state.home,
     learnNew : state.learnNew,
+    vocaPlay : state.vocaPlay,
 });
 
 const mapDispatchToProps = {
-    loadPlayWordList: VocaPlayAction.loadList,
+    loadReviewList: VocaPlayAction.loadReviewList,
+    loadLearnList : VocaPlayAction.loadLearnList,
     loadVocaGroups : VocaGroupAction.loadVocaGroups,
     loadVocaBooks : VocaLibAction.loadVocaBooks,
     loadTaskLists : HomeAtion.loadTaskLists,
     loadTask: LearnNewAction.loadTask,
+
 };
 
 

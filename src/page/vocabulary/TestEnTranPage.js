@@ -4,6 +4,7 @@ import { Container, Header, Content, Icon, Accordion,  Body,Title, Grid, Col, Ro
     Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
 import {connect} from 'react-redux'
+import {NavigationActions, StackActions} from 'react-navigation'
     
 
 import AliIcon from '../../component/AliIcon'
@@ -60,6 +61,23 @@ const styles = StyleSheet.create({
 });
 
 class TestEnTranPage extends Component {
+
+    constructor(props){
+        super(props);
+    }
+
+
+    //回到首页
+    _backToHome = ()=>{
+        // 抹掉stack，跳转到指定路由
+        const  resetAction = StackActions.reset({  
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'Home'}),
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
+    }
 
     render() {
         return (

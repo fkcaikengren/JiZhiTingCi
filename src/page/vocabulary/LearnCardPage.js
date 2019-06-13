@@ -4,7 +4,7 @@ import { Container, Header, Content, Icon, Accordion, Body,Title, Grid, Col, Row
     Button, Footer, FooterTab} from "native-base";
 import * as Progress from 'react-native-progress';
 import {connect} from 'react-redux'
-    
+import {NavigationActions, StackActions} from 'react-navigation'
 
 import AliIcon from '../../component/AliIcon';
 import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
@@ -64,8 +64,21 @@ class LearnCardPage extends Component {
 
     constructor(props){
         super(props)
+
     }
 
+
+    //回到首页
+    _backToHome = ()=>{
+        // 抹掉stack，跳转到指定路由
+        const  resetAction = StackActions.reset({  
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'Home'})
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
+    }
 
     _nextWord = ()=>{
         //跳到下一个单词
@@ -96,7 +109,7 @@ class LearnCardPage extends Component {
                 <Header translucent noLeft noShadow style={{backgroundColor:'#1890FF', elevation:0,}}>
                     <Button transparent style={{position:'absolute', left:10}}>
                         <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
-                            this.props.navigation.goBack();
+                            this._backToHome();
                         }}></AliIcon>
                     </Button>
                     <Body style={{flexDirection:'row',
@@ -171,7 +184,8 @@ class LearnCardPage extends Component {
     }
 }
 const mapStateToProps = state =>({
-    learnNew : state.learnNew
+    learnNew : state.learnNew,
+    vocaPlay : state.vocaPlay
 });
 
 const mapDispatchToProps = {

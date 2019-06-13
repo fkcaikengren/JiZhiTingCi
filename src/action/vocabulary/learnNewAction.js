@@ -33,10 +33,9 @@ export const {loadTask, nextWord,  finishPlay, finishCardLearn} = createActions(
             console.log(err)
         }
         
-        task.isSync =  false   //isSync属性：是否同步
-        task.learnStatus = IN_CARD  //目前所处的阶段[轮播，卡片，测试1，重测1，测试2，重测2]
-        
-        for(let w of task.words){ //testWrongNum 属性： 学习测试中的错误次数
+        task.isSync =  false        //isSync属性：是否同步
+        task.learnStatus = IN_PLAY  //目前所处的阶段[轮播，卡片，测试1，重测1，测试2，重测2]
+        for(let w of task.words){   //testWrongNum 属性： 学习测试中的错误次数
             w.testWrongNum = 0;
         }
         return {task}

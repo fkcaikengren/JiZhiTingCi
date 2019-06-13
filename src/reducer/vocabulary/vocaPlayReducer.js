@@ -4,11 +4,9 @@ import * as vpAction from '../../action/vocabulary/vocaPlayAction';
 const defaultState ={
 
     //1单词列表数据
-    wordList:[{
-        id: 0,
-        word: 'xx',
-        tran: 'adj. 坏的',
-    },],
+    wordList:[],
+    //数据是否加载成功，避免重复加载数据
+    isDataLoaded : false,
     //2当前正在播放的单词id
     curIndex:0,
     //3是否播放
@@ -40,17 +38,14 @@ const defaultState ={
     }],
     //8.2当前主题id
     themeId: 0,
-    //9.单词信息
-    wordInfo:{
-        word:'',
-        info:{},
-    }
+    
 }
 
 
 export const vocaPlay =  handleActions({
 
-    [vpAction.LOAD_LIST] : (state, action) => ({ ...state, wordList:action.payload.wordList }),
+    [vpAction.LOAD_REVIEW_LIST] : (state, action) => ({ ...state, ...action.payload }),  //加载复习单词列表
+    [vpAction.LOAD_LEARN_LIST] : (state, action) => ({ ...defaultState, ...action.payload}),             //加载新学单词列表
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
     [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
@@ -58,5 +53,5 @@ export const vocaPlay =  handleActions({
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
     [vpAction.CHANGE_CUR_INDEX] : (state, action) => ({ ...state, curIndex:action.payload.curIndex }),
     [vpAction.CHANGE_INTERVAL] : (state, action) => ({ ...state, interval:action.payload.interval }),
-    
+    [vpAction.RESET_PLAY_LIST] : (state, action) => ({ ...defaultState }),                  //重置播放列表
 }, defaultState);

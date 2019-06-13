@@ -92,14 +92,23 @@ const HomeStackNav = createStackNavigator(
   }
 );
 
+//导航进入第n(n>1)个页面时，隐藏导航的tabBar
 HomeStackNav.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   let swipeEnabled = true;
-  if (navigation.state.index > 0) {
-    tabBarVisible = false;
-    swipeEnabled = false;
-  }
+  let index = navigation.state.index;  //index是导航的栈下标 （表示当前路由下标）
 
+
+  let routes = navigation.state.routes;
+  if(index > 0 || routes[index].routeName === 'LearnCard' || routes[index].routeName === 'TestEnTran' 
+    || routes[index].routeName === 'TestSentence'){
+      tabBarVisible = false;
+      swipeEnabled = false;
+    }
+
+
+  console.log('navigation: ')
+  console.log(navigation)
   return {
     tabBarVisible,
     swipeEnabled,

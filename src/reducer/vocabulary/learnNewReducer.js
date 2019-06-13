@@ -19,6 +19,11 @@ export const learnNew = handleActions({
         { ...state, ...action.payload }
     ),
     [ln.NEXT_WORD]:(state, action) => ({ ...state, curIndex:state.curIndex+1 }),    //下一个单词
+    [ln.FINISH_PLAY]:(state, action) =>{     //完成单词轮播
+        //修改任务数据
+        let task = {...state.task, learnStatus:IN_CARD }
+        return {...state, task, curIndex:0}
+    },
     [ln.FINISH_CARD_LEARN]: (state, action) =>{     //完成卡片学习
         //修改任务数据
         let task = {...state.task, learnStatus:IN_TEST1 }

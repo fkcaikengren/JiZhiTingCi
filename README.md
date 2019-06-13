@@ -233,4 +233,45 @@ yarn add querystring
 
 
 
+
+
+### 安装realm
+
+```
+yarn add realm
+手动link
+```
+
+问题记录： 安装realm后，remotely debug会出现以下问题：
+
+```
+DOMException: Failed to execute 'send' on 'XMLHttpRequest'
+
+V:\VSCode\English\JiZhiTingCi\node_modules\react-native\Libraries\Core\ExceptionsManager.js:74 Realm failed to connect to the embedded debug server inside the app
+
+'Access to XMLHttpRequest at 'http://localhost:8081/create_session' from origin 'http://192.168.1.21:8081' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.'
+
+'Must first create RPC session with a valid host'
+
+'Unhandled JS Exception: Must first create RPC session with a valid host'
+```
+
+解决方法：
+
+```
+adb forward --list 【检查你的设备是否在名单里】
+emulator-5554 tcp:8083 tcp:8083
+然后参考链接，修改rpc.js
+```
+
+参考：<https://github.com/realm/realm-js/issues/578>
+
+参考：<https://github.com/realm/realm-js/issues/1034>
+
+
+
+
+
+
+
 # JiZhiTingCi

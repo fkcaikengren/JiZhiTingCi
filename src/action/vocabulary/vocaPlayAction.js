@@ -2,7 +2,13 @@
 
 import { createActions } from 'redux-actions';
 
-export const LOAD_LIST = 'LOAD_LIST';                //1下/上一首（播放指定列表）
+import {openVocaRealm} from '../../dao/createVocaRealm';
+
+
+
+export const LOAD_REVIEW_LIST = 'LOAD_REVIEW_LIST';     //1下/上一首（播放指定列表）
+export const LOAD_LEARN_LIST = 'LOAD_LEARN_LIST';     //1下/上一首（播放指定列表）
+
 export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';    //2 顺序播放单词
 export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';              //3暂停/播放
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';      //4控制时间间隔
@@ -14,65 +20,155 @@ export const CHANGE_THEME = 'CHANGE_THEME'          //9改变主题
 export const GET_WORD_INFO = 'GET_WORD_INFO';        //10查词
 export const PASS_WORD = 'PASS_WORD';              //11Pass单词
 
+export const RESET_PLAY_LIST = 'RESET_PLAY_LIST'
+
 
 //驼峰式命名，不可以更改(与变量名必须对应)
 
-export const {loadList,changePlayTimer,changeInterval, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex, } = createActions({
-    [LOAD_LIST]: () => {
-        const wordList = [{
+export const {loadReviewList, loadLearnList, changePlayTimer,changeInterval, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex,
+  resetPlayList } = createActions({
+
+    [LOAD_REVIEW_LIST]: () => {      //加载复习单词列表
+        let wordList = [{
             id: 0,
             word: 'accommodation',
-            tran: 'adj. 坏的',
+            tran: '',
           }, {
             id: 1,
             word: 'acute',
-            tran: 'adj. 好的',
+            tran: '',
           },{
             id: 2,
             word: 'calorie',
-            tran: 'adj. 流行的',
+            tran: '',
           }, {
             id: 3,
             word: 'decent',
-            tran: 'v. 谢谢',
+            tran: '',
           },{
             id: 4,
             word: 'ensue',
-            tran: 'n. 吉他',
+            tran: '',
           }, {
             id: 5,
             word: 'feeble',
-            tran: 'n. 苹果',
+            tran: '',
           },{
             id: 6,
             word: 'harmony',
-            tran: 'adj. 死亡的',
+            tran: '',
           }, {
             id: 7,
             word: 'hostile',
-            tran: 'v. xx',
+            tran: '',
           },{
             id: 8,
             word: 'limp',
-            tran: 'n. 其他',
+            tran: '',
           },{
             id: 9,
             word: 'maintain',
-            tran: 'adj. 哈哈',
+            tran: '',
           }, {
             id: 10,
             word: 'notion',
-            tran: 'v. 嘻嘻',
+            tran: '',
           },{
             id: 11,
             word: 'poverty',
-            tran: 'v. 嘻嘻',
+            tran: '',
           },{
             id: 12,
             word: 'premier',
-            tran: 'v. 嘻嘻',
+            tran: '',
           }];
-          return {wordList};
+
+          //realm查询单词解释
+          
+          openVocaRealm((realm)=>{
+            for(let w of wordList){
+              let wordInfos = realm.objects('WordInfo').filtered('word="'+w.word+'"'); //数组
+              let trans = '';
+              for(let info of wordInfos){
+                trans = `${trans} ${info.property}. ${info.tran}；`
+              }
+              w.tran = trans;
+            }
+          });
+          
+          console.log(wordList)
+          return {wordList,  isDataLoaded:true};
+    },
+    [LOAD_LEARN_LIST] : ()=>{ //加载新学单词列表
+      let wordList = [{
+        id: 0,
+        word: 'accommodation',
+        tran: '',
+      }, {
+        id: 1,
+        word: 'acute',
+        tran: '',
+      },{
+        id: 2,
+        word: 'calorie',
+        tran: '',
+      }, {
+        id: 3,
+        word: 'decent',
+        tran: '',
+      },{
+        id: 4,
+        word: 'ensue',
+        tran: '',
+      }, {
+        id: 5,
+        word: 'feeble',
+        tran: '',
+      },{
+        id: 6,
+        word: 'harmony',
+        tran: '',
+      }, {
+        id: 7,
+        word: 'hostile',
+        tran: '',
+      },{
+        id: 8,
+        word: 'limp',
+        tran: '',
+      },{
+        id: 9,
+        word: 'maintain',
+        tran: '',
+      }, {
+        id: 10,
+        word: 'notion',
+        tran: '',
+      },{
+        id: 11,
+        word: 'poverty',
+        tran: '',
+      },{
+        id: 12,
+        word: 'premier',
+        tran: '',
+      }];
+
+      //realm查询单词解释
+      
+      openVocaRealm((realm)=>{
+        for(let w of wordList){
+          let wordInfos = realm.objects('WordInfo').filtered('word="'+w.word+'"'); //数组
+          let trans = '';
+          for(let info of wordInfos){
+            trans = `${trans} ${info.property}. ${info.tran}；`
+          }
+          w.tran = trans;
+        }
+      });
+      
+      console.log(wordList)
+      return {wordList,  isDataLoaded:true};
     },
     [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{
       return {autoPlayTimer};
@@ -105,6 +201,12 @@ export const {loadList,changePlayTimer,changeInterval, toggleWord, toggleTran,lo
       console.info(`当前单词index`);
       return { curIndex };
     },
+
+
+    //重置播放列表(清空)
+    [RESET_PLAY_LIST]: ()=>{
+
+    }
     
    
   });
