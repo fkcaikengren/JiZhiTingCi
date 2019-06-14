@@ -44,7 +44,7 @@ const defaultState ={
 
 export const vocaPlay =  handleActions({
 
-    [vpAction.LOAD_REVIEW_LIST] : (state, action) => ({ ...state, ...action.payload }),  //加载复习单词列表
+    [vpAction.LOAD_REVIEW_LIST] : (state, action) => ({ ...state, ...action.payload }),         //加载复习单词列表
     [vpAction.LOAD_LEARN_LIST] : (state, action) => ({ ...defaultState, ...action.payload}),             //加载新学单词列表
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),

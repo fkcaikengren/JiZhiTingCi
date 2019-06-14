@@ -3,7 +3,7 @@ import {Platform, StatusBar, ScrollView, StyleSheet,Text, View} from 'react-nati
 import { createAppContainer, createMaterialTopTabNavigator, Button } from 'react-navigation';
 
 
-import DetailDictPage from '../page/vocabulary/DetailDictPage';
+import DetailDictPage from '../component/DetailDictPage';
 import DetailRootPage from '../page/vocabulary/DetailRootPage';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');

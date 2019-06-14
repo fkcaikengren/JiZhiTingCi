@@ -8,6 +8,7 @@ import {NavigationActions, StackActions} from 'react-navigation'
 
 import AliIcon from '../../component/AliIcon';
 import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
+import * as VocaDao from '../../dao/vocabulary/VocaDao'
 
 
 const Dimensions = require('Dimensions');
@@ -67,6 +68,9 @@ class LearnCardPage extends Component {
 
     }
 
+    componentDidMount(){
+        
+    }
 
     //回到首页
     _backToHome = ()=>{
@@ -93,6 +97,17 @@ class LearnCardPage extends Component {
             this.props.navigation.navigate('TestEnTran');
         }
     }
+
+
+    _getWordDetail(){
+
+    }
+
+    _getWordRoot(){
+
+    }
+
+
 
     render() {
         const {task, curIndex} = this.props.learnNew
@@ -132,33 +147,47 @@ class LearnCardPage extends Component {
                         {/* 音标 */}
                         <Row style={[styles.row, ]}>
                             <View style={styles.row}>
-                                <Text style={styles.phonetic}>/əˈbɒlɪʃ/</Text>
+                                <Text style={styles.phonetic}>{words[curIndex].enPhonetic}</Text>
                                 <AliIcon name='shengyin' size={26} color='#E59AAA'></AliIcon>
                             </View>
                             <View style={[{marginLeft:20}, styles.row]}>
-                                <Text style={styles.phonetic}>/əˈbɑːlɪʃ/</Text>
+                                <Text style={styles.phonetic}>{words[curIndex].amPhonetic}</Text>
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
                             </View>
                         </Row>
                         {/* 英英释义 */}
                         <Row style={[styles.col, {marginTop:16}]}>
                             <View style={[styles.row]}>
-                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
-                                <Text>英英释义</Text>
+                                <Text style={{fontSize:18,color:'#303030'}}>
+                                    {words[curIndex].trans[0] && `${words[curIndex].trans[0].property}. `}
+                                </Text>
+                                <Text>| 英英释义</Text>
                             </View>
-                            <View style={{flex:1, backgroundColor:'#C0E5FF', padding:4, borderRadius:4,}}>
-                                <Text style={styles.fonts}>to officially end a law, system etc, especially one that has existed for a long time.</Text>
+                            <View style={{width:'100%', backgroundColor:'#C0E5FF', padding:4, borderRadius:4,}}>
+                                <Text style={styles.fonts}>{words[curIndex].def}</Text>
                             </View>
                         </Row>
                         {/* 例句 */}
-                        <Row style={[styles.col, {marginTop:16,}]}>
+                        <Row style={[styles.col, {marginTop:16,} ]}>
                             <View style={[styles.row]}>
                                 <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
                                 <Text>例句</Text>
                             </View>
-                            <View style={{flex:1, backgroundColor:'#C0E5FF', padding:5, borderRadius:4,}}>
-                                <Text style={styles.fonts}>Slavery was abolished in the US in the 19th century.</Text>
+                            <View style={{width:'100%', backgroundColor:'#C0E5FF', padding:5, borderRadius:4,}}>
+                                <Text style={styles.fonts}>{words[curIndex].sentence}</Text>
                             </View>
+                        </Row>
+
+                        <Row style={[styles.col, {marginTop:16,}]}>
+                            {words[curIndex].trans &&
+                                words[curIndex].trans.map((item, index)=>(
+                                    <View key={index} style={{flex:1, padding:5, borderRadius:4,}}>
+                                        <Text numberOfLines={1} style={styles.fonts}>{`${item.property}. ${item.tran}`}</Text>
+                                    </View>
+                                ))
+
+                            }
+                            
                         </Row>
                         
                     </Grid>
@@ -185,12 +214,11 @@ class LearnCardPage extends Component {
 }
 const mapStateToProps = state =>({
     learnNew : state.learnNew,
-    vocaPlay : state.vocaPlay
 });
 
 const mapDispatchToProps = {
     nextWord: LearnNewAction.nextWord,
-    finishCardLearn : LearnNewAction.finishCardLearn
+    finishCardLearn : LearnNewAction.finishCardLearn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LearnCardPage);

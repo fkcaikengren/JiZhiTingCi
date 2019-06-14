@@ -9,6 +9,7 @@ const Sound = require('react-native-sound');
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import * as vocaPlayAction from '../../action/vocabulary/vocaPlayAction';
+import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
 import {PLAY_LEARN,  PLAY_REVIEW } from '../../constant'
 import AliIcon from '../../component/AliIcon';
 const Dimensions = require('Dimensions');
@@ -179,7 +180,7 @@ class VocaPlayPage extends React.Component {
      */
     _autoplay = (index) => {
         const { wordList,curIndex, autoPlayTimer} = this.props.vocaPlay;
-        const {changePlayTimer} = this.props;
+        const {changePlayTimer, finishPlay} = this.props;
 
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated:true, index, viewPosition:0.5 };
@@ -233,6 +234,8 @@ class VocaPlayPage extends React.Component {
                     ]
                 });
                 this.props.navigation.dispatch(resetAction);
+                //标记完成轮播学习
+                finishPlay();
             }
         }
     };
@@ -522,6 +525,7 @@ const mapDispatchToProps = {
     changeTheme : vocaPlayAction.changeTheme,
     changeInterval : vocaPlayAction.changeInterval,
     resetPlayList : vocaPlayAction.resetPlayList,
+    finishPlay : LearnNewAction.finishPlay
     
 };
 

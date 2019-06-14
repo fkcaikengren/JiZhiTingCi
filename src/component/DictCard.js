@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text} from 'react-native';
-
+import {PropTypes} from 'prop-types';
 import AliIcon from './AliIcon';
 
 const styles = StyleSheet.create({
@@ -58,11 +58,13 @@ const styles = StyleSheet.create({
 export default class DictCard extends React.Component {
     constructor(props){
         super(props);
-        this.state={}
     }
 
 
     render(){
+        const {defInfo, order} = this.props
+        console.log('defInfo:');
+        console.log(defInfo);
         return(
             <View style={{
             flexDirection: 'column',
@@ -75,36 +77,55 @@ export default class DictCard extends React.Component {
                 {/* 卡片上半部分 */}
                 <View style={styles.topView}>
                     
-                    <Text style={styles.fonts}><Text style={{color:'#FF9800'}}>1. </Text>to leave someone, especially someone you are responsible for </Text>
+                    <Text style={styles.fonts}><Text style={{color:'#FF9800'}}>{order}. </Text>{defInfo.def}</Text>
                 </View>
 
                 {/* 卡片下半部分 */}
                 <View style={styles.bottomView}>
                     <View style={styles.row}>
                         <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>义</Text></View>
-                        <Text style={styles.keyFonts}>抛弃，遗弃〔某人〕</Text>
+                        <Text style={styles.keyFonts}>{defInfo.defTran}</Text>
                     </View>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>同</Text></View>
-                        <Text style={styles.keyFonts}>leave</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>短</Text></View>
-                        <Text style={styles.keyFonts}></Text>
-                    </View>
-
-                        
-                    <Text style={[styles.fonts, styles.sen]}>
-                        <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
-                        We had to abandon the car and walk the rest of the way.
-                    </Text>
+                    {defInfo.syn !== undefined && defInfo.syn !=='' && 
+                        <View style={styles.row}>
+                            <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>同</Text></View>
+                            <Text style={styles.keyFonts}>{defInfo.syn}</Text>
+                        </View>
+                    }
+                    {defInfo.phrase!==undefined && defInfo.phrase!=='' &&
+                        <View style={styles.row}>
+                            <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>短</Text></View>
+                            <Text style={styles.keyFonts}>{defInfo.phrase}</Text>
+                        </View>
+                    }
                     
-                    <Text style={[styles.fonts, styles.sen]}>
-                        <AliIcon name='shengyin' size={26} color='#3F51B5' ></AliIcon>
-                        Fearing further attacks, most of the population had abandoned the city.
-                    </Text>
+
+
+                    {defInfo.sentences!==undefined &&
+                        defInfo.sentences.map((senInfo, index)=>{
+                            return (
+                                <Text key={index} style={[styles.fonts, styles.sen]}>
+                                    <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                                    {senInfo.sentence}
+                                </Text>
+                            )
+                        })
+                    }
+                
                 </View>
             </View>
         );
+    }
+
+
+
+    static PropTypes = {
+        defInfo:PropTypes.object.isRequired,
+        order:PropTypes.string.isRequired,
+    }
+
+    static defaultProps = {
+        defInfo:{},
+        order:1
     }
 }

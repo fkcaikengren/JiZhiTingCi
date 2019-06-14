@@ -9,8 +9,10 @@ const defaultState = {
     },
     //单词进度, //跳到下一个
     curIndex:0,
-
-    
+    options:[],     //选项数组（存放单词下标）
+    answerIndex:-1,  //答案下标
+    selectedIndex:-1, //选择的下标
+    selectedStatus:0, //选择的状态 [0:待选择，1:正确，2:错误]
 }
 
 
@@ -28,6 +30,15 @@ export const learnNew = handleActions({
         //修改任务数据
         let task = {...state.task, learnStatus:IN_TEST1 }
         return {...state, task, curIndex:0}
+    },
+    [ln.CHANGE_OPTIONS]: (state, action) =>{     //完成卡片学习
+        return {...state, ...action.payload}
+    },
+    [ln.SELECT_ANSWER]:(state, action) =>{     //选择答案
+        return {...state, ...action.payload}
+    },
+    [ln.RESET]:(state, action) =>{     //选择答案
+        return defaultState
     }
         
 

@@ -42,7 +42,7 @@ export const saveVocaTasks = (vocaTasks)=>{
                 passed: false,
                 wrongNum: 0
             },{
-                word: "bolish",
+                word: "abolish",
                 passed: false,
                 wrongNum: 0
             },{
@@ -74,27 +74,27 @@ export const saveVocaTasks = (vocaTasks)=>{
             playDuration: 180,
             vocaTaskDate: 1559378082410,
             words: [{
-                word: "abandon",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "abort",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "pick",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "dish",
-                passed: false,
-                wrongNum: 0
-            },{
+            //     word: "abandon",
+            //     passed: false,
+            //     wrongNum: 0
+            // },{
+            //     word: "abort",
+            //     passed: false,
+            //     wrongNum: 0
+            // },{
+            //     word: "pick",
+            //     passed: false,
+            //     wrongNum: 0
+            // },{
+            //     word: "dish",
+            //     passed: false,
+            //     wrongNum: 0
+            // },{
                 word: "miss",
                 passed: false,
                 wrongNum: 0
             },{
-                word: "bolish",
+                word: "abolish",
                 passed: false,
                 wrongNum: 0
             },{
