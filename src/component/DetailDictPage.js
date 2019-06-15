@@ -3,7 +3,10 @@ import {StyleSheet, View, Text} from 'react-native';
 import { Container, Header, Content, Grid, Row, Col, } from 'native-base';
 import {getWordDetail} from '../dao/vocabulary/VocaDao'
 import {PropTypes} from 'prop-types';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
+
+import VocaGroupDao from '../dao/vocabulary/VocaGroupDao'
 import DictCard from './DictCard';
 import AliIcon from './AliIcon';
 const Dimensions = require('Dimensions');
@@ -20,7 +23,7 @@ const styles = StyleSheet.create({
       flexDirection:'column',
       justifyContent:'center',
       alignItems:'center',
-      backgroundColor:'green',
+      backgroundColor:'#1890FF',
       borderRadius:2,
       marginRight: 10,
   },
@@ -42,33 +45,53 @@ export default class DetailDictPage extends Component {
   constructor(props){
     super(props);
     this.state = {wordDict:{}}
+    this.dao = new VocaGroupDao()
   }
 
   componentDidMount(){
     getWordDetail(this.props.word)
     .then(wordDict =>{
-        this.setState({wordDict:wordDict})
+        this.setState({wordDict:wordDict});
+        //打开数据库
+        this.dao.open()
     })
     .catch(err=>{
       console.log("DetailDictPage: 读取单词信息失败");
       console.log(err)
     })
-    
   }
-    
+  
+  componentWillUnmount(){
+    alert('detailDictPage out, close realm');
+    this.dao.close();
+  }
+
   render() {
     const {word, properties} = this.state.wordDict
     return (
       <Container style={styles.container}>
         <Content padder>
+          {/* 单词 */}
           <View style={styles.row}>
             <Text style={{fontSize:18,fontWeight:'500',color:'#303030'}}>{word?word:''}</Text>
+            <Ionicons name='ios-star' color='#909090' size={30} onPress={()=>{
+              alert('add')
+              let groupWord = {
+                word: word,
+                enPhonetic: properties?properties[0].enPhonetic:'',
+                enPhoneticUrl: '',
+                amPhonetic: properties?properties[0].amPhonetic:'',
+                amPhoneticUrl: '',
+                tran: 'xxxxxxx'
+              }
+              this.dao.addWordToDefault(groupWord)
+            }}/>
           </View>
           {properties &&
             properties.map((propInfo , index)=>{
               return (
-
-                <View key={index}>
+                // 词性
+                <View key={index} >
                   <Grid>
                     <Row  style={{marginVertical:16}}>
                       <View style={[styles.iconText, {marginLeft:5}]}>
@@ -89,6 +112,7 @@ export default class DetailDictPage extends Component {
                   {propInfo.defs &&
                     propInfo.defs.map((defInfo, index)=>{
                       return (
+                        //释义例句卡片
                         <DictCard key={index} defInfo={defInfo} order={index+1}/>
                       )
                     })
@@ -108,7 +132,7 @@ export default class DetailDictPage extends Component {
 
 
 
-  static PropTypes = {
+  static propTypes = {
       
       word: PropTypes.string.isRquired,
     

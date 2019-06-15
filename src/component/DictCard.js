@@ -72,6 +72,7 @@ export default class DictCard extends React.Component {
             alignItems: 'center',
             borderRadius: 5,
             backgroundColor: '#FDFDFD',
+            marginBottom:20
             }}>
 
                 {/* 卡片上半部分 */}
@@ -119,7 +120,7 @@ export default class DictCard extends React.Component {
 
 
 
-    static PropTypes = {
+    static propTypes = {
         defInfo:PropTypes.object.isRequired,
         order:PropTypes.string.isRequired,
     }

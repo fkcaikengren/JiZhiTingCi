@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import {TouchableOpacity, FlatList, View, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, TextInput,StatusBar ,FlatList, View, Text, StyleSheet} from 'react-native';
 import { Container, Header, Input,Button, Icon, Content, Item } from 'native-base';
 
+
+import {searchWord} from '../../dao/vocabulary/VocaDao'
+import DetailDictPage from '../../component/DetailDictPage';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
+const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+const StatusBarHeight = StatusBar.currentHeight;
 
 const TestData = [
   {word:'abandon', phonetic:'/xx/', tran:'v. 抛弃；放弃；n. 放纵'},
@@ -12,6 +17,21 @@ const TestData = [
 
 
 const styles = StyleSheet.create({
+  row:{
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+  },  
+  item:{
+    width:width,
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'flex-start',
+    padding:8,
+    borderBottomWidth:1,
+    borderColor:'#EFEFEF'
+    
+  },
   item1: {
     flexBasis:6, 
     flexGrow:6, 
@@ -27,7 +47,11 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
-  }
+  },
+  contentText:{
+    paddingLeft:5
+  },
+
 });
 
 
@@ -37,23 +61,25 @@ export default class VocaSearchPage extends Component {
     super(props);
     this.state = {
       searchText: '',
+      data:[],
+      searchWord: '',
     }
   }
+
+
+  _keyExtractor = (item, index) => item.word;
   
   
   _renderItem = ({item})=>{
-    return <TouchableOpacity key={item.word} onPress={()=>{alert('单词');}}>
-      <View  style={{
-        width:width,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'flex-start',
-      }}>
-          <View>
-              <Text>{item.word}</Text>
-              <Text>{item.phonetic}</Text>
+    return <TouchableOpacity  onPress={()=>{
+      this.setState({searchWord:item.word})
+    }}>
+      <View  style={styles.item}>
+          <View style={styles.row}>
+              <Text style={[styles.contentText,{fontSize:16,color:'#404040'}]}>{item.word}</Text>
+              <Text style={[styles.contentText,{fontSize:12,color:'#999999'}]}>{item.enPhonetic}</Text>
           </View>
-          <Text>{item.tran}</Text>
+          <Text numberOfLines={1} style={[styles.contentText,{fontSize:12,color:'#606060'}]}>{item.trans}</Text>
       </View>
     </TouchableOpacity>
     
@@ -65,11 +91,34 @@ export default class VocaSearchPage extends Component {
     alert(this.state.searchText);
   }
 
+  _changeText = (searchText)=>{
+    searchWord(searchText)
+    .then(data=>{
+      console.log(data)
+      this.setState({searchText, data})
+    })
+    .catch(err=>{
+      console.log('VocaSearchPage: 查词失败')
+    })
+    
+    
+  }
+
   _clearSear = ()=>{
     this.setState({
       searchText:'',
+      searchWord:''
     });
+    this._inputRef._root.focus()
   }
+
+
+  _onFocus = (e)=>{
+    if(this.state.searchWord !== ''){
+      this.setState({searchWord:''})
+    }
+  }
+
   render() {
 
     return (
@@ -79,7 +128,13 @@ export default class VocaSearchPage extends Component {
         <Header searchBar rounded style={{backgroundColor:'#1890FF'}}>
                     <Item style={styles.item1}>
                           <Icon name="ios-search" />
-                          <Input placeholder="请输入要查询的单词或中文" value={this.state.searchText}  onChangeText={(text) => this.setState({searchText:text})} onSubmitEditing={()=>this._search()}/>
+                          <Input autoFocus
+                          ref={ref=>this._inputRef = ref}
+                          maxLength={50}
+                          placeholder="请输入要查询的单词或中文"
+                          value={this.state.searchText}
+                          onChangeText={this._changeText} 
+                          onFocus={this._onFocus}/>
                           <Icon name="ios-close-circle" style={{fontSize:18}} onPress={()=>{this._clearSear()}}/>
                     </Item>
                     <Item  style={[styles.c_center,styles.item2]}>
@@ -88,17 +143,25 @@ export default class VocaSearchPage extends Component {
                           }}>取消</Text>
                     </Item>
                     </Header>
-        <Content>
-          <FlatList
-              //数据源(数组)
-              data={TestData}
-              //渲染列表数据
-              renderItem={this._renderItem}
-              //分割线
-              ItemSeparatorComponent={()=><View style={{borderBottomWidth:1,borderBottomColor:'#A8A8A8'}}></View>}
-              
-          />
-        </Content>
+
+                    
+          {this.state.searchWord === ''&&
+            <FlatList
+                ref= {ref=>this._listRef = ref}
+                //数据源(数组)
+                data={this.state.data}
+                //渲染列表数据
+                renderItem={this._renderItem}
+                keyExtractor={this._keyExtractor}
+            />
+          }
+
+          {this.state.searchWord !== ''&&
+            <DetailDictPage word={this.state.searchWord}/>
+          }
+        
+
+       
       </Container>
     );
   }

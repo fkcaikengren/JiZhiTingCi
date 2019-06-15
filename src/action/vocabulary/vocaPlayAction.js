@@ -2,7 +2,7 @@
 
 import { createActions } from 'redux-actions';
 
-import {openVocaRealm} from '../../dao/createVocaRealm';
+
 
 
 
@@ -85,7 +85,8 @@ export const {loadReviewList, loadLearnList, changePlayTimer,changeInterval, tog
 
           //realm查询单词解释
           
-          openVocaRealm((realm)=>{
+          Realm.open({path: 'voca.realm', readOnly:true})
+          .then((realm)=>{
             for(let w of wordList){
               let wordInfos = realm.objects('WordInfo').filtered('word="'+w.word+'"'); //数组
               let trans = '';
@@ -94,7 +95,8 @@ export const {loadReviewList, loadLearnList, changePlayTimer,changeInterval, tog
               }
               w.tran = trans;
             }
-          });
+          })
+          
           
           console.log(wordList)
           return {wordList,  isDataLoaded:true};

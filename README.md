@@ -270,6 +270,12 @@ emulator-5554 tcp:8083 tcp:8083
 
 
 
+### 安装uuid（为realm生成uuid主键）
+
+```
+yarn add uuid
+```
+
 
 
 

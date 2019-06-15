@@ -3,16 +3,15 @@ import * as gv from '../../action/vocabulary/groupVocaAction';
 
 const defaultState ={
 
-    // 生词表
-    groupName:'',
-    groupVocas:[],
+    // 生词列表
+    sectionsWords:[],
 }
 
 
 export const groupVoca =  handleActions({
 
    
-    [gv.LOAD_GROUP_VOCAS]: (state, action)=>{             //加载生词本的所有生词
-        return {...state, groupName:action.payload.groupName, groupVocas:action.payload.groupVocas}
+    [gv.LOAD_SECTIONS_WORDS]: (state, action)=>{             //加载生词本的所有生词
+        return {...state, ...action.payload}
     }
 }, defaultState);

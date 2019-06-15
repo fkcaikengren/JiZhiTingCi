@@ -5,7 +5,6 @@ import { Container, Header,Content,  Grid, Col, Row,
 import * as Progress from 'react-native-progress';
 import {connect} from 'react-redux';
 import * as VocaPlayAction from '../../action/vocabulary/vocaPlayAction';
-import * as VocaGroupAction from '../../action/vocabulary/vocaGroupAction'
 import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
 import * as HomeAtion from '../../action/vocabulary/homeAction'
 import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
@@ -128,7 +127,7 @@ class HomePage extends Component {
     }
 
     _renderItem = ({ item, index }) => {
-        const {loadVocaGroups, loadVocaBooks, loadTask} = this.props;
+        const { loadVocaBooks, loadTask} = this.props;
 
         let bodyStyle = {};
         let buttonContent = {color:'#1890FF', fontSize:14, fontWeight:'500'};
@@ -182,7 +181,7 @@ class HomePage extends Component {
                         </Col>
                         {/* 生词本 */}
                         <Col style={[styles.c_center,{width:width/4}]} onPress={()=>{
-                                loadVocaGroups();
+                                
                                 this.props.navigation.navigate('VocaGroup');
                             }}>
                             <AliIcon name='edit' size={26} color='#66CAA3'></AliIcon>
@@ -348,7 +347,6 @@ const mapStateToProps = state =>({
 const mapDispatchToProps = {
     loadReviewList: VocaPlayAction.loadReviewList,
     loadLearnList : VocaPlayAction.loadLearnList,
-    loadVocaGroups : VocaGroupAction.loadVocaGroups,
     loadVocaBooks : VocaLibAction.loadVocaBooks,
     loadTaskLists : HomeAtion.loadTaskLists,
     loadTask: LearnNewAction.loadTask,

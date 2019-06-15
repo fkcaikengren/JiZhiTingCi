@@ -2,6 +2,54 @@
 const Realm = require('realm');
 
 
+
+export const searchWord = (searchText)=>{
+    return new Promise((resolve, reject)=>{
+       Realm.open({path:'voca.realm'})
+       .then(realm=>{
+            //不区分大小写，查询以searchText开头的
+            let wordObjs = realm.objects('WordInfo').filtered('word BEGINSWITH "'+searchText+'" AND inflection_type = "prototype"'); 
+            let data = []
+            let d = null
+            let preWord = {}
+            //放到集合里，如果和上一个重复，对上一个进行叠加产生一个新的对象
+            for(let wo of wordObjs){
+                let myTran = `${wo.property}. ${wo.tran}`
+                if(wo.word === preWord){
+                    //删除上一个
+                    let pre = data.pop()
+                    d = {
+                        word: wo.word,
+                        enPhonetic: wo.en_phonetic,
+                        trans: wo.tran?`${pre.trans}；${myTran}`:'',
+                    }
+                }else{
+                    d = {
+                        word: wo.word,
+                        enPhonetic: wo.en_phonetic,
+                        trans: wo.tran?myTran:'',
+                    }
+                }
+                preWord = wo.word
+                data.push(d);
+
+                if(data.length >= 8){
+                    console.log('break at 8')
+                    break;
+                }
+            }
+            return resolve(data);
+       })
+       .catch(err=>{
+           console.log('查询单词失败')
+           console.log(err)
+           return reject(err)
+       })
+
+
+    })
+}
+
 export const getWordDetail = (word)=>{
     return new Promise((resolve, reject) =>{
 

@@ -4,10 +4,11 @@ import { Container, Header, Content, Body, Item, Input,
     Button, Footer, FooterTab} from "native-base";
 import {connect} from 'react-redux';
 import Modal from 'react-native-modalbox';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import AliIcon from '../../component/AliIcon';
 import * as VocaGroupAction from '../../action/vocabulary/vocaGroupAction';
-import * as GroupVocaAction from '../../action/vocabulary/groupVocaAction';
+import VocaGroupDao from '../../dao/vocabulary/VocaGroupDao'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -92,7 +93,26 @@ class VocaGroupPage extends Component {
             addName: '',
             updateName: '',
             selectedName: '',
+            refresh: true, //用来刷新
           };
+        this.dao = new VocaGroupDao();
+    }
+
+    componentDidMount(){
+        const {loadVocaGroups} = this.props
+        //打开数据库
+        this.dao.open()
+        .then(()=>{
+            let groups = this.dao.getAllGroups();
+            loadVocaGroups(groups)
+        })
+       
+        
+    }
+
+    componentWillUnmount(){
+        alert('vocaGroup out, close realm');
+        this.dao.close()
     }
 
     //打开添加弹框
@@ -177,15 +197,17 @@ class VocaGroupPage extends Component {
         }else if(isExist){
             alert('重名了，添加失败')
         }else{
-            addVocaGroup(0+this.state.addName);
+            // addVocaGroup(0+this.state.addName);
+            
+            alert('添加成功:'+this.state.addName)
+            this.dao.addGroup(0+this.state.addName)
             this.setState({addName:''});
-            alert('添加成功')
+            
         }
    }
 
    //修改生词本
    _updateVocaGroup = () =>{
-        const {updateGroupName} = this.props
         this._closeUpdateModal()
         let isExist = this._isNameExist(this.state.updateName);
         
@@ -195,7 +217,7 @@ class VocaGroupPage extends Component {
         }else if(isExist){
             alert('重名了，修改失败')
         }else{
-            updateGroupName(this.state.selectedName, 0+this.state.updateName);
+            this.dao.updateGroupName(this.state.selectedName, 0+this.state.updateName);
             this.setState({updateName:'',selectedName:''})
             alert('修改成功')
         }
@@ -203,9 +225,9 @@ class VocaGroupPage extends Component {
 
     //删除生词本
     _deleteVocaGroup = (deleteName) =>{
-        const {deleteGroup} = this.props
-        deleteGroup(deleteName);
+        this.dao.deleteGroup(deleteName)
         alert('删除成功');
+        this.setState({refresh:!this.state.refresh})
     }
 
 
@@ -213,7 +235,8 @@ class VocaGroupPage extends Component {
     render() {
 
         const {vocaGroups, } = this.props.vocaGroup
-        const {loadGroupVocas} = this.props
+        console.log('page:');
+        console.log(vocaGroups)
         return (
             <Container>
                 <StatusBar
@@ -254,8 +277,10 @@ class VocaGroupPage extends Component {
                     return (
                         <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={()=>{
                             //加载生词
-                            loadGroupVocas(item.groupName);
-                            this.props.navigation.navigate('GroupVoca');
+                            this.props.navigation.navigate('GroupVoca',{
+                                dao:this.dao, 
+                                group:item
+                            });
                                 
                         }}>
                             <View style={styles.groupItem}>
@@ -271,11 +296,18 @@ class VocaGroupPage extends Component {
                                 {this.state.inEdit &&
                                     <View style={[styles.row, {flex:1}]}>
                                         <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
+                                            {/* 设置为默认生词本 */}
+                                            <Ionicons name='ios-star' color={item.isDefault?'#EE4':'#909090'} size={30} onPress={()=>{
+                                                alert('设置为默认的');
+                                                this.dao.updateToDefault(0+groupName)
+                                                }}/>
+                                            {/* 修改 */}
                                             <TouchableNativeFeedback onPress={()=>{
                                                 this.setState({isUpdateModalOpen:true,selectedName:item.groupName})
                                             }}>
                                                 <Text style={{fontSize:14, color:'#1890FF', marginRight:10}}>修改名称</Text>
                                             </TouchableNativeFeedback>
+                                            {/* 删除 */}
                                             <TouchableNativeFeedback onPress={()=>{
                                                 Alert.alert(
                                                     '删除生词本',
@@ -331,10 +363,7 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
-    addVocaGroup: VocaGroupAction.addVocaGroup,
-    updateGroupName : VocaGroupAction.updateGroupName, 
-    deleteGroup : VocaGroupAction.deleteGroup,
-    loadGroupVocas : GroupVocaAction.loadGroupVocas,
+    loadVocaGroups : VocaGroupAction.loadVocaGroups,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaGroupPage);

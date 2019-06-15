@@ -3,9 +3,12 @@ import {StyleSheet, StatusBar, View, Text, FlatList} from 'react-native';
 import { Container, Header, Content, Icon, Accordion,Body,Title,
     Grid, Col, Button} from "native-base";
 import {connect} from 'react-redux'
+
+
+
+
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
-
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -73,16 +76,14 @@ class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
         this.flatData = []
-        this.sections = []
+        this.sideSections = []
         this.sectionIndex = []
         this.stickyHeaderIndices  = []
     }
 
     componentDidMount(){
-        //不要把数据处理放在这里
-        //分析: 由于navigation没有让redux管理，在redux处理异步数据时，navigation已经调到目标页面，但数据还未加载
-        //      componentDidMount只(在装载时)加载一次，不跟随redux的状态树变化而调动。
-        //      所以，应该将数据处理放在componentDidUpdate 或render里。
+        const {getParam} = this.props.navigation
+        this.dao = getParam('dao')
     }
 
     componentDidUpdate(){
@@ -90,30 +91,34 @@ class GroupVocaPage extends Component {
     }
 
     _formatData = () => {          //数据预处理
-        const {groupVocas } = this.props.groupVoca
-        console.log(groupVocas);
+        const {getParam} = this.props.navigation
+        let group = getParam('group')
+        let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
         //FlatList的数据源
         let flatData = [];
         //分组头的数据源
-        let sections1 = [];
+        let sideSections = [];
         //分组头在列表中的位置
-        let sectionIndex1 = [];
+        let sectionIndex = [];
         //arr, 吸顶头部索引
-        let stickyHeaderIndices1 = [];
-        for (let i = 0; i < groupVocas.length; i++) {        //遍历章节
+        let stickyHeaderIndices = [];
+
+        console.log('sections:')
+        console.log(sections)
+        for (let i = 0; i < sections.length; i++) {        //遍历章节
             
             //给右侧的滚动条进行使用的
-            sections1[i] = groupVocas[i].sectionId,
-            sectionIndex1[i] = totalSize;
-            stickyHeaderIndices1.push(totalSize);
+            sideSections[i] = sections[i].section,
+            sectionIndex[i] = totalSize;
+            stickyHeaderIndices.push(totalSize);
             //FlatList的数据
             flatData.push({
-                type:'chapter', sectionId:groupVocas[i].sectionId,
+                type:'chapter', section:sections[i].section,
             });
             totalSize ++;
-            for (let w of groupVocas[i].words) { //遍历单词
+            for (let w of sections[i].words) { //遍历单词
                 flatData.push({
                     type:'word',  word:w.word, isHidden:w.isHidden, tran:w.tran
                 });
@@ -124,10 +129,13 @@ class GroupVocaPage extends Component {
         // console.log(sectionIndex1); [0, 8, 16, 24, 32, 37, 45, 53, 61, 69]
         
         this.flatData = flatData, 
-        this.sections = sections1
-        this.sectionIndex = sectionIndex1
-        this.stickyHeaderIndices = stickyHeaderIndices1
-        console.log(this.sections);
+        this.sideSections = sideSections
+        this.sectionIndex = sectionIndex
+        this.stickyHeaderIndices = stickyHeaderIndices
+        console.log('this.flatData:');
+        console.log(this.flatData);
+        console.log('this.sideSections:');
+        console.log(this.sideSections);
     }
 
     render() {
@@ -164,7 +172,7 @@ class GroupVocaPage extends Component {
                                 stickyHeaderIndices={this.stickyHeaderIndices}/>
                                 
                                 <IndexSectionList
-                                sections={ this.sections}
+                                sections={ this.sideSections}
                                 onSectionSelect={this._onSectionselect}/> 
                         </View>
                     }
@@ -203,7 +211,7 @@ class GroupVocaPage extends Component {
         return (
                 flag
                 ?<View key={'h'+index} style={styles.headerView}>
-                        <Text style={styles.headerText}>{item.sectionId}</Text>
+                        <Text style={styles.headerText}>{item.section}</Text>
                     </View>
                 :<View key={'w'+index} style={styles.itemView}>
                     <View style={styles.rowBetween}>
@@ -223,11 +231,11 @@ class GroupVocaPage extends Component {
 }
 
 const mapStateToProps = state =>({
-    groupVoca : state.groupVoca,
 });
 
 
 const mapDispatchToProps = {
+   
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupVocaPage);

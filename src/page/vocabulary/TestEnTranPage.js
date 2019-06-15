@@ -177,6 +177,7 @@ class TestEnTranPage extends Component {
 
     //创建单词详情modal, 
     _createDetailModal = (isWrong) =>{
+        const {task, curIndex} = this.props.learnNew
         // isWrong=true，表示选错后的Modal；isWrong=false,表示查看提示的Modal
         return <Modal style={[styles.modal, styles.modal2]}
                 isOpen={isWrong?this.state.isWrongModalOpen : this.state.isDetailModalOpen} 
@@ -189,7 +190,7 @@ class TestEnTranPage extends Component {
                 ref={ref => {
                     this.detailModal = ref
                 }}>
-                <DetailDictPage word='abort'/>
+                <DetailDictPage word={task.words[curIndex].word}/>
                 <View style={styles.modalBottom }>
                     <TouchableNativeFeedback  >
                     <View style={[styles.modalBtn,{width:width/5}]}>
@@ -305,7 +306,7 @@ class TestEnTranPage extends Component {
                     {options.length!=0 &&
                         options.map((option, index)=>{
                            
-                            return <Row style={styles.row}>
+                            return <Row key={index} style={styles.row}>
                                 <Button block style={[
                                     styles.selectBtn, 
                                     index==answerIndex&&selected?{borderColor:'#1890FF'}:{}, 

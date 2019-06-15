@@ -31,7 +31,8 @@
     "redux-actions": "^2.6.5",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
-    "rn-fetch-blob": "^0.10.15"
+    "rn-fetch-blob": "^0.10.15",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
