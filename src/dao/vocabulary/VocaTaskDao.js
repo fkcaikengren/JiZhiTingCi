@@ -1,219 +1,224 @@
 
+const Realm = require('realm')
+const uuidv4 = require('uuid/v4');
+
+// 1. 任务表
+const VocaTaskSchema = {
+    name: 'VocaTask',
+    primaryKey: 'id',
+    properties: {
+        id: 'string',                           //任务id
+        taskOrder: 'int?',                      //任务序号
+            //任务状态[0:未学, 1:完成新学,  2完成二复, 4, 7, 15, 200:掌握 ] 
+        status: {type:'int', optional:true, default:0},                 
+            //任务执行日期
+        vocaTaskDate: 'int?',                                            
+            //学习新词时的状态 IN_LEARN_PLAY , IN_LEARN_CARD , IN_LEARN_TEST1 , IN_LEARN_RETEST1 , IN_LEARN_TEST2, IN_LEARN_RETEST2, LEARN_FINISH
+        learnStatus: {type: 'string',optional:true, default: 'IN_LEARN_CARD'}, 
+            //新词复习时的状态  IN_REVIEW_PLAY  , IN_REVIEW_TEST1 , IN_REVIEW_RETEST1 , IN_REVIEW_TEST2, IN_REVIEW_RETEST2, REVIEW_FINISH
+        reviewStatus: {type:'string', optional:true, default: 'IN_REVIEW_TEST1'},    
+            //任务单词数组
+        taskWords: 'TaskWord[]',    
+            //进行中的当前单词下标                                
+        curIndex:{type: 'int',optional:true, default: 0},
+            //判断单词数据是否已查询写入
+        dataCompleted:{type: 'bool',optional:true, default: false},
+        createTime:'int?'
+    }
+  };
+ 
+  
+  // 2. 任务单词表
+  const TaskWordSchema = {
+    name: 'TaskWord',
+    primaryKey: 'id',
+    properties: {
+      id: 'string',                      
+      word: 'string?',
+      passed: {type: 'bool', optional:true, default: false},
+      wrongNum:	'int?',
+      testWrongNum: 'int?',
+      enPhonetic: 'string?',
+      enPronUrl: 'string?',
+      amPhonetic: 'string?',
+      amPronUrl: 'string?',
+      def:'string?',
+      sentence:'string?',
+      tran: 'string?'
+    }
+  };
+  
+  
 
 
 
-async function vocaTasks(params) {
-    Http.get('/vocaTask/getVocaTasks')
-    .then(response =>{
-        return response.data.data
-    })
-}
+export default class VocaTaskDao {
+
+    constructor(props){
+        this.realm = null
+    }
+    //打开数据库
+    async open(){
+        try{
+            this.realm  = await Realm.open({path: 'VocaTask.realm', schema:[ TaskWordSchema,VocaTaskSchema]})
+        }catch(err){
+            console.log('Error:打开realm数据库失败, 创建VocaTaskDao对象失败')
+            console.log(err)
+        }
+        return this.realm;
+    }
+    //判断数据库是否关闭
+    isOpen(){
+        return (this.realm !== null)
+    }
+    //关闭数据库
+    close = ()=>{
+        if(this.realm && !this.realm.isClosed){
+            this.realm.close()
+            this.realm = null
+        }
+    }
+
+    //修改数据库
+    modify = (fn)=>{
+        this.realm.write(fn)
+    }
 
 
-//1. 保存任务列表
-export const saveVocaTasks = (vocaTasks)=>{
-
-    //虚拟数据
-    
-    let data = [
-        {
-            taskOrder: 1, //复习
-            status: 22,
-            playDuration: 180,
-            vocaTaskDate: 1559378082410,
-            words: [{
-                word: "abandon",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "abort",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "pick",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "dish",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "miss",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "abolish",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "limit",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "join",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "sister",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "desk",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "monster",
-                passed: false,
-                wrongNum: 0
+    //1. 保存任务数据
+    saveVocaTasks = (vocaTasks)=>{
+        console.log('save ...');
+        vocaTasks = [
+            {
+                id:uuidv4(),
+                taskOrder: 1, //复习
+                status: 0,
+                learnStatus:'IN_LEARN_TEST1',
+                vocaTaskDate: new Date(new Date().toLocaleDateString()).getTime(),
+                taskWords: [{
+                    id:uuidv4(),
+                    word: "acute",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "accommodation",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "calorie",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "decent",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "define",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "ensue",
+                    passed: false,
+                    wrongNum: 0
+                },
+                ]
             },
-            ]
-        },
-        {
-            taskOrder: 2, //新学
-            status: 10,
-            playDuration: 180,
-            vocaTaskDate: 1559378082410,
-            words: [{
-            //     word: "abandon",
-            //     passed: false,
-            //     wrongNum: 0
-            // },{
-            //     word: "abort",
-            //     passed: false,
-            //     wrongNum: 0
-            // },{
-            //     word: "pick",
-            //     passed: false,
-            //     wrongNum: 0
-            // },{
-            //     word: "dish",
-            //     passed: false,
-            //     wrongNum: 0
-            // },{
-                word: "miss",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "abolish",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "limit",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "join",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "sister",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "desk",
-                passed: false,
-                wrongNum: 0
-            },{
-                word: "monster",
-                passed: false,
-                wrongNum: 0
+            {
+                id:uuidv4(),
+                taskOrder: 2, //新学
+                status: 0,
+                learnStatus:'IN_LEARN_TEST1',
+                vocaTaskDate: new Date(new Date().toLocaleDateString()).getTime(),
+                taskWords: [{
+                    id:uuidv4(),
+                    word: "poverty",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "premier",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "miss",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "notion",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "harmony",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "feeble",
+                    passed: false,
+                    wrongNum: 0
+                }],
+              
+            },];
+            //遍历存入
+            try{
+                this.realm.write(()=>{
+                    for(let task of vocaTasks){
+                        console.log(task)
+                        this.realm.create('VocaTask', task);
+                    }
+                })
+            }catch(err){
+                console.log('save failed')
+                console.log(err)
             }
-            ],
-          
-        },
-    ];
-    for(let task of data){
-        Storage.save({
-            key: 'vocaTasks',
-            id: task.taskOrder,
-            data: task,
-            expires: 1000 * 36000, //保存10h
+    }
+
+    //2. 获取全部任务数据
+    getAllTasks = ()=>{
+        let vocaTasks = this.realm.objects('VocaTask')
+        return vocaTasks;
+    }
+
+
+    // 获取今日新学任务
+    getLearnTasks = ()=>{
+        //获取今天0点的时间戳
+        let today = new Date(new Date().toLocaleDateString()).getTime()
+        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today+' AND status = 0')
+        console.log(vocaTasks)
+        return vocaTasks;
+    }
+
+    // 获取今日旧词复习任务
+    getReviewTasks = ()=>{
+        //获取今天0点的时间戳
+        let today = new Date(new Date().toLocaleDateString()).getTime()
+        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today+' AND status > 0')
+        console.log(vocaTasks)
+        return vocaTasks;
+    }
+
+    // 根据taskOrder获取任务
+    getTask = (taskOrder)=>{
+        let vocaTask = this.realm.objects('VocaTask').filtered('taskOrder = "'+taskOrder+'"')[0]
+        console.log(vocaTask)
+        return vocaTask;
+    }
+
+    //清空所有
+    deleteAllTasks = ()=>{
+        this.realm.write(()=>{
+            this.realm.deleteAll();
         })
     }
+
 }
-
-
-//2. 加载任务列表
-export const loadVocaTasks = ()=>{
-    return new Promise((resolve, reject) => {
-        Storage.sync = {
-            // sync方法的名字必须和所存数据的key完全相同
-            // 方法接受的参数为一整个object，所有参数从object中解构取出
-            // 这里可以使用promise。或是使用普通回调函数，但需要调用resolve或reject。
-            vocaTasks
-        }
-    
-        Storage.load({
-            key: 'vocaTasks',
-            // autoSync(默认为true)意味着在没有找到数据或数据过期时自动调用相应的sync方法
-            // 设置为false的话，则等待sync方法提供的最新数据(当然会需要更多时间)。
-            autoSync: true, 
-            // syncInBackground(默认为true)意味着如果数据过期，
-            // 在调用sync方法的同时先返回已经过期的数据。
-            syncInBackground: true,
-            // 你还可以给sync方法传递额外的参数
-            syncParams: {
-            extraFetchOptions: {
-                // 各种参数
-            },
-            someFlag: true,
-            },
-        })
-        .then(vocaTasks => {     
-            //保存数据到Storage
-            saveVocaTasks(vocaTasks)
-            //返回结果promise
-            resolve(vocaTasks);
-        })
-        .catch(err => {
-            console.warn(err.message);
-            switch (err.name) {
-            case 'NotFoundError':
-                // 数据没找到，重新请求任务列表数据，
-                break;
-            case 'ExpiredError':
-                // 数据过期，重新请求任务列表数据，
-                break;
-            }
-            reject(err)
-        });
-        
-    });
-}
-
-
-//3. 加载任务
-export const loadTask = (taskOrder)=>{
-    return new Promise((resolve, reject)=>{
-
-        console.log('taskOrder:'+taskOrder);
-        Storage.sync = {} //如果没有，不会网络请求获取任务
-        Storage.load({
-            key:'vocaTasks',
-            id:taskOrder,
-            autoSync: false, 
-            syncInBackground:false,
-        })
-        .then(task=>{
-            console.log(task);
-            return resolve(task)
-        })
-        .catch(err=>{
-            console.log('VocaTaskDao: 加载任务失败')
-            console.warn(err.message);
-            switch (err.name) {
-            case 'NotFoundError':
-                // 数据没找到，重新请求任务列表数据，
-                loadVocaTasks();
-                break;
-            case 'ExpiredError':
-                // 数据过期，重新请求任务列表数据，
-                loadVocaTasks();
-                break;
-            }
-            reject(err)
-        })
-    })
-}
-
 

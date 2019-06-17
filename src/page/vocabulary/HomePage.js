@@ -3,12 +3,13 @@ import {View, StyleSheet,Image, FlatList, TouchableOpacity} from 'react-native';
 import { Container, Header,Content,  Grid, Col, Row,
     Icon ,Button,Text,Left,Right, Body, Footer,ListItem } from 'native-base';
 import * as Progress from 'react-native-progress';
-import {connect} from 'react-redux';
-import * as VocaPlayAction from '../../action/vocabulary/vocaPlayAction';
-import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
-import * as HomeAtion from '../../action/vocabulary/homeAction'
-import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
-import {IN_PLAY , IN_CARD , IN_TEST1 , IN_RETEST1 , IN_TEST2, IN_RETEST2, PLAY_LEARN,  PLAY_REVIEW} from '../../constant'
+
+import Ionicons from 'react-native-vector-icons'
+
+
+import VocaDao from '../../dao/vocabulary/VocaDao'
+import VocaTaskDao from '../../dao/vocabulary/VocaTaskDao'
+import * as Constant from '../../constant'
 
 
 import AliIcon from '../../component/AliIcon';
@@ -76,79 +77,127 @@ const styles = StyleSheet.create({
     }
 });
 
-class HomePage extends Component {
+export default class HomePage extends Component {
 
     constructor(props) {
         super(props);
-       
-      }
+        this.state = {data:[{type:'menu', titile:null, task:null}]}
+        this.vocaDao = new VocaDao()
+        this.taskDao = new VocaTaskDao()
+    }
 
     componentDidMount(){
-        const {loadTaskLists, } = this.props
-        loadTaskLists();
+        this.vocaDao.open()     //打开单词数据库
+        this.taskDao.open()     //打卡任务数据库
+        .then(()=>{
+            //先存一部分数据（测试）
+            // this.taskDao.deleteAllTasks()
+            // this.taskDao.saveVocaTasks([])
+            this._loadData()
+        })
+    }
+
+    componentWillUnmount(){
+        alert('Home out, realm close')
+        this.vocaDao.close()
+        this.taskDao.close()
     }
 
 
-    //根据任务处于哪一学习阶段，跳到指定页面
-    _startSelection(task){
-        const { loadLearnList} = this.props;
-        const {navigate} = this.props.navigation
-         //根据learnStatus 判断处于哪一学习阶段
-         if(task.learnStatus === IN_PLAY){          //单词轮播页面
-            //加载学习单词列表
-            loadLearnList()
-            navigate('VocaPlay', {playMode:PLAY_LEARN});
-        }else if(task.learnStatus === IN_CARD){  //跳转到卡片学习页面
-            navigate('LearnCard');
-        }else if(task.learnStatus === IN_TEST1){ //跳转到测试1 页面
-            navigate('TestEnTran');
+    //同步加载数据（同时格式化处理）
+    _loadData = ()=>{
+        let data = [{type:'menu', titile:null, task:null}];
+        let indices = [0]
+        //获取今日新学任务
+        data.push({type:'header', titile:'今日新学', task:null})
+        indices.push(data.length-1)
+        let learnTasks = this.taskDao.getLearnTasks()
+        console.log('learnTasks:')
+        console.log(learnTasks)
+        for(let task of learnTasks){
+            data.push({type:'task', titile:null, task:task, flag:1})  //今日新学任务（一直存在）
         }
+        data.push({type:'header', titile:'新学复习', task:null})
+        indices.push(data.length-1)
+        for(let task of learnTasks){
+            if(task.learnStatus !== 'LEARN_FINISH'){ //锁定
+                data.push({type:'task', titile:null, task:task, locked:true, flag:2})
+            }else{//未锁，可复习
+                data.push({type:'task', titile:null, task:task, locked:false, flag:2})
+            }
+        }
+        
+        //获取复习任务
+        data.push({type:'header', titile:'往日回顾', task:null})
+        indices.push(data.length-1)
+        let reviewTasks = this.taskDao.getReviewTasks()
+        console.log('reviewTasks:')
+        console.log(reviewTasks)
+        for(let task of reviewTasks){
+            data.push({type:'task', titile:null, task:task, flag:3})
+        }
+        // 初始化
+        this.stickyHeaderIndices = indices
+        this.setState({data:data, })
     }
 
     //开始任务
-    _start = (item)=>{
-        const { loadTask} = this.props;
-        const {task} = this.props.learnNew
-         //默认task为{},若learnStatus不存在 首次加载任务数据
-         if(!task.learnStatus){
-            loadTask(item.taskOrder)
-            .then(action =>{
-                this._startSelection(action.payload.task);
-                
-                // console.log('判断是否改变状态后，才返回');
-                // console.log(task);          //这个时候还没有dispatch, 当then结束后才dispatch
-            })
-        }else{
-            this._startSelection(task);
+    _start = (task)=>{
+        console.log('go:')
+        console.log(task)
+        const {navigate} = this.props.navigation
+        //根据learnStatus 判断处于哪一学习阶段
+        let goalPage = ''
+        
+        if(task.learnStatus === 'IN_LEARN_CARD'){            //跳转到卡片学习页面
+            goalPage = 'LearnCard'
+        }else if(task.learnStatus === 'IN_LEARN_TEST1'){    //跳转到测试1 页面
+            goalPage = 'TestEnTran'
         }
-
-         
-       
+        if(goalPage.length > 0){
+                navigate(goalPage, {taskDao:this.taskDao, taskOrder:task.taskOrder, vocaDao: this.vocaDao});
+        }
     }
 
     _renderItem = ({ item, index }) => {
-        const { loadVocaBooks, loadTask} = this.props;
 
-        let bodyStyle = {};
-        let buttonContent = {color:'#1890FF', fontSize:14, fontWeight:'500'};
-        let iconName = 'square-o';
-        let iconStyle = {color:'#1890FF'};
-        let buttonName = '开始';
         
-        if(item.finished == true){
-            bodyStyle = {textDecorationLine:'line-through'}
-            iconName = 'check-square';
-            iconStyle = {color:'#1890FF'};
-            buttonName = '已完成';
+
+        let display = 'normal' //['normal', 'locked', 'finished']
+        switch(item.flag){
+            case 1:
+                if(item.task && item.task.learnStatus === 'LEARN_FINISH'){
+                    display = 'finished'
+                }
+            break;
+            case 2:
+                if(item.locked && item.locked==true){
+                    display = 'locked'
+                }
+                if(item.task && item.task.reviewStatus === 'REVIEW_FINISH'){
+                    display = 'finished'
+                }
+            break;
+            case 3:
+                if(item.task && item.task.reviewStatus === 'REVIEW_FINISH'){
+                    display = 'finished'
+                }
+            break;
         }
+        
+        if(item.locked !== undefined){  //复习
 
-        let type='item' //menu, header, item
-        let note = '';
+            if(item.locked==true){
+                display = 'locked'
+            }
+        }
+        
 
-        if(index == 0){
+        let note = ''
+        //菜单
+        if(item.type === 'menu'){
             return (
-                //菜单
-                <Grid style={{height:155,}}>
+                <Grid  style={{height:155,}}>
                     <Row style={[styles.c_center,{height:60}]}>
                         <View style={{
                             flexDirection: 'row',justifyContent: 'space-between', alignItems: 'center', width: width-40,
@@ -166,7 +215,6 @@ class HomePage extends Component {
                     <Row style={[styles.center, { height:width/4}]}>
                         {/* 单词书库 */}
                         <Col style={[styles.c_center,{ width:width/4}]} onPress={()=>{
-                                loadVocaBooks();
                                 this.props.navigation.navigate('VocaLib');
                             }}>
                             <AliIcon name='icon-test' size={26} color='#F2B055' ></AliIcon>
@@ -181,7 +229,6 @@ class HomePage extends Component {
                         </Col>
                         {/* 生词本 */}
                         <Col style={[styles.c_center,{width:width/4}]} onPress={()=>{
-                                
                                 this.props.navigation.navigate('VocaGroup');
                             }}>
                             <AliIcon name='edit' size={26} color='#66CAA3'></AliIcon>
@@ -199,64 +246,85 @@ class HomePage extends Component {
                     </Row>
                 </Grid>
             );
-        }else{
-            if(item.status==-1){
-                type = 'header'
-            }else if(item.status==0){
-                
-            }else if(item.status==10 || item.status==11 || item.status==12){
-
-            }else if(item.status==22 || item.status==24 || item.status==27 || item.status==215){
-
-            }else if(item.status==200){
-
-            }else{
-                console.log('taskList的status不对')
-                type=''
-            }
-
-            if (type === 'header') {
+        } else if (item.type === 'header') {
             return (
-                //分类头
                 <View style={{backgroundColor:'#FDFDFD', paddingLeft:15, paddingVertical:15}}>
-                <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>
-                    {item.title}
-                </Text>
-                </View>          
+                    <Text style={{ color:'#2D4150', fontSize:16, fontWeight:'500'}}>
+                        {item.titile}
+                    </Text>
+                </View> 
+                        
             );
-            } else if(type === "item"){
-                return (
-                    //任务列表项
-                    <ListItem  thumbnail style={{ padding:0}}>
+        } else if(item.type === "task"){
+            if(display === 'locked'){      //锁定的
+                return(
+                    <ListItem  thumbnail style={[{ padding:0}]}>
                         <Left >
-                            <Icon type='FontAwesome' name={iconName} size={30} style={[iconStyle]}/>
+                            <Icon type='FontAwesome' name='square-o' size={30} style={{color:'#AAAAAA'}}/>
                         </Left>
                         <Body >
-                            <Text style={[{ color:'#2D4150', fontSize:14, fontWeight:'500'}]}>学习List{item.taskOrder}</Text>
+                            <Text style={[{ color:'#AAAAAA', fontSize:14, fontWeight:'500'}]}>List{item.task.taskOrder}</Text>
                             <Text note numberOfLines={1} >{note}</Text>
                         </Body>
                         <Right>
-                            <Button rounded style={styles.listButton} onPress={()=>{this._start(item)}}>
-                                <Text style={[buttonContent]}>{buttonName}</Text>
-                            </Button>
+                            <Icon type='FontAwesome' name='lock' size={30} color='#AAAAAA'/>
                         </Right>
                     </ListItem>
-                );
+                )
+                
+            }else if(display === 'finished'){     //已完成的
+                return(
+                        <ListItem  thumbnail style={[{ padding:0}]}>
+                            <Left >
+                                <Icon type='FontAwesome' name='check-square' size={30} style={{color:'#1890FF'}}/>
+                            </Left>
+                            <Body >
+                                <Text style={[{ color:'#303030', fontSize:14, fontWeight:'500', 
+                                    textDecorationLine:'line-through', textDecorationColor:'#000000'}]}>
+                                    List{item.task.taskOrder}
+                                </Text>
+                                <Text note numberOfLines={1} >{note}</Text>
+                            </Body>
+                            <Right>
+                                <Button rounded transparent disabled>
+                                    <Text style={{fontSize:16, fontWeight:'500', color:'#1890FF'}}>
+                                        完成
+                                    </Text>
+                                </Button>
+                            </Right>
+                        </ListItem>
+                )
+            }else{        //正常的
+                return(
+                        <ListItem  thumbnail style={[{ padding:0}]}>
+                            <Left >
+                                <Icon type='FontAwesome' name='square-o' size={30} style={{color:'#1890FF'}}/>
+                            </Left>
+                            <Body >
+                                <Text style={[{ color:'#303030', fontSize:14, fontWeight:'500'}]}>List{item.task.taskOrder}</Text>
+                                <Text note numberOfLines={1} >{note}</Text>
+                            </Body>
+                            <Right>
+                                <Button rounded style={{backgroundColor:'#1890FF33', elevation:0}} onPress={()=>{
+                                    this._start(item.task)
+                                }}>
+                                    <Text style={{fontSize:16, fontWeight:'500', color:'#1890FF'}}>
+                                        开始
+                                    </Text>
+                                </Button>
+                            </Right>
+                        </ListItem>
+                )
             }
-
         }
-
-    
+           
         
       };
 
     render() {
-        const {taskList, stickyHeaderIndices} = this.props.home;
-        const {loadReviewList, loadTask} = this.props;
-        
+        console.log(this.state.data)
         return (
             <Container style={{ backgroundColor: '#FDFDFD',}}> 
-
                 {/* 头部 */}
                 <Header style={styles.header}>
                     <Text style={styles.title}>极致英语</Text>
@@ -272,16 +340,16 @@ class HomePage extends Component {
             
                 <Content >
                     {/* 首页菜单和任务列表 */}
-                    <Grid style={{height:440}}>
-                        <Col>
+                    <View style={{ height:450}}>
                             <FlatList
-                                data={taskList}
+                                data={this.state.data}
                                 renderItem={this._renderItem}
+                                // extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
-                                stickyHeaderIndices={stickyHeaderIndices}
+                                // stickyHeaderIndices={this.stickyHeaderIndices}
                             />
-                        </Col>
-                    </Grid>
+
+                    </View>
                 </Content>
 
                 <Footer style={{backgroundColor:'#FFF'}} >
@@ -289,10 +357,7 @@ class HomePage extends Component {
                     <TouchableOpacity
                         style={styles.touch}
                         onPress={()=>{      //播放
-                            if(!this.props.vocaPlay.isDataLoaded){ //没有数据则加载
-                                loadReviewList();
-                            }
-                            this.props.navigation.navigate('VocaPlay',{playMode:PLAY_REVIEW});
+                            this.props.navigation.navigate('VocaPlay',{playMode:'PLAY_REVIEW', taskDao:this.taskDao});
                         }}
                         activeOpacity={0.7}
                             >
@@ -336,23 +401,4 @@ class HomePage extends Component {
   }
 }
 
-
-
-const mapStateToProps = state =>({
-    home : state.home,
-    learnNew : state.learnNew,
-    vocaPlay : state.vocaPlay,
-});
-
-const mapDispatchToProps = {
-    loadReviewList: VocaPlayAction.loadReviewList,
-    loadLearnList : VocaPlayAction.loadLearnList,
-    loadVocaBooks : VocaLibAction.loadVocaBooks,
-    loadTaskLists : HomeAtion.loadTaskLists,
-    loadTask: LearnNewAction.loadTask,
-
-};
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
 

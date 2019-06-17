@@ -5,6 +5,7 @@ import { Container, Content, Grid, Row, Col, ListItem, Icon, Left, Body, Right, 
 import {turnLogoImg} from '../../image';
 import AliIcon from '../../component/AliIcon';
 import IconListItem from '../../component/IconListItem';
+import UserDao from '../../dao/mine/UserDao'
 
 
 const styles = StyleSheet.create({
@@ -51,8 +52,51 @@ export default class MinePage extends React.Component {
     constructor(props){
         super(props);
         this.state={}
+        this.dao = new UserDao()
+        this.state = {user:{}}
     }
+
+    componentDidMount(){
+        this.dao.open()
+        .then(()=>{
+            let user = this.dao.getUser();
+            this.setState({user:{...user}})
+            //拷贝完数据，关闭接口（因为这个页面不会卸载）
+            this.dao.close();
+        })
+    }
+
+    componentWillUnmount(){
+        alert('MinePage out, close realm  ')
+    }
+
+    _setVocaLevel = (num)=>{
+        switch(num){
+            case 1:
+                return '小学'
+            case 2:
+                return '初中'
+            case 3:
+                return '高中'
+            case 4:
+                return '四级'
+            case 5:
+                return '六级'
+            case 6:
+                return '研究生'
+            case 7:
+                return '雅思'
+            case 8:
+                return 'GRE'
+            default:
+                return '未测试'
+        }
+    }
+
+
     render(){
+        const {user} = this.state
+        console.log(user)
         return(
             <Container>
 
@@ -61,7 +105,7 @@ export default class MinePage extends React.Component {
                         {/* 头像 */}
                         <Row style={{height:160, backgroundColor:'#1890FF'}}>
                             <Col style={[styles.c_center, ]}>
-                                <Text style={styles.userNameFont}>JacyAcme</Text>
+                                <Text style={styles.userNameFont}>{user.nickname}</Text>
                                 <View style={styles.member}>
                                     <AliIcon name='huiyuan' size={26} color='red' style={{fontWeight:'600'}}></AliIcon>
                                     <Text style={styles.memberFont}>查看会员</Text>
@@ -80,11 +124,11 @@ export default class MinePage extends React.Component {
                         {/* 等级和极币 */}
                         <Row style={{marginTop:30,}}>
                             <Col style={[styles.c_center,{borderRightWidth:1, borderRightColor:'#cfcfcf'}]}>
-                                <Text style={styles.keyFont}>雅思</Text>
+                                <Text style={styles.keyFont}>{this._setVocaLevel(user.level)}</Text>
                                 <Text>等级</Text>
                             </Col>
                             <Col style={[styles.c_center,]}>
-                                <Text style={styles.keyFont}>300</Text>
+                                <Text style={styles.keyFont}>{user.balance}</Text>
                                 <Text>极币</Text>
                             </Col>
                         </Row>
@@ -117,22 +161,6 @@ export default class MinePage extends React.Component {
                                     }}
                                 />
                                 <IconListItem 
-                                    leftIcon={<AliIcon name='yixue' size={26} color='#F79131' ></AliIcon>}
-                                    title='已学单词书'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('已学');
-                                    }}
-                                />
-                                <IconListItem 
-                                    leftIcon={<AliIcon name='dingshi' size={26} color='#F79131' ></AliIcon>}
-                                    title='定时关闭'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('定时');
-                                    }}
-                                />
-                                <IconListItem 
                                     leftIcon={<AliIcon name='shezhi' size={26} color='#F79131' ></AliIcon>}
                                     title='设置'
                                     arrow={true} 
@@ -140,6 +168,7 @@ export default class MinePage extends React.Component {
                                         alert('定时');
                                     }}
                                 />
+                                
                                 
                             </Col>
                         </Row>

@@ -15,36 +15,19 @@ const styles = StyleSheet.create({
 import AppNavigator from './src/navigator/AppNavigator';
 import configureStore from './src/dao/configureStorage';
 import Axios from './src/dao/Axios'
+import UserDao from './src/dao/mine/UserDao'
 
 
-//设置全局变量
+//设置全局变量 (注：这部分代码只在安装App时运行一次)
 global.Storage = configureStore;
 global.Http = new Axios();
+
 
 /**
  *Created by Jacy on 19/05/11.
  */
 export default class App extends React.Component {
   render(){
-
-    const CarSchema = {
-      name: 'Car',
-      properties: {
-        make:  'string',
-        model: 'string',
-        miles: {type: 'int', default: 0},
-      }
-    };
-    const PersonSchema = {
-      name: 'Person',
-      properties: {
-        name:     'string',
-        birthday: 'date',
-        picture:  'data?', // optional property
-      }
-    };
-    
-   
 
     return(
 

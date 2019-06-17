@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, TouchableNativeFeedback, Alert} from 'react-native';
 import { Container, Header, Content, Body, Item, Input,
     Button, Footer, FooterTab} from "native-base";
-import {connect} from 'react-redux';
 import Modal from 'react-native-modalbox';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import AliIcon from '../../component/AliIcon';
-import * as VocaGroupAction from '../../action/vocabulary/vocaGroupAction';
 import VocaGroupDao from '../../dao/vocabulary/VocaGroupDao'
 
 const Dimensions = require('Dimensions');
@@ -82,38 +80,43 @@ const styles = StyleSheet.create({
     
 });
 
-class VocaGroupPage extends Component {
+export default class VocaGroupPage extends Component {
 
     constructor(props){
         super(props);
         this.state = {
+            vocaGroups:[],          //生词本数组
             inEdit:false,
             isAddModalOpen: false,
             isUpdateModalOpen: false,
             addName: '',
             updateName: '',
             selectedName: '',
-            refresh: true, //用来刷新
+            refresh: true,          //用来刷新
           };
         this.dao = new VocaGroupDao();
     }
 
     componentDidMount(){
-        const {loadVocaGroups} = this.props
         //打开数据库
         this.dao.open()
         .then(()=>{
-            let groups = this.dao.getAllGroups();
-            loadVocaGroups(groups)
+            let vocaGroups = this.dao.getAllGroups();
+            if(vocaGroups.length == 0){
+                this.dao.addGroup('0默认生词本')
+                this.dao.updateToDefault('0默认生词本')
+            }
+            this.setState({vocaGroups})
         })
        
-        
     }
 
     componentWillUnmount(){
-        alert('vocaGroup out, close realm');
+        alert('vocaGroup out, close realm')
         this.dao.close()
     }
+
+    
 
     //打开添加弹框
    _openAddModal = ()=>{
@@ -172,8 +175,7 @@ class VocaGroupPage extends Component {
    //判断是否存在该名称的生词本
    _isNameExist = (name)=>{
         let isExist = false;
-        const {vocaGroups} = this.props.vocaGroup
-        for(let g of vocaGroups){
+        for(let g of this.state.vocaGroups){
             let gName = g.groupName.substring(1)
             if(gName === name){
                 alert(gName);
@@ -187,7 +189,6 @@ class VocaGroupPage extends Component {
    //添加生词本
    _addVocaGroup = ()=>{
         
-        const {addVocaGroup} = this.props
         this._closeAddModal();
         //循环
         let isExist = this._isNameExist(this.state.addName);
@@ -234,9 +235,6 @@ class VocaGroupPage extends Component {
 
     render() {
 
-        const {vocaGroups, } = this.props.vocaGroup
-        console.log('page:');
-        console.log(vocaGroups)
         return (
             <Container>
                 <StatusBar
@@ -265,7 +263,7 @@ class VocaGroupPage extends Component {
                 <Content padder style={{ backgroundColor:'#FDFDFD', }}>
                     
                     
-                {vocaGroups.map((item, index)=>{
+                {this.state.vocaGroups.map((item, index)=>{
                     //判断是什么类型的生词本
                     let iconName = ''
                     if(item.groupName.startsWith('0')){  //自定义
@@ -279,7 +277,7 @@ class VocaGroupPage extends Component {
                             //加载生词
                             this.props.navigation.navigate('GroupVoca',{
                                 dao:this.dao, 
-                                group:item
+                                groupName:item.groupName
                             });
                                 
                         }}>
@@ -293,6 +291,9 @@ class VocaGroupPage extends Component {
                                         <Text style={{fontSize:14, marginLeft:10}}>共{item.count}词</Text>
                                     </View>
                                 </View>
+                                {!this.state.inEdit &&  item.isDefault &&
+                                    <Ionicons name='ios-star' color={'#EE4'} size={30} />
+                                }
                                 {this.state.inEdit &&
                                     <View style={[styles.row, {flex:1}]}>
                                         <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
@@ -357,13 +358,3 @@ class VocaGroupPage extends Component {
         );
     }
 }
-
-const mapStateToProps = state =>({
-    vocaGroup : state.vocaGroup,
-});
-
-const mapDispatchToProps = {
-    loadVocaGroups : VocaGroupAction.loadVocaGroups,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(VocaGroupPage);

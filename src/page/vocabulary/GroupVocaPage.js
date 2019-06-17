@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, FlatList} from 'react-native';
-import { Container, Header, Content, Icon, Accordion,Body,Title,
-    Grid, Col, Button} from "native-base";
-import {connect} from 'react-redux'
-
-
+import { Container, Header, Body, Button} from "native-base";
 
 
 import AliIcon from '../../component/AliIcon';
@@ -71,8 +67,13 @@ const styles = StyleSheet.create({
     }
 });
 
+/*
+    总结：禁止在react-navigation里面传递RealmObject对象， 这样对导致Realm对象留在导航里。
+    当组件unMount,realm.close()时，仍然存在对RealmObject的引用，而该RealmObject却已经过期了
+*/
 
-class GroupVocaPage extends Component {
+
+export default class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
         this.flatData = []
@@ -82,17 +83,16 @@ class GroupVocaPage extends Component {
     }
 
     componentDidMount(){
-        const {getParam} = this.props.navigation
-        this.dao = getParam('dao')
     }
 
-    componentDidUpdate(){
-
+    componentWillUnmount(){
     }
 
     _formatData = () => {          //数据预处理
         const {getParam} = this.props.navigation
-        let group = getParam('group')
+        let dao = getParam('dao')
+        let groupName = getParam('groupName')
+        let group = dao.getGroup(groupName);
         let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
@@ -169,7 +169,7 @@ class GroupVocaPage extends Component {
                                 renderItem={this._renderItem}
                                 getItemLayout={this._getItemLayout}
                                 keyExtractor={item => item.type}
-                                stickyHeaderIndices={this.stickyHeaderIndices}/>
+                                stickyHeaderIndices={this.stickyHeaderIndices}/> 
                                 
                                 <IndexSectionList
                                 sections={ this.sideSections}
@@ -222,20 +222,10 @@ class GroupVocaPage extends Component {
                         <AliIcon name='shengyin' size={26} color='#1890FF'></AliIcon>
                     </View>
                     <View style={[styles.rowStart,{width:width-40}]}>
-                        <Text style={{fontSize:14, color:'#606060', }}>{item.tran}</Text>
+                        <Text numberOfLines={1} style={{fontSize:14, color:'#606060', }}>{item.tran}</Text>
                     </View>
                 </View>
         )
         
     }
 }
-
-const mapStateToProps = state =>({
-});
-
-
-const mapDispatchToProps = {
-   
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(GroupVocaPage);

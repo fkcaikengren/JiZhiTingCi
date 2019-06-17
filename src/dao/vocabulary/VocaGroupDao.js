@@ -2,16 +2,11 @@
 const Realm = require('realm');
 const uuidv4 = require('uuid/v4');
 
-
 //总结： realm 1对多
 // 1. 建表
-
 // 2. 插入 （插入对象，该对象引用的数组对象自动插入；）
-
 // 3. 查询 （关联查询，通过引用获取到数组对象；）
-
 // 4. 修改 （获取到对象，修改属性，自动自动持久化；）
-
 // 5.删除 （获取到对象，便可删除；不会级联删除；）
 
 
@@ -71,15 +66,19 @@ export default class VocaGroupDao{
         try{
             this.realm  = await Realm.open({path: 'VocaGroup.realm', schema:[ GroupWordSchema,GroupSectionSchema, VocaGroupSchema]})
         }catch(err){
-            console.log('创建VocaGroupDao对象失败，原因：打开realm数据库失败')
+            console.log('Error:打开realm数据库失败, 创建VocaGroupDao对象失败')
             console.log(err)
         }
-        return ;
+        return this.realm;
+    }
+
+    isOpen(){
+        return (this.realm !== null)
     }
  
     //关闭数据库
     close = ()=>{
-        if(!this.realm && !this.realm.isClosed){
+        if(this.realm && !this.realm.isClosed){
             this.realm.close()
             this.realm = null
         }
@@ -126,6 +125,12 @@ export default class VocaGroupDao{
         let groups = this.realm.objects('VocaGroup');
         console.log(groups);  //undefined (当没有数据时)
         return groups;
+    }
+
+
+    //获取具体某生词本
+    getGroup = (groupName)=>{
+        return this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
     }
     
     
@@ -174,6 +179,26 @@ export default class VocaGroupDao{
     }
     
     //7. 删除指定生词本下的单词 sections:删除的数组）
+    isExistInDefault = (word)=>{
+        console.log(this.realm)
+        let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+        let isExist = false;
+        for(let s of defaultGroup.sections){
+            for(let w of s.words){
+                if(w.word ===  word){
+                    //如果存在
+                    isExist = true
+                    break;
+                }
+                
+            }
+        }
+        return isExist
+            
+    }
+
+
+    //7. 判断单词是否在默认生词本
     deleteWords = (groupName, words)=>{
         let group = this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
         

@@ -22,6 +22,10 @@ export  default class IndexSectionList extends PureComponent {
         this.state = {text: '', isShow: false}
     }
 
+    componentWillUnmount(){
+        alert('IndexSections out')
+    }
+
 
     render() {
         return (

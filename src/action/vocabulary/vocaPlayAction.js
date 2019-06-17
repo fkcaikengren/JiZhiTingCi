@@ -1,7 +1,7 @@
 
 
 import { createActions } from 'redux-actions';
-
+const Realm = require('realm')
 
 
 
@@ -28,76 +28,8 @@ export const RESET_PLAY_LIST = 'RESET_PLAY_LIST'
 export const {loadReviewList, loadLearnList, changePlayTimer,changeInterval, toggleWord, toggleTran,loadThemes, changeTheme, changeCurIndex,
   resetPlayList } = createActions({
 
-    [LOAD_REVIEW_LIST]: () => {      //加载复习单词列表
-        let wordList = [{
-            id: 0,
-            word: 'accommodation',
-            tran: '',
-          }, {
-            id: 1,
-            word: 'acute',
-            tran: '',
-          },{
-            id: 2,
-            word: 'calorie',
-            tran: '',
-          }, {
-            id: 3,
-            word: 'decent',
-            tran: '',
-          },{
-            id: 4,
-            word: 'ensue',
-            tran: '',
-          }, {
-            id: 5,
-            word: 'feeble',
-            tran: '',
-          },{
-            id: 6,
-            word: 'harmony',
-            tran: '',
-          }, {
-            id: 7,
-            word: 'hostile',
-            tran: '',
-          },{
-            id: 8,
-            word: 'limp',
-            tran: '',
-          },{
-            id: 9,
-            word: 'maintain',
-            tran: '',
-          }, {
-            id: 10,
-            word: 'notion',
-            tran: '',
-          },{
-            id: 11,
-            word: 'poverty',
-            tran: '',
-          },{
-            id: 12,
-            word: 'premier',
-            tran: '',
-          }];
-
-          //realm查询单词解释
-          
-          Realm.open({path: 'voca.realm', readOnly:true})
-          .then((realm)=>{
-            for(let w of wordList){
-              let wordInfos = realm.objects('WordInfo').filtered('word="'+w.word+'"'); //数组
-              let trans = '';
-              for(let info of wordInfos){
-                trans = `${trans} ${info.property}. ${info.tran}；`
-              }
-              w.tran = trans;
-            }
-          })
-          
-          
+    [LOAD_REVIEW_LIST]: (wordList) => {      //加载复习单词列表
+          console.log('wordList')
           console.log(wordList)
           return {wordList,  isDataLoaded:true};
     },

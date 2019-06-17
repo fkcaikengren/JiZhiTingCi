@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'querystring';
 import httpBaseConfig from '../common/httpBaseConfig';
-
+import UserDao from '../dao/mine/UserDao'
 
 
 
@@ -11,13 +11,17 @@ let instance = axios;
 export default class Axios {
     constructor(props) {
         if (props && typeof props === 'object') {
-            instance = axios.create(props);
+            console.log('初始化Axios:')
+            console.log({...httpBaseConfig, ...props})
+            instance = axios.create({...httpBaseConfig, ...props});
         } else {
             instance = axios.create(httpBaseConfig);
         }
  
        //请求拦截处理
         instance.interceptors.request.use(function (config) {
+            console.log('config:')
+            console.log(config)
             // 在发送请求之前做些什么
             return config;
         }, function (error) {
@@ -40,10 +44,11 @@ export default class Axios {
         return httpBaseConfig.baseUrl;
     }
  
+    //发送无参数的GET请求
     async get(url) {
         return this.get(url, null)
     }
- 
+    //发送带参数的GET请求
     async get(url, params) {
         try {
             // LoadingUtil.showLoadingDelay(500);
@@ -66,10 +71,12 @@ export default class Axios {
         }
     }
  
+    //发送无参数的POST请求
     async post(url) {
         return this.post(url, null, true, true)
     }
  
+    //发送带参数的POST请求
     async post(url, params, showLoading = true, showError = true) {
         try {
             if (showLoading) {
@@ -81,20 +88,16 @@ export default class Axios {
                 // LoadingUtil.dismissLoading();
             // }
             // console.log(baseUrl + url, params)
-            if (response) {
-                if (response.code !== 0){
+  
+            if (response) {  
+                if (response.status != 200){
                     if (showError) {
-                        // global.toast.alertWithType('warn', '温馨提示',response.message);
-                        alert('温馨提示, 0');
+                        alert('response.status: '+response.status);
                     }
                 }
-                if (response.code === 10011) {
-                    // console.log("response.code error : " + response.code + " " + response.message);
-                    
-                } else if (response.code === 10012 || response.code === 10013 || response.code === 10014 || response.code === 20004) {
-                    // console.log("response.code error2 : " + response.code + " " + response.message);
-                    
-                }
+                console.log('response')
+                console.log(response)
+                
             }
             return response;
         } catch (e) {
@@ -106,7 +109,14 @@ export default class Axios {
         }
     }
  
+    //设置请求头
     setPostHeader(key, value) {
-        instance.defaults.headers.post[key] = value;
+        instance.defaults.headers.post[key] = value
     }
+
+    //设置Get请求头
+    setGetHeader(key, value) {
+        instance.defaults.headers.get[key] = value
+    }
+    
 }

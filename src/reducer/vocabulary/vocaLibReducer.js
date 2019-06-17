@@ -12,9 +12,6 @@ const defaultState ={
     curBookName:'五年级',
     listCount:1,
     listWordCount:10
-
-
- 
 }
 
 

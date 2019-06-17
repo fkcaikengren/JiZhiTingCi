@@ -4,8 +4,9 @@ import { Container, Header, Content, Icon, Accordion,Body,Title,
     ListItem, Left, Right , Button} from "native-base";
 import Picker from 'react-native-picker';
 import {connect} from 'react-redux';
-import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
 
+
+import * as VocaLibAction from '../../action/vocabulary/vocaLibAction'
 import AliIcon from '../../component/AliIcon';
 
 
@@ -52,6 +53,12 @@ class VocaLibPage extends Component {
 
     constructor(props){
         super(props)
+    }
+
+    componentDidMount(){
+        //加载数据
+        const {loadVocaBooks} = this.props
+        loadVocaBooks()
     }
 
     _show = (name)=>{
@@ -184,6 +191,7 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
+    loadVocaBooks : VocaLibAction.loadVocaBooks,
     changeVocaBook: VocaLibAction.changeVocaBook,
 };
 

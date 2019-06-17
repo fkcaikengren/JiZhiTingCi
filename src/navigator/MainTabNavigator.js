@@ -23,6 +23,7 @@ import GroupVocaPage from '../page/vocabulary/GroupVocaPage';
 
 import MinePage from '../page/mine/MinePage';
 import AccountPage from '../page/mine/AccountPage';
+import LoginPage from '../page/mine/LoginPage';
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -144,7 +145,7 @@ const MineStackNav = createStackNavigator(
     // 账号资料
     Account:{
       screen: AccountPage,
-    }
+    },
   },
   {
     initialRouteName: 'Mine',

@@ -7,11 +7,9 @@ import {connect} from 'react-redux'
 import {NavigationActions, StackActions} from 'react-navigation'
 import Modal from 'react-native-modalbox';
 import Ionicons from "react-native-vector-icons/Ionicons";
-    
-
-import AliIcon from '../../component/AliIcon'
-import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
 import DetailDictPage from '../../component/DetailDictPage'
+    
+import AliIcon from '../../component/AliIcon'
 
 
 
@@ -96,54 +94,64 @@ const styles = StyleSheet.create({
     
 });
 
-class TestEnTranPage extends Component {
+export default class TestEnTranPage extends Component {
 
     constructor(props){
         super(props);
         this.state = {
+            task:{curIndex:0, taskWords:[]},
             isDetailModalOpen:false,
-            isWrongModalOpen:false
-       }
+            isWrongModalOpen:false,
+            selectedIndex:-1,       //选择的下标
+            selectedStatus:0,       //选择的状态 [0:待选择，1:正确，2:错误]
+            refresh:false
+        }
+        this.options=[]             //选项数组（存放单词下标）
+        this.answerIndex=-1         //答案下标
     }
 
     componentDidMount(){
-       this._genOptions(0)
-      
-    }
+        this.taskDao = this.props.navigation.getParam('taskDao');
+        this.VocaDao = this.props.navigation.getParam('vocaDao');
+        this.taskOrder = this.props.navigation.getParam('taskOrder')
 
-
-    //产生选项和答案
-    _genOptions(curIndex){
-        const {task, } = this.props.learnNew
-        const {changeOptions} = this.props
-        console.log(task.words.length);
-        //生成选项
-        let answerIndex = this._randomNum(0,3)                 //产生一个随机下标
-        let options = this._randomArr(0, task.words.length-1, curIndex)            //3个选项
-        options.splice(answerIndex, 0, curIndex)        //插入
-        changeOptions(options, answerIndex)
-    }
-
-    //判断答案 isWrong: 返回是否选错
-    _judgeAnswer(index){
-        //index范围： [0,1,2,3,4],其中4是查看提示
-        const {task, curIndex, answerIndex } = this.props.learnNew
-        const {selectAnswer} = this.props
-        let isWrong = false
-        if(index == 4){     //查看提示
-            selectAnswer(index, 3)
-        }else if(index == answerIndex){ //选择正确
-            selectAnswer(index, 1)
-        }else{      //选择错误
-            selectAnswer(index, 2)
-            isWrong = true
+        let task = this.taskDao.getTask(this.taskOrder)
+        //是否需要查询
+        console.log(' data :'+task.dataCompleted)
+        if(!task.dataCompleted){
+            this.taskDao.modify(()=>{
+                this.VocaDao.writeInfoToTask(task)
+                task.dataCompleted = true
+            })  
         }
-        return isWrong
+        this._genOptions(task.curIndex, task.taskWords.length)  //第一次生成选项
+        this.setState({task})
+        console.log(task.options)
+    }
+    componentWillUnmount(){
+
     }
 
+     //产生选项和答案
+     _genOptions(curIndex, length){
+    
+        //判断错误
+        if((typeof curIndex !== "number") || (typeof length !== "number")){
+            throw new Error('参数类型错误，curIndex, length 应该是number')
+        }
+        //生成选项
+        this.answerIndex = this._randomNum(0,3)                                     //产生一个随机下标
+        this.options = this._randomArr(0, length-1, curIndex)       //3个选项
+        this.options.splice(this.answerIndex, 0, curIndex)         
+    }
 
+    
     //生成一个minNum到maxMum间的随机数数组 (不出现指定数)
     _randomArr = (minNum, maxNum, num) => {
+        //判断错误
+        if((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof num !== "number")){
+            throw new Error('参数类型错误，minNum, maxNum, num 应该是number')
+        }
         let options = []
 
         for(let i of [1,2,3]){ //产生3个选项
@@ -158,26 +166,34 @@ class TestEnTranPage extends Component {
 
     //生成一个minNum到maxMum间的随机数
     _randomNum = (minNum, maxNum) => {
+        if((typeof minNum !== "number") || (typeof maxNum !== "number") ){
+            throw new Error('参数类型错误，minNum, maxNum 应该是number')
+        }
         return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
     }
 
-    //回到首页
-    _backToHome = ()=>{
-        // 抹掉stack，跳转到指定路由
-        const  resetAction = StackActions.reset({  
-            index: 0,
-            actions: [
-                NavigationActions.navigate({routeName:'Home'}),
-            ]
-        });
-        this.props.navigation.dispatch(resetAction);
+
+     //判断答案 isWrong: 返回是否选错
+     _judgeAnswer(index){
+        //index范围： [0,1,2,3,4],其中4是查看提示
+        let isWrong = false
+        if(index == 4){                         //查看提示
+            this.setState({selectedIndex:index, selectedStatus:0})
+        }else if(index == this.answerIndex){    //选择正确
+            this.setState({selectedIndex:index, selectedStatus:1})
+        }else{                                  //选择错误
+            this.setState({selectedIndex:index, selectedStatus:2})
+            isWrong = true
+        }
+        return isWrong
     }
 
 
+    
 
     //创建单词详情modal, 
     _createDetailModal = (isWrong) =>{
-        const {task, curIndex} = this.props.learnNew
+        const {curIndex, taskWords} = this.state.task
         // isWrong=true，表示选错后的Modal；isWrong=false,表示查看提示的Modal
         return <Modal style={[styles.modal, styles.modal2]}
                 isOpen={isWrong?this.state.isWrongModalOpen : this.state.isDetailModalOpen} 
@@ -190,7 +206,15 @@ class TestEnTranPage extends Component {
                 ref={ref => {
                     this.detailModal = ref
                 }}>
-                <DetailDictPage word={task.words[curIndex].word}/>
+                
+                    <DetailDictPage 
+                    vocaDao={this.VocaDao}
+                    vocaGroupDao={null}
+                    word={taskWords[curIndex]?taskWords[curIndex].word:''}
+                    tran={taskWords[curIndex]?taskWords[curIndex].tran:''}
+                    />
+                
+               
                 <View style={styles.modalBottom }>
                     <TouchableNativeFeedback  >
                     <View style={[styles.modalBtn,{width:width/5}]}>
@@ -198,28 +222,15 @@ class TestEnTranPage extends Component {
                         </View>
                     </TouchableNativeFeedback>
                     <TouchableNativeFeedback onPress={()=>{
-                        const {curIndex, task} = this.props.learnNew
-                        const {nextWord, reset} = this.props
                         
                         if(isWrong){
-                            if(curIndex >= task.words.length-1){ //结束本轮测试
-                                //暂时设置为退出 => 回到首页
-                                alert('学习完毕');
-                                reset()
-                                this._backToHome()
-
-                            }else{
-                                 //如果是做错题，则跳到下一个单词
-                                this._closeWrongModal()
-                                nextWord()
-                                this._genOptions(curIndex+1)
-                            }
-                           
-
-                            
+                            this._closeWrongModal()
+                            this._nextWord()
                         }else{
                             this._closeDetailModal()
                         }
+                        
+                        
                     }}>
                         <View style={[styles.modalBtn, {width:width*3/5}]} >
                             <Text style={{fontSize:16,color:'#404040'}}>继续做题</Text>
@@ -243,16 +254,65 @@ class TestEnTranPage extends Component {
         this.setState({isWrongModalOpen: false});
     }
 
-    render() {
-        const {task, curIndex,options, answerIndex,selectedIndex, selectedStatus} = this.props.learnNew
-        const {words} = task
-        const {nextWord,reset} = this.props
-        let curWord = words[curIndex]
 
+
+
+
+
+    _nextWord = ()=>{
        
+        let {task} = this.state
+        if(task.curIndex >= task.taskWords.length-1){   //返回
+            alert('学习完毕')
+            this.taskDao.modify(()=>{
+                // 完成卡片学习
+                task.learnStatus = 'LEARN_FINISH'
+                task.curIndex = 0
+            })
+            console.log(task)
+            this.props.navigation.goBack()
+        }else{                                       //跳到下一个单词         
+              //当前词下标+1
+            this.taskDao.modify(()=>{
+                task.curIndex = task.curIndex+1
+            })
+            this.setState({selectedStatus:0})
+            this._genOptions(task.curIndex, task.taskWords.length)
+            
+            
+            
+        }
+    }
+
+
+    //回到首页
+    _backToHome = ()=>{
+        // 抹掉stack，跳转到指定路由
+        const  resetAction = StackActions.reset({  
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName:'Home'})
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
+    }
+
+    render() {
+        console.log('dao:')
+        console.log(this.VocaDao)
+        console.log(this.taskDao)
+        let {selectedStatus,selectedIndex,task} = this.state
+        const {taskWords,curIndex } = task
+        let curWord = taskWords[curIndex]
+        let testWrongNum = 0
+        let def = ''
+        if(curWord){
+            testWrongNum = curWord.testWrongNum
+            def = curWord.def
+        }
 
         //已选择
-        let selected = (selectedStatus==1 || selectedStatus==2);
+        let selected = (selectedStatus != 0);
         //选择失败
         let selectWrong = (selectedStatus==2 );
 
@@ -278,7 +338,7 @@ class TestEnTranPage extends Component {
                     alignItems:'center',}}>
                         <View style={[styles.center,]}>
                             <Progress.Bar progress={0.9} height={10} width={width-120} color='#F6B056' unfilledColor='#FFF' borderWidth={0} >
-                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>3/15</Text> 
+                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>{`${curIndex}/${taskWords.length}`}</Text> 
                             </Progress.Bar>
                         </View>
                     </Body>
@@ -292,10 +352,10 @@ class TestEnTranPage extends Component {
                                 <View style={[styles.row]}>
                                     <Text style={{color:'#303030',fontSize:16,}}>英英释义</Text>
                                 </View>
-                                <Text style={{color:'#EC6760',fontSize:16,}}>{`答错${curWord.testWrongNum}次`}</Text>
+                                <Text style={{color:'#EC6760',fontSize:16,}}>{`答错${testWrongNum}次`}</Text>
                             </View>
                             <View style={{flex:1, backgroundColor:'#C0E5FF', padding:4, borderRadius:4, marginTop:5}}>
-                                <Text style={styles.enFont}>{curWord.def}</Text>
+                                <Text style={styles.enFont}>{def}</Text>
                             </View>
                         </Row>
                         
@@ -303,33 +363,26 @@ class TestEnTranPage extends Component {
                 </Content>
 
                 <Grid style={{padding:10}}>
-                    {options.length!=0 &&
-                        options.map((option, index)=>{
+                    {this.options.length!=0 &&
+                        this.options.map((option, index)=>{
                            
                             return <Row key={index} style={styles.row}>
                                 <Button block style={[
                                     styles.selectBtn, 
-                                    index==answerIndex&&selected?{borderColor:'#1890FF'}:{}, 
+                                    index==this.answerIndex&&selected?{borderColor:'#1890FF'}:{}, 
                                     index==selectedIndex&&selectWrong?{borderColor:'#EC6760'}:{}]} onPress={()=>{
                                     if(this._judgeAnswer(index)){ //选择错误
                                         this._openWrongModal()
                                     }else{                      //选择正确
-                                        if(curIndex >= task.words.length-1){//结束测试
-                                            alert('学习完毕')
-                                            reset()
-                                            this._backToHome()
-                                        }else{
-                                            nextWord()
-                                            this._genOptions(curIndex+1)
-                                        }
+                                        this._nextWord();
                                     }
                                     
                                     
                                 }}>
                                     <Text style={[
                                         styles.btnFont, 
-                                        index==answerIndex&&selected?{color:'#1890FF'}:{},
-                                        index==selectedIndex&&selectWrong?{color:'#EC6760'}:{}]}>{words[option].word}</Text>
+                                        index==this.answerIndex&&selected?{color:'#1890FF'}:{},
+                                        index==selectedIndex&&selectWrong?{color:'#EC6760'}:{}]}>{taskWords[option]?taskWords[option].word:''}</Text>
                                 </Button>
                         </Row>
                         })
@@ -342,10 +395,10 @@ class TestEnTranPage extends Component {
                         </Button>
                     </Row>
                 </Grid>
-                {
+                {taskWords[curIndex] && this.VocaDao && this.taskDao &&
                     this._createDetailModal(false)
                 }
-                {
+                {taskWords[curIndex] && this.VocaDao && this.taskDao &&
                     this._createDetailModal(true)
                 }
             </Container>
@@ -354,15 +407,3 @@ class TestEnTranPage extends Component {
 }
 
 
-const mapStateToProps = state =>({
-    learnNew : state.learnNew
-});
-
-const mapDispatchToProps = {
-    nextWord: LearnNewAction.nextWord,
-    changeOptions: LearnNewAction.changeOptions,
-    selectAnswer: LearnNewAction.selectAnswer,
-    reset: LearnNewAction.reset,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TestEnTranPage);

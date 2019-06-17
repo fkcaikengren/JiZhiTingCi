@@ -3,7 +3,8 @@ import {TouchableOpacity, TextInput,StatusBar ,FlatList, View, Text, StyleSheet}
 import { Container, Header, Input,Button, Icon, Content, Item } from 'native-base';
 
 
-import {searchWord} from '../../dao/vocabulary/VocaDao'
+import VocaDao from '../../dao/vocabulary/VocaDao'
+import VocaGroupDao from '../../dao/vocabulary/VocaGroupDao'
 import DetailDictPage from '../../component/DetailDictPage';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -63,7 +64,21 @@ export default class VocaSearchPage extends Component {
       searchText: '',
       data:[],
       searchWord: '',
+      tran:'',
     }
+    this.vocaDao = new VocaDao();
+    this.vocaGroupDao = new VocaGroupDao()
+  }
+
+  componentDidMount(){
+    this.vocaDao.open()
+    this.vocaGroupDao.open()
+  }
+
+
+  componentWillUnmount(){
+    this.vocaDao.close()
+    this.vocaGroupDao.close()
   }
 
 
@@ -72,7 +87,7 @@ export default class VocaSearchPage extends Component {
   
   _renderItem = ({item})=>{
     return <TouchableOpacity  onPress={()=>{
-      this.setState({searchWord:item.word})
+      this.setState({searchWord:item.word, tran:item.trans})
     }}>
       <View  style={styles.item}>
           <View style={styles.row}>
@@ -92,16 +107,8 @@ export default class VocaSearchPage extends Component {
   }
 
   _changeText = (searchText)=>{
-    searchWord(searchText)
-    .then(data=>{
-      console.log(data)
-      this.setState({searchText, data})
-    })
-    .catch(err=>{
-      console.log('VocaSearchPage: 查词失败')
-    })
-    
-    
+    const data = this.vocaDao.searchWord(searchText)
+    this.setState({searchText, data})
   }
 
   _clearSear = ()=>{
@@ -157,7 +164,11 @@ export default class VocaSearchPage extends Component {
           }
 
           {this.state.searchWord !== ''&&
-            <DetailDictPage word={this.state.searchWord}/>
+            <DetailDictPage 
+            vocaDao={this.vocaDao}
+            vocaGroupDao={this.vocaGroupDao}
+            word={this.state.searchWord} 
+            tran={this.state.tran}/>
           }
         
 

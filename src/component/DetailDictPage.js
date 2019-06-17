@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import { Container, Header, Content, Grid, Row, Col, } from 'native-base';
-import {getWordDetail} from '../dao/vocabulary/VocaDao'
 import {PropTypes} from 'prop-types';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
-
 import VocaGroupDao from '../dao/vocabulary/VocaGroupDao'
+
 import DictCard from './DictCard';
 import AliIcon from './AliIcon';
 const Dimensions = require('Dimensions');
@@ -44,26 +42,34 @@ export default class DetailDictPage extends Component {
 
   constructor(props){
     super(props);
-    this.state = {wordDict:{}}
-    this.dao = new VocaGroupDao()
+    this.state = {wordDict:{}, highLight:false}
+    if(!this.props.vocaGroupDao){
+      console.log('自建')
+      this.vocaGroupDao = new VocaGroupDao()
+    }else{
+      console.log('props vocaGroupDao')
+      this.vocaGroupDao = this.props.vocaGroupDao
+    }
   }
 
   componentDidMount(){
-    getWordDetail(this.props.word)
-    .then(wordDict =>{
-        this.setState({wordDict:wordDict});
-        //打开数据库
-        this.dao.open()
-    })
-    .catch(err=>{
-      console.log("DetailDictPage: 读取单词信息失败");
-      console.log(err)
-    })
+    console.log(this.props.vocaDao);
+    //打开数据库，查询单词详情
+    const wordDict = this.props.vocaDao.getWordDetail(this.props.word)
+    this.setState({wordDict});
+     //打开数据库，查询生词本信息
+     this.vocaGroupDao.open()
+     .then(()=>{
+        //判断是否存在默认生词本中
+        if(this.vocaGroupDao.isExistInDefault(this.props.word)){
+          this.setState({highLight:true})
+        }
+     })
   }
   
   componentWillUnmount(){
     alert('detailDictPage out, close realm');
-    this.dao.close();
+    this.vocaGroupDao.close();
   }
 
   render() {
@@ -74,17 +80,24 @@ export default class DetailDictPage extends Component {
           {/* 单词 */}
           <View style={styles.row}>
             <Text style={{fontSize:18,fontWeight:'500',color:'#303030'}}>{word?word:''}</Text>
-            <Ionicons name='ios-star' color='#909090' size={30} onPress={()=>{
-              alert('add')
-              let groupWord = {
-                word: word,
-                enPhonetic: properties?properties[0].enPhonetic:'',
-                enPhoneticUrl: '',
-                amPhonetic: properties?properties[0].amPhonetic:'',
-                amPhoneticUrl: '',
-                tran: 'xxxxxxx'
+            <Ionicons name='ios-star' color={this.state.highLight?'#EE4':'#909090'} size={30} 
+            style={{marginLeft:20}} 
+            onPress={()=>{
+              
+              if(!this.state.highLight){ //不在默认生词本中
+                let groupWord = {
+                  word: word,
+                  enPhonetic: properties?properties[0].enPhonetic:'',
+                  enPhoneticUrl: '',
+                  amPhonetic: properties?properties[0].amPhonetic:'',
+                  amPhoneticUrl: '',
+                  tran: this.props.tran
+                }
+                this.vocaGroupDao.addWordToDefault(groupWord)
+                this.setState({highLight:true})
+                alert('添加成功')
               }
-              this.dao.addWordToDefault(groupWord)
+              
             }}/>
           </View>
           {properties &&
@@ -135,11 +148,16 @@ export default class DetailDictPage extends Component {
   static propTypes = {
       
       word: PropTypes.string.isRquired,
-    
+      tran: PropTypes.string.isRquired,
+      vocaDao: PropTypes.object.isRequired,
+      vocaGroupDao: PropTypes.object.isRequired,
   }
 
 // 组件参数默认属性
   static defaultProps = {
-      word:''
+      word:'',
+      tran:'',
+      vocaDao:null,
+      vocaGroupDao: null,
   }
 }

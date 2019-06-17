@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import {Platform, StatusBar, View, StyleSheet, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import { Container, Content, Grid, Row, Col, Header, Button, Body, Switch} from 'native-base';
+import {NavigationActions, StackActions} from 'react-navigation'
 
 import {turnLogoImg} from '../../image';
 import AliIcon from '../../component/AliIcon';
 import IconListItem from '../../component/IconListItem';
-
+import UserDao from '../../dao/mine/UserDao'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -46,9 +47,33 @@ const styles = StyleSheet.create({
 export default class AccountPage extends React.Component {
     constructor(props){
         super(props);
-        this.state={}
+        this.state={user:{}}
+        this.dao = new UserDao()
+    }
+
+
+    componentDidMount(){
+        this.dao.open()
+        .then(()=>{
+            let user = this.dao.getUser()
+            this.setState({user})
+        })
+    }
+
+    componentWillUnmount(){
+        alert('acountPage out, close realm ')
+        this.dao.close()
+    }
+
+
+    //退出登录
+    _logout = ()=>{
+        //清空用户信息
+        this.dao.clearUserInfo()
+        BackHandler.exitApp()
     }
     render(){
+        let {user} = this.state
         return(
             <Container style={styles.container}>
                 <StatusBar
@@ -87,7 +112,7 @@ export default class AccountPage extends React.Component {
                             <IconListItem 
                                 containerStyle={styles.containerStyle}
                                 title='用户名'
-                                subtitle='JacyAcme'
+                                subtitle={user.nickname?user.nickname:''}
                                 onPress={()=>{
                                     alert('Jacy');
                                 }}
@@ -95,10 +120,9 @@ export default class AccountPage extends React.Component {
                             <IconListItem 
                                 containerStyle={styles.containerStyle}
                                 title='绑定手机'
-                                rightIcon={<AliIcon name='shouji' size={26} color='#808080'></AliIcon>}
-                                onPress={()=>{
-                                    alert('读后感');
-                                }}
+                                subtitle={user.phone}
+                                rightIcon={user.phone?null:<AliIcon name='shouji' size={26} color='#1890FF'></AliIcon>}
+                               
                             />
                             <IconListItem 
                                 containerStyle={styles.containerStyle}
@@ -118,9 +142,7 @@ export default class AccountPage extends React.Component {
                             />
 
 
-                            <TouchableOpacity onPress={()=>{
-                                alert('tuichu');
-                            }}>
+                            <TouchableOpacity onPress={this._logout}>
                                 <View style={[{
                                     flexDirection:'row',
                                     justifyContent:'center',

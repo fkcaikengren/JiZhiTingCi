@@ -9,7 +9,6 @@ const Sound = require('react-native-sound');
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import * as vocaPlayAction from '../../action/vocabulary/vocaPlayAction';
-import * as LearnNewAction from '../../action/vocabulary/learnNewAction'
 import {PLAY_LEARN,  PLAY_REVIEW } from '../../constant'
 import AliIcon from '../../component/AliIcon';
 const Dimensions = require('Dimensions');
@@ -140,9 +139,14 @@ class VocaPlayPage extends React.Component {
             this.controlDisable = true
             this.learnPlayTime = 0//播放遍数
         }
-
+        this.taskDao = this.props.navigation.getParam('taskDao')
     }
     componentDidMount(){
+        //taskDao, 获取taskOrder=1的数据
+        const task = this.taskDao.getTask(1)
+        console.log(task)
+        this.props.loadReviewList(task.taskWords)
+        console.log(task)
         const {curIndex} = this.props.vocaPlay
         //根据传递参数判断，是否自动播放
         if(this.controlDisable){
@@ -518,6 +522,7 @@ const mapStateToProps = state =>({
 
 const mapDispatchToProps = {
     changePlayTimer : vocaPlayAction.changePlayTimer,
+    loadReviewList : vocaPlayAction.loadReviewList,
     changeCurIndex : vocaPlayAction.changeCurIndex,
     toggleWord : vocaPlayAction.toggleWord,
     toggleTran : vocaPlayAction.toggleTran,
@@ -525,8 +530,7 @@ const mapDispatchToProps = {
     changeTheme : vocaPlayAction.changeTheme,
     changeInterval : vocaPlayAction.changeInterval,
     resetPlayList : vocaPlayAction.resetPlayList,
-    finishPlay : LearnNewAction.finishPlay
-    
+  
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);
