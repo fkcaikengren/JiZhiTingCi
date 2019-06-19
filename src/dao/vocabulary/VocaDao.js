@@ -82,6 +82,8 @@ export default class VocaDao{
                 property:wi.property,
                 enPhonetic:wi.en_phonetic,
                 amPhonetic:wi.am_phonetic,
+                enPronUrl:wi.en_pron_url,
+                amPronUrl:wi.am_pron_url,
                 defs:[]
             }
             for(let wd of wordDefs){

@@ -91,8 +91,8 @@ export default class HomePage extends Component {
         this.taskDao.open()     //打卡任务数据库
         .then(()=>{
             //先存一部分数据（测试）
-            // this.taskDao.deleteAllTasks()
-            // this.taskDao.saveVocaTasks([])
+            this.taskDao.deleteAllTasks()
+            this.taskDao.saveVocaTasks([])
             this._loadData()
         })
     }

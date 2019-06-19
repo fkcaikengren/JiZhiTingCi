@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, FlatList} from 'react-native';
 import { Container, Header, Body, Button} from "native-base";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
+import {playSound} from '../../net/vocabulary/AudioFetch'
 import AliIcon from '../../component/AliIcon';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import IndexSectionList from '../../component/IndexSectionList';
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -120,7 +123,9 @@ export default class GroupVocaPage extends Component {
             totalSize ++;
             for (let w of sections[i].words) { //遍历单词
                 flatData.push({
-                    type:'word',  word:w.word, isHidden:w.isHidden, tran:w.tran
+                    type:'word',  word:w.word, isHidden:w.isHidden, tran:w.tran, 
+                    enPhonetic:w.enPhonetic, 
+                    enPronUrl:w.enPronUrl
                 });
                 totalSize ++;
             }                                           
@@ -219,7 +224,9 @@ export default class GroupVocaPage extends Component {
                             <Text style={{fontSize:16, color:'#1890FF'}}>1</Text>
                             <Text style={{fontSize:16, color:'#303030', marginLeft:10}}>{item.word}</Text>
                         </View>
-                        <AliIcon name='shengyin' size={26} color='#1890FF'></AliIcon>
+                        <MaterialIcons name='volume-up' size={24} color='#3F51B5'  onPress={()=>{
+                            playSound(item.enPronUrl)
+                        }}/>
                     </View>
                     <View style={[styles.rowStart,{width:width-40}]}>
                         <Text numberOfLines={1} style={{fontSize:14, color:'#606060', }}>{item.tran}</Text>

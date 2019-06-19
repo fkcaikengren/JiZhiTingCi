@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text,  TouchableHighlight} from 'react-native';
 import { Container, Header, Content, Grid, Row, Col, } from 'native-base';
 import {PropTypes} from 'prop-types';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import VocaGroupDao from '../dao/vocabulary/VocaGroupDao'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Sound from 'react-native-sound'
 
+import VocaGroupDao from '../dao/vocabulary/VocaGroupDao'
+import {playSound} from '../net/vocabulary/AudioFetch'
 import DictCard from './DictCard';
 import AliIcon from './AliIcon';
 const Dimensions = require('Dimensions');
@@ -72,6 +75,8 @@ export default class DetailDictPage extends Component {
     this.vocaGroupDao.close();
   }
 
+
+
   render() {
     const {word, properties} = this.state.wordDict
     return (
@@ -88,9 +93,9 @@ export default class DetailDictPage extends Component {
                 let groupWord = {
                   word: word,
                   enPhonetic: properties?properties[0].enPhonetic:'',
-                  enPhoneticUrl: '',
+                  enPronUrl: properties?properties[0].enPronUrl:'',
                   amPhonetic: properties?properties[0].amPhonetic:'',
-                  amPhoneticUrl: '',
+                  amPronUrl: properties?properties[0].amPronUrl:'',
                   tran: this.props.tran
                 }
                 this.vocaGroupDao.addWordToDefault(groupWord)
@@ -113,11 +118,15 @@ export default class DetailDictPage extends Component {
                       <View style={[styles.row, ]}>
                           <View style={[styles.row,]}>
                               <Text style={styles.phonetic}>{propInfo.enPhonetic}</Text>
-                              <AliIcon name='shengyin' size={26} color='#E59AAA'></AliIcon>
+                              <FontAwesome5 name='headphones-alt' color='#E59AAA' size={26} onPress={()=>{
+                                  playSound(propInfo.enPronUrl)
+                              }}/>
                           </View>
                           <View style={[{marginLeft:20}, styles.row]}>
-                              <Text style={styles.phonetic}>{propInfo.amPhonetic}</Text>
-                              <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                            <Text style={styles.phonetic}>{propInfo.amPhonetic}</Text>
+                            <FontAwesome5 name='headphones-alt' color='#3F51B5' size={26} onPress={()=>{
+                                playSound(propInfo.amPronUrl)
+                            }}/>
                           </View>
                       </View>
                     </Row>

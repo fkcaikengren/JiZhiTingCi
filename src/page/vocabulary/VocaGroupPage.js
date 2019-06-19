@@ -4,7 +4,6 @@ import { Container, Header, Content, Body, Item, Input,
     Button, Footer, FooterTab} from "native-base";
 import Modal from 'react-native-modalbox';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
 import AliIcon from '../../component/AliIcon';
 import VocaGroupDao from '../../dao/vocabulary/VocaGroupDao'
 
@@ -102,6 +101,9 @@ export default class VocaGroupPage extends Component {
         this.dao.open()
         .then(()=>{
             let vocaGroups = this.dao.getAllGroups();
+            console.log('all groups:')
+            console.log(vocaGroups[0].groupName)
+            console.log(vocaGroups[0].sections.section)
             if(vocaGroups.length == 0){
                 this.dao.addGroup('0默认生词本')
                 this.dao.updateToDefault('0默认生词本')
@@ -299,8 +301,11 @@ export default class VocaGroupPage extends Component {
                                         <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
                                             {/* 设置为默认生词本 */}
                                             <Ionicons name='ios-star' color={item.isDefault?'#EE4':'#909090'} size={30} onPress={()=>{
-                                                alert('设置为默认的');
-                                                this.dao.updateToDefault(0+groupName)
+                                                if(!item.isDefault){ //不是默认
+                                                    alert('设置为默认的');
+                                                    this.dao.updateToDefault(0+groupName)
+                                                    this.setState({refresh:!this.state.refresh})
+                                                }
                                                 }}/>
                                             {/* 修改 */}
                                             <TouchableNativeFeedback onPress={()=>{

@@ -46,9 +46,9 @@ const GroupWordSchema = {
     word: 'string?',
     isHidden: {type: 'bool', optional:true, default: false},
     enPhonetic: 'string?',
-    enPhoneticUrl: 'string?',
+    enPronUrl: 'string?',
     amPhonetic: 'string?',
-    amPhoneticUrl: 'string?',
+    amPronUrl: 'string?',
     tran: 'string?'
   }
 };
@@ -139,11 +139,17 @@ export default class VocaGroupDao{
     //5. 修改为默认生词本
     updateToDefault = (groupName)=>{
         this.realm.write(()=>{
+            //先取消所有的默认生词本，再设置新的默认生词本（保证唯一）
+            let dgs = this.realm.objects('VocaGroup').filtered('isDefault = true')
+            for(let dg of dgs){
+                dg.isDefault = false
+            }
+
             let group = this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
             if(group){
                 group.isDefault = true;
             }else{
-                console.log('更新生词本名称，未查找到')
+                console.log('未查找到要修改的生词本')
             }
         })
     }
@@ -152,10 +158,24 @@ export default class VocaGroupDao{
     // 6. 添加生词到默认生词本
     addWordToDefault = (groupWord)=>{
         this.realm.write(()=>{
+            console.log(groupWord.word)
             //判断groupWord 所在的分组（即判断第一个字母）
             let isSaved = false
             let firstChar = groupWord.word[0].toUpperCase()
             let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+            //如果默认生词本不存在，创建一个默认生词本
+            if(!defaultGroup){
+                let group={
+                    id: uuidv4(),                       
+                    groupName: '0默认生词本',            
+                    count: 0,
+                    createTime: new Date().getTime(),  
+                    isDefault: true,     //是否是默认生词本
+                    sections: [],   
+                }
+                defaultGroup = this.realm.create('VocaGroup', group);
+            }
+            console.log(defaultGroup)
             for(let s of defaultGroup.sections){
                 if(s.section === firstChar){
                     //存入
@@ -174,7 +194,7 @@ export default class VocaGroupDao{
                 defaultGroup.sections.push(newSection);
                 defaultGroup.count++;
             }
-            
+            // console.log(defaultGroup)
         })
     }
     
@@ -183,14 +203,16 @@ export default class VocaGroupDao{
         console.log(this.realm)
         let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
         let isExist = false;
-        for(let s of defaultGroup.sections){
-            for(let w of s.words){
-                if(w.word ===  word){
-                    //如果存在
-                    isExist = true
-                    break;
+        if(defaultGroup){
+            for(let s of defaultGroup.sections){
+                for(let w of s.words){
+                    if(w.word ===  word){
+                        //如果存在
+                        isExist = true
+                        break;
+                    }
+                    
                 }
-                
             }
         }
         return isExist

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text} from 'react-native';
+import {StyleSheet, StatusBar, View, Text, TouchableHighlight} from 'react-native';
 import {PropTypes} from 'prop-types';
-import AliIcon from './AliIcon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import {playSound} from '../net/vocabulary/AudioFetch'
+
 
 const styles = StyleSheet.create({
     topView:{
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     fonts:{
         fontSize:16,
         color:'#404040',
-        lineHeight:24,
+        lineHeight:30,
     },
     keyFonts:{
         fontSize:16,
@@ -60,6 +62,8 @@ export default class DictCard extends React.Component {
         super(props);
     }
 
+
+    
 
     render(){
         const {defInfo, order} = this.props
@@ -105,8 +109,11 @@ export default class DictCard extends React.Component {
                     {defInfo.sentences!==undefined &&
                         defInfo.sentences.map((senInfo, index)=>{
                             return (
-                                <Text key={index} style={[styles.fonts, styles.sen]}>
-                                    <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
+                                <Text numberOfLines={3} key={index} style={[styles.fonts, styles.sen,]}>
+                                    <MaterialIcons name='volume-up' size={24} color='#3F51B5'  onPress={()=>{
+                                        console.log(senInfo.sentence_pron_url)
+                                        playSound(senInfo.sentence_pron_url)
+                                    }}/>
                                     {senInfo.sentence}
                                 </Text>
                             )
