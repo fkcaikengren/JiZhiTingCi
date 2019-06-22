@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {View, StyleSheet,Image, FlatList, TouchableOpacity} from 'react-native';
+import {StatusBar , StyleSheet,Image, View,FlatList, TouchableOpacity} from 'react-native';
 import { Container, Header,Content,  Grid, Col, Row,
-    Icon ,Button,Text,Left,Right, Body, Footer,ListItem } from 'native-base';
+    Icon ,Button,Text,Left,Right, Body, Footer,ListItem,  } from 'native-base';
 import * as Progress from 'react-native-progress';
 
 import Ionicons from 'react-native-vector-icons'
@@ -16,6 +16,7 @@ import AliIcon from '../../component/AliIcon';
 import {turnLogoImg} from '../../image';
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
+const STATUSBAR_HEIGHT =  StatusBar.currentHeight
 
 const styles = StyleSheet.create({
     header:{
@@ -325,6 +326,11 @@ export default class HomePage extends Component {
         console.log(this.state.data)
         return (
             <Container style={{ backgroundColor: '#FDFDFD',}}> 
+                <StatusBar
+                    translucent={true}
+                    // hidden
+                />
+                <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
                 {/* 头部 */}
                 <Header style={styles.header}>
                     <Text style={styles.title}>极致英语</Text>

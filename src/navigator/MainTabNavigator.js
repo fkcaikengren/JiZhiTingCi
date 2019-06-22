@@ -5,9 +5,6 @@ import { createStackNavigator, Button, createBottomTabNavigator } from 'react-na
 
 import AliIcon from '../component/AliIcon';
 
-import ReadPage from '../page/reading/ReadPage';
-import GrammaPage from '../page/gramma/GrammaPage';
-
 import HomePage from '../page/vocabulary/HomePage';
 import VocaSearchPage from '../page/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../page/vocabulary/VocaPlayPage';
@@ -23,7 +20,12 @@ import GroupVocaPage from '../page/vocabulary/GroupVocaPage';
 
 import MinePage from '../page/mine/MinePage';
 import AccountPage from '../page/mine/AccountPage';
-import LoginPage from '../page/mine/LoginPage';
+import GrammaPage from '../page/gramma/GrammaPage';
+
+import ReadPage from '../page/reading/ReadPage'
+import LevelBookPage from '../page/reading/LevelBookPage'
+import GenreBookPage from '../page/reading/GenreBookPage'
+
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -120,19 +122,54 @@ HomeStackNav.navigationOptions = ({ navigation }) => {
 
 
 
-// 语法模块
-const GrammaStackNav = createStackNavigator(
+
+
+
+// 阅读模块
+const ReadStackNav = createStackNavigator(
   {
-    // 语法
-    Gramma: {
-      screen:GrammaPage,
+    // 阅读主页
+    Read: {
+      screen:ReadPage,
+    },
+    // 分级查看书籍
+    LevelBook: {
+      screen:LevelBookPage
+    },
+    GenreBook: {
+      screen:GenreBookPage
     }
   },
   {
-    initialRouteName: 'Gramma',
+    initialRouteName: 'Read',
     headerMode:'none',
   }
 );
+//导航进入第n(n>1)个页面时，隐藏导航的tabBar
+ReadStackNav.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  let swipeEnabled = true;
+  let index = navigation.state.index;  //index是导航的栈下标 （表示当前路由下标）
+
+
+  let routes = navigation.state.routes;
+  if(index > 0){
+      tabBarVisible = false;
+      swipeEnabled = false;
+    }
+
+  console.log('navigation: ')
+  console.log(navigation)
+  return {
+    tabBarVisible,
+    swipeEnabled,
+  };
+};
+
+
+
+
+
 
 
 // 我的模块
@@ -166,25 +203,17 @@ export default createBottomTabNavigator(
         }
       },
      
-      // '阅读':{
-      //   screen: ReadPage,
-      //   navigationOptions: {
-      //     tabBarLabel: '阅读',
-      //     tabBarIcon: ({tintColor, focused}) => (
-      //         <AliIcon name='yuedureading19-copy' size={24} color={tintColor}></AliIcon>
-      //     ),
-      //   }
-      // },
+      
 
-      // '语法':{
-      //   screen: GrammaStackNav,
-      //   navigationOptions: {
-      //     tabBarLabel: '语法',
-      //     tabBarIcon: ({tintColor, focused}) => (
-      //         <AliIcon name='yingyu' size={24} color={tintColor}></AliIcon>
-      //     ),
-      //   }
-      // },
+      '语法':{
+        screen: ReadStackNav,
+        navigationOptions: {
+          tabBarLabel: '阅读',
+          tabBarIcon: ({tintColor, focused}) => (
+              <AliIcon name='yuedureading19-copy' size={24} color={tintColor}></AliIcon>
+          ),
+        }
+      },
       '我的':{
         screen: MineStackNav,
         navigationOptions: {

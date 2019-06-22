@@ -264,6 +264,38 @@ emulator-5554 tcp:8083 tcp:8083
 然后参考链接，修改rpc.js
 ```
 
+```jsx
+if (global.__debug__) {
+    let request = global.__debug__.require('sync-request');
+    let response = request('POST', url, {
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "text/plain;charset=UTF-8"
+      }
+    });
+
+    statusCode = response.statusCode;
+    responseText = response.body.toString('utf-8');
+} else {
+    let body = JSON.stringify(data);
+    let request = new XMLHttpRequest();
+
+    // 增加以下代码
+    if (__DEV__) {
+        url = 'http://localhost:8083' + url.substring(url.lastIndexOf('/'));
+    }
+
+    request.open('POST', url, false);
+    request.send(body);
+
+    statusCode = request.status;
+    responseText = request.responseText;
+}
+
+```
+
+
+
 参考：<https://github.com/realm/realm-js/issues/578>
 
 参考：<https://github.com/realm/realm-js/issues/1034>
@@ -277,6 +309,29 @@ yarn add uuid
 ```
 
 
+
+### 安装react-native-swiper
+
+```
+yarn add react-native-swiper 
+```
+
+
+
+### 安装react-native-shadow
+
+```jsx
+yarn add react-native-shadow
+```
+
+
+
+### 安装react-native-svg
+
+```
+yarn add react-native-svg
+手动link
+```
 
 
 

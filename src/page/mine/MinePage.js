@@ -8,6 +8,10 @@ import IconListItem from '../../component/IconListItem';
 import UserDao from '../../dao/mine/UserDao'
 
 
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
+const STATUSBAR_HEIGHT =  StatusBar.currentHeight
+
 const styles = StyleSheet.create({
     headerIcon:{
         width:100,
@@ -99,7 +103,12 @@ export default class MinePage extends React.Component {
         console.log(user)
         return(
             <Container>
-
+                <StatusBar
+                    translucent={true}
+                    // hidden
+                />
+                <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
+                {/* 头部 */}
                 <Content>
                     <Grid>
                         {/* 头像 */}
