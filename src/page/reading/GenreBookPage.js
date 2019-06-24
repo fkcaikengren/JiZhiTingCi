@@ -26,12 +26,21 @@ export default class GenreBookPage extends Component {
         super(props)
         this.state={
             books:[
-                {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg'},
-                {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg'},
-                {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg'},
-                {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg'},
-                {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg'},
-                {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg'},
+                {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+
+                {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                
+                
             ]
         }
     }
@@ -39,14 +48,13 @@ export default class GenreBookPage extends Component {
     _renderItem = ({item, index})=>{
         console.log(item)
         return <Row style={{marginBottom:20}}>
-            <RowBook book={item}/>
+            <RowBook book={item} feature={'原著/有音频/免费'} showIntro={true}/>
         </Row>
     }
 
 
   render(){
     const {navigate,goBack, getParam} = this.props.navigation
-    const {genreName} = getParam('genreName');
     return (
         <Container >
             <StatusBar
@@ -69,7 +77,7 @@ export default class GenreBookPage extends Component {
                 <Body style={{flexDirection:'row',
                 justifyContent:'center',
                 alignItems:'center',}}>
-                    <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>{genreName}</Text>
+                    <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>{getParam('genreName')}</Text>
                 </Body>
             </Header> 
             <Content style={{}}>

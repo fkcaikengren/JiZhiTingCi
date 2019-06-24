@@ -58,7 +58,15 @@ export default class LevelBook extends Component {
     _renderItem = ({item, index})=>{
         console.log(item)
         return <Row style={{marginBottom:20}}>
-            <RowBook book={item}/>
+            <RowBook book={item} enNameSize={14} zhNameSize={14} 
+            imgStyle={{ 
+                width:60,
+                height:80,
+                borderRadius:2}}
+            starSize={10}
+            showAuthor={false}
+            feature={'原著/有音频/免费'}
+            featureSize={10}/>
         </Row>
     }
 

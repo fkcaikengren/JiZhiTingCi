@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     },
     bkContainer:{
         width:width/3,
-        height:180,
+        height:140,
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
@@ -65,7 +65,12 @@ const styles = StyleSheet.create({
         marginVertical:10,
         backgroundColor:'#EFEFEF',
         borderRadius:5,
-
+    },
+    desk:{
+        width:width,
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
     }
 })
 
@@ -74,19 +79,33 @@ export default class ReadPage extends Component {
     constructor(props){
         super(props)
         this.state={
+            myBooks:[
+                {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+            ],
             data:[{
                 name:'冒险',
                 books:[
-                    {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg'},
-                    {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg'},
-                    {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg'},
+                    {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg',
+                intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                    {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg',
+                    intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                    {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'Island', coverUrl:'/xx/xx.jpg',
+                    intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
                 ]
             },{
                 name:'爱情',
                 books:[
-                    {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg'},
-                    {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg'},
-                    {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'', coverUrl:'/xx/xx.jpg'},
+                    {zhName:'汤姆·索亚历险记',zhAuthor:'马克·吐温', enName:'The Adventures of Tom Sawyer', coverUrl:'/xx/xx.jpg',
+                    intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                    {zhName:'80天环游世界',zhAuthor:'马克·吐温', enName:'Le Tour du monde en quatre-vingts jours', coverUrl:'/xx/xx.jpg',
+                    intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
+                    {zhName:'金银岛',zhAuthor:'罗伯特·路易斯', enName:'', coverUrl:'/xx/xx.jpg',
+                    intro:'本书是英国小说家罗伯特·路易斯·史蒂文森创作的一部长篇小说，创作于1881年，作品于1881年10月至1882年1月以《金银岛，或伊斯班袅拉号上的暴乱》为题在《小伙子》上发表，作者的署名是“乔治·诺斯船长”，1883年出版单行本。'},
                 ]
             }]
         }
@@ -162,7 +181,7 @@ export default class ReadPage extends Component {
                         </Item>
                     </Row>
                     {/* 轮播 */}
-                    <Row style={[styles.r_center,]}>
+                    <Row style={[styles.r_center,{marginBottom:20}]}>
                         <Swiper 
                             height={200}
                             style={styles.wrapper}
@@ -185,8 +204,18 @@ export default class ReadPage extends Component {
                         </Swiper>
                     </Row>
                     {/* 书桌 */}
-                    <Row style={{width:width}}>
-                        <ScrollView style={{ flex: 1 }}
+                    <Row style={styles.desk}>
+                        <View style={{ 
+                            flexDirection:'row',
+                            justifyContent:'space-between',
+                            alignItems:'center',
+                            width:width}}>
+                            <H3 style={{marginLeft:13}}>书桌</H3>
+                            <AliIcon style={{marginRight:8}} name='youjiantou' size={26} color='#1890FF' onPress={()=>{
+                                alert('我的书桌')
+                            }}/>
+                        </View>
+                        <ScrollView style={{ flex: 1, }}
                             horizontal={true}
                             // 是否分页
                             pagingEnabled={false}
@@ -194,18 +223,20 @@ export default class ReadPage extends Component {
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false}
                             >
-                            <View style={styles.bkContainer}>
-                                <Image source={bkCover1} style={styles.bkCover} />
-                            </View>
-                            <View style={styles.bkContainer}>
-                                <Image source={bkCover1} style={styles.bkCover} />
-                            </View>
-                            <View style={styles.bkContainer}>
-                                <Image source={bkCover1} style={styles.bkCover} />
-                            </View>
-                            <View style={styles.bkContainer}>
-                                <Image source={bkCover1} style={styles.bkCover} />
-                            </View>
+                            {
+                                this.state.myBooks.map((book, index) =>{
+                                    return (
+                                    <TouchableWithoutFeedback onPress={()=>{
+                                        navigate('BookDetail', {book:book})
+                                    }}>
+                                        <View style={styles.bkContainer}>
+                                            <Image source={bkCover1} style={styles.bkCover} />
+                                        </View>
+                                    </TouchableWithoutFeedback>)
+                                })
+                            }
+                            
+                         
                         </ScrollView>
                     </Row>
                     {/* 分级阅读和人气榜 */}
@@ -220,6 +251,7 @@ export default class ReadPage extends Component {
                             </View>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={()=>{
+                            navigate('GenreBook',{genreName:'人气榜'})
                         }}>
                             <View style={styles.rank}>
                                 <AliIcon name='shouye-cihuiliang' size={26} color='#303030'></AliIcon>

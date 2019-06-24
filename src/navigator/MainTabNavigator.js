@@ -25,6 +25,7 @@ import GrammaPage from '../page/gramma/GrammaPage';
 import ReadPage from '../page/reading/ReadPage'
 import LevelBookPage from '../page/reading/LevelBookPage'
 import GenreBookPage from '../page/reading/GenreBookPage'
+import BookDetailPage from '../page/reading/BookDetailPage'
 
 
 const Dimensions = require('Dimensions');
@@ -132,12 +133,17 @@ const ReadStackNav = createStackNavigator(
     Read: {
       screen:ReadPage,
     },
-    // 分级查看书籍
+    // 分级查看书籍页
     LevelBook: {
       screen:LevelBookPage
     },
+    //分类查看书籍页
     GenreBook: {
       screen:GenreBookPage
+    },
+    // 书籍详情页
+    BookDetail: {
+      screen: BookDetailPage
     }
   },
   {

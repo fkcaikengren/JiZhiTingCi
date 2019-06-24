@@ -130,8 +130,12 @@ export default class VocaSearchPage extends Component {
 
     return (
       <Container>
-        
-
+        <StatusBar
+              translucent={true}
+              // hidden
+          />
+          <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
+          {/* 头部 */}
         <Header searchBar rounded style={{backgroundColor:'#1890FF'}}>
                     <Item style={styles.item1}>
                           <Icon name="ios-search" />
