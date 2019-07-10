@@ -126,7 +126,6 @@ export default class TestEnTranPage extends Component {
         }
         this._genOptions(task.curIndex, task.taskWords.length)  //第一次生成选项
         this.setState({task})
-        console.log(task.options)
     }
     componentWillUnmount(){
 

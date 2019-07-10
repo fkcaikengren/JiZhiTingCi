@@ -97,11 +97,6 @@ export default class VocaTaskDao {
                 vocaTaskDate: new Date(new Date().toLocaleDateString()).getTime(),
                 taskWords: [{
                     id:uuidv4(),
-                    word: "acute",
-                    passed: false,
-                    wrongNum: 0
-                },{
-                    id:uuidv4(),
                     word: "accommodation",
                     passed: false,
                     wrongNum: 0
@@ -123,6 +118,31 @@ export default class VocaTaskDao {
                 },{
                     id:uuidv4(),
                     word: "ensue",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "tasty",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "complicated",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "weary",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "wrinkle",
+                    passed: false,
+                    wrongNum: 0
+                },{
+                    id:uuidv4(),
+                    word: "weary",
                     passed: false,
                     wrongNum: 0
                 },

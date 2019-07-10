@@ -97,11 +97,6 @@ const styles = StyleSheet.create({
         color:'#FFFFFFAA',
     },
 
-    playText:{
-        fontSize:20,
-        color:'red'
-    },
-
     triggerText:{
         color:'#FFF',  
         paddingHorizontal:3,
@@ -140,6 +135,9 @@ class VocaPlayPage extends React.Component {
             this.learnPlayTime = 0//播放遍数
         }
         this.taskDao = this.props.navigation.getParam('taskDao')
+        this.state = {
+            curIndex : 0
+        }
     }
     componentDidMount(){
         //taskDao, 获取taskOrder=1的数据
@@ -249,6 +247,7 @@ class VocaPlayPage extends React.Component {
         const { changeCurIndex } = this.props;
         
         changeCurIndex(index);
+        this.setState({curIndex:index})
         // 回调自动播放
         if (autoPlayTimer) {
             this._autoplay(index);  
@@ -260,15 +259,24 @@ class VocaPlayPage extends React.Component {
     _renderItem = ({item, index})=>{
         let {showWord,showTran,curIndex} = this.props.vocaPlay;
         console.log(item.tran)
-        let playStyle = {}
-        if(curIndex == item.id){
-            playStyle = styles.playText;
+        let playEnStyle = {}
+        let playZhStyle = {}
+        if(curIndex == index){
+            console.log(`curIndex: ${curIndex}`)
+            playEnStyle = {
+                fontSize:22,
+                color:'red'
+            };
+            playZhStyle = {
+                fontSize:18,
+                color:'#FA5735'
+            };
         }
 
         return (
             <View style={styles.item}>
-                <Text style={[styles.itemText,playStyle]}>{showWord?item.word:''}</Text>
-                <Text note numberOfLines={1} style={[styles.itemText,playStyle]}>
+                <Text style={[styles.itemText,playEnStyle]}>{showWord?item.word:''}</Text>
+                <Text note numberOfLines={1} style={[styles.itemText,playZhStyle]}>
                     {showTran?item.tran:''}</Text>
             </View>
         );
@@ -348,7 +356,7 @@ class VocaPlayPage extends React.Component {
             showsHorizontalScrollIndicator: false,
             showsVerticalScrollIndicator: false,
             pagingEnabled: false,
-            extraData: this.props.vocaPlay,  //wordList是没有变化
+            extraData: this.state.curIndex,  //wordList是没有变化
             keyExtractor: this._keyExtractor,
             data:wordList,
             renderItem: this._renderItem,
@@ -446,9 +454,9 @@ class VocaPlayPage extends React.Component {
                             justifyContent:'center',
                             alignItems:'center',
                         }}>
-                            <Text style={{color:'#fff' , marginRight:5}}>7</Text>
-                            <Progress.Bar progress={0.3} height={2} width={width-100} color='#F79131' unfilledColor='#DEDEDE' borderWidth={0}/>
-                            <Text style={{color:'#fff' ,  marginLeft:10}}>20</Text>
+                            <Text style={{color:'#fff' , marginRight:5}}>{curIndex?curIndex:0}</Text>
+                            <Progress.Bar progress={curIndex/10} height={2} width={width-100} color='#F79131' unfilledColor='#DEDEDE' borderWidth={0}/>
+                            <Text style={{color:'#fff' ,  marginLeft:10}}>{wordList.length}</Text>
                         </View>
                     </Row>
                     {/* 播放按钮 */}
