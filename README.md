@@ -260,8 +260,8 @@ V:\VSCode\English\JiZhiTingCi\node_modules\react-native\Libraries\Core\Exception
 
 ```
 adb forward --list 【检查你的设备是否在名单里】
-emulator-5554 tcp:8083 tcp:8083
-然后参考链接，修改rpc.js
+adb forward tcp:8083 tcp:8083 【建立连接】
+然后参考链接，修改realm/lib/browser/rpc.js
 ```
 
 ```jsx
@@ -283,7 +283,7 @@ if (global.__debug__) {
     // 增加以下代码
     if (__DEV__) {
         url = 'http://localhost:8083' + url.substring(url.lastIndexOf('/'));
-    }
+    }//增加上述代码
 
     request.open('POST', url, false);
     request.send(body);
@@ -296,9 +296,7 @@ if (global.__debug__) {
 
 
 
-参考：<https://github.com/realm/realm-js/issues/578>
-
-参考：<https://github.com/realm/realm-js/issues/1034>
+参考：<https://blog.csdn.net/Yuequnchen/article/details/86625223>
 
 
 
@@ -322,6 +320,14 @@ yarn add react-native-swiper
 
 ```jsx
 yarn add react-native-shadow
+```
+
+
+
+### 安装react-native-parallax-scroll-view
+
+```
+yarn add react-native-parallax-scroll-view
 ```
 
 

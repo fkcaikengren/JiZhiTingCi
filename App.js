@@ -3,8 +3,8 @@ import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
 import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
-import store from './src/store/configureStore';
-import RNFetchBlob from 'rn-fetch-blob';
+import store from './src/common/configureStore';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
   }
 });
 // import HomePage from './src/page/HomePage';
-import AppNavigator from './src/navigator/AppNavigator';
-import configureStore from './src/dao/configureStorage';
-import Axios from './src/dao/Axios'
-import UserDao from './src/dao/mine/UserDao'
+import AppNavigator from './src/navigation/AppNavigator';
+import configureStore from './src/common/configureStorage';
+import Axios from './src/common/Axios'
+
 
 
 //设置全局变量 (注：这部分代码只在安装App时运行一次)
