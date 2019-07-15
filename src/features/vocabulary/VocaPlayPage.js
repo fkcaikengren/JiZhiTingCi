@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Platform, StatusBar, ScrollView, StyleSheet, View, Text, FlatList, TouchableNativeFeedback} from 'react-native';
 import { Container, Header, Content, Footer, Button, Icon, Left, Right, Body, Title,
  Grid, Col, Row, ActionSheet} from 'native-base';
-import * as Progress from 'react-native-progress';
+import * as Progress from '../../component/react-native-progress';
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import {connect} from 'react-redux';
 const Sound = require('react-native-sound');

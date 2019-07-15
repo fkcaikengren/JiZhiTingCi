@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import {StatusBar , StyleSheet,Image, View,FlatList,Animated, TouchableOpacity} from 'react-native';
 import {PropTypes} from 'prop-types';
 import { Container,Content,  Grid, Col, Row,Text, Footer,  } from 'native-base';
-import * as Progress from 'react-native-progress';
+import * as Progress from '../../component/react-native-progress';
 import VocaDao from './dao/VocaDao'
 import VocaTaskDao from './dao/VocaTaskDao'
 
 
 import AliIcon from '../../component/AliIcon';
-import {turnLogoImg} from '../../image';
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
@@ -59,9 +58,13 @@ export default class HomePage extends Component {
 
     return (
       <View style={styles.container}>
+          {/*顶部背景和任务列表 */}
         <Header offset={this.state.shift} current={this.state.current}>
-            <Forecast forecast={[1,2,3,4,5]} />
+            <Forecast forecast={[1,2,3,4,5,6,7]} />
+            {/* [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17] */}
         </Header>
+
+        {/* 底部播放控制 */}
         <Footer style={{backgroundColor:'#FFF'}} >
             <Grid >
             <TouchableOpacity
@@ -73,7 +76,7 @@ export default class HomePage extends Component {
                     >
                 <Col style={{width:70, height:50, }}>
                     <Row style={styles.center}>
-                        <Image style={{width:50, height:50, borderRadius:50}} source={turnLogoImg} />
+                        <Image style={{width:50, height:50, borderRadius:50}} source={require('../../image/h_icon.png')} />
                     </Row>
                 
                 </Col>
@@ -81,7 +84,7 @@ export default class HomePage extends Component {
                 <Col>
                     <Row size={1}>
                         <View style={[styles.center,{alignItems:'flex-end'}]}>
-                            <Progress.Bar progress={0.3} height={2} width={280} color='#1890FF' unfilledColor='#DEDEDE' borderWidth={0}/>
+                            <Progress.Bar progress={0.3} height={2} width={280} color='#FFE957' unfilledColor='#DEDEDE' borderWidth={0}/>
                         </View>
                     </Row>
                     <Row size={4} style={{
@@ -89,16 +92,16 @@ export default class HomePage extends Component {
                         justifyContent:'space-between',
                         alignItems:'center',}}>
                         <View >
-                            <Text style={{fontSize:16, color:'#1890FF'}}>List-001</Text>
+                            <Text style={{fontSize:16, color:'#404040'}}>List-001</Text>
                         </View>
                         <View style={{
                             flexDirection:'row',
                             justifyContent:'flex-end',
                             alignItems:'center',
                         }}>
-                            <AliIcon name='bofang1' size={22} color='#1890FF' style={{paddingRight:20}}></AliIcon>
-                            <AliIcon name='xiayige' size={20} color='#1890FF'  style={{paddingRight:20}}></AliIcon>
-                            <AliIcon name='bofangliebiaoicon' size={20} color='#1890FF'  style={{paddingRight:10}}></AliIcon>
+                            <AliIcon name='bofang1' size={22} color='#404040' style={{paddingRight:20}}></AliIcon>
+                            <AliIcon name='xiayige' size={20} color='#404040'  style={{paddingRight:20}}></AliIcon>
+                            <AliIcon name='bofangliebiaoicon' size={18} color='#404040' style={{paddingRight:10}}></AliIcon>
                         </View>
                         
                     </Row>
@@ -110,6 +113,7 @@ export default class HomePage extends Component {
   }
 
 }
+
 
 const styles = StyleSheet.create({
     container: {

@@ -60,6 +60,28 @@ yarn add react-native-vector-icons
 yarn add react-native-progress
 ```
 
+取消依赖，直接拷贝源码，然后修改源码：
+
+```
+修改Circle.js，修改如下
+
+- formatText: PropTypes.func,
++ formatText: PropTypes.func,
+- formatText: progress => `${Math.round(progress * 100)}%`,
++ formatText: progress => <Text> {`${Math.round(progress * 100)}%`}</Text>,
+
+
++{
++	formatText(progressValue)
++}
+```
+
+
+
+
+
+
+
 ### 安装react-native-picker
 
 ```
@@ -74,17 +96,23 @@ $ pod install
 
 ```
 
+
+
 ### 安装 react-native-check-box
 
 ```
 yarn add react-native-check-box
 ```
 
+
+
 ### 安装react-native-calendars
 
 ```
 yarn add react-native-calendars
 ```
+
+
 
 ### 安装react-native-popup-menu
 
@@ -336,6 +364,15 @@ yarn add react-native-parallax-scroll-view
 
 ```
 yarn add react-native-svg
+手动link
+```
+
+
+
+### 安装react-native-linear-gradient
+
+```
+yarn add react-native-linear-gradient
 手动link
 ```
 
