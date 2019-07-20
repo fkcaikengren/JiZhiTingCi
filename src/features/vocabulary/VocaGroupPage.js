@@ -1,11 +1,17 @@
+
+
+'use strict';
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, TouchableNativeFeedback, Alert} from 'react-native';
-import { Container, Header, Content, Body, Item, Input,
-    Button, Footer, FooterTab} from "native-base";
+import {StyleSheet, StatusBar, View, Text, TouchableNativeFeedback, Alert,
+    ScrollView
+} from 'react-native';
+import {Header, Button,Icon, Input} from 'react-native-elements'
+import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modalbox';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AliIcon from '../../component/AliIcon';
 import VocaGroupDao from './dao/VocaGroupDao'
+import { WingBlank } from "@ant-design/react-native";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -13,6 +19,10 @@ const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
+    container:{
+        backgroundColor:'#FDFDFD',
+        flex: 1
+    },
     center:{
         flexDirection:'row',
         justifyContent:'center',
@@ -36,14 +46,6 @@ const styles = StyleSheet.create({
         borderRadius:4,
         marginTop:16, 
         paddingVertical:10
-    },
-    iconText:{
-        width:32,
-        height:32, 
-        backgroundColor:'#1890FF', 
-        textAlign:'center', 
-        lineHeight:32, 
-        borderRadius:50,
     },
     iconBg:{
         flexDirection:'column',
@@ -72,9 +74,18 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         alignItems:'center',
         marginTop:10
-    }
+    },
 
-   
+    footer: {
+        position:'absolute',
+        bottom:0,
+        width:width,
+        height:55,
+        backgroundColor: '#FDFDFD',
+        flexDirection:'row',
+        justifyContent:'space-around',
+        alignItems:'center',
+    }
    
     
 });
@@ -150,20 +161,25 @@ export default class VocaGroupPage extends Component {
                     ?this._addModalRef = ref
                     :this._updateModalRef =ref
                 }}>
-            <Text style={{fontSize:18,fontWeight:'500', color:'red', marginBottom:10}}>{isAdd?'新建生词本':'修改生词本'}</Text>
-            <Item rounded style={{height:30}}>
-                <Input  style={{fontSize:16}} autoFocus placeholder='请输入生词本名称' onChangeText={(name)=>{
+            <Text style={{fontSize:18,fontWeight:'500', color:'#F29F3F', marginBottom:10}}>{isAdd?'新建生词本':'修改生词本'}</Text>
+            <Input
+                leftIcon={<AliIcon name='yingyong-beidanci-yingyongjianjie' size={26} color='#F29F3F'></AliIcon>}   
+                placeholder='请输入生词本名称' 
+                onChangeText={(name)=>{
                     isAdd
                     ?this.setState({addName:name})
                     :this.setState({updateName:name})
                 }}/>
-            </Item>
             <View style={styles.buttongGroup}>
-                <Button transparent onPress={isAdd?this._closeAddModal:this._closeUpdateModal}>
-                    <Text style={{fontSize:16, }}>取消</Text>
+                
+                <Button type='clear' onPress={isAdd?this._closeAddModal:this._closeUpdateModal}
+                title='取消'
+                titleStyle={{fontSize:16, color:'#999'}}>
                 </Button>
-                <Button transparent onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}>
-                    <Text style={{fontSize:16, color:'#1890FF'}}>确定</Text>
+                <Button type='clear' onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}
+                title='确定'
+                titleStyle={{fontSize:16, color:'#F29F3F'}}
+                >
                 </Button>
             </View>
         </Modal>
@@ -238,119 +254,150 @@ export default class VocaGroupPage extends Component {
     render() {
 
         return (
-            <Container>
-                <StatusBar
-                    translucent={true}
-                    // hidden
+            <View style={styles.container}>
+                <StatusBar translucent={true} />
+                <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content" // or directly
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }}></AliIcon> }
+                rightComponent={
+                    <Text style={{color:'#303030', fontSize:16, fontWeight:'normal'}}>同步</Text>
+                }
+                centerComponent={{ text: '生词本', style: { color: '#303030', fontSize:18 } }}
+                containerStyle={{
+                    backgroundColor: '#FCFCFC',
+                    justifyContent: 'space-around',
+                }}
                 />
 
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#1890FF'}}></View>
-                {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
-                    <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
-                            this.props.navigation.goBack();
-                        }}></AliIcon>
-                    </Button>
-                    <Body style={{flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',}}>
-                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>生词本</Text>
-                    </Body>
-                    <Button transparent style={{position:'absolute', right:10}}>
-                        <Text style={{color:'#1890FF', fontSize:16, fontWeight:'normal'}}>同步</Text>
-                    </Button>
-                </Header> 
-
-                <Content padder style={{ backgroundColor:'#FDFDFD', }}>
-                    
-                    
-                {this.state.vocaGroups.map((item, index)=>{
-                    //判断是什么类型的生词本
-                    let iconName = ''
-                    if(item.groupName.startsWith('0')){  //自定义
-                        iconName = 'zi'
-                    }else if(item.groupName.startsWith('1')){    //阅读生词本
-                        iconName = 'yuedu'
-                    } 
-                    let groupName = item.groupName.substring(1);
-                    return (
-                        <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={()=>{
-                            //加载生词
-                            this.props.navigation.navigate('GroupVoca',{
-                                dao:this.dao, 
-                                groupName:item.groupName
-                            });
-                                
-                        }}>
-                            <View style={styles.groupItem}>
-                                <View style={[styles.row, {flex:1,}]}>
-                                    <View style={styles.iconBg}>
-                                        <AliIcon name={iconName} size={20} color='#FFF'></AliIcon>
-                                    </View>
-                                    <View>
-                                        <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10}}>{groupName}</Text>
-                                        <Text style={{fontSize:14, marginLeft:10}}>共{item.count}词</Text>
-                                    </View>
-                                </View>
-                                {!this.state.inEdit &&  item.isDefault &&
-                                    <Ionicons name='ios-star' color={'#EE4'} size={30} />
-                                }
-                                {this.state.inEdit &&
-                                    <View style={[styles.row, {flex:1}]}>
-                                        <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
-                                            {/* 设置为默认生词本 */}
-                                            <Ionicons name='ios-star' color={item.isDefault?'#EE4':'#909090'} size={30} onPress={()=>{
-                                                if(!item.isDefault){ //不是默认
-                                                    alert('设置为默认的');
-                                                    this.dao.updateToDefault(0+groupName)
-                                                    this.setState({refresh:!this.state.refresh})
-                                                }
-                                                }}/>
-                                            {/* 修改 */}
-                                            <TouchableNativeFeedback onPress={()=>{
-                                                this.setState({isUpdateModalOpen:true,selectedName:item.groupName})
-                                            }}>
-                                                <Text style={{fontSize:14, color:'#1890FF', marginRight:10}}>修改名称</Text>
-                                            </TouchableNativeFeedback>
-                                            {/* 删除 */}
-                                            <TouchableNativeFeedback onPress={()=>{
-                                                Alert.alert(
-                                                    '删除生词本',
-                                                    `是否删除${groupName}?`,
-                                                    [
-                                                      {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                                                      {text: '确认', onPress: () => {this._deleteVocaGroup(item.groupName)}}
-                                                    ],
-                                                    { cancelable: false }
-                                                  )
-                                                
-                                            }}>
-                                                <Text style={{fontSize:14, color:'red', marginRight:10}}>删除</Text>
-                                            </TouchableNativeFeedback>
+                <WingBlank size='lg'>
+                    <ScrollView style={{ flex: 1 }}
+                    pagingEnabled={false}
+                    automaticallyAdjustContentInsets={false}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    >
+                        {this.state.vocaGroups.map((item, index)=>{
+                            //判断是什么类型的生词本
+                            let iconName = ''
+                            if(item.groupName.startsWith('0')){  //自定义
+                                iconName = 'zi'
+                            }else if(item.groupName.startsWith('1')){    //阅读生词本
+                                iconName = 'yuedu'
+                            } 
+                            let groupName = item.groupName.substring(1);
+                            return (
+                                <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={()=>{
+                                    //加载生词
+                                    this.props.navigation.navigate('GroupVoca',{
+                                        dao:this.dao, 
+                                        groupName:item.groupName
+                                    });
+                                        
+                                }}>
+                                    <View style={styles.groupItem}>
+                                        <View style={[styles.row, {flex:1,}]}>
+                                            <View style={styles.iconBg}>
+                                                <Text style={{color:'#FFF', fontSize:16, fontWeight:'500'}}>
+                                                    {item.groupName[1]}
+                                                </Text>
+                                            </View>
+                                            <View>
+                                                <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10}}>{groupName}</Text>
+                                                <Text style={{fontSize:14, marginLeft:10}}>共{item.count}词</Text>
+                                            </View>
                                         </View>
+                                        {!this.state.inEdit &&  item.isDefault &&
+                                            <Ionicons name='ios-star' color={'#EE4'} size={30} />
+                                        }
+                                        {this.state.inEdit &&
+                                            <View style={[styles.row, {flex:1}]}>
+                                                <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
+                                                    {/* 设置为默认生词本 */}
+                                                    <Ionicons name='ios-star' color={item.isDefault?'#EE4':'#909090'} size={30} onPress={()=>{
+                                                        if(!item.isDefault){ //不是默认
+                                                            alert('设置为默认的');
+                                                            this.dao.updateToDefault(0+groupName)
+                                                            this.setState({refresh:!this.state.refresh})
+                                                        }
+                                                        }}/>
+                                                    {/* 修改 */}
+                                                    <TouchableNativeFeedback onPress={()=>{
+                                                        this.setState({isUpdateModalOpen:true,selectedName:item.groupName})
+                                                    }}>
+                                                        <Text style={{fontSize:14, color:'#1890FF', marginRight:10}}>修改名称</Text>
+                                                    </TouchableNativeFeedback>
+                                                    {/* 删除 */}
+                                                    <TouchableNativeFeedback onPress={()=>{
+                                                        Alert.alert(
+                                                            '删除生词本',
+                                                            `是否删除${groupName}?`,
+                                                            [
+                                                            {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                                                            {text: '确认', onPress: () => {this._deleteVocaGroup(item.groupName)}}
+                                                            ],
+                                                            { cancelable: false }
+                                                        )
+                                                        
+                                                    }}>
+                                                        <Text style={{fontSize:14, color:'red', marginRight:10}}>删除</Text>
+                                                    </TouchableNativeFeedback>
+                                                </View>
+                                            </View>
+                                        }
                                     </View>
-                                }
-                            </View>
-                        </TouchableNativeFeedback>
-                    )
-                       
-                })}
-            </Content>
+                                </TouchableNativeFeedback>
+                            )
+                            
+                        })}
 
-                <Footer >
-                    <FooterTab style={{backgroundColor:'#FDFDFD'}} onPress={()=>{
-                    }}>
-                        <Button onPress={()=>{
-                            this._openAddModal();
-                        }}>
-                            <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>添加</Text>
-                        </Button>
-                        <Button onPress={this._toggleEdit}>
-                            <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>{this.state.inEdit?'退出编辑':'编辑'}</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
+                    </ScrollView>   
+                </WingBlank>
+
+
+                <View style={styles.footer}>
+                    {/* 添加 */}
+                    <Button 
+                    containerStyle={{width:width*2/5,height:36}}
+                    ViewComponent={LinearGradient} // Don't forget this!
+                    linearGradientProps={{
+                      colors: ['#FFE957', '#F29F3F'],
+                      start: { x: 0, y: 0.5 },
+                      end: { x: 1, y: 0.5 },
+                    }}
+                    icon={
+                        <Icon
+                          name="add"
+                          size={16}
+                          color="white"
+                        />}
+                    title='添加'
+                    titleStyle={{fontSize:14,color:'#FFF', fontWeight:'500'}}
+                    onPress={this._openAddModal}>
+                    </Button>
+                    {/* 编辑 */}
+                    <Button 
+                    containerStyle={{width:width*2/5,height:40}}
+                    ViewComponent={LinearGradient} 
+                    linearGradientProps={{
+                      colors: ['#FFE957', '#F29F3F'],
+                      start: { x: 0, y: 0.5 },
+                      end: { x: 1, y: 0.5 },
+                    }}
+                    icon={
+                        <Icon
+                          name="edit"
+                          size={14}
+                          color="white"
+                        />}
+                    title={this.state.inEdit?'退出编辑':'编辑'}
+                    titleStyle={{fontSize:14,color:'#FFF', fontWeight:'500'}}
+                    onPress={this._toggleEdit}>
+                    </Button>
+                </View>
                 
                 {
                     this._createModal(true) //创建添加弹框
@@ -358,8 +405,7 @@ export default class VocaGroupPage extends Component {
                 {
                     this._createModal(false) //创建修改弹框
                 }
-                        
-            </Container>
+            </View>    
         );
     }
 }

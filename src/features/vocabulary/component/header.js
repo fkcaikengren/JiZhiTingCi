@@ -1,10 +1,9 @@
 
 
 'use strict';
-
 import React, { Component } from 'react';
 import {
-  StyleSheet,Text,View,Image,Animated,RefreshControl, Button
+  StyleSheet,Text,View,Image,Animated,RefreshControl, Button, TouchableOpacity
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -65,7 +64,6 @@ export default class Header extends Component {
   onScroll = (e)=>{
     this.state.shift.setValue(e.nativeEvent.contentOffset.y);
   }
-
   
   //头部背景
   renderBackground = ()=> {
@@ -80,14 +78,32 @@ export default class Header extends Component {
       <View style={styles.stickyHeaderView}>
         <View style={{flexDirection:'row',paddingLeft:5}}>
           <Image source={require('../../../image/h_icon.png')} style={{width:30,height:30,borderRadius:30}}/>
-          <Text style={{color:'#1890FF', fontSize:26, paddingLeft:5}}>极致英语</Text>
+          <Text style={{color:'#FFF', fontSize:20, paddingLeft:5}}>四级词汇书</Text>
         </View>
-        <AliIcon name='chazhao' size={22} color='#1890FF'></AliIcon>
+        <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch}></AliIcon>
     </View>
     )
   }
 
+  /**导航到词库页面 */
+  _navVocaLib = ()=>{
+    this.props.navigation.navigate('VocaLib');
+  }
 
+  /**导航到单词列表页 */
+  _navVocaList = ()=>{
+    this.props.navigation.navigate('VocaList');
+  }
+
+  /**导航到生词本页面 */
+  _navVocaGroup = ()=>{
+    this.props.navigation.navigate('VocaGroup');
+  }
+
+  /**导航到生词本页面 */
+  _navVocaSearch = ()=>{
+    this.props.navigation.navigate('VocaSearch');
+  }
 
   //头部
   renderHeader = ()=> {
@@ -102,7 +118,7 @@ export default class Header extends Component {
             alignItems:'center',
           }}>
             <Image source={require('../../../image/h_icon.png')} style={{width:36,height:36,borderRadius:30}}/>
-            <AliIcon name='chazhao' size={24} color='#1890FF'></AliIcon>
+            <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch}></AliIcon>
           </View>
           {/* 环形进度条 */}
           <Progress.Circle 
@@ -124,9 +140,16 @@ export default class Header extends Component {
           <View style={styles.headerBottom}>
             <View style={styles.r_start}>
               <Text style={styles.bottom_font}>四级词汇书</Text>
-              <Text style={styles.changeBtn}>更换</Text>
-              <AliIcon name='ai-list' size={22} color='#FFF' style={{marginLeft:10}}></AliIcon>
-              <AliIcon name='yuedu' size={22} color='#FFF' style={{marginLeft:10}}></AliIcon>
+              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaLib}>
+                <Text style={styles.changeBtn}>更换</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaList}>
+                <AliIcon name='ai-list' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaGroup}>
+                <AliIcon name='yuedu' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
+              </TouchableOpacity>
+              
             </View>
             <Text style={styles.bottom_font}>任务 1/6</Text>
           </View>

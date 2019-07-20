@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {TouchableOpacity, TextInput,StatusBar ,FlatList, View, Text, StyleSheet} from 'react-native';
-import { Container, Header, Input,Button, Icon, Content, Item } from 'native-base';
-
+import {TouchableOpacity,StatusBar ,FlatList, View, Text, StyleSheet} from 'react-native';
+import {SearchBar } from 'react-native-elements'
 
 import VocaDao from './dao/VocaDao'
 import VocaGroupDao from './dao/VocaGroupDao'
@@ -10,11 +9,6 @@ const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
-
-const TestData = [
-  {word:'abandon', phonetic:'/xx/', tran:'v. 抛弃；放弃；n. 放纵'},
-  {word:'reserve', phonetic:'/xx/', tran:'n. 储备；保留；保护区；v. 保留；预定'}
-]
 
 
 const styles = StyleSheet.create({
@@ -129,33 +123,25 @@ export default class VocaSearchPage extends Component {
   render() {
 
     return (
-      <Container>
-        <StatusBar
-              translucent={true}
-              // hidden
-          />
-          <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
-          {/* 头部 */}
-        <Header searchBar rounded style={{backgroundColor:'#1890FF'}}>
-                    <Item style={styles.item1}>
-                          <Icon name="ios-search" />
-                          <Input autoFocus
-                          ref={ref=>this._inputRef = ref}
-                          maxLength={50}
-                          placeholder="请输入要查询的单词或中文"
-                          value={this.state.searchText}
-                          onChangeText={this._changeText} 
-                          onFocus={this._onFocus}/>
-                          <Icon name="ios-close-circle" style={{fontSize:18}} onPress={()=>{this._clearSear()}}/>
-                    </Item>
-                    <Item  style={[styles.c_center,styles.item2]}>
-                        <Text style={{fontSize:16, color:'#FFF'}} onPress={()=>{
-                          this.props.navigation.goBack()
-                          }}>取消</Text>
-                    </Item>
-                    </Header>
+        <View style={{flex: 1}}>
+          <StatusBar translucent={true} />
+          <View style={{width:width, height:StatusBarHeight, backgroundColor:'#EFEFEF'}}></View>
 
-                    
+        <SearchBar
+          platform='ios'
+          containerStyle={{height:55,backgroundColor:'#FFE957'}}
+          inputContainerStyle={{backgroundColor:'#FDFDFD'}}
+          cancelButtonProps={
+            {color:'#303030'}
+          }
+          ref={ref=>this._inputRef = ref}
+          placeholder="请输入英文单词"
+          onChangeText={this._changeText}
+          value={this.state.searchText}
+          onCancel={()=>{
+            this.props.navigation.goBack()
+            }}
+          />  
           {this.state.searchWord === ''&&
             <FlatList
                 ref= {ref=>this._listRef = ref}
@@ -174,10 +160,8 @@ export default class VocaSearchPage extends Component {
             word={this.state.searchWord} 
             tran={this.state.tran}/>
           }
-        
-
        
-      </Container>
+      </View>
     );
   }
 }

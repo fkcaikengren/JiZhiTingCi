@@ -22,7 +22,7 @@ let {width, height} = Dimensions.get('window');
 'use strict';
 
 import Header from './component/header';
-import Forecast from './component/forecast';
+import Task from './component/Task';
 import Loading from './component/loading';
 
 // import type { WeatherModel } from '../models/view'
@@ -59,9 +59,8 @@ export default class HomePage extends Component {
     return (
       <View style={styles.container}>
           {/*顶部背景和任务列表 */}
-        <Header offset={this.state.shift} current={this.state.current}>
-            <Forecast forecast={[1,2,3,4,5,6,7]} />
-            {/* [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17] */}
+        <Header {...this.props} offset={this.state.shift} current={this.state.current}>
+            <Task {...this.props} tasks={[1,2,3,4,5]} />
         </Header>
 
         {/* 底部播放控制 */}

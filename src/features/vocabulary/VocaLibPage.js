@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text} from 'react-native';
-import { Container, Header, Content, Icon, Accordion,Body,Title,
-    ListItem, Left, Right , Button} from "native-base";
+import {StyleSheet, StatusBar, View, Text, Image, ScrollView} from 'react-native';
+import {
+    WhiteSpace, Carousel, Grid, Flex, 
+} from '@ant-design/react-native';
+import {Header, Button} from 'react-native-elements'
 import Picker from 'react-native-picker';
 import {connect} from 'react-redux';
+import CardView from 'react-native-cardview'
 
-
-import * as VocaLibAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon';
 
 
@@ -17,7 +18,8 @@ const StatusBarHeight = StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#EFEFEF'
+        backgroundColor:'#FDFDFD',
+        flex: 1
     },
     center:{
         flexDirection:'row',
@@ -45,6 +47,28 @@ const styles = StyleSheet.create({
         borderRadius:5,
         marginTop:10,
         padding:5,
+    },
+    grid: {
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    bookCard: {
+        width:75,
+        height:100,
+        marginBottom:10,
+    },
+    img: {
+        width:90,
+        height:120,
+    },
+    bookname: {
+        fontSize: 16,
+        color:'#303030',
+        fontWeight:'500',
+    },
+    noteText:{
+        fontSize: 12,
     }
 });
 
@@ -53,30 +77,40 @@ class VocaLibPage extends Component {
 
     constructor(props){
         super(props)
+        this.state = {
+            data: [{imgPath:'/pic/1.jpg', name:'初中词汇书'},{imgPath:'/pic/2.jpg', name:'高中词汇书'},
+            {imgPath:'/pic/3.jpg', name:'考研词汇书'},{imgPath:'/pic/1.jpg', name:'四级词汇书'},{imgPath:'/pic/2.jpg', name:'六级词汇书'},
+            {imgPath:'/pic/3.jpg', name:'雅思词汇书'},{imgPath:'/pic/3.jpg', name:'托福词汇书'}]
+        }
     }
 
     componentDidMount(){
         //加载数据
-        const {loadVocaBooks} = this.props
-        loadVocaBooks()
+        // const {loadVocaBooks} = this.props
+        // loadVocaBooks()
+
     }
 
-    _show = (name)=>{
-        const {changeVocaBook} = this.props
+    _show = (el, index)=>{
+        // const {changeVocaBook} = this.props
         let data = [
-            [1,2,3,4,5],    //新学列表数
-            [10,11,12,13,14,15,16,17,18,19,20], //列表单词数
+            [15,30,45,60],    //新学列表数
         ];
-        let selectedValue = [1, 10];
-
+        let selectedValue = [15];
         Picker.init({
             pickerData: data,
             selectedValue: selectedValue,
-            pickerTitleText: name,
+            pickerCancelBtnText: '取消',
+            pickerTitleText: el.name,
+            pickerConfirmBtnText: '确定',
+            pickerCancelBtnColor: [30,30,30,1],
+            pickerTitleColor: [30,30,30,1],
+            pickerConfirmBtnColor: [30,30,30,1],
+            pickerToolBarBg: [255,233,87, 1],
+            pickerBg: [255,233,87, 0.8],
             onPickerConfirm: data => {
-                const {listCount,listWordCount} = data;
-                changeVocaBook(name, listCount,  listWordCount);
-                alert('恭喜你，计划设置成功');
+                // changeVocaBook(el.name, listCount,  listWordCount);
+                alert(data);
             },
             onPickerCancel: data => {
                 console.log(data);
@@ -88,111 +122,69 @@ class VocaLibPage extends Component {
         Picker.show();
     }
 
-    _renderHeader = (item, expanded)=> {
-        return (
-        <View style={[{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center" ,
-            padding: 10,
-            borderColor:'#F7F7F7'
-            },{borderBottomWidth:1}]}>
-            <View style={[styles.center,{justifyContent:'flex-start'}]}>
-                <Text style={[styles.iconText,{color:'#FFF'}]}>
-                    {item.section[0]}
-                </Text>
-                <Text style={{color:'#303030', fontSize:16, marginLeft:16, fontWeight:'500'}}>
-                {" "}{item.section}
-                </Text>
-            </View>
-            {expanded
-            ? <AliIcon name='youjiantou-copy' size={26} color='#A0A0A0'></AliIcon>
-            : <AliIcon name='youjiantou' size={26} color='#A0A0A0'></AliIcon>}
+    _renderBooks = (el,index)=>{
+        const baseUrl = 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com'
+        return  <View style={styles.c_center}>
+            <CardView
+                cardElevation={10}
+                cardMaxElevation={10}
+                cornerRadius={2}
+                style={styles.bookCard}>
+                    <Image source={{uri:baseUrl+el.imgPath}} style={styles.img} />
+            </CardView>
+            <Text style={styles.bookname}>{el.name}</Text>
+            <Text style={styles.noteText}>共<Text style={[styles.noteText,{color:'#F29F3F'}]}>3012</Text>个单词</Text>
         </View>
-        );
     }
-    _renderContent = (item)=> {
-        return (
-        item.books.map((it, index)=>{
-            return <View key={index} style={{flexDirection: "row", 
-            justifyContent: "space-between",
-            alignItems: "center" ,
-            backgroundColor: "#F7F7F7" ,
-            paddingLeft:10,
-            paddingVertical:10}} >
-                    <Text onPress={()=>{
-                        this._show(it.name);
-                    }}
-                    style={{ color:'#39668D', fontSize:16 , paddingLeft:30}}>{it.name}</Text>
-                    <Text style={{ fontSize:16 , color:'#AAAAAA', paddingRight:10}}>{it.count}</Text>
-            </View>
-        })
-        );
-    }
+    
     render() {
         
         //数据
-        const {vocaBooks, curBookName} = this.props.vocaLib
         return (
-            <Container style={styles.container}>
-                <StatusBar
-                    translucent={true}
-                    // hidden
+            <View style={{flex: 1}}>
+                <StatusBar translucent={true} />
+                <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content" // or directly
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }}></AliIcon> }
+                rightComponent={
+                    <AliIcon name='xiazai' size={24} color='#303030'></AliIcon>
+                }
+                centerComponent={{ text: '四级词汇', style: { color: '#303030', fontSize:18 } }}
+                containerStyle={{
+                    backgroundColor: '#FCFCFC',
+                    justifyContent: 'space-around',
+                }}
                 />
+              
+                    <WhiteSpace size="lg" />
+                    <ScrollView style={{ flex: 1 }}
+                        pagingEnabled={false}
+                        automaticallyAdjustContentInsets={false}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <Grid
+                            data={this.state.data}
+                            columnNum={2}
+                            renderItem={this._renderBooks}
+                            itemStyle={styles.grid}
+                            onPress={this._show}
+                        />
+                    </ScrollView>
 
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#FDFDFD'}}></View>
-                {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
-                    <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
-                            this.props.navigation.goBack();
-                        }}></AliIcon>
-                    </Button>
-                    <Body style={{flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',}}>
-                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>单词书库</Text>
-                    </Body>
-                </Header> 
-
-
-
-                <Content padder style={{ backgroundColor:'#EFEFEF', }}>
-
-                {/* 计划中的单词书 */}
-                <View style={styles.planBook}>
-                    <View style={[styles.center, { paddingLeft:10}]}>
-                        <AliIcon name='yixue' size={26} color='#1890FF'></AliIcon>
-                        <View style={[styles.c_center, {alignItems:'flex-start', paddingLeft:20}]}>
-                            <Text style={{fontSize:16, color:'#303030', fontWeight:'500' }}>{curBookName}</Text>
-                            {/* <Text style={{fontSize:12}}>已掌握23/3090</Text> */}
-                        </View>
-                    </View>
-                    <View style={[styles.c_center,]}>
-                        <AliIcon name='xiazai' size={24} color='#A0A0A0'></AliIcon>
-                        <Text style={{fontSize:12}}>下载词汇音频包</Text>
-                    </View>
-                </View>
-                {/* 单词书列表 */}
-                <Accordion style={{backgroundColor:'#FDFDFD', borderRadius:5, marginTop:20,}}
-                    dataArray={vocaBooks}
-                    animation={true}
-                    expanded={true}
-                    renderHeader={this._renderHeader}
-                    renderContent={this._renderContent}
-                />
-                </Content>
-            </Container>
+                    
+            </View>
         );
     }
 }
 const mapStateToProps = state =>({
-    vocaLib : state.vocaLib,
 });
 
 const mapDispatchToProps = {
-    loadVocaBooks : VocaLibAction.loadVocaBooks,
-    changeVocaBook: VocaLibAction.changeVocaBook,
 };
 
 

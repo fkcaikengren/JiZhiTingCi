@@ -13,23 +13,32 @@ react-native init JiZhiTingCi
 ### vscode 同步设置到github
 
 ```
-CODE SETTINGS SYNC UPLOAD SUMMARY
-Version: 3.2.9
---------------------
-GitHub Token: 8aed96048385c582aa76a0b11b4797584452dd4a
-GitHub Gist: 6da075ab51771687235234fd1427aab3
-GitHub Gist Type: Secret
+
 ```
 
 ### vscode 同步代码到github
 
 ```
-github地址：https://github.com/JacyAcme/JiZhiTingCi.git
+
 ```
 
 
 
-## 界面开发
+## 开发过程
+
+### 安装ant-design库
+
+```
+yarn add @ant-design/react-native
+yarn add babel-plugin-import （按需加载）
+react-native link @ant-design/icons-react-native 
+```
+
+
+
+安装ant-design库
+
+
 
 ### 安装NativeBase库
 
@@ -54,7 +63,7 @@ yarn add react-native-gesture-handler
 yarn add react-native-vector-icons
 ```
 
-### 安装react-native-progress库
+### ~~安装react-native-progress库~~（拷贝源码）
 
 ```
 yarn add react-native-progress
@@ -166,11 +175,15 @@ yarn add redux-devtools --dev
 
 
 
-### 安装redux-promise
+### ~~安装redux-promise~~ (使用redux-saga替换)
 
 ```
 yarn add redux-promise
 ```
+
+
+
+
 
 
 
@@ -344,10 +357,11 @@ yarn add react-native-swiper
 
 
 
-### 安装react-native-shadow
+### ~~安装react-native-shadow~~(使用react-native-cardview替换)
 
 ```jsx
-yarn add react-native-shadow
+yarn add react-native-cardview
+手动link
 ```
 
 
@@ -357,6 +371,8 @@ yarn add react-native-shadow
 ```
 yarn add react-native-parallax-scroll-view
 ```
+
+
 
 
 
@@ -378,4 +394,4 @@ yarn add react-native-linear-gradient
 
 
 
-# JiZhiTingCi
+# 英语听词App
