@@ -1,4 +1,4 @@
-# 极致听词（JiZhiTingCi）
+# 英语听词（yingyutingci）
 
 ## 准备工作
 
@@ -24,7 +24,44 @@ react-native init JiZhiTingCi
 
 
 
-## 开发过程
+## 项目目录结构
+
+英语App项目目录	
+|-- project-name
+|    |-- src
+|    |    |-- common
+
+|    |    |    +--redux
+|    |    |    +-- dao
+|    |    |    +-- net
+|    |    |-- features
+
+|    |    |    |-- vocabulary
+|    |    |    |    |-- redux
+
+|    |    |    |    |    |--action.js 	(总的action)
+|    |    |    |    |    |--constant.js
+|    |    |    |    |    |--reducer.js	(总的reducer)
+|    |    |    |    |    |--vocaPlay.js	(某一个页面的功能集合)
+|    |    |    |    |-- VocaPlayPage.js
+|    |    |    |    |-- VocaListTabNavgator.js (导航页面)
+|    |    |    |    |-- dao	(realm数据库操作)
+|    |    |    |    |    |--vocaTaskDao 	
+|    |    |    |    |-- net	(axios网络请求层)
+|    |    |    |    |    |--AudioFetch	
+|    |    |    +-- reading 	(阅读模块)
+|    |    |    +-- gramma （语法模块）
+|    |    +-- style  (全局样式)
+|    |    +-- image （图片）
+|    |    |	  |--App.js  （图片）
+
+
+
+## 项目需求分析
+
+
+
+## 安装第三方组件
 
 ### 安装ant-design库
 
@@ -84,8 +121,6 @@ yarn add react-native-progress
 +	formatText(progressValue)
 +}
 ```
-
-
 
 
 

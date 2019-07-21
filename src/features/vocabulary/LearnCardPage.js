@@ -1,59 +1,18 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text} from 'react-native';
 import { Container, Header, Content, Icon, Accordion, Body,Title, Grid, Col, Row,
-    Button, Footer, FooterTab} from "native-base";
-import * as Progress from 'react-native-progress';
+    Button, Footer, FooterTab} from "native-base"
+import * as Progress from 'react-native-progress'
 import {connect} from 'react-redux'
 import {NavigationActions, StackActions} from 'react-navigation'
 
-import AliIcon from '../../component/AliIcon';
+import AliIcon from '../../component/AliIcon'
+import styles from './LearnCardStyle'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
-
-const styles = StyleSheet.create({
-    center:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    row:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'center',
-    },
-    col:{
-        flexDirection:'column',
-        justifyContent:'flex-start',
-        alignItems:'flex-start',
-    },
-    iconText:{
-        width:32,
-        height:32, 
-        backgroundColor:'#1890FF', 
-        textAlign:'center', 
-        lineHeight:32, 
-        borderRadius:50,
-    },
-    bottomBtn:{
-        width: (width-80)/2,
-        elevation: 0,
-        backgroundColor: '#1890FF',
-
-    }, 
-    fonts:{
-        fontSize:16,
-        color:'#404040',
-        lineHeight:24,
-    },
-    phonetic:{
-        fontSize: 16,
-        color: '#101010',
-    }
-});
-
 
 
 

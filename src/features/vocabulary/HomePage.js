@@ -5,9 +5,8 @@ import { Container,Content,  Grid, Col, Row,Text, Footer,  } from 'native-base';
 import * as Progress from '../../component/react-native-progress';
 import VocaDao from './dao/VocaDao'
 import VocaTaskDao from './dao/VocaTaskDao'
-
-
 import AliIcon from '../../component/AliIcon';
+import styles from './HomeStyle'
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
@@ -23,7 +22,6 @@ let {width, height} = Dimensions.get('window');
 
 import Header from './component/header';
 import Task from './component/Task';
-import Loading from './component/loading';
 
 // import type { WeatherModel } from '../models/view'
 
@@ -114,17 +112,6 @@ export default class HomePage extends Component {
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9F9F9'
-    },
-    center:{
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignItems:'center',
-    },
-});
 
 
 
