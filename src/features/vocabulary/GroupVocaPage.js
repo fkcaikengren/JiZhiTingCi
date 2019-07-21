@@ -4,7 +4,7 @@ import { Container, Header, Body, Button} from "native-base";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
-import {playSound} from './net/AudioFetch'
+import {playSound} from './service/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 const Dimensions = require('Dimensions');

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, TouchableHighlight} from 'react-native';
 import {PropTypes} from 'prop-types';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import {playSound} from '../net/AudioFetch'
+import {playSound} from '../service/AudioFetch'
 
 
 const styles = StyleSheet.create({

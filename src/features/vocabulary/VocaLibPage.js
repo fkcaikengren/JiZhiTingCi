@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import {StatusBar, View, Text, Image, ScrollView} from 'react-native';
-import {
-    WhiteSpace, Carousel, Grid, Flex, 
-} from '@ant-design/react-native';
+import { WhiteSpace, Carousel, Grid, Flex, } from '@ant-design/react-native';
 import {Header, Button} from 'react-native-elements'
 import Picker from 'react-native-picker';
 import {connect} from 'react-redux';
 import CardView from 'react-native-cardview'
+import { Bubbles, DoubleBounce, Bars, Pulse } from 'react-native-loader';
+import * as VocaLibAction from './redux/action/vocaLibAction'
 
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
@@ -28,12 +28,12 @@ class VocaLibPage extends Component {
     }
 
     componentDidMount(){
-        //加载数据
-        // const {loadVocaBooks} = this.props
-        // loadVocaBooks()
+         //加载书籍
+        this.props.loadVocaBooks()
 
     }
 
+    /**显示选择器 */
     _show = (el, index)=>{
         // const {changeVocaBook} = this.props
         let data = [
@@ -50,10 +50,11 @@ class VocaLibPage extends Component {
             pickerTitleColor: [30,30,30,1],
             pickerConfirmBtnColor: [30,30,30,1],
             pickerToolBarBg: [255,233,87, 1],
-            pickerBg: [255,233,87, 0.8],
+            // pickerBg: [255,233,87, 0.8],
             onPickerConfirm: data => {
-                // changeVocaBook(el.name, listCount,  listWordCount);
-                alert(data);
+                //提交计划
+                console.log(el.bookCode, data)
+                this.props.changeVocaBook(el.bookCode, data);
             },
             onPickerCancel: data => {
                 console.log(data);
@@ -66,24 +67,24 @@ class VocaLibPage extends Component {
     }
 
     _renderBooks = (el,index)=>{
-        const baseUrl = 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com'
         return  <View style={styles.c_center}>
             <CardView
                 cardElevation={10}
                 cardMaxElevation={10}
                 cornerRadius={2}
                 style={styles.bookCard}>
-                    <Image source={{uri:baseUrl+el.imgPath}} style={styles.img} />
+                    <Image source={{uri:el.coverUrl}} style={styles.img} />
             </CardView>
             <Text style={styles.bookname}>{el.name}</Text>
-            <Text style={styles.noteText}>共<Text style={[styles.noteText,{color:'#F29F3F'}]}>3012</Text>个单词</Text>
+            <Text style={styles.noteText}>共<Text style={[styles.noteText,{color:'#F29F3F'}]}>{el.count}</Text>个单词</Text>
         </View>
     }
     
     render() {
-        
+        const {books, isLoadPending} = this.props
         //数据
         return (
+            
             <View style={{flex: 1}}>
                 <StatusBar translucent={true} />
                 <Header
@@ -102,8 +103,18 @@ class VocaLibPage extends Component {
                     justifyContent: 'space-around',
                 }}
                 />
-              
-                    <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                {isLoadPending &&
+                    <View style={{
+                        flex:1,
+                        flexDirection:'column',
+                        justifyContent:'center',
+                        alignItems:'center',}}>
+                        <Bubbles size={10} color="#FFE957" />
+                    </View>
+                }
+                
+                {!isLoadPending &&
                     <ScrollView style={{ flex: 1 }}
                         pagingEnabled={false}
                         automaticallyAdjustContentInsets={false}
@@ -111,24 +122,29 @@ class VocaLibPage extends Component {
                         showsVerticalScrollIndicator={false}
                     >
                         <Grid
-                            data={this.state.data}
+                            data={books}
                             columnNum={2}
                             renderItem={this._renderBooks}
                             itemStyle={styles.grid}
                             onPress={this._show}
                         />
                     </ScrollView>
-
-                    
+                }
             </View>
+            
+            
         );
     }
 }
 const mapStateToProps = state =>({
+    books: state.vocaLib.books,
+    isLoadPending: state.vocaLib.isLoadPending,
 });
 
-const mapDispatchToProps = {
-};
+const mapDispatchToProps = dispatch=> ({
+    loadVocaBooks: ()=>{dispatch(VocaLibAction.loadVocaBooks())},
+    changeVocaBook: (bookCode, taskCount)=>{dispatch(VocaLibAction.changeVocaBook())}
+});
 
 
 export default connect(mapStateToProps,mapDispatchToProps )(VocaLibPage);

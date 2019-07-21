@@ -4,26 +4,35 @@ import * as vl from './action/vocaLibAction';
 
 const defaultState ={
 
-    vocaBooks:[{ 	
-        section: "小学", 
-        "books": [{ name:"五年级", count:350}] 
-        }],
-    //2.当前计划
-    curBookName:'五年级',
-    listCount:1,
-    listWordCount:10
+    //单词书
+    books:[],
+    //状态
+    isLoadPending:false,
+    //当前计划
+    plan: {
+        bookCode: "VB_1",
+        bookName: "四级词汇书",
+        taskCount: 1,
+        taskWordCount: 15
+    },
 }
 
 
 export const vocaLib =  handleActions({
 
-    [vl.LOAD_VOCA_BOOKS] : (state, action) => {
-        return { ...state,  vocaBooks: action.payload.vocaBooks};
+    [vl.LOAD_VOCA_BOOKS_START] : (state, action) => {
+        return { ...state,  isLoadPending:true};
     },
-    [vl.CHANGE_VOCA_BOOK] : (state, action) => {
-        return { ...state,  ...action.payload};
+    [vl.LOAD_VOCA_BOOKS_SUCCEED] : (state, action) => {
+        return { ...state, books:action.books, isLoadPending:false};
     },
 
+    [vl.CHANGE_VOCA_BOOK_START] : (state, action) => {
+        return { ...state,  isLoadPending:true};
+    },
+    [vl.CHANGE_VOCA_BOOK_SUCCEED] : (state, action) => {
+        return { ...state, plan:action.plan, isLoadPending:false};
+    },
 
 }, defaultState);
 

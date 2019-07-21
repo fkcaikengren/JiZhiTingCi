@@ -9,7 +9,7 @@ const Sound = require('react-native-sound');
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import * as vocaPlayAction from './redux/action/vocaPlayAction';
-import {PLAY_LEARN,  PLAY_REVIEW } from './redux/'
+import {PLAY_LEARN,  PLAY_REVIEW } from './common/constant'
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaPlayStyle'
 

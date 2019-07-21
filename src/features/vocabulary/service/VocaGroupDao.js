@@ -9,8 +9,6 @@ const uuidv4 = require('uuid/v4');
 // 4. 修改 （获取到对象，修改属性，自动自动持久化；）
 // 5.删除 （获取到对象，便可删除；不会级联删除；）
 
-
-
 // 1. 生词本表
 const VocaGroupSchema = {
   name: 'VocaGroup',
@@ -58,7 +56,6 @@ export default class VocaGroupDao{
 
     constructor(props){
         this.realm = null
-        
     }
 
     //打开数据库
@@ -83,8 +80,6 @@ export default class VocaGroupDao{
             this.realm = null
         }
     }
-
-
 
     //1. 添加生词本
     addGroup = (groupName)=>{
@@ -132,8 +127,6 @@ export default class VocaGroupDao{
     getGroup = (groupName)=>{
         return this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
     }
-    
-    
     
     
     //5. 修改为默认生词本
@@ -216,7 +209,6 @@ export default class VocaGroupDao{
             }
         }
         return isExist
-            
     }
 
 
@@ -238,8 +230,6 @@ export default class VocaGroupDao{
             }
             
     }
-
-
     
     //删除所有生词本
     deleteAllGroups = ()=>{
@@ -247,6 +237,4 @@ export default class VocaGroupDao{
             this.realm.deleteAll();
         })
     }
-
-
 }

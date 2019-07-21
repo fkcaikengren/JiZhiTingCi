@@ -16,7 +16,7 @@ const {width, height} = Dimensions.get('window');
 const SCREEN_WIDTH = width; //屏幕宽度
 const HEADER_HEIGHT = 290;  //头部背景高度
 const TITLE_HEIGHT = 55;    //标题栏高度
-export default class Header extends Component {
+export default class HomeHeader extends Component {
   static propsType = {
     
   };
@@ -72,7 +72,7 @@ export default class Header extends Component {
     );
   }
 
-  //吸顶标题栏
+  /**吸顶标题栏 */
   renderTitle = ()=> {
     return (
       <View style={styles.stickyHeaderView}>

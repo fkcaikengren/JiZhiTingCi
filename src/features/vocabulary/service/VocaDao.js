@@ -6,7 +6,7 @@ export default class VocaDao{
     constructor(props){
         this.realm = null
     }
-    //打开数据库
+    /** 打开数据库 */
     async open(){
         try{
             this.realm  = await Realm.open({path: 'voca.realm'})
@@ -16,11 +16,11 @@ export default class VocaDao{
         }
         return this.realm;
     }
-    //数据库是否打开的
+    /** 数据库是否打开的 */
     isOpen(){
         return (this.realm !== null)
     }
-    //关闭数据库
+    /**关闭数据库 */
     close = ()=>{
         if(this.realm && !this.realm.isClosed){
             this.realm.close()
@@ -28,7 +28,10 @@ export default class VocaDao{
         }
     }
 
-    //查词（模糊查询匹配的前8个单词）
+    /**
+     * @description 查词（模糊查询匹配的前8个单词）
+     * @memberof VocaDao
+     */
     searchWord = (searchText)=>{
         //不区分大小写，查询以searchText开头的
         let wordObjs = this.realm.objects('WordInfo').filtered('word BEGINSWITH "'+searchText+'" AND inflection_type = "prototype"'); 
@@ -66,7 +69,10 @@ export default class VocaDao{
 
 
 
-    //获取单词详情
+    /**
+     * @description 获取单词详情
+     * @memberof VocaDao
+     */
     getWordDetail = (word)=>{
         //查询单词基本信息
         let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'"'); //数组
@@ -108,7 +114,10 @@ export default class VocaDao{
         return wordObj
     }
 
-    //查询任务的单词信息，补充进去
+    /**
+     * @description 查询任务的单词信息，补充进去
+     * @memberof VocaDao
+     */
     writeInfoToTask = (task)=>{
         for(let w of task.taskWords){      //遍历每个单词
             //testWrongNum 属性： 学习测试中的错误次数
@@ -148,8 +157,6 @@ export default class VocaDao{
             }
             w.transformations = transformations
                 
-            
-
             //第一个释义和例句
             if(wordInfos[0] ){
                 let id = wordInfos[0].id
@@ -168,9 +175,6 @@ export default class VocaDao{
             w.tran = tran
         }
     }
-
-    
-      
 
 }
 // getWordDetail('abandon')

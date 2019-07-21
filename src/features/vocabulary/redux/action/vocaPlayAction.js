@@ -1,9 +1,6 @@
 
 
 import { createActions } from 'redux-actions';
-const Realm = require('realm')
-
-
 
 
 export const LOAD_REVIEW_LIST = 'LOAD_REVIEW_LIST';     //1下/上一首（播放指定列表）

@@ -23,6 +23,7 @@
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.2.1",
     "react-native-linear-gradient": "^2.5.4",
+    "react-native-loader": "^1.2.1",
     "react-native-modalbox": "^1.7.1",
     "react-native-parallax-scroll-view": "^0.21.3",
     "react-native-picker": "^4.3.7",
@@ -39,7 +40,9 @@
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
     "redux-logger": "^3.0.6",
+    "redux-persist": "^5.10.0",
     "redux-promise": "^0.6.0",
+    "redux-saga": "^1.0.5",
     "rn-fetch-blob": "^0.10.15",
     "uuid": "^3.3.2",
     "yarn": "^1.17.3"

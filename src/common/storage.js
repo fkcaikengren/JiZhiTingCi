@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Storage from 'react-native-storage';
 
-const configureStorage = new Storage({
+export const createStorage = ()=>  new Storage({
     // 最大容量，默认值1000条数据循环存储
     size: 1000,
 
@@ -25,5 +25,3 @@ const configureStorage = new Storage({
 })
 
 // console.log(configureStorage.sync)
-
-export default configureStorage;

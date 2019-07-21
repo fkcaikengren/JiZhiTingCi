@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {TouchableOpacity,StatusBar ,FlatList, View, Text, StyleSheet} from 'react-native';
 import {SearchBar } from 'react-native-elements'
 
-import VocaDao from './dao/VocaDao'
-import VocaGroupDao from './dao/VocaGroupDao'
+import VocaDao from './service/VocaDao'
+import VocaGroupDao from './service/VocaGroupDao'
 import DetailDictPage from './component/DetailDictPage';
 import styles from './VocaSearchStyle'
 

@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modalbox';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AliIcon from '../../component/AliIcon';
-import VocaGroupDao from './dao/VocaGroupDao'
+import VocaGroupDao from './service/VocaGroupDao'
 import styles from './VocaGroupStyle'
 
 

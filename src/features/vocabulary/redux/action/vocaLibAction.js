@@ -1,31 +1,24 @@
 import { createActions } from 'redux-actions';
 
-export const LOAD_VOCA_BOOKS = 'LOAD_VOCA_BOOKS'    //1查看单词书
-export const CHANGE_VOCA_BOOK = 'CHANGE_VOCA_BOOK'    //1切换单词书
+export const LOAD_VOCA_BOOKS = 'LOAD_VOCA_BOOKS'    //加载单词书
+export const LOAD_VOCA_BOOKS_START = 'LOAD_VOCA_BOOKS_START'
+export const LOAD_VOCA_BOOKS_SUCCEED = 'LOAD_VOCA_BOOKS_SUCCEED'
+export const LOAD_VOCA_BOOKS_FAIL = 'LOAD_VOCA_BOOKS_FAIL'
 
 
+export const CHANGE_VOCA_BOOK = 'CHANGE_VOCA_BOOK'    //切换单词书
 
+export const MODIFY_PLAN = 'MODIFY_PLAN'   
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-
 export const {loadVocaBooks,changeVocaBook} = createActions({
-    [LOAD_VOCA_BOOKS]: async () => {
-        //发送Http加载单词书
-        // let response = await Http.get('/vocaBook/getVocaBooks')
-        // console.log('response.data :')
-        // console.log(response.data)
-       
-
-
-        //加载生词本数据
-        // const vocaBooks = await require('../../component/vocaBooks.json');
-
-
-        return {vocaBooks};
+    //加载单词书
+    [LOAD_VOCA_BOOKS]: ()=>{
+        return {type:'LOAD_VOCA_BOOKS'}
     },
-    [CHANGE_VOCA_BOOK]:(curBookName, listCount,listWordCount) => {
-        //修改单词书
-        return {curBookName, listCount,listWordCount};
+    //修改单词书
+    [CHANGE_VOCA_BOOK]:(bookCode, taskCount) => {
+        return {type:'CHANGE_VOCA_BOOK', bookCode, taskCount, taskWordCount:15};
     },
     
 });

@@ -213,7 +213,7 @@ yarn add redux-devtools --dev
 ### ~~安装redux-promise~~ (使用redux-saga替换)
 
 ```
-yarn add redux-promise
+yarn add redux-saga
 ```
 
 
@@ -264,7 +264,11 @@ yarn add @react-native-community/async-storage
 react-native link @react-native-community/async-storage
 ```
 
+### 安装redux-persist (实现数据持久化)
 
+```
+yarn add redux-persist
+```
 
 
 
@@ -425,6 +429,14 @@ yarn add react-native-svg
 ```
 yarn add react-native-linear-gradient
 手动link
+```
+
+
+
+### 安装react-native-loader
+
+```
+yarn add react-native-loader
 ```
 
 

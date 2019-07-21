@@ -6,12 +6,12 @@
 
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text, View,
+  StyleSheet, Text, View, Image
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import TaskItem from './TaskItem';
-
+const Dimensions = require('Dimensions');
+let {width, height} = Dimensions.get('window');
 
 
 export default class Task extends Component {
@@ -27,7 +27,14 @@ export default class Task extends Component {
     return (
       <View style={styles.taskView}>
         <View style={styles.taskList}>
-          { this.renderTaskItems() }
+          {this.props.tasks.length>0 &&
+            this.renderTaskItems() 
+          }
+          {this.props.tasks<=0 &&
+            <View >
+                <Image source={require('../../../image/plan.jpg')} style={{width:200, height:200}} />
+            </View>
+          }
         </View>
       </View>
     );
