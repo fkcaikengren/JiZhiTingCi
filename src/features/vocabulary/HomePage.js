@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar , StyleSheet,Image, View,FlatList,Animated, TouchableOpacity} from 'react-native';
+import {Image, View,FlatList,Animated, TouchableOpacity} from 'react-native';
 import {   Grid, Col, Row,Text, Footer,  } from 'native-base';
 import {connect} from 'react-redux'
 import * as Progress from '../../component/react-native-progress';

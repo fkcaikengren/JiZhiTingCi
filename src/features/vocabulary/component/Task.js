@@ -1,8 +1,3 @@
-/**
- * @flow
- */
-
-'use strict';
 
 import React, { Component } from 'react';
 import {
@@ -34,7 +29,7 @@ export default class Task extends Component {
             <View >
                 <Image source={require('../../../image/plan.jpg')} style={{width:200, height:200}} />
             </View>
-          }
+          } 
         </View>
       </View>
     );

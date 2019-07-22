@@ -3,7 +3,7 @@ import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
 import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
-import {store} from './src/common/store'
+import {store} from './src/redux/store'
 // import RNFetchBlob from 'rn-fetch-blob';
 
 import AppNavigator from './src/navigation/AppNavigator';

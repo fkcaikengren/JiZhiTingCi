@@ -24,6 +24,14 @@ react-native init JiZhiTingCi
 
 
 
+
+
+
+
+## 项目功能简介
+
+
+
 ## 项目目录结构
 
 英语App项目目录	
@@ -56,8 +64,6 @@ react-native init JiZhiTingCi
 |    |    |	  |--App.js  （图片）
 
 
-
-## 项目需求分析
 
 
 
@@ -441,4 +447,71 @@ yarn add react-native-loader
 
 
 
-# 英语听词App
+# 测试
+
+### 使用bookstory
+
+参考<https://storybook.js.org/docs/guides/guide-react-native/>
+
+```
+cd my-project-directory
+```
+
+```
+npx -p @storybook/cli sb init --type react_native
+```
+
+```
+npm run storybook
+```
+
+
+
+问题1 :
+
+```jsx
+installation is not 100% automated.
+To quickly run storybook, replace contents of your app entry with:
+export default from './storybook';
+```
+
+意思是说：把入口文件（index.js）的内容用上面这句代码替换。或者用下面的代码替换：
+
+```
+import StorybookUI from './storybook';
+export default StorybookUI;
+```
+
+问题2：
+
+```
+Unable to resolve module `emotion-theming` from `V:\VSCode\English\JiZhiTingCi\node_modules\@storybook\react-native\dist\preview\index.js`: Module `emotion-theming` does not exist in the Haste module map
+```
+
+解决：
+
+```
+yarn add emotion-theming --dev
+yarn add @emotion/core --dev
+```
+
+
+
+### jest测试
+
+参考<https://www.jianshu.com/p/d4e447430c3c>
+
+github demo: <https://github.com/yinghuiwang/A0624-rn-unit-test>
+
+安装[Enzyme](http://airbnb.io/enzyme/)
+
+```
+yarn add enzyme enzyme-adapter-react-16 --dev
+```
+
+安装[react-native-mock](http://airbnb.io/enzyme/docs/guides/react-native.html)
+
+```
+yarn add react-native-mock --dev
+```
+

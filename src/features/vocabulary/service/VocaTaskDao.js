@@ -9,21 +9,24 @@ const VocaTaskSchema = {
     properties: {
         id: 'string',                           //任务id
         taskOrder: 'int?',                      //任务序号
-            //任务状态[0:未学, 1:完成新学,  2完成二复, 4, 7, 15, 200:掌握 ] 
+            //任务状态 [0,1,2,4,7,15,200 ] 代表[待学，1复，2复，4复，7复，15复，完成]
         status: {type:'int', optional:true, default:0},                 
             //任务执行日期
         vocaTaskDate: 'int?',                                            
-            //学习新词时的状态 IN_LEARN_PLAY , IN_LEARN_CARD , IN_LEARN_TEST1 , IN_LEARN_RETEST1 , IN_LEARN_TEST2, IN_LEARN_RETEST2, LEARN_FINISH
-        learnStatus: {type: 'string',optional:true, default: 'IN_LEARN_CARD'}, 
-            //新词复习时的状态  IN_REVIEW_PLAY  , IN_REVIEW_TEST1 , IN_REVIEW_RETEST1 , IN_REVIEW_TEST2, IN_REVIEW_RETEST2, REVIEW_FINISH
-        reviewStatus: {type:'string', optional:true, default: 'IN_REVIEW_TEST1'},    
+            //任务进度
+        process: {type: 'string',optional:true, default: 'IN_LEARN_PLAY'}, 
             //任务单词数组
         taskWords: 'TaskWord[]',    
             //进行中的当前单词下标                                
         curIndex:{type: 'int',optional:true, default: 0},
+            //剩下的遍数
+        letfTimes:{type: 'int',optional:true, default: 0},
             //判断单词数据是否已查询写入
         dataCompleted:{type: 'bool',optional:true, default: false},
-        createTime:'int?'
+            //创建时间
+        createTime:'int?',
+            //是否同步
+        isSync: {type: 'bool',optional:true, default: true}
     }
   };
  
@@ -79,13 +82,45 @@ export default class VocaTaskDao {
         }
     }
 
-    //修改数据库
-    modify = (fn)=>{
+    /**批量修改对象数据 */
+    modifyTasks = (tasks)=>{
+        this.realm.write((realm=>{
+            for(let task of tasks){
+                let params = {
+                    id:task.id,
+                    taskOrder: task.taskOrder, //复习
+                    status: task.status,
+                    learnStatus: task.vocaTaskDate,
+                    vocaTaskDate: task.vocaTaskDate,
+                    taskWords: task.taskWords
+                 }
+                realm.create('VocaTask', params, true);
+            }
+        }))
+    }
+
+    /**修改对象数据 */
+    modifyTask = (task)=>{
+         this.realm.write((realm=>{
+             let params = {
+                id:task.id,
+                taskOrder: task.taskOrder, //复习
+                status: task.status,
+                learnStatus: task.vocaTaskDate,
+                vocaTaskDate: task.vocaTaskDate,
+                taskWords: task.taskWords
+             }
+            realm.create('VocaTask', params, true);
+        }))
+    }
+
+    /**自定义修改 */
+    modify =  (fn)=>{
         this.realm.write(fn)
     }
 
 
-    //1. 保存任务数据
+    /**保存任务数据 */
     saveVocaTasks = (vocaTasks)=>{
         console.log('save ...');
         vocaTasks = [
@@ -201,39 +236,51 @@ export default class VocaTaskDao {
             }
     }
 
-    //2. 获取全部任务数据
+    /** 获取全部任务数据 */
     getAllTasks = ()=>{
         let vocaTasks = this.realm.objects('VocaTask')
         return vocaTasks;
     }
 
-
-    // 获取今日新学任务
-    getLearnTasks = ()=>{
+    /** 获取今日任务*/
+    getTodayTasks = ()=>{
         //获取今天0点的时间戳
         let today = new Date(new Date().toLocaleDateString()).getTime()
-        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today+' AND status = 0')
+        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today+' AND status >= 0 AND status <= 15')
         console.log(vocaTasks)
         return vocaTasks;
     }
 
-    // 获取今日旧词复习任务
-    getReviewTasks = ()=>{
-        //获取今天0点的时间戳
-        let today = new Date(new Date().toLocaleDateString()).getTime()
-        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today+' AND status > 0')
+    /** 获取已学任务 */
+    getLearnedTask = ()=>{
+        let vocaTasks = this.realm.objects('VocaTask').filtered('status > 0')
         console.log(vocaTasks)
         return vocaTasks;
     }
 
-    // 根据taskOrder获取任务
-    getTask = (taskOrder)=>{
+     /** 获取未学任务 */
+     getNotLearnedTask = ()=>{
+        let vocaTasks = this.realm.objects('VocaTask').filtered('status = 0')
+        console.log(vocaTasks)
+        return vocaTasks;
+    }
+
+    /**根据taskOrder获取任务 */
+    getTaskByOrder = (taskOrder)=>{
         let vocaTask = this.realm.objects('VocaTask').filtered('taskOrder = "'+taskOrder+'"')[0]
         console.log(vocaTask)
         return vocaTask;
     }
 
-    //清空所有
+    /** 根据错词频数查询单词 */
+    getWordsByWrongNum = (num)=>{
+        let words = this.realm.objects('TaskWord').filtered('wrongNum = "'+num+'"')
+        console.log(words)
+        return words;
+    }
+    
+
+    /**清空所有任务 */
     deleteAllTasks = ()=>{
         this.realm.write(()=>{
             this.realm.deleteAll();

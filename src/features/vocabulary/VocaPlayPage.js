@@ -9,7 +9,7 @@ const Sound = require('react-native-sound');
 import {NavigationActions, StackActions} from 'react-navigation'
 
 import * as vocaPlayAction from './redux/action/vocaPlayAction';
-import {PLAY_LEARN,  PLAY_REVIEW } from './common/constant'
+import {LEARN_PLAY,  REVIEW_PLAY } from './common/constant'
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaPlayStyle'
 
@@ -26,9 +26,9 @@ global.VocaPlayInterval = 1.0;
 class VocaPlayPage extends React.Component {
     constructor(props){
         super(props);
-        let playMode = this.props.navigation.getParam('playMode', PLAY_REVIEW)
+        let playMode = this.props.navigation.getParam('playMode', REVIEW_PLAY)
         this.controlDisable = false
-        if(playMode === PLAY_LEARN){
+        if(playMode === LEARN_PLAY){
             this.controlDisable = true
             this.learnPlayTime = 0//播放遍数
         }
