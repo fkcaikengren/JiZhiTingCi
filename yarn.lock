@@ -5211,13 +5211,6 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
-flux-standard-action@^2.0.3:
-  version "2.1.0"
-  resolved "https://registry.npm.taobao.org/flux-standard-action/download/flux-standard-action-2.1.0.tgz#23713a545ee49d62bd067e77d63f8c691561c94c"
-  integrity sha1-I3E6VF7knWK9Bn531j+MaRVhyUw=
-  dependencies:
-    lodash "^4.17.11"
-
 focus-lock@^0.6.3:
   version "0.6.5"
   resolved "https://registry.npm.taobao.org/focus-lock/download/focus-lock-0.6.5.tgz#f6eb37832a9b1b205406175f5277396a28c0fce1"
@@ -10199,14 +10192,6 @@ redux-persist@^5.10.0:
   version "5.10.0"
   resolved "https://registry.npm.taobao.org/redux-persist/download/redux-persist-5.10.0.tgz#5d8d802c5571e55924efc1c3a9b23575283be62b"
   integrity sha1-XY2ALFVx5Vkk78HDqbI1dSg75is=
-
-redux-promise@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.npm.taobao.org/redux-promise/download/redux-promise-0.6.0.tgz#c64723b5213bb5603c11b74302883b682e06b319"
-  integrity sha1-xkcjtSE7tWA8EbdDAog7aC4Gsxk=
-  dependencies:
-    flux-standard-action "^2.0.3"
-    is-promise "^2.1.0"
 
 redux-saga@^1.0.5:
   version "1.0.5"

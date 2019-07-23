@@ -42,7 +42,6 @@
     "redux-actions": "^2.6.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
-    "redux-promise": "^0.6.0",
     "redux-saga": "^1.0.5",
     "rn-fetch-blob": "^0.10.15",
     "uuid": "^3.3.2",
@@ -65,7 +64,6 @@
     "metro-react-native-babel-preset": "^0.54.0",
     "mockjs": "^1.0.1-beta3",
     "react-dom": "16.8.3",
-    "react-native-mock": "^0.3.1",
     "react-test-renderer": "16.8.3",
     "redux-devtools": "^3.5.0"
   },

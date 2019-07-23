@@ -497,7 +497,7 @@ yarn add @emotion/core --dev
 
 
 
-### jest测试
+### Jest测试
 
 参考<https://www.jianshu.com/p/d4e447430c3c>
 
@@ -509,9 +509,45 @@ github demo: <https://github.com/yinghuiwang/A0624-rn-unit-test>
 yarn add enzyme enzyme-adapter-react-16 --dev
 ```
 
-安装[react-native-mock](http://airbnb.io/enzyme/docs/guides/react-native.html)
+~~安装[react-native-mock](http://airbnb.io/enzyme/docs/guides/react-native.html)~~ 
 
 ```
 yarn add react-native-mock --dev
 ```
+
+不支持react16, 所以放弃react-native-mock
+
+
+
+
+
+
+
+#### Jest测试fetch异步请求
+
+
+
+
+
+#### 借助Chrome浏览器查看realm数据库
+
+##### 1.项目集成stetho
+
+##### 2.打开chrome://inspect/ , 使用dev tool进行查看数据库
+
+##### 3.集成第三方插件stetho_realm，才可以查看realm数据库
+
+**参考：基本配置**    <https://github.com/uPhyca/stetho-realm>
+
+**参考： suppoort realm5.10.0**  <https://github.com/uPhyca/stetho-realm/issues/62>
+
+
+
+遇到问题：
+
+​	找不到stetho_realm， 找不到Realm
+
+​	打开devtools ，点开realm数据库就出现 connect close.
+
+​	
 

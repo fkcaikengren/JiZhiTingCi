@@ -74,43 +74,49 @@ export default class VocaDao{
      * @memberof VocaDao
      */
     getWordDetail = (word)=>{
-        //查询单词基本信息
-        let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'"'); //数组
-        let wordObj = { //构成一级对象
-            word:word,
-            properties:[]
-        };
-        for(let wi of wordInfos){
+        let wordObj = null
+        try{
+            //查询单词基本信息
+            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'"'); //数组
+            wordObj = { //构成一级对象
+                word:word,
+                properties:[]
+            };
+            for(let wi of wordInfos){
 
-            //查询单词英英释义
-            let wordDefs = this.realm.objects('WordDef').filtered('word_id="'+wi.id+'"'); 
-            let propertyObj = {//构建二级对象
-                property:wi.property,
-                enPhonetic:wi.en_phonetic,
-                amPhonetic:wi.am_phonetic,
-                enPronUrl:wi.en_pron_url,
-                amPronUrl:wi.am_pron_url,
-                defs:[]
-            }
-            for(let wd of wordDefs){
-
-
-                //查询单词句子
-                let sens = this.realm.objects('WordSentence').filtered('def_id="'+wd.id+'"')
-                let sentenceObj = {
-                    def:wd.def,
-                    defTran:wd.def_tran,
-                    syn: wd.syn,
-                    phrase: wd.phrase,
-                    sentences:[]
+                //查询单词英英释义
+                let wordDefs = this.realm.objects('WordDef').filtered('word_id="'+wi.id+'"');
+                let propertyObj = {//构建二级对象
+                    property:wi.property,
+                    enPhonetic:wi.en_phonetic,
+                    amPhonetic:wi.am_phonetic,
+                    enPronUrl:wi.en_pron_url,
+                    amPronUrl:wi.am_pron_url,
+                    defs:[]
                 }
-                sentenceObj.sentences = sens;
+                for(let wd of wordDefs){
 
-                propertyObj.defs.push(sentenceObj);
+
+                    //查询单词句子
+                    let sens = this.realm.objects('WordSentence').filtered('def_id="'+wd.id+'"')
+                    let sentenceObj = {
+                        def:wd.def,
+                        defTran:wd.def_tran,
+                        syn: wd.syn,
+                        phrase: wd.phrase,
+                        sentences:[]
+                    }
+                    sentenceObj.sentences = sens;
+
+                    propertyObj.defs.push(sentenceObj);
+                }
+                wordObj.properties.push(propertyObj);
             }
-            wordObj.properties.push(propertyObj);
+            console.log(wordObj);
+        }catch (e) {
+            console.log(e)
+            console.log('VocaDao : getWordDetail() Error')
         }
-        console.log(wordObj);
         return wordObj
     }
 
@@ -177,21 +183,3 @@ export default class VocaDao{
     }
 
 }
-// getWordDetail('abandon')
-// { word: 'abandon',
-//   properties:[ 
-//         { id: 1, property: 'v', defs: [Array] },
-//         { id: 2, property: 'n', defs: [Array] } 
-//     ]
-//  }
-// -----------------------------------------
-// defs:[
-//     [   { sentences: Results { [0]: [RealmObject] } },
-//         { sentences: Results { [0]: [RealmObject], [1]: [RealmObject] } },
-//         { sentences:Results { [0]: [RealmObject], [1]: [RealmObject], [2]: [RealmObject] } },
-//         { sentences: Results { [0]: [RealmObject], [1]: [RealmObject] } },
-//         { sentences: Results { [0]: [RealmObject] } },
-//         { sentences: Results {} } 
-//     ],
-//     [   { sentences: Results { [0]: [RealmObject] } } ]
-// ]

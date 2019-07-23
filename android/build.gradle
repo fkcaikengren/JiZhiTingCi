@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.1'
-
+        classpath "io.realm:realm-gradle-plugin:5.10.0"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,7 +27,14 @@ allprojects {
         jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            //react-native的第三方库（npm/yarn安装的依赖）地址
             url "$rootDir/../node_modules/react-native/android"
         }
+
+        maven {
+            // stetho-realm的地址源
+            url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
+        }       
+
     }
 }
