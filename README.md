@@ -551,3 +551,10 @@ yarn add react-native-mock --dev
 
 ​	
 
+
+
+#### jest操作realm时，for of语法报错
+
+错误：_iterator3[(intermediate value)(intermediate value)(intermediate value)] is not a function
+
+只能换成 for in的语法

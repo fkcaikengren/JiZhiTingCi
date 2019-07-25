@@ -129,7 +129,7 @@ export default class VocaDao{
             //testWrongNum 属性： 学习测试中的错误次数
             w.testWrongNum = 0; 
             console.log(w.word);
-            wordInfos = this.realm.objects('WordInfo').filtered('word="'+w.word+'"'); 
+            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+w.word+'"');
             //音标
             w.enPhonetic  = wordInfos[0]?wordInfos[0].en_phonetic:''
             w.enPronUrl = wordInfos[0]?wordInfos[0].en_pron_url:''

@@ -1,13 +1,10 @@
 import axios from 'axios';
-import qs from 'querystring';
 import httpBaseConfig from './httpBaseConfig';
 
 export const createHttp = (config=httpBaseConfig)=>{
     const instance = axios.create(config);
     //请求拦截处理
     instance.interceptors.request.use(function (config) {
-        console.log('config:')
-        console.log(config)
         // 在发送请求之前做些什么
         return config;
     }, function (error) {
