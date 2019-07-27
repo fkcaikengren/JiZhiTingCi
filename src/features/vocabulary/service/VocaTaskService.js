@@ -1,6 +1,7 @@
 
 
 import * as Constant from '../common/constant'
+import _util from '../../../common/util'
 import VocaTaskDao from "./VocaTaskDao";
 import _ from 'lodash'
 
@@ -32,28 +33,31 @@ export default class VocaTaskService {
     }
 
     /**
-     * 获取今日任务：生成home页的任务列表
+     * 获取今日任务：任务顺序，大原则按taskOrder递增，新学产生的1复任务放末尾
+     *      目的：保证任务进度快慢是按照taskOrder递增顺序的
      *     今日任务：新学任务，1复，其他复习任务
      * @returns {any[]}
      */
-    getTodayTasks = (oldTasks)=>{
+    getTodayTasks = (oldTasks, n)=>{
         //判断oldTasks 是否过时
-        let today = new Date(new Date().toLocaleDateString()).getTime()
+        let today = _util.getDayTime(0)
         if(oldTasks && oldTasks[0] && oldTasks[0].vocaTaskDate === today){ //数据未过时
             return oldTasks
         }else{                                 //数据过时，从数据库重新加载
-            const tasks = this.vtd.getTodayTasks()
+            //1. 查询
+            const tasks = this.vtd.getTodayTasks(n)
             let copyTasks = []
             let reviewTask = null
+            let reviewTasks = []
+            //2. 深拷贝
             for(let task of tasks){
-                //深拷贝一份
                 let copyTask = {
-                    taskOrder: task.taskOrder,                      //任务序号
+                    taskOrder: task.taskOrder,              //任务序号
                     status: task.status,                 
                     vocaTaskDate: task.vocaTaskDate,                                            
                     process: task.process, 
                     curIndex:task.curIndex,
-                    letfTimes:task.letfTimes, //默认是新学阶段，3遍轮播
+                    leftTimes:task.leftTimes,               //默认是新学阶段，3遍轮播
                     delayDays:task.delayDays,
                     dataCompleted:task.dataCompleted,
                     createTime:task.createTime,
@@ -82,13 +86,23 @@ export default class VocaTaskService {
                     reviewTask = _.cloneDeep(copyTask);
                     reviewTask.status = Constant.STATUS_1
                     reviewTask.process = Constant.IN_REVIEW_PLAY
-                    reviewTask.letfTimes = Constant.REVIEW_PLAY_TIMES
+                    reviewTask.leftTimes = Constant.REVIEW_PLAY_TIMES
+                    reviewTasks.push(reviewTask)
+                }
+
+            }
+
+            //3.顺序调整: 新学放开头，新学生成的1复放末尾
+            let newTasks = [], otherTasks = []
+            for(let t of copyTasks){
+                if(t.status === Constant.STATUS_0){
+                    newTasks.push(t)
+                }else{
+                    otherTasks.push(t)
                 }
             }
-            if(reviewTask){                          //如果存在新学任务
-                copyTasks.push(reviewTask)
-            }
-            return copyTasks
+            let sortedTasks = newTasks.concat(otherTasks).concat(reviewTasks)
+            return sortedTasks
         }
     }
 
@@ -122,100 +136,122 @@ export default class VocaTaskService {
     }
 
 
+
     /**
-     *  根据昨日的任务,计算今日的任务
-     *      新的一天调用这个函数
-     * @param tasks
+     * 存储昨日的任务,计算今日的任务
+     *      场景：新的一天调用这个函数
+     * @param rawTasks 原始任务
+     * @param taskCount 计划中的每日任务数量
+     * @param nth 第nth天，默认为0，表示今天零点的时间戳（方便模拟测试）
      */
-    calculateTasks = (rawTasks, taskCount)=>{
+    calculateTasks = (rawTasks, taskCount, nth=0)=>{
+
         //1. 筛选出需存储的任务
         let oldTasks = this.filterTasks(rawTasks)
-        let tasksFinished = true
+        let leftCount = 0
         for(let oldTask of oldTasks){
-            if(oldTask.process.startsWith('IN_LEARN')){                 //新学未完成
+            if(oldTask.process.startsWith('IN_LEARN') && oldTask.process !== Constant.IN_LEARN_FINISH){      //新学未完成
                 oldTask.status = Constant.STATUS_0
-                oldTask.delayDays = 0
-                oldTask.vocaTaskDate += 1*Constant.DAY_MS
-                tasksFinished = false
+                // console.log('未完成新学')
             }else if(oldTask.process === Constant.IN_REVIEW_FINISH ){    //完成复习
                 switch(oldTask.status){
                     case Constant.STATUS_1:
-                        oldTask.vocaTaskDate += 1*Constant.DAY_MS
+                        oldTask.vocaTaskDate += _util.getDaysMS(1)
                         break
                     case Constant.STATUS_2:
-                        oldTask.vocaTaskDate += 2*Constant.DAY_MS
+                        oldTask.vocaTaskDate += _util.getDaysMS(2)
                         break
                     case Constant.STATUS_4:
-                        oldTask.vocaTaskDate += 3*Constant.DAY_MS
+                        oldTask.vocaTaskDate += _util.getDaysMS(3)
                         break
                     case Constant.STATUS_7:
-                        oldTask.vocaTaskDate += 8*Constant.DAY_MS
+                        oldTask.vocaTaskDate += _util.getDaysMS(8)
                         break
                     default:
                         break;
                 }
                 oldTask.status = this.getNextStatus(oldTask.status)
-                oldTasks.delayDays = 0
-                tasksFinished = false
+                oldTask.delayDays = 0
+                // console.log('完成复习')
             } else if(oldTask.process.startsWith('IN_REVIEW')){         //未完成复习
-
+                oldTask.vocaTaskDate += _util.getDaysMS(1)
                 switch(oldTask.status){
                     case Constant.STATUS_1:
-                        if(oldTasks.delayDays < Constant.DELAY_DAYS_1){
+                        if(oldTask.delayDays < Constant.DELAY_DAYS_1){
                             oldTask.delayDays += 1
-                        }else{
+                            leftCount++
+                        }else{//重学
                             oldTask.status = Constant.STATUS_0
-                            oldTask.delayDays = 0
                         }
                         break
                     case Constant.STATUS_2:
-                        if(oldTasks.delayDays < Constant.DELAY_DAYS_2){
+                        if(oldTask.delayDays < Constant.DELAY_DAYS_2){
                             oldTask.delayDays += 1
-                        }else{
+                            leftCount++
+                        }else{//重学
                             oldTask.status = Constant.STATUS_0
-                            oldTask.delayDays = 0
                         }
                         break
                     case Constant.STATUS_4:
-                        if(oldTasks.delayDays < Constant.DELAY_DAYS_4){
+                        if(oldTask.delayDays < Constant.DELAY_DAYS_4){
                             oldTask.delayDays += 1
-                        }else{
+                            leftCount++
+                        }else{//重学
                             oldTask.status = Constant.STATUS_0
-                            oldTask.delayDays = 0
                         }
                         break
                     case Constant.STATUS_7:
-                        if(oldTasks.delayDays < Constant.DELAY_DAYS_7){
+                        if(oldTask.delayDays < Constant.DELAY_DAYS_7){
                             oldTask.delayDays += 1
-                        }else{
+                            leftCount++
+                        }else{//重学
                             oldTask.status = Constant.STATUS_0
-                            oldTask.delayDays = 0
                         }
                         break
                     case Constant.STATUS_15:
-                        if(oldTasks.delayDays < Constant.DELAY_DAYS_15){
+                        if(oldTask.delayDays < Constant.DELAY_DAYS_15){
                             oldTask.delayDays += 1
-                        }else{
+                            leftCount++
+                        }else{//重学
                             oldTask.status = Constant.STATUS_0
-                            oldTask.delayDays = 0
                         }
                         break
                     default:
                         break;
                 }
-                oldTask.vocaTaskDate += 1*Constant.DAY_MS
+                // console.log('未完成复习')
             }
+
+            oldTask.curIndex = 0
+            if(oldTask.status == Constant.STATUS_0){ //重学 or 新学
+                oldTask.delayDays = 0
+                oldTask.vocaTaskDate = 0
+                oldTask.process = Constant.IN_LEARN_PLAY
+                oldTask.leftTimes = Constant.LEARN_PLAY_TIMES
+
+            }else if(oldTask.status == Constant.STATUS_200){ //完成
+                oldTask.process = Constant.IN_REVIEW_FINISH
+                oldTask.leftTimes = 0
+            }else{
+                oldTask.process = Constant.IN_REVIEW_PLAY
+                oldTask.leftTimes = Constant.REVIEW_PLAY_TIMES
+            }
+
         }
+
+
         //2. 更新旧任务
         this.vtd.modifyTasks(oldTasks)
 
         //3. 产生新学任务
-        if(tasksFinished){     //如果任务全部完成,才生成新任务
+        if(leftCount<=0){     //如果不存在遗留任务,才生成新任务
             //获取 status==0 的tasks[i]
             this.vtd.modify(()=>{
                 let newTasks = this.vtd.getNotLearnedTasks()
-                for(let i=0; i<taskCount; i++){
-                    newTasks[i].vocaTaskDate = new Date(new Date().toLocaleDateString()).getTime() //今日
+                if(newTasks.length > 0){                    //如果还存在未学任务
+                    for(let i=0; (i<taskCount && i<newTasks.length); i++){
+                        newTasks[i].vocaTaskDate =  _util.getDayTime(nth) //今日零点
+                    }
                 }
             })
         }

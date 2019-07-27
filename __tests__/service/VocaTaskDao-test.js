@@ -14,3 +14,7 @@ afterEach(()=>{
 it('getTodayTasks ', ()=>{
     console.log(vtd.getTodayTasks())
 })
+
+it('已学的任务', ()=>{
+    console.log(vtd.getLearnedTasks().length)
+})

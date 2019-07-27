@@ -1,6 +1,7 @@
+import _util from "../../../common/util";
 
 const Realm = require('realm')
-const uuidv4 = require('uuid/v4');
+import * as Constant from "../common/constant";
 
 // 1. 任务表
 const VocaTaskSchema = {
@@ -17,7 +18,7 @@ const VocaTaskSchema = {
             //进行中的当前单词下标
         curIndex:{type: 'int',optional:true, default: 0},
             //剩下的遍数
-        letfTimes:{type: 'int',optional:true, default: 3}, //默认是新学阶段，3遍轮播
+        leftTimes:{type: 'int',optional:true, default: Constant.LEARN_PLAY_TIMES}, //默认是新学阶段，3遍轮播
             //延迟天数
         delayDays:{type: 'int',optional:true, default: 0},
             //判断单词数据是否已查询写入
@@ -113,11 +114,14 @@ export default class VocaTaskDao {
      */
     modifyTasks = (tasks)=>{
         try{
-            this.realm.write((realm=>{
+            this.realm.write(()=>{
                 for(let task of tasks){
-                    realm.create('VocaTask', task, true);
+                    this.realm.create('VocaTask', task, true);
+                    if(task.taskOrder == 57){
+                        console.log(task.leftTimes)
+                    }
                 }
-            }))
+            })
         }catch (e) {
             console.log('VocaTaskDao : 批量修改数据失败')
             console.log(e)
@@ -131,26 +135,36 @@ export default class VocaTaskDao {
     }
 
 
-    /** 获取今日任务*/
-    getTodayTasks = ()=>{
-        //获取今天0点的时间戳
-        let today = new Date(new Date().toLocaleDateString()).getTime()
-        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today )
+    /**
+     * 获取今日任务 (具有一定顺序)
+     * @param nth
+     * @returns {Realm.Results<any>} 查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
+     */
+    getTodayTasks = (nth=0)=>{
+        //nth=0 获取今天0点的时间戳
+        let today = _util.getDayTime(nth)
+        let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = '+today + ' SORT(taskOrder ASC) ' )
         return vocaTasks;
     }
 
-    /** 获取已学任务 */
+    /**
+     * 获取已学任务
+     * @returns {Realm.Results<any>} 查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
+     */
     getLearnedTasks = ()=>{
         let vocaTasks = this.realm.objects('VocaTask').filtered('status > 0')
-        console.log(vocaTasks)
         return vocaTasks;
     }
 
-     /** 获取未学任务 */
+    /**
+     * 获取未学任务
+     * @returns {Realm.Results<any>}查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
+     */
      getNotLearnedTasks = ()=>{
         let vocaTasks = this.realm.objects('VocaTask').filtered('status = 0')
         return vocaTasks;
     }
+
     //-----------------------------------------------
     /**根据taskOrder获取任务 */
     getTaskByOrder = (taskOrder)=>{

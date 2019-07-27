@@ -1,6 +1,4 @@
 
-export const DAY_MS = 86400000
-
 
 export const NORMAL_PLAY = 'NORMAL_PLAY'         //普通模式的轮播
 export const LEARN_PLAY = 'LEARN_PLAY'          //学习模式的轮播
