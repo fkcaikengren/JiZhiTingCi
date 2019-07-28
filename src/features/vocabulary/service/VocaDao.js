@@ -3,7 +3,7 @@ const Realm = require('realm');
 
 export default class VocaDao{
     
-    constructor(props){
+    constructor(){
         this.realm = null
     }
     /** 打开数据库 */
@@ -125,9 +125,7 @@ export default class VocaDao{
      * @memberof VocaDao
      */
     writeInfoToTask = (task)=>{
-        for(let w of task.taskWords){      //遍历每个单词
-            //testWrongNum 属性： 学习测试中的错误次数
-            w.testWrongNum = 0; 
+        for(let w of task.words){      //遍历每个单词
             console.log(w.word);
             let wordInfos = this.realm.objects('WordInfo').filtered('word="'+w.word+'"');
             //音标
@@ -139,30 +137,15 @@ export default class VocaDao{
 
             //词性数组
             let trans = []
-            let tran = ''
             for(let wi of wordInfos){   
 
                 trans.push({
-                    wordId : wi.id,             //单词id
                     property : wi.property,     //词性
                     tran : wi.tran              //释义
                 });
-                tran = tran+wi.property+'. '+ wi.tran+'；'
+
             }
 
-            //inflections,衍生词和变形词
-            let transformations = []
-            if(wordInfos[0]){
-                let ids = wordInfos[0].inflections.split(',')
-                for(let id of ids){
-                    let transformWord = this.realm.objects('WordInfo').filtered('id="'+id+'" AND inflection_type = "transform"')[0]
-                    if(transformWord){
-                        transformations.push(transformWord.word)
-                    }
-                }
-            }
-            w.transformations = transformations
-                
             //第一个释义和例句
             if(wordInfos[0] ){
                 let id = wordInfos[0].id
@@ -172,14 +155,17 @@ export default class VocaDao{
                     w.def = def0.def
                     if(def0.id){
                         let defId = def0.id
-                        w.sentence = this.realm.objects('WordSentence').filtered('def_id="'+defId+'"')[0].sentence
+                        let s = this.realm.objects('WordSentence').filtered('def_id="'+defId+'"')[0]
+                        w.sentence = s?s.sentence:''
                     }
                 }
             }
             
-            w.trans = trans;
-            w.tran = tran
+            w.tran = JSON.stringify(trans); //把词性数组当做string存入单词的tran
         }
+        console.log(task)
+        //数据填充完成
+        task.dataCompleted = true
     }
 
 }

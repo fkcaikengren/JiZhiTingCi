@@ -3,30 +3,19 @@ import * as vpAction from './action/vocaPlayAction';
 
 const defaultState ={
 
-    //1单词列表数据
-    wordList:[],
-    //数据是否加载成功，避免重复加载数据
-    isDataLoaded : false,
-    //2当前正在播放的单词id
-    curIndex:0,
-    //3是否播放
+    //任务,包含了单词列表 (不进行持久化)
+    task:{
+        words:[]
+    },
+    //是否播放, <=0表示暂停，>0表示播放
     autoPlayTimer:0,
-    //4时间间隔
+    //时间间隔
     interval:1.0,
-    //5已学列表id数组
-    learnedLists: [{
-        id:0,
-        info:'12个单词'
-    },{
-        id:1,
-        info:'13个单词'
-    }
-    ],
-    //6是否显示英文单词
+    //是否显示英文单词
     showWord:true,
-    //7是否显示中文释义
+    //是否显示中文释义
     showTran:true,
-    //8.1主题数组
+    //主题数组
     themes:[{
         id: 0,
         name: '蓝色',
@@ -36,22 +25,32 @@ const defaultState ={
         name: '粉红',
         bgColor: 'pink'
     }],
-    //8.2当前主题id
+    //当前主题id
     themeId: 0,
-    
+     //加载状态
+     isLoadPending:false,
 }
 
 
 export const vocaPlay =  handleActions({
 
-    [vpAction.LOAD_REVIEW_LIST] : (state, action) => ({ ...state, ...action.payload }),         //加载复习单词列表
-    [vpAction.LOAD_LEARN_LIST] : (state, action) => ({ ...defaultState, ...action.payload}),             //加载新学单词列表
+    //加载任务
+    [vpAction.LOAD_TASK_START] : (state, action) => ({ ...state, isLoadPending:true }),                             //开始加载任务
+    [vpAction.LOAD_TASK_SUCCEED] : (state, action) => ({ ...state, task:action.task, isLoadPending:false }),         //任务加载成功
+    //暂停、播放
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
-    [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
-    [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
-    [vpAction.LOAD_THEMES] : (state, action) => ({ ...state, themes:action.payload.themes }),
-    [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
-    [vpAction.CHANGE_CUR_INDEX] : (state, action) => ({ ...state, curIndex:action.payload.curIndex }),
+    //更新当前单词
+    [vpAction.CHANGE_CUR_INDEX] : (state, action) => ({ ...state, task:{...state.task, curIndex:action.payload.curIndex} }),
+    //改变播放间隔
     [vpAction.CHANGE_INTERVAL] : (state, action) => ({ ...state, interval:action.payload.interval }),
-    [vpAction.RESET_PLAY_LIST] : (state, action) => ({ ...defaultState }),                  //重置播放列表
+    //是否显示单词
+    [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
+    //是否显示翻译
+    [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
+    //加载主题
+    [vpAction.LOAD_THEMES] : (state, action) => ({ ...state, themes:action.payload.themes }),
+    //改变主题
+    [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
+    
+    
 }, defaultState);

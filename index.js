@@ -10,7 +10,7 @@ import {createStorage} from './src/common/storage';
 import {createHttp} from './src/common/http'
 const Realm = require('realm');
 //设置全局变量和拷贝realm (注：这部分代码只在安装App时运行一次)
-Realm.copyBundledRealmFiles();
+Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重新拷贝
 console.log('copy voca.realm');
 global.Storage = createStorage();
 global.Http = createHttp()

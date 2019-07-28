@@ -6,7 +6,7 @@ const defaultState ={
 
     //单词书
     books:[],
-    //状态
+    //加载状态
     isLoadPending:false,
     //当前计划
     plan: {

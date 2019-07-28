@@ -83,13 +83,21 @@ react-native link @ant-design/icons-react-native
 
 
 
-### 安装NativeBase库
+### 安装NativeBase库 (逐步取消)
 
 需要link
 
 ```
 yarn add native-base
 ```
+
+### 安装react-native-easy-grid
+
+```
+yarn add react-native-easy-grid
+```
+
+
 
 ### 安装react-navigator库
 
@@ -100,7 +108,7 @@ yarn add react-navigation
 yarn add react-native-gesture-handler 
 ```
 
-### 安装eact-navigator库
+### 安装react-navigator库
 
 ```
 yarn add react-native-vector-icons

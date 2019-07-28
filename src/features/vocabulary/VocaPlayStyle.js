@@ -7,7 +7,13 @@ const ITEM_H = 55;
 const styles = StyleSheet.create({
   
     container:{
-        width:width,
+        flex:1,
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'center',
+    },
+    content:{
+        width:width-100,
         height:height-240-STATUSBAR_HEIGHT,
     },
     backgroundVideo: {
@@ -38,26 +44,23 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    buttonText:{
-        color:'#FFF',  
-        padding:2,
-        fontSize:14,
-        textAlign:'center', 
-        lineHeight:22, 
+    textIcon:{
+        height:22,
+        width:22,
+        textAlign:'center',
+        borderWidth:1,
+        borderRadius:2,
+        
     },
-    selectedButton:{
+    selected:{
+        color:'#FFF',
         borderColor:'#E59AAA',
-        borderWidth:1,
         backgroundColor:'#E59AAA',
-        height:22,
-        elevation:0,
     },
-    unSelectedButton:{
-        borderColor:'#FFFFFF',
-        borderWidth:1,
-        backgroundColor:'#FFFFFF00',
-        height:22,
-        elevation:0,
+    unSelected:{
+        color:'#FFF',
+        borderColor:'#FFF',
+        
     },
     outlineButton:{
         borderColor:'#fff',
@@ -72,12 +75,17 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        width:width,
+        width:'100%',
         height: ITEM_H,
         backgroundColor:'#FFFFFF00'
     },
 
-    itemText:{
+    itemEnText:{
+        fontSize:16,
+        color:'#FFFFFFAA',
+    },
+    itemZhText:{
+        fontSize:12,
         color:'#FFFFFFAA',
     },
 

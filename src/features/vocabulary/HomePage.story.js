@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, TouchableOpacity, StyleSheet} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
@@ -14,9 +14,11 @@ import _util from '../../common/util'
 import HomePage from './HomePage';
 import HomeHeader from './component/HomeHeader'
 import Task from './component/Task'
+import HomeFooter from './component/HomeFooter';
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     backgroundColor:'#FDFDFD',
   }
 });
@@ -74,7 +76,7 @@ let tasks = [{
   vocaTaskDate: _util.getDayTime(0),
   process: 'IN_REVIEW_PLAY',
   curIndex: 0,
-  leftTimes: 0,
+  leftTimes: 2,
   delayDays: 12,
   dataCompleted: true,
   createTime: '',
@@ -114,6 +116,14 @@ storiesOf('HomePage', module)
   .add('Task', ()=>
     <Task tasks={tasks}  />
   )
+  .add('Footer', ()=>{
+    <View style={{
+        flex: 1,
+        backgroundColor: '#F9F9F9'
+    }}>
+      <HomeFooter task={tasks[1]}/>
+    </View>
+  })
 
 
 

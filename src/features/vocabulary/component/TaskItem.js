@@ -1,15 +1,13 @@
 
 
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
+import { StyleSheet,Text, View,Image,
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Constant from '../common/constant'
+import VocaUtil from '../../vocabulary/common/vocaUtil'
+
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -26,6 +24,7 @@ export default class TaskItem extends Component {
 
   render() {
     const {index, item } = this.props
+    //任务名
     let name = ''
     if(item.taskOrder < 10){
       name = '00'+item.taskOrder
@@ -34,6 +33,8 @@ export default class TaskItem extends Component {
     }else{
       name = item.taskOrder
     }
+    //计算进度
+    let processNum = VocaUtil.calculateProcess(item)
     
 
     return (
@@ -46,7 +47,7 @@ export default class TaskItem extends Component {
             <Text style={styles.nameText}>{`List-${name}`}</Text>
             <View style={styles.noteView}>
               <Text style={styles.labelText}>{item.status===Constant.STATUS_0?'新学':'复习'}</Text>
-              <Text style={styles.noteText}>{`共${}词，已完成${}%`}</Text>
+              <Text style={styles.noteText}>{`共${item.wordCount}词，已完成${processNum}%`}</Text>
             </View>
           </View>
         </View>
@@ -58,6 +59,7 @@ export default class TaskItem extends Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

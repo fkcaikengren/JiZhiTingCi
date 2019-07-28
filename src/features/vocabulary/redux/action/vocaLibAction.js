@@ -1,6 +1,7 @@
 import { createActions } from 'redux-actions';
 
-export const LOAD_VOCA_BOOKS = 'LOAD_VOCA_BOOKS'    //加载单词书
+//加载单词书
+export const LOAD_VOCA_BOOKS = 'LOAD_VOCA_BOOKS'    
 export const LOAD_VOCA_BOOKS_START = 'LOAD_VOCA_BOOKS_START'
 export const LOAD_VOCA_BOOKS_SUCCEED = 'LOAD_VOCA_BOOKS_SUCCEED'
 export const LOAD_VOCA_BOOKS_FAIL = 'LOAD_VOCA_BOOKS_FAIL'
