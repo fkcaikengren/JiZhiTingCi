@@ -2,6 +2,7 @@
 
 import * as Constant from '../common/constant'
 import _util from '../../../common/util'
+import VocaUtil from '../common/vocaUtil'
 import VocaTaskDao from "./VocaTaskDao";
 import _ from 'lodash'
 
@@ -17,6 +18,7 @@ export default class VocaTaskService {
         this.vtd.open()
     }
 
+
     /**
      * 关闭数据库
      */
@@ -31,6 +33,7 @@ export default class VocaTaskService {
     saveVocaTasks(tasks){
         this.vtd.saveVocaTasks(tasks)
     }
+
 
     /**
      * 获取今日任务：任务顺序，大原则按taskOrder递增，新学产生的1复任务放末尾
@@ -51,35 +54,7 @@ export default class VocaTaskService {
             let reviewTasks = []
             //2. 深拷贝
             for(let task of tasks){
-                let copyTask = {
-                    taskOrder: task.taskOrder,              //任务序号
-                    status: task.status,                 
-                    vocaTaskDate: task.vocaTaskDate,                                            
-                    process: task.process, 
-                    curIndex:task.curIndex,
-                    leftTimes:task.leftTimes,               //默认是新学阶段，3遍轮播
-                    delayDays:task.delayDays,
-                    dataCompleted:task.dataCompleted,
-                    createTime:task.createTime,
-                    isSync: task.isSync,
-                    words: []
-                }
-                let ws = task.words
-                for(let i in ws){
-                    copyTask.words.push({
-                        word: ws[i].word,
-                        passed: ws[i].passed,
-                        wrongNum: ws[i].wrongNum,
-                        testWrongNum: ws[i].testWrongNum,
-                        enPhonetic: ws[i].enPhonetic,
-                        enPronUrl: ws[i].enPronUrl,
-                        amPhonetic: ws[i].amPhonetic,
-                        amPronUrl: ws[i].amPronUrl,
-                        def: ws[i].def,
-                        sentence: ws[i].sentence,
-                        tran: ws[i].tran
-                    })
-                }
+                let copyTask = VocaUtil.copyTask(task)
                 copyTasks.push(copyTask)
                 //生成1复任务
                 if(copyTask.status === Constant.STATUS_0){
@@ -136,7 +111,6 @@ export default class VocaTaskService {
     }
 
 
-
     /**
      * 存储昨日的任务,计算今日的任务
      *      场景：新的一天调用这个函数
@@ -170,7 +144,7 @@ export default class VocaTaskService {
                     default:
                         break;
                 }
-                oldTask.status = this.getNextStatus(oldTask.status)
+                oldTask.status = VocaUtil.getNextStatus(oldTask.status)
                 oldTask.delayDays = 0
                 // console.log('完成复习')
             } else if(oldTask.process.startsWith('IN_REVIEW')){         //未完成复习
@@ -255,39 +229,6 @@ export default class VocaTaskService {
                 }
             })
         }
-    }
-
-
-    /**
-     * 获取下一个状态
-     * @param oldStatus
-     * @returns {*}
-     */
-    getNextStatus(oldStatus){
-        let status = oldStatus
-        switch(oldStatus){
-            case Constant.STATUS_0:
-                status = Constant.STATUS_1
-                break
-            case Constant.STATUS_1:
-                status = Constant.STATUS_2
-                break
-            case Constant.STATUS_2:
-                status = Constant.STATUS_4
-                break
-            case Constant.STATUS_4:
-                status = Constant.STATUS_7
-                break
-            case Constant.STATUS_7:
-                status = Constant.STATUS_15
-                break
-            case Constant.STATUS_15:
-                status = Constant.STATUS_200
-                break
-            default:
-                break;
-        }
-        return status
     }
 
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Image, View,FlatList,Animated, TouchableOpacity} from 'react-native';
+import {Image, View,Animated, TouchableOpacity} from 'react-native';
 import {   Grid, Col, Row,Text, Footer,  } from 'native-base';
 import {connect} from 'react-redux'
 import * as Progress from '../../component/react-native-progress';
@@ -19,8 +19,10 @@ class HomePage extends Component {
 
     }
     _navVocaPlay = ()=>{      //跳到轮播页
-        this.props.navigation.navigate('VocaPlay',{playMode:'PLAY_REVIEW', taskDao:this.taskDao});
+        // this.props.navigation.navigate('VocaPlay',{playMode:'PLAY_REVIEW', taskDao:this.taskDao});
     }
+
+
     render() {
         const {tasks} = this.props
         return (

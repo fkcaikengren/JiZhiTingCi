@@ -16,5 +16,9 @@ it('getTodayTasks ', ()=>{
 })
 
 it('已学的任务', ()=>{
-    console.log(vtd.getLearnedTasks().length)
+    let ts = vtd.getLearnedTasks()
+    // console.log(ts)
+    for(let t of ts){
+        console.log(t.words)
+    }
 })

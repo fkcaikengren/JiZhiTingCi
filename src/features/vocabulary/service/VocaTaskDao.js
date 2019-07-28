@@ -2,6 +2,7 @@ import _util from "../../../common/util";
 
 const Realm = require('realm')
 import * as Constant from "../common/constant";
+import * as VConfig from '../common/vocaConfig'
 
 // 1. 任务表
 const VocaTaskSchema = {
@@ -28,7 +29,9 @@ const VocaTaskSchema = {
             //是否同步
         isSync: {type: 'bool',optional:true, default: true},
         //任务单词数组
-        words: 'TaskWord[]'
+        words: 'TaskWord[]',
+        //未被pass的单词数量
+        wordCount: {type: 'int',optional:true, default: VConfig.DEFAULT_TASK_WORD_COUNT}
     }
   };
  
@@ -166,7 +169,11 @@ export default class VocaTaskDao {
     }
 
     //-----------------------------------------------
-    /**根据taskOrder获取任务 */
+    /**
+     * 根据taskOrder获取任务
+     * @param taskOrder
+     * @returns {any} 如果不存在，返回undefined
+     */
     getTaskByOrder = (taskOrder)=>{
         let vocaTask = this.realm.objects('VocaTask').filtered('taskOrder = "'+taskOrder+'"')[0]
         console.log(vocaTask)

@@ -3,19 +3,19 @@
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
-//
-// global.Symbol = require('core-js/es6/symbol');
-// require('core-js/fn/symbol/iterator');
-// require('core-js/fn/map');
-// require('core-js/fn/set');
-// require('core-js/fn/array/find');
+
+
+import StorybookUI from './storybook';
+import {createStorage} from './src/common/storage';
+import {createHttp} from './src/common/http'
 const Realm = require('realm');
+//设置全局变量和拷贝realm (注：这部分代码只在安装App时运行一次)
 Realm.copyBundledRealmFiles();
 console.log('copy voca.realm');
+global.Storage = createStorage();
+global.Http = createHttp()
 
-AppRegistry.registerComponent(appName, () => App);
+// AppRegistry.registerComponent(appName, () => App);
 
-
-
-// import StorybookUI from './storybook';
-// export default StorybookUI;
+// 进入storybook
+export default StorybookUI;

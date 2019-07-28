@@ -1,0 +1,2 @@
+
+export const DEFAULT_TASK_WORD_COUNT = 15

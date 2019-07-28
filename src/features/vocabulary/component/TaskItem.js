@@ -1,8 +1,4 @@
-/**
- * @flow
- */
 
-'use strict';
 
 import React, { Component } from 'react';
 import {
@@ -13,11 +9,12 @@ import {
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Constant from '../common/constant'
 
 export default class TaskItem extends Component {
   static propTypes = {
     index: PropTypes.number,
-    name: PropTypes.string,
+    item: PropTypes.object,
     separator: PropTypes.any,
   };
 
@@ -25,19 +22,31 @@ export default class TaskItem extends Component {
     super(props);
   }
 
+  
+
   render() {
-   
+    const {index, item } = this.props
+    let name = ''
+    if(item.taskOrder < 10){
+      name = '00'+item.taskOrder
+    }else if(item.taskOrder < 100){
+      name = '0'+item.taskOrder
+    }else{
+      name = item.taskOrder
+    }
+    
+
     return (
       <View style={[styles.taskItem, this.props.separator, styles.container]}>
         <View style={styles.leftView}>
           <View style={styles.serialView}>
-            <Text style={styles.serialText}>01</Text>
+            <Text style={styles.serialText}>{index<10?'0'+index:index}</Text>
           </View>
           <View stye={styles.nameView}>
-            <Text style={styles.nameText}>四级List-001</Text>
+            <Text style={styles.nameText}>{`List-${name}`}</Text>
             <View style={styles.noteView}>
-              <Text style={styles.labelText}>新学</Text>
-              <Text style={styles.noteText}>需要花费20min</Text>
+              <Text style={styles.labelText}>{item.status===Constant.STATUS_0?'新学':'复习'}</Text>
+              <Text style={styles.noteText}>{`共${}词，已完成${}%`}</Text>
             </View>
           </View>
         </View>

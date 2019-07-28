@@ -15,7 +15,7 @@ const fs = require("fs");
 
 let myhttp = createHttp()
 let vts = new VocaTaskService()
-let taskCount = 2
+let taskCount = 1
 let oldTasks = [{
     taskOrder: 1,
     status: 0,
@@ -27,7 +27,8 @@ let oldTasks = [{
     dataCompleted: false,
     createTime: null,
     isSync: true,
-    words:[]
+    words:[],
+    wordCount:15
 }]
 
 beforeEach(async ()=>{
@@ -174,10 +175,10 @@ it('偷懒学习1, 第x天开始不完成新学，从第y天开始全部完成',
     //任务存入realm
     vts.saveVocaTasks(tasks)
     //开始测试--------------------------------
-    let n = 1000; //表示无穷大
+    let n = 30; //表示无穷大
     let todayTasks = []
-    let x = 60
-    let y = 90
+    let x = 20
+    let y = 1000
     for(let i=0;i<n;i++){
         //step1. 更新保存前一天任务&计算新任务
         if(i > 0){
@@ -400,3 +401,5 @@ it('偷懒学习3, 第x天开始不完成复习的第二项任务，从第y天�
     }
 
 })
+
+

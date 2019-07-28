@@ -38,19 +38,14 @@ export default class Task extends Component {
   renderTaskItems = ()=> {
     return (
       this.props.tasks.map((item, index) => {
-        if (index === 0) {
-            return null;
-        };
-        console.log(this.props.tasks)
         if (index < this.props.tasks.length - 1) {
           var separator = {
             borderColor: '#F4F4F4',
             borderBottomWidth: StyleSheet.hairlineWidth,
           };
         }
-
         return (
-          <TaskItem  index={index} {...item} separator={separator} />
+          <TaskItem  index={index+1} item={item} separator={separator} />
         );
       })
     );
