@@ -39,7 +39,7 @@ export default class Task extends Component {
     return (
       this.props.tasks.map((item, index) => {
         if (index < this.props.tasks.length - 1) {
-          var separator = {
+          const separator = {
             borderColor: '#F4F4F4',
             borderBottomWidth: StyleSheet.hairlineWidth,
           };

@@ -7,20 +7,22 @@ import * as Constant from '../../common/constant'
 
 
 /**加载任务  */
-export function * loadTask(mode, task, vocaDao, taskDao){
+export function * loadTask( task, vocaDao, taskDao){
     yield put({type:'LOAD_TASK_START'})
+    console.log(task)
     try{
-        //从realm数据库中加载已学的task （已学的task数据一定是填充好的）
-        if(mode === Constant.NORMAL_PLAY){ 
+        //若task数据不完整，根据task.taskOrder查询任务
+        if(!task.words || task.words.length<=0){
             const t = yield taskDao.getTaskByOrder(task.taskOrder)
             if(t){
                 task = t
             }
-        }else{ 
-            //从voca.realm填充任务数据
-            if(!task.dataCompleted){
-                yield vocaDao.writeInfoToTask(task)
-            }
+        }
+        //从voca.realm填充任务数据
+        if(!task.dataCompleted){
+            yield taskDao.realm.write(()=>{
+                vocaDao.writeInfoToTask(task)
+            })
         }
         console.log(task)
         yield put({type:'LOAD_TASK_SUCCEED', task:task})    
@@ -28,16 +30,16 @@ export function * loadTask(mode, task, vocaDao, taskDao){
         console.log(err)
         yield put({type:'LOAD_TASK_FAIL'})
     }
-    
 }
+
 
 
 /**watch saga */
 function * watchVocaPlay(){
     while (true) {
         const action = yield take('LOAD_TASK')
-        const {mode, task, vocaDao, taskDao} = action.payload
-        yield call(loadTask, mode, task, vocaDao, taskDao )
+        const { task, vocaDao, taskDao} = action.payload
+        yield call(loadTask, task, vocaDao, taskDao )
     }
 }
 export default watchVocaPlay

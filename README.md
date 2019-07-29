@@ -388,7 +388,10 @@ if (global.__debug__) {
 
 ```
 
-
+```
+问题：error: more than one device/emulator
+解决：taskkill /f /im adb.exe
+```
 
 参考：<https://blog.csdn.net/Yuequnchen/article/details/86625223>
 

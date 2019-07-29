@@ -5,7 +5,7 @@ const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const ITEM_H = 55;
 
 const styles = StyleSheet.create({
-  
+   
     container:{
         flex:1,
         flexDirection:'column',
@@ -50,16 +50,6 @@ const styles = StyleSheet.create({
         textAlign:'center',
         borderWidth:1,
         borderRadius:2,
-        
-    },
-    selected:{
-        color:'#FFF',
-        borderColor:'#E59AAA',
-        backgroundColor:'#E59AAA',
-    },
-    unSelected:{
-        color:'#FFF',
-        borderColor:'#FFF',
         
     },
     outlineButton:{
@@ -112,8 +102,72 @@ const styles = StyleSheet.create({
     },
     intervalFont:{
         fontSize:12,
-    }
-
+    },
+    //底部控制栏
+    
+    unSelected:{
+        color:'#FFF',
+        borderColor:'#FFF',
+        
+    },
+    smallRoundBtn:{
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        width:34,
+        height:34,
+        borderRadius:60,
+    },
+    bigRoundBtn:{
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        width:55,
+        height:55,
+        borderRadius:60,
+    },
+    //----------
+    
+    tasksModal:{
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'center',
+        width:width,
+        height:360,
+        backgroundColor: "#FDFDFD"
+    },
+    modalHeader: {
+        width:width,
+        height:40,
+        position:'absolute',
+        top:0,
+        backgroundColor:'#EFEFEF'
+    },
+    taskItem:{
+        width:'100%',
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        paddingHorizontal:10,
+        paddingVertical:8,
+        borderColor: '#F4F4F4',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    nameView: {
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'flex-start',
+        
+    },  
+    nameText: {
+        fontSize: 16,
+        color:'#303030'
+    },
+    noteText: {
+        fontSize:12,
+        lineHeight: 16,
+    },
+    
 });
 
 export default styles

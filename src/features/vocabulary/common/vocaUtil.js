@@ -133,7 +133,18 @@ export default class VocaUtil{
         return num;
     }
 
-
+    
+    static genTaskName = (taskOrder)=>{
+        let name = ''
+        if(taskOrder < 10){
+            name = '00'+taskOrder
+        }else if(taskOrder < 100){
+            name = '0'+taskOrder
+        }else{
+            name = ''+taskOrder
+        }
+        return name
+    }
 }
 
 

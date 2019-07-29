@@ -1,5 +1,6 @@
 import {  handleActions } from 'redux-actions';
 import * as vpAction from './action/vocaPlayAction';
+import {Themes} from '../common/vocaConfig'
 
 const defaultState ={
 
@@ -16,19 +17,13 @@ const defaultState ={
     //是否显示中文释义
     showTran:true,
     //主题数组
-    themes:[{
-        id: 0,
-        name: '蓝色',
-        bgColor: '#9999ff'
-    },{
-        id: 1,
-        name: '粉红',
-        bgColor: 'pink'
-    }],
+    themes:Themes,
     //当前主题id
-    themeId: 0,
+    themeId: 2,
+    //任务列表面板是否打开
+    tasksModalOpened:false,
      //加载状态
-     isLoadPending:false,
+    isLoadPending:false,
 }
 
 
@@ -47,10 +42,8 @@ export const vocaPlay =  handleActions({
     [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
     //是否显示翻译
     [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
-    //加载主题
-    [vpAction.LOAD_THEMES] : (state, action) => ({ ...state, themes:action.payload.themes }),
     //改变主题
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
-    
+    [vpAction.TOGGLE_TASK_MODAL]: (state, action) => ({ ...state, tasksModalOpened:action.payload.tasksModalOpened }),
     
 }, defaultState);

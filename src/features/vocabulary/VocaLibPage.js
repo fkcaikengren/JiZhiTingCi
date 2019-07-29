@@ -5,7 +5,7 @@ import {Header, Button} from 'react-native-elements'
 import Picker from 'react-native-picker';
 import {connect} from 'react-redux';
 import CardView from 'react-native-cardview'
-import { Bubbles, DoubleBounce, Bars, Pulse } from 'react-native-loader';
+import { Bubbles } from 'react-native-loader';
 import * as VocaLibAction from './redux/action/vocaLibAction'
 
 import AliIcon from '../../component/AliIcon';

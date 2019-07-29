@@ -25,14 +25,8 @@ export default class TaskItem extends Component {
   render() {
     const {index, item } = this.props
     //任务名
-    let name = ''
-    if(item.taskOrder < 10){
-      name = '00'+item.taskOrder
-    }else if(item.taskOrder < 100){
-      name = '0'+item.taskOrder
-    }else{
-      name = item.taskOrder
-    }
+    let name = VocaUtil.genTaskName(item.taskOrder)
+    
     //计算进度
     let processNum = VocaUtil.calculateProcess(item)
     

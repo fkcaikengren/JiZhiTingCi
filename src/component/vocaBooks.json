@@ -1,9 +1,0 @@
-[
-    { "section": "小学", "books": [{"name":"三年级", "count":300}, {"name":"四年级", "count":400}, {"name":"五年级", "count":350}, {"name":"六年级", "count":490}] },
-    { "section": "初中", "books": [{"name":"初一", "count":2300}, {"name":"初二", "count":2300},{"name":"初三", "count":5300}] },
-    { "section": "高中", "books": [{"name":"高一", "count":2300}, {"name":"高二", "count":2300},{"name":"高三", "count":5300}]  },
-    { "section": "四级词汇", "books": [{"name":"火星四级", "count":2300}, {"name":"新东方四级", "count":2300}] },
-    { "section": "六级词汇", "books": [{"name":"火星六级", "count":3500}, {"name":"新东方六级", "count":3220}, {"name":"六级乱序", "count":4200}, {"name":"六级正序","count":4200}, {"name":"六级词根词缀", "count":4200}] },
-    { "section": "雅思词汇", "books": [{"name":"雅思分类词汇", "count":2300}, {"name":"雅思核心词汇", "count":4300}]  }
-    
-  ]

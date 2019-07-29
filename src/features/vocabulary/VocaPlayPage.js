@@ -1,27 +1,29 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, StyleSheet, View, Text, FlatList, TouchableNativeFeedback, TouchableWithoutFeedback} from 'react-native';
-import {WhiteSpace} from '@ant-design/react-native'
+import {Platform, StatusBar, StyleSheet, View, Text, FlatList,
+    TouchableWithoutFeedback, TouchableOpacity, Easing } from 'react-native';
+import {WhiteSpace, Modal} from '@ant-design/react-native'
 import {Header, Button} from 'react-native-elements'
-import { Grid, Col, Row,} from 'react-native-easy-grid'
-import * as Progress from '../../component/react-native-progress';
-import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import {connect} from 'react-redux';
-const Sound = require('react-native-sound');
+import LinearGradient from 'react-native-linear-gradient';
+import ModalBox from 'react-native-modalbox';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Bubbles } from 'react-native-loader';
 // import {NavigationActions, StackActions} from 'react-navigation'
 import {PropTypes} from 'prop-types'
 import * as Constant from './common/constant'
 import * as vocaPlayAction from './redux/action/vocaPlayAction';
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaPlayStyle'
+import PlayController from './component/PlayController';
+import VocaUtil from './common/vocaUtil'
+import gstyles from '../../style'
 
 
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
 const ITEM_H = 55;
 const StatusBarHeight = StatusBar.currentHeight;
 
 global.VocaPlayFlatList = null; //声明全局遍历对象
-global.VocaPlayInterval = 1.0;
+
 
 
 class VocaPlayPage extends React.Component {
@@ -45,22 +47,19 @@ class VocaPlayPage extends React.Component {
         if(this.mode !== Constant.NORMAL_PLAY){  //不是正常模式，则禁止操作控制栏
             this.controlDisable = true
         }
-        this.state = {
-            currentIndex:0,
-        }
     }
     componentDidMount(){
         const { loadTask} = this.props
         //加载task
         // const task = navigation.getParam('task', null)
-        loadTask(this.mode, this.props.task, this.vocaDao, this.taskDao)
+        loadTask(this.props.task, this.vocaDao, this.taskDao)
 
         //判断是否自动播放，task是从navigation中获取，一定存在curIndex
         if(this.controlDisable){
             // 1s后自动播放
-            let tm = setTimeout(()=>{
-                this._autoplay(0);
-            },1000)
+            // let tm = setTimeout(()=>{
+            //     this._autoplay(0);
+            // },1000)
         }
     }
 
@@ -142,7 +141,6 @@ class VocaPlayPage extends React.Component {
         const { changeCurIndex } = this.props;
         
         changeCurIndex(index);
-        this.setState({currentIndex:index})
         // 回调自动播放
         if (autoPlayTimer) {
             this._autoplay(index);  
@@ -152,7 +150,7 @@ class VocaPlayPage extends React.Component {
     }
 
     _renderItem = ({item, index})=>{
-        let {showWord,showTran} = this.props.vocaPlay;
+        const {showWord,showTran,task,themes, themeId} = this.props.vocaPlay;
         //处理中文翻译
         let translation = ''
         if(item.tran !==null && item.tran.length>0){
@@ -167,29 +165,36 @@ class VocaPlayPage extends React.Component {
                 translation += `${trans[i].property}.${processdTran}；`
             }
         }
+        //主题
+        const Theme = themes[themeId]
         //字幕的样式
         let playEnStyle = {}
         let playZhStyle = {}
-        const {currentIndex } = this.state
-        if(currentIndex == index){
-            console.log(`curIndex: ${currentIndex}`)
+        const curIndex  = task.curIndex?task.curIndex:0
+
+        if(curIndex == index){
+            console.log(`curIndex: ${curIndex}`)
             playEnStyle = {
                 fontSize:20,
-                color:'red'
+                color:Theme.playColor
             };
             playZhStyle = {
-                fontSize:16,
-                color:'#FA5735'
+                fontSize:14,
+                color:Theme.playColor
             };
         }
 
         return (
-            <View style={styles.item}>
-                <Text style={[styles.itemEnText,playEnStyle]}>{showWord?item.word:''}</Text>
+            <TouchableWithoutFeedback onPress={()=>{
                 
-                <Text note numberOfLines={1} style={[styles.itemZhText,playZhStyle]}>
-                    {showTran?translation:''}</Text>
-            </View>
+                Modal.alert('Pass单词', `确认Pass ${item.word}?`);
+            }}>
+                <View style={styles.item}>
+                    <Text style={[styles.itemEnText,playEnStyle]}>{showWord?item.word:''}</Text>
+                    <Text note numberOfLines={1} style={[styles.itemZhText,playZhStyle]}>
+                        {showTran?translation:''}</Text>
+                </View>
+            </TouchableWithoutFeedback>
         );
     };
 
@@ -203,61 +208,70 @@ class VocaPlayPage extends React.Component {
         return ({ length: ITEM_H, offset: ITEM_H * index, index });
     } 
 
-    //选择测试
-    _chooseTest = (value) =>{
-        switch(value){
-            case 0:
-                // this.props.navigation.navigate('TestEnTran');
-                break;
-            case 1:
-                // this.props.navigation.navigate('TestSentence');
-                break;
-            case 2:
-                alert(value);
-                break;
-            case 3:
-                alert(value);
-                break;
-        }
-    }
 
-    //选择主题
-    _chooseTheme = (themeId)=>{
-        const {autoPlayTimer} = this.props.vocaPlay;
-        const {changeTheme} = this.props;
-        changeTheme(themeId);
+    // 渲染任务列表
+    _renderTaskItem = ({item, index})=>{
+        let name = VocaUtil.genTaskName(item.taskOrder)
+        return <TouchableOpacity onPress={()=>{
+            this.props.loadTask(item, this.vocaDao, this.taskDao)
+        }}>
+            <View style={styles.taskItem}>
+                <View style={styles.nameView}>
+                    <Text style={styles.nameText}>{`List-${name}`}</Text>
+                    <Text style={styles.noteText}>{`任务列表`}</Text>
+                </View>
+                <FontAwesome name="play-circle" size={24} color="#999"/>
+            </View>
+        </TouchableOpacity>
     }
-
-    //选择播放时间间隔
-    _chooseInterval = (interval)=>{
-        const {changeInterval } = this.props;
-        VocaPlayInterval = interval;
-        changeInterval(VocaPlayInterval);
-        
+    // 关闭任务列表
+    _closeTaskListModal = ()=>{
+        this.props.toggleTaskModal(false)
     }
-
-    //播放暂停切换
-    _togglePlay = ()=>{
-        const {autoPlayTimer, curIndex, } = this.props.vocaPlay;
-        const {changePlayTimer} = this.props;
-        if(autoPlayTimer){
-            //暂停
-            clearTimeout(autoPlayTimer);
-            changePlayTimer(0);
-        }else {
-            //播放
-            this._autoplay(curIndex);
-        }
+    //打开任务列表
+    _openTaskListModal = ()=>{
+        this.props.toggleTaskModal(true)
     }
-
+    // 创建任务列表
+    _createTaskListModal = () =>{
+        // 获取任务列表数据
+        const {tasksModalOpened} = this.props.vocaPlay
+        return <ModalBox style={[styles.tasksModal]}
+            isOpen={tasksModalOpened} 
+            onClosed={this._closeTaskListModal}
+            onOpened={this._openTaskListModal}
+            backdrop={true} 
+            backdropPressToClose={true}
+            swipeToClose={false}
+            position={"bottom"} 
+            easing={Easing.elastic(0.2)}
+            ref={ref => {
+                this.taskList = ref
+            }}>
+            <View style={[gstyles.c_start, {width:'100%'}]}>
+                <View style={[styles.modalHeader,gstyles.r_center]}>
+                    <Text>四级词汇</Text>
+                </View>
+                <View style={{height:40}}>
+                </View>
+                <FlatList
+                    //数据源
+                    data={this.taskDao.getLearnedTasks()}
+                    //渲染列表数据
+                    renderItem={this._renderTaskItem}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListFooterComponent={<View style={{width:'100%',height:50,backgroundColor:'#FFF'}}></View>}
+                />
+            </View>
+        </ModalBox>
+    }
 
     render(){
 
-        const {task,  curIndex, themeId, themes, autoPlayTimer,showWord, showTran, interval, } = this.props.vocaPlay;
+        const {task,  themeId, themes, autoPlayTimer, isLoadPending} = this.props.vocaPlay;
+        console.log(isLoadPending)
         const {words} = task
-        const {toggleWord, toggleTran, } = this.props;
-        
-        let bgStyle = {backgroundColor: themes[themeId].bgColor};
+        const Theme = themes[themeId]
 
         let flatListProps = {
             ref: component => {
@@ -267,7 +281,7 @@ class VocaPlayPage extends React.Component {
             showsHorizontalScrollIndicator: false,
             showsVerticalScrollIndicator: false,
             pagingEnabled: false,
-            extraData: this.state.currentIndex,     //促使FlatList刷新  
+            extraData: this.props.vocaPlay,      //促使FlatList刷新  
             keyExtractor: this._keyExtractor,
             data:words,
             renderItem: this._renderItem,
@@ -277,164 +291,39 @@ class VocaPlayPage extends React.Component {
 
         
         return(
-            <View style={[styles.container, bgStyle]}>
-                {/* 头部 */}
-                <StatusBar translucent={true} />
-                <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
-                leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
-                        this.props.navigation.goBack();
-                    }}></AliIcon> }
-                
-                centerComponent={{ text: '四级词汇', style: { color: '#FFF', fontSize:18 } }}
-                containerStyle={{
-                    backgroundColor: '#FCFCFC00',
-                    borderBottomColor: '#FCFCFC00',
-                }}
-                />
+        <LinearGradient 
+        start={{x: 0.15, y: 0.15}} end={{x: 0.75, y: 0.75}}
+        colors={Theme.bgColors} style={styles.container}>
 
-                {/* 内容列表 */}
-                <WhiteSpace size='lg'/>
-                <View style={ styles.content}>
-                    <FlatList {...flatListProps}/>
-                </View>
+            {/* 头部 */}
+            <StatusBar translucent={true} />
+            <Header
+            statusBarProps={{ barStyle: 'light-content' }}
+            barStyle="light-content" // or directly
+            leftComponent={ 
+                <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
+                    this.props.navigation.goBack();
+                }}></AliIcon> }
+            
+            centerComponent={{ text: '四级词汇', style: { color: '#FFF', fontSize:18 } }}
+            containerStyle={{
+                backgroundColor: '#FCFCFC00',
+                borderBottomColor: '#FCFCFC00',
+            }}
+            />
 
-                {/* 底部控制 */}
-                <Grid style={{width:width, position:'absolute', bottom:0}}>
-                    {/* 功能按钮 */}
-                    <Row style={{
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        alignItems:'center',
-                    }}>
-                        {/* 英文单词按钮 */}
-                        <TouchableWithoutFeedback >
-                            <Text style={[styles.textIcon, styles.selected]}>
-                                en
-                            </Text>
-                        </TouchableWithoutFeedback>
-                        {/* 主题按钮 */}
-                        <Menu onSelect={this._chooseTheme} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                            <MenuTrigger disabled={this.controlDisable}  text='主题' customStyles={{triggerText: styles.triggerText,}}/>
-                            <MenuOptions>
-                                {
-                                    themes.map((item, index)=>{
-                                        return (
-                                            <MenuOption key={item.id} value={item.id}>
-                                                <Text style={{color: 'red'}}>{item.name}</Text>
-                                            </MenuOption>
-                                        );
-                                    })
-                                }
-                                
-                            </MenuOptions>
-                        </Menu>
-                        {/* 测试按钮 */}
-                        <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                            <MenuTrigger disabled={this.controlDisable} text='测试' customStyles={{triggerText: styles.triggerText,}}/>
-                            <MenuOptions>
-                                <MenuOption value={0} text='英英释义选词' />
-                                <MenuOption value={1}>
-                                    <Text style={{color: 'red'}}>例句选词</Text>
-                                </MenuOption>
-                                <MenuOption value={2}>
-                                    <Text style={{color: 'red'}}>看词选中义</Text>
-                                </MenuOption>
-                                <MenuOption value={3}>
-                                    <Text style={{color: 'red'}}>听音选词</Text>
-                                </MenuOption>
-                            </MenuOptions>
-                        </Menu>
-                        {/* 中文按钮 */}
-                        <TouchableWithoutFeedback >
-                            <Text style={[styles.textIcon, styles.selected]}>
-                                zh
-                            </Text>
-                        </TouchableWithoutFeedback>
-                    </Row>
-                    {/* 进度条 */}
-                    <WhiteSpace size='md'/>
-                    <Row style={{
-                        flexDirection:'row',
-                        justifyContent:'center',
-                        alignItems:'center',
-                    }}>
-                        <View style={{
-                            flexDirection:'row',
-                            justifyContent:'center',
-                            alignItems:'center',
-                        }}>
-                            <Text style={{color:'#fff' , marginRight:5}}>{curIndex?curIndex:0}</Text>
-                            {/* <Progress.Bar progress={curIndex/10} height={2} width={width-100} color='#F79131' unfilledColor='#DEDEDE' borderWidth={0}/> */}
-                            <Progress.Bar 
-                                progress={0.4} 
-                                height={2} 
-                                width={width-100} 
-                                color='#F79131' 
-                                unfilledColor='#DEDEDE' 
-                                borderWidth={0}/>
-                            <Text style={{color:'#fff' ,  marginLeft:10}}>{words.length}</Text>
-                        </View>
-                    </Row>
-                    {/* 播放按钮 */}
-                    <WhiteSpace size='sm'/>
-                    <Row style={{
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        alignItems:'center',
-                    }}>
-                        
-                        <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                            <MenuTrigger disabled={this.controlDisable} text={interval+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
-                            <MenuOptions>
-                            <MenuOption value={5.0}>
-                                    <Text>5.0s</Text>
-                                </MenuOption>
-                                <MenuOption value={4.0}>
-                                    <Text>4.0s</Text>
-                                </MenuOption>
-                                <MenuOption value={3.0}>
-                                    <Text>3.0s</Text>
-                                </MenuOption>
-                                <MenuOption value={2.0}>
-                                    <Text>2.0s</Text>
-                                </MenuOption>
-                                <MenuOption value={1.0}>
-                                    <Text>1.0s</Text>
-                                </MenuOption>
-                                
-                            </MenuOptions>
-                        </Menu>
-                        <View style={{
-                            width:width*(1/2),
-                            flexDirection:'row',
-                            justifyContent:'space-around',
-                            alignItems:'center',
-                        }}>
-                            <TouchableNativeFeedback >
-                                <AliIcon name='icon-2' size={32} color='#FFF'></AliIcon>
-                            </TouchableNativeFeedback>
-                            
-                            
-                            <TouchableNativeFeedback  onPress={this.controlDisable?()=>{}:this._togglePlay}>
-                                <AliIcon name={autoPlayTimer?'icon-3':'icon-'} size={50} color='#FFF'></AliIcon>
-                            </TouchableNativeFeedback>
-                            
-                            <TouchableNativeFeedback  >
-                                <AliIcon name='icon-1' size={32} color='#FFF'></AliIcon>
-                            </TouchableNativeFeedback>
-                        </View>
-                        <TouchableNativeFeedback  >
-                            <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
-                        </TouchableNativeFeedback>
-                    </Row>
-                    <WhiteSpace size='sm'/>
-                </Grid>
-                
+            {/* 内容列表区 */}
+            <WhiteSpace size='lg'/>
+            <View style={ styles.content}>
+                <FlatList {...flatListProps}/>
             </View>
-
+            {/* 底部播放控制区 */}
+            <PlayController {...this.props} autoplay={this._autoplay} 
+                openTaskListModal={this._openTaskListModal}  />
+            {
+                this._createTaskListModal()
+            }
+        </LinearGradient>
         );
     }
 }
@@ -454,7 +343,7 @@ const mapDispatchToProps = {
     loadTheme : vocaPlayAction.loadThemes,
     changeTheme : vocaPlayAction.changeTheme,
     changeInterval : vocaPlayAction.changeInterval,
-  
+    toggleTaskModal : vocaPlayAction.toggleTaskModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

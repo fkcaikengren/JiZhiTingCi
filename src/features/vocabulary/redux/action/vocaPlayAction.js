@@ -15,18 +15,21 @@ export const TOGGLE_WORD = 'TOGGLE_WORD';             //控制英文单词显示
 export const TOGGLE_TRAN = 'TOGGLE_TRAN';             //控制中文释义显示
 export const LOAD_THEMES = 'LOAD_THEMES';             //查看主题
 export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
+export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开任务列表
+
+
 export const GET_WORD_INFO = 'GET_WORD_INFO';         //查词
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,loadThemes, changeTheme,
-  resetPlayList } = createActions({
+export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, changeTheme,
+  toggleTaskModal } = createActions({
 
     //加载任务  
-    [LOAD_TASK] : (mode, task, vocaDao, taskDao)=>{ 
-      return {mode, task, vocaDao, taskDao};
+    [LOAD_TASK] : (task, vocaDao, taskDao)=>{
+      return { task, vocaDao, taskDao};
     },
     //暂停、播放
     [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{ 
@@ -43,31 +46,21 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
     },
     //是否显示单词
     [TOGGLE_WORD]: ()=>{
+      console.log('toggleWord')
       return {};
     },
     //是否显示翻译
     [TOGGLE_TRAN]: ()=>{
       return {};
     },
-    //加载主题
-    [LOAD_THEMES]: ()=>{ 
-      const themes = [{
-          id: 1,
-          name: '蓝色',
-          bgColor: '#9999ff'
-      },{
-          id: 1,
-          name: '粉红',
-          bgColor: 'pink'
-      }]
-      return { themes};
-    },
     //改变主题
     [CHANGE_THEME]: (themeId)=>{ 
       return { themeId};
     },
-
-
+    //显示隐藏任务列表面板
+    [TOGGLE_TASK_MODAL]: (tasksModalOpened)=>{
+      return {tasksModalOpened}
+    },
    
   });
 
