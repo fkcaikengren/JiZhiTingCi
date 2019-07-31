@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, StyleSheet, View, Text, FlatList,
     TouchableWithoutFeedback, TouchableOpacity, Easing } from 'react-native';
-import {WhiteSpace, Modal} from '@ant-design/react-native'
+import {WhiteSpace} from '@ant-design/react-native'
 import {Header, Button} from 'react-native-elements'
 import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalBox from 'react-native-modalbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Bubbles } from 'react-native-loader';
+import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 // import {NavigationActions, StackActions} from 'react-navigation'
 import {PropTypes} from 'prop-types'
 import * as Constant from './common/constant'
@@ -15,16 +15,17 @@ import * as vocaPlayAction from './redux/action/vocaPlayAction';
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaPlayStyle'
 import PlayController from './component/PlayController';
+import StudyPlayController from './component/StudyPlayController'
 import VocaUtil from './common/vocaUtil'
 import gstyles from '../../style'
 
 
 const ITEM_H = 55;
-const StatusBarHeight = StatusBar.currentHeight;
+const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
 
 global.VocaPlayFlatList = null; //声明全局遍历对象
-
-
 
 class VocaPlayPage extends React.Component {
 
@@ -43,9 +44,9 @@ class VocaPlayPage extends React.Component {
         this.vocaDao = this.props.vocaDao
         // this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
         this.mode = this.props.mode
-        this.controlDisable = false
-        if(this.mode !== Constant.NORMAL_PLAY){  //不是正常模式，则禁止操作控制栏
-            this.controlDisable = true
+        this.isStudyMode = false
+        if(this.mode !== Constant.NORMAL_PLAY){  //新学和复习统称学习模式
+            this.isStudyMode = true
         }
     }
     componentDidMount(){
@@ -55,7 +56,7 @@ class VocaPlayPage extends React.Component {
         loadTask(this.props.task, this.vocaDao, this.taskDao)
 
         //判断是否自动播放，task是从navigation中获取，一定存在curIndex
-        if(this.controlDisable){
+        if(this.isStudyMode){
             // 1s后自动播放
             // let tm = setTimeout(()=>{
             //     this._autoplay(0);
@@ -69,7 +70,7 @@ class VocaPlayPage extends React.Component {
 
     //退出页面（学习模式下）
     _quitLearn(){
-        if(this.controlDisable){  
+        if(this.isStudyMode){  
             VocaPlayFlatList = 0;
             const {autoPlayTimer, curIndex} = this.props.vocaPlay
             const {changePlayTimer} = this.props;  
@@ -89,32 +90,34 @@ class VocaPlayPage extends React.Component {
      * @memberof SwiperFlatList
      */
     _autoplay = (index) => {
-        const { task} = this.props.vocaPlay;
-        const { words} = task
+        const {task} = this.props.vocaPlay;
+        const { words, wordCount} = task 
         const {changePlayTimer} = this.props;
-
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated:true, index, viewPosition:0.5 };
-        if (VocaPlayFlatList && words.length>0) { //当words不是空数组时才能移动
-            console.log('move');
-            VocaPlayFlatList.scrollToIndex(params);
+        if(wordCount > 0){
+            console.log('run autoplay')
+            if (VocaPlayFlatList) { 
+                console.log('move');
+                VocaPlayFlatList.scrollToIndex(params);
+            }
+            //2.播放单词音频
+
+
+            //3.循环回调
+            let timer = setTimeout(() => {
+                const nextIndex = (index + 1) % wordCount;
+                this._replay(  nextIndex);
+                
+            }, VocaPlayInterval * 1000);
+            changePlayTimer(timer);     //改变
         }
-
-
-        //2.播放单词音频
-        //3.循环回调
-        let timer = setTimeout(() => {
-            console.log(` words.length ${ words.length}`)
-            const nextIndex = (index + 1) % words.length;
-            console.log(nextIndex)
-            this._replay(  nextIndex);
-            
-        }, VocaPlayInterval * 1000);
-        changePlayTimer(timer);
+  
+        
 
 
         //4. 中断播放
-        // if(this.controlDisable){
+        // if(this.isStudyMode){
         //     if(curIndex == words.length-1){  //最后一个 12
         //         this.learnPlayTime++
         //     }
@@ -136,11 +139,13 @@ class VocaPlayPage extends React.Component {
     };
   
     _replay = (index) => {
-        console.log(index)
+        console.log(`replay index:${index}`)
         const { autoPlayTimer, } = this.props.vocaPlay;
         const { changeCurIndex } = this.props;
         
-        changeCurIndex(index);
+        //改变单词下标
+        changeCurIndex(index,this.isStudyMode);
+
         // 回调自动播放
         if (autoPlayTimer) {
             this._autoplay(index);  
@@ -149,8 +154,18 @@ class VocaPlayPage extends React.Component {
         
     }
 
+    //Pass单词
+    _passWord = (word)=>{
+        const {status} = this.props.vocaPlay.task
+        this.props.passWord(word,status,this.isStudyMode, this.taskDao)
+    }
+    //查询单词
+    _queryWord = (word)=>{
+
+    }
+
     _renderItem = ({item, index})=>{
-        const {showWord,showTran,task,themes, themeId} = this.props.vocaPlay;
+        const {showWord,showTran,curIndex,themes, themeId, autoPlayTimer} = this.props.vocaPlay;
         //处理中文翻译
         let translation = ''
         if(item.tran !==null && item.tran.length>0){
@@ -170,7 +185,7 @@ class VocaPlayPage extends React.Component {
         //字幕的样式
         let playEnStyle = {}
         let playZhStyle = {}
-        const curIndex  = task.curIndex?task.curIndex:0
+
 
         if(curIndex == index){
             console.log(`curIndex: ${curIndex}`)
@@ -184,18 +199,42 @@ class VocaPlayPage extends React.Component {
             };
         }
 
-        return (
-            <TouchableWithoutFeedback onPress={()=>{
-                
-                Modal.alert('Pass单词', `确认Pass ${item.word}?`);
-            }}>
+        if(autoPlayTimer>0){
+            return (
                 <View style={styles.item}>
                     <Text style={[styles.itemEnText,playEnStyle]}>{showWord?item.word:''}</Text>
                     <Text note numberOfLines={1} style={[styles.itemZhText,playZhStyle]}>
                         {showTran?translation:''}</Text>
                 </View>
-            </TouchableWithoutFeedback>
-        );
+            );
+        }else{
+            return (
+                <Menu>
+                    <MenuTrigger  >
+                        <View style={styles.item}>
+                            <Text style={[styles.itemEnText,playEnStyle]}>{showWord?item.word:''}</Text>
+                            <Text note numberOfLines={1} style={[styles.itemZhText,playZhStyle]}>
+                                {showTran?translation:''}</Text>
+                        </View>
+                    </MenuTrigger>
+                    <MenuOptions>
+                        <MenuOption style={gstyles.haireBottom} onSelect={()=>this._passWord(item.word)} >
+                            <View style={[gstyles.r_start, {paddingVertical:4}]}>
+                                <AliIcon name='pass' size={20} color={Theme.themeColor}></AliIcon>
+                                <Text style={{paddingLeft:10,fontSize:16,color: Theme.themeColor}}>Pass单词</Text>
+                            </View>
+                        </MenuOption>
+                            
+                        <MenuOption onSelect={() => this._queryWord(word)} >
+                            <View style={[gstyles.r_start, {paddingVertical:4}]}>
+                                <AliIcon name='chazhao' size={20} color={Theme.themeColor}></AliIcon>
+                                <Text style={{paddingLeft:10,fontSize:16, color: Theme.themeColor}}>查询单词</Text>
+                            </View>
+                        </MenuOption>
+                    </MenuOptions>
+                </Menu>
+            )
+        }
     };
 
     _keyExtractor = (item, index) => index.toString();
@@ -211,9 +250,20 @@ class VocaPlayPage extends React.Component {
 
     // 渲染任务列表
     _renderTaskItem = ({item, index})=>{
+        const {autoPlayTimer} = this.props.vocaPlay
+        const {loadTask , changePlayTimer} = this.props
         let name = VocaUtil.genTaskName(item.taskOrder)
+        // 播放新的任务
         return <TouchableOpacity onPress={()=>{
-            this.props.loadTask(item, this.vocaDao, this.taskDao)
+            if(autoPlayTimer){ 
+                clearTimeout(autoPlayTimer);
+                changePlayTimer(0);
+            }
+            loadTask(item, this.vocaDao, this.taskDao)
+            //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
+            if(item.wordCount>0){
+                this._autoplay(0)
+            }
         }}>
             <View style={styles.taskItem}>
                 <View style={styles.nameView}>
@@ -269,9 +319,20 @@ class VocaPlayPage extends React.Component {
     render(){
 
         const {task,  themeId, themes, autoPlayTimer, isLoadPending} = this.props.vocaPlay;
-        console.log(isLoadPending)
         const {words} = task
         const Theme = themes[themeId]
+
+        let name = VocaUtil.genTaskName(task.taskOrder)
+        const totalTimes = this.mode===Constant.LEARN_PLAY?Constant.LEARN_PLAY_TIMES:Constant.REVIEW_PLAY_TIMES
+        const finishedTimes = task?totalTimes-task.leftTimes:0
+        const contentHeight = this.isStudyMode?height-STATUSBAR_HEIGHT-200:height-STATUSBAR_HEIGHT-240
+        //单词列表处理
+        const showWords = []
+        for(let w of words){
+            if(!w.passed ){
+                showWords.push(w)
+            }
+        }
 
         let flatListProps = {
             ref: component => {
@@ -283,7 +344,7 @@ class VocaPlayPage extends React.Component {
             pagingEnabled: false,
             extraData: this.props.vocaPlay,      //促使FlatList刷新  
             keyExtractor: this._keyExtractor,
-            data:words,
+            data:showWords,
             renderItem: this._renderItem,
             initialNumToRender: 16,
             getItemLayout: this._getItemLayout,
@@ -294,32 +355,39 @@ class VocaPlayPage extends React.Component {
         <LinearGradient 
         start={{x: 0.15, y: 0.15}} end={{x: 0.75, y: 0.75}}
         colors={Theme.bgColors} style={styles.container}>
-
-            {/* 头部 */}
             <StatusBar translucent={true} />
             <Header
-            statusBarProps={{ barStyle: 'light-content' }}
-            barStyle="light-content" // or directly
-            leftComponent={ 
-                <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
-                    this.props.navigation.goBack();
-                }}></AliIcon> }
-            
-            centerComponent={{ text: '四级词汇', style: { color: '#FFF', fontSize:18 } }}
-            containerStyle={{
-                backgroundColor: '#FCFCFC00',
-                borderBottomColor: '#FCFCFC00',
-            }}
-            />
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content" // or directly
+                leftComponent={this.isStudyMode?null:
+                    <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }}></AliIcon> }
+                
+                centerComponent={<Text style={gstyles.pageTitle} >{`List-${name}`}</Text>}
+                rightComponent={this.isStudyMode?
+                    <Text style={gstyles.pageTitle}>{`${finishedTimes}/${totalTimes}`}</Text>:
+                    null}
+                containerStyle={{
+                    backgroundColor: '#FCFCFC00',
+                    borderBottomColor: '#FCFCFC00',
+                }}
+                />
 
             {/* 内容列表区 */}
             <WhiteSpace size='lg'/>
-            <View style={ styles.content}>
+            <View style={ [styles.content, {height:contentHeight}]}>
                 <FlatList {...flatListProps}/>
             </View>
             {/* 底部播放控制区 */}
-            <PlayController {...this.props} autoplay={this._autoplay} 
+            {this.isStudyMode &&
+                <StudyPlayController {...this.props} autoplay={this._autoplay} 
                 openTaskListModal={this._openTaskListModal}  />
+            }
+            {!this.isStudyMode &&
+                <PlayController {...this.props} autoplay={this._autoplay} 
+                openTaskListModal={this._openTaskListModal}  />
+            }
             {
                 this._createTaskListModal()
             }
@@ -344,6 +412,7 @@ const mapDispatchToProps = {
     changeTheme : vocaPlayAction.changeTheme,
     changeInterval : vocaPlayAction.changeInterval,
     toggleTaskModal : vocaPlayAction.toggleTaskModal,
+    passWord : vocaPlayAction.passWord,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

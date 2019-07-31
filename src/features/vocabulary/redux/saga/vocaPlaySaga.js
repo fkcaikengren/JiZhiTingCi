@@ -9,10 +9,9 @@ import * as Constant from '../../common/constant'
 /**加载任务  */
 export function * loadTask( task, vocaDao, taskDao){
     yield put({type:'LOAD_TASK_START'})
-    console.log(task)
     try{
         //若task数据不完整，根据task.taskOrder查询任务
-        if(!task.words || task.words.length<=0){
+        if(!(task.words && task.words.length>0)){
             const t = yield taskDao.getTaskByOrder(task.taskOrder)
             if(t){
                 task = t
@@ -24,7 +23,6 @@ export function * loadTask( task, vocaDao, taskDao){
                 vocaDao.writeInfoToTask(task)
             })
         }
-        console.log(task)
         yield put({type:'LOAD_TASK_SUCCEED', task:task})    
     }catch(err){
         console.log(err)

@@ -96,6 +96,10 @@ it('默认生词本添加重复生词', ()=>{
     // expect(vgd.addWordToDefault(groupWord)).toBeFalsy()
 })
 
+it('从默认生词中移除生词', ()=>{
+    expect(vgd.removeWordFromDefault('love')).toBeTruthy()
+})
+
 it('批量删除生词本下的单词', ()=>{
     //删除存在的单词
     // expect(vgd.deleteWords('Sunny', ['share','love'])).toBeTruthy()

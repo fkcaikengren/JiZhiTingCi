@@ -1,7 +1,6 @@
 import {StyleSheet, StatusBar} from 'react-native'
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const ITEM_H = 55;
 
 const styles = StyleSheet.create({
@@ -13,8 +12,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     content:{
-        width:width-100,
-        height:height-240-STATUSBAR_HEIGHT,
+        width:width-120,
     },
     backgroundVideo: {
         position: 'absolute',
@@ -44,14 +42,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    textIcon:{
-        height:22,
-        width:22,
-        textAlign:'center',
-        borderWidth:1,
-        borderRadius:2,
-        
-    },
+    
     outlineButton:{
         borderColor:'#fff',
         height:22,
@@ -89,22 +80,16 @@ const styles = StyleSheet.create({
         borderColor:'#FFF',
         borderRadius:1
     },
-    intervalButton: {
-        width:26,
-        color:'#FFF',  
-        paddingHorizontal:3,
-        fontSize:14,
-        textAlign:'center', 
-        lineHeight:20, 
-        borderWidth:1,
-        borderColor:'#FFF',
-        borderRadius:5
-    },
-    intervalFont:{
-        fontSize:12,
-    },
-    //底部控制栏
     
+    //底部控制栏
+    textIcon:{
+        height:22,
+        width:22,
+        textAlign:'center',
+        borderWidth:1,
+        borderRadius:2,
+        
+    },
     unSelected:{
         color:'#FFF',
         borderColor:'#FFF',
@@ -125,6 +110,20 @@ const styles = StyleSheet.create({
         width:55,
         height:55,
         borderRadius:60,
+    },
+    intervalButton: {
+        width:26,
+        color:'#FFF',  
+        paddingHorizontal:3,
+        fontSize:14,
+        textAlign:'center', 
+        lineHeight:20, 
+        borderWidth:1,
+        borderColor:'#FFF',
+        borderRadius:5
+    },
+    intervalFont:{
+        fontSize:12,
     },
     //----------
     
@@ -167,6 +166,7 @@ const styles = StyleSheet.create({
         fontSize:12,
         lineHeight: 16,
     },
+   
     
 });
 

@@ -60,11 +60,19 @@ it('提交计划, tasks存入realm',async ()=>{
 }, 60000)
 
 
-it('getTodayTasks：获取今日任务', ()=>{
+it('getTodayTasks：获取今日任务并修改words', ()=>{
     let todayTasks = vts.getTodayTasks(oldTasks)
+    //修改words可以自动更新
     for(let t of todayTasks){
+        for(let w of t.words){
+            vts.vtd.modify(()=>{
+                w.passed = true
+            })
+        }
         console.log(t)
     }
+
+
 })
 it('filterTasks: 过滤得到新学', ()=>{
     let todayTasks = vts.getTodayTasks(oldTasks)

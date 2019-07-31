@@ -120,9 +120,6 @@ export default class VocaTaskDao {
             this.realm.write(()=>{
                 for(let task of tasks){
                     this.realm.create('VocaTask', task, true);
-                    if(task.taskOrder == 57){
-                        console.log(task.leftTimes)
-                    }
                 }
             })
         }catch (e) {
@@ -131,6 +128,20 @@ export default class VocaTaskDao {
         }
     }
 
+    /**
+     * 修改修改对象数据
+     * @param task
+     */
+    modifyTask = (task)=>{
+        try{
+            this.realm.write(()=>{
+                this.realm.create('VocaTask', task, true);
+            })
+        }catch (e) {
+            console.log('VocaTaskDao : 修改数据失败')
+            console.log(e)
+        }
+    }
 
     /**自定义修改 */
     modify =  (fn)=>{

@@ -5,11 +5,30 @@ const {width, height} = Dimensions.get('window');
 
 
 const styles = StyleSheet.create({
-    row:{
-      flexDirection:'row',
-      justifyContent:'flex-start',
-      alignItems:'center',
+    searchBar:{
+      height: 55, 
+      width:width,
+      backgroundColor:'#EFEFEF'
+    },
+    searchIcon:{
+      marginHorizontal:6,
+    },
+    clearIcon:{
+      marginRight:5,
+    },
+    inputWrapper:{
+      height: 36, 
+      width:'80%',
+      borderColor: '#DDD', 
+      borderWidth: 1,
+      borderRadius:5,
+      backgroundColor:'#FFF'
     },  
+    cancelBtn:{
+      color:'#1890FF',
+      fontSize:16,
+      paddingRight:5,
+    },
     item:{
       width:width,
       flexDirection:'column',
@@ -30,11 +49,6 @@ const styles = StyleSheet.create({
       flexGrow:1, 
       flexShrink:1, 
       backgroundColor:'#1890FF'
-    },
-    c_center: {
-      flexDirection:'column',
-      justifyContent:'center',
-      alignItems:'center',
     },
     contentText:{
       paddingLeft:5

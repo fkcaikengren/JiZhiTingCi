@@ -11,6 +11,11 @@ const gstyles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'center',
     },
+    r_start_top:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+    },
     r_end:{
         flexDirection:'row',
         justifyContent:'flex-end',
@@ -40,6 +45,14 @@ const gstyles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'flex-end',
         alignItems:'center',
+    },
+    haireBottom:{
+        borderColor: '#F4F4F4',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    pageTitle:{
+        color:'#FFF', 
+        fontSize:18
     }
 
 });

@@ -28,16 +28,16 @@ vocaDao.open()
 const taskDao = new VocaTaskDao()
 taskDao.open()
 //模拟数据
-const mode = Constant.LEARN_PLAY
+const mode = Constant.REVIEW_PLAY
 const task = {
   taskOrder: 1,
   status: 0,
   vocaTaskDate: _util.getDayTime(0),
   process: 'IN_REVIEW_FINISH',
   curIndex: 0,
-  leftTimes: 0,
+  leftTimes: 3,
   delayDays: 0,
-  dataCompleted: true,
+  dataCompleted: false,
   createTime: '',
   isSync: true,
   wordCount:15,

@@ -15,17 +15,17 @@ export const TOGGLE_WORD = 'TOGGLE_WORD';             //控制英文单词显示
 export const TOGGLE_TRAN = 'TOGGLE_TRAN';             //控制中文释义显示
 export const LOAD_THEMES = 'LOAD_THEMES';             //查看主题
 export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
-export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开任务列表
-
+export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
+export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 
 export const GET_WORD_INFO = 'GET_WORD_INFO';         //查词
-export const PASS_WORD = 'PASS_WORD';                 //Pass单词
+
 
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
 export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, changeTheme,
-  toggleTaskModal } = createActions({
+  toggleTaskModal,passWord } = createActions({
 
     //加载任务  
     [LOAD_TASK] : (task, vocaDao, taskDao)=>{
@@ -36,9 +36,8 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
       return { autoPlayTimer};
     },
     //更新当前单词
-    [CHANGE_CUR_INDEX]: (curIndex)=> {
-      console.info(`当前单词index`);
-      return { curIndex };
+    [CHANGE_CUR_INDEX]: (curIndex, isStudyMode)=> {
+      return { curIndex,isStudyMode };
     },
     //改变播放间隔
     [CHANGE_INTERVAL]: (interval)=>{
@@ -60,6 +59,9 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
     //显示隐藏任务列表面板
     [TOGGLE_TASK_MODAL]: (tasksModalOpened)=>{
       return {tasksModalOpened}
+    },
+    [PASS_WORD] : (word,status,isStudyMode,taskDao)=>{
+      return {word,status,isStudyMode, taskDao}
     },
    
   });

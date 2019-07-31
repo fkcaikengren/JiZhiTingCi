@@ -6,10 +6,10 @@ export default class VocaUtil{
 
 
     /**
-     *   深拷贝VocaTask
-     * @param task Realm数据库中的task
-     * @returns  新的task
-     * */
+     *
+     * @param task
+     * @returns
+     */
     static copyTask(task){
         let copyTask = {
             taskOrder: task.taskOrder,              //任务序号
@@ -17,7 +17,34 @@ export default class VocaUtil{
             vocaTaskDate: task.vocaTaskDate,
             process: task.process,
             curIndex:task.curIndex,
-            leftTimes:task.leftTimes,               //默认是新学阶段，3遍轮播
+            leftTimes:task.leftTimes,
+            delayDays:task.delayDays,
+            dataCompleted:task.dataCompleted,
+            createTime:task.createTime,
+            isSync: task.isSync,
+            words: [],
+            wordCount: task.wordCount,
+        }
+        let ws = task.words
+        for(let i in ws){
+            copyTask.words.push(ws[i])
+        }
+        return copyTask
+    }
+
+    /**
+     *   深拷贝VocaTask
+     * @param task Realm数据库中的task
+     * @returns  新的task
+     * */
+    static copyTaskDeep(task){
+        let copyTask = {
+            taskOrder: task.taskOrder,
+            status: task.status,
+            vocaTaskDate: task.vocaTaskDate,
+            process: task.process,
+            curIndex:task.curIndex,
+            leftTimes:task.leftTimes,
             delayDays:task.delayDays,
             dataCompleted:task.dataCompleted,
             createTime:task.createTime,
@@ -45,7 +72,7 @@ export default class VocaUtil{
     }
 
     /**
-     * 获取下一个状态
+     *  按顺序获取下一个状态
      * @param oldStatus
      * @returns {*}
      */
@@ -133,7 +160,12 @@ export default class VocaUtil{
         return num;
     }
 
-    
+
+    /**
+     *  生成Task的名词
+     * @param taskOrder
+     * @returns {string}
+     */
     static genTaskName = (taskOrder)=>{
         let name = ''
         if(taskOrder < 10){

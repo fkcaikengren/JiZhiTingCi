@@ -284,8 +284,12 @@ export default class VocaGroupDao{
         }
         return success
     }
-    
-    //7. 判断单词是否在默认生词本
+
+    /**
+     * 判断单词是否在默认生词本
+     * @param word
+     * @returns {boolean}
+     */
     isExistInDefault = (word)=>{
         console.log(this.realm)
         let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
@@ -305,6 +309,41 @@ export default class VocaGroupDao{
         return isExist
     }
 
+    /**
+     *  从默认生词本移除单词
+     * @param word
+     * @returns {boolean}
+     */
+    removeWordFromDefault =(word)=>{
+        let success = true
+        try{
+            let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+            if(defaultGroup){
+                this.realm.write(()=>{
+                    let sectionName = word[0].toUpperCase()
+                    let section = defaultGroup.sections.filtered('section = "'+sectionName+'"')[0];
+                    if(section){
+                        for(let key in section.words){
+                            let w = section.words[key]
+                            if(w && w.word === word ){
+                                this.realm.delete(w);
+                            }
+                        }
+                    }else{
+                        console.log('removeWordFromDefault： Section不存在')
+                        success = false
+                    }
+                })
+            }else{
+                console.log('removeWordFromDefault： 生词本不存在')
+                success = false
+            }
+        }catch (e) {
+            console(e)
+            success = false
+        }
+        return success
+    }
 
     /**
      * 批量删除单词

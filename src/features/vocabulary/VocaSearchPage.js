@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {TouchableOpacity,StatusBar ,FlatList, View, Text, StyleSheet} from 'react-native';
-import {SearchBar } from 'react-native-elements'
+import {StatusBar ,FlatList, View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 
 import VocaDao from './service/VocaDao'
 import VocaGroupDao from './service/VocaGroupDao'
 import DetailDictPage from './component/DetailDictPage';
 import styles from './VocaSearchStyle'
+import gstyles from '../../style'
+import AliIcon from '../../component/AliIcon'
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -23,6 +24,7 @@ export default class VocaSearchPage extends Component {
       data:[],
       searchWord: '',
       tran:'',
+      showClearBtn:false,
     }
     this.vocaDao = new VocaDao();
     this.vocaGroupDao = new VocaGroupDao()
@@ -48,7 +50,7 @@ export default class VocaSearchPage extends Component {
       this.setState({searchWord:item.word, tran:item.trans})
     }}>
       <View  style={styles.item}>
-          <View style={styles.row}>
+          <View style={gstyles.r_start}>
               <Text style={[styles.contentText,{fontSize:16,color:'#404040'}]}>{item.word}</Text>
               <Text style={[styles.contentText,{fontSize:12,color:'#999999'}]}>{item.enPhonetic}</Text>
           </View>
@@ -60,21 +62,20 @@ export default class VocaSearchPage extends Component {
   }
   
 
-  _search = ()=>{
-    alert(this.state.searchText);
-  }
 
   _changeText = (searchText)=>{
     const data = this.vocaDao.searchWord(searchText)
-    this.setState({searchText, data})
+    const showClearBtn = searchText.length>0?true:false
+    this.setState({searchText, data, showClearBtn})
+
   }
 
-  _clearSear = ()=>{
+  _clear = ()=>{
     this.setState({
       searchText:'',
       searchWord:''
     });
-    this._inputRef._root.focus()
+    this._inputRef.focus()
   }
 
 
@@ -84,34 +85,48 @@ export default class VocaSearchPage extends Component {
     }
   }
 
+  
+
   render() {
 
     return (
         <View style={{flex: 1}}>
           <StatusBar translucent={true} />
           <View style={{width:width, height:StatusBarHeight, backgroundColor:'#EFEFEF'}}></View>
-
-        <SearchBar
-          platform='ios'
-          containerStyle={{height:55,backgroundColor:'#FFE957'}}
-          inputContainerStyle={{backgroundColor:'#FDFDFD'}}
-          cancelButtonProps={
-            {color:'#303030'}
-          }
-          ref={ref=>this._inputRef = ref}
-          placeholder="请输入英文单词"
-          onChangeText={this._changeText}
-          value={this.state.searchText}
-          onCancel={()=>{
-            this.props.navigation.goBack()
-            }}
-          />  
+          {/* 搜索栏 */}
+          <View style={[gstyles.r_around, styles.searchBar]}>
+            <View style={[gstyles.r_between, styles.inputWrapper]}>
+              <View style={gstyles.r_start}>
+                {/* 查找图标 */}
+                <AliIcon name='chazhao1' size={20} color='#666' style={styles.searchIcon}/>
+                {/* 搜索框 */}
+                <TextInput
+                  ref={ref=>this._inputRef = ref}
+                  style={{height:40,width:'80%'}}
+                  value={this.state.searchText}
+                  placeholder="请输入英文单词"
+                  onChangeText={this._changeText}
+                  clearButtonMode='while-editing'
+                  onFocus={this._onFocus}
+                  autoFocus
+                />
+              </View>
+              {/* 清空图标 */}
+              {this.state.showClearBtn &&
+                <AliIcon name='guanbi' size={16} color='#666' style={styles.clearIcon} 
+                  onPress={this._clear}/>
+              }
+            </View>
+            <TouchableWithoutFeedback onPress={()=>{this.props.navigation.goBack()}}>
+              <Text style={styles.cancelBtn}>取消</Text>
+            </TouchableWithoutFeedback>
+          
+          </View>
+          {/* 搜索结果列表 */}
           {this.state.searchWord === ''&&
             <FlatList
                 ref= {ref=>this._listRef = ref}
-                //数据源(数组)
                 data={this.state.data}
-                //渲染列表数据
                 renderItem={this._renderItem}
                 keyExtractor={this._keyExtractor}
             />

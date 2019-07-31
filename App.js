@@ -3,7 +3,6 @@ import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
 import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
-import {Provider as AntProvider} from '@ant-design/react-native'
 import {store} from './src/redux/store'
 const Realm = require('realm')
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -35,17 +34,13 @@ export default class App extends React.Component {
 
       
       <Provider store={store}>
-        
         <MenuProvider>
           <Root>
-            <AntProvider>
-              <Container style={styles.container}>
-                <AppNavigator/>
-              </Container>
-            </AntProvider>
+            <Container style={styles.container}>
+              <AppNavigator/>
+            </Container>
           </Root>
         </MenuProvider>
-        
       </Provider>
       
     );

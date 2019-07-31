@@ -9,6 +9,7 @@ import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
+import gstyles from '../../../style'
 
 
 const Dimensions = require('Dimensions');
@@ -17,15 +18,11 @@ const SCREEN_WIDTH = width; //屏幕宽度
 const HEADER_HEIGHT = 290;  //头部背景高度
 const TITLE_HEIGHT = 55;    //标题栏高度
 export default class HomeHeader extends Component {
-  static propsType = {
-    
-  };
+
 
   constructor(props) {
     super(props);
-
     this.state = {
-      isRefreshing: false,
       shift: new Animated.Value(0)
     };
   }
@@ -80,7 +77,7 @@ export default class HomeHeader extends Component {
           <Image source={require('../../../image/h_icon.png')} style={{width:30,height:30,borderRadius:30}}/>
           <Text style={{color:'#FFF', fontSize:20, paddingLeft:5}}>四级词汇书</Text>
         </View>
-        <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch}></AliIcon>
+        <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch} />
     </View>
     )
   }
@@ -117,8 +114,8 @@ export default class HomeHeader extends Component {
             justifyContent:'space-between',
             alignItems:'center',
           }}>
-            <Image source={require('../../../image/h_icon.png')} style={{width:36,height:36,borderRadius:30}}/>
-            <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch}></AliIcon>
+            <Image source={require('../../../image/h_icon.png')} style={styles.headerIcon}/>
+            <AliIcon name='chazhao' size={22} color='#FFF' onPress={()=>alert('gg')} />
           </View>
           {/* 环形进度条 */}
           <Progress.Circle 
@@ -138,7 +135,7 @@ export default class HomeHeader extends Component {
           />
           {/* 头部的底部栏 */}
           <View style={styles.headerBottom}>
-            <View style={styles.r_start}>
+            <View style={gstyles.r_start}>
               <Text style={styles.bottom_font}>四级词汇书</Text>
               <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaLib}>
                 <Text style={styles.changeBtn}>更换</Text>
@@ -161,25 +158,21 @@ export default class HomeHeader extends Component {
 }
 
 const styles = StyleSheet.create({
-  c_center : {
-    flexDirection:'column',
-    justifyContent:'center',
-    alignItems:'center',
-  },
-  r_start : {
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'center',
-  },
   imageStyle : {
     width: 100,
     height: 100
   },
+  
   headerView: {
     flexDirection:'column',
     justifyContent:'flex-start',
     alignItems:'center',
     height:HEADER_HEIGHT,
+  },
+  headerIcon:{
+    width:36,
+    height:36,
+    borderRadius:30
   },
   headerBottom: {
     width:SCREEN_WIDTH,

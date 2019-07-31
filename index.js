@@ -13,7 +13,7 @@ const Realm = require('realm');
 global.Storage = createStorage();
 global.Http = createHttp()
 
-// AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName, () => App);
 
 // 进入storybook
-export default StorybookUI;
+// export default StorybookUI;
