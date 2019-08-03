@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalBox from 'react-native-modalbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
+import {Menu, MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu';
 // import {NavigationActions, StackActions} from 'react-navigation'
 import {PropTypes} from 'prop-types'
 import * as Constant from './common/constant'

@@ -3,7 +3,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Container, Content, Header, Button, Text  } from 'native-base';
 import { Col, Row, Grid, } from 'react-native-easy-grid';
 
-import VocaHomeStackNav from '../features/vocabulary/navigation/VocaHomeStackNav';
+import HomeStackNav from './HomeStackNav';
 import LoginPage from '../features/mine/LoginPage';
 import UserDao from '../features/mine/dao/UserDao'
 
@@ -60,7 +60,7 @@ class AuthLoadingPage extends Component {
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingPage,
-    Main: VocaHomeStackNav,
+    Main: HomeStackNav,
     Login: LoginPage,
   },
   {

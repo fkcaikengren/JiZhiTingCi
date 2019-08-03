@@ -1,18 +1,21 @@
 import { createStackNavigator } from 'react-navigation';
 
 
-import HomePage from '../HomePage';
-import VocaSearchPage from '../VocaSearchPage';
-import VocaPlayPage from '../VocaPlayPage';
-import VocaLibPage from '../VocaLibPage';
-import VocaListPage from '../VocaListPage';
-import VocaGroupPage from '../VocaGroupPage'
-import StatisticsPage from '../StatisticsPage';
-import LearnCardPage from '../LearnCardPage';
-import VocaDetailPage from '../VocaDetailPage';
-import TestEnTranPage from '../TestEnTranPage';
-import TestSentencePage from '../TestSentencePage';
-import GroupVocaPage from '../GroupVocaPage';
+import HomePage from '../features/vocabulary/HomePage';
+import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
+import VocaPlayPage from '../features/vocabulary/VocaPlayPage';
+import VocaLibPage from '../features/vocabulary/VocaLibPage';
+import VocaListPage from '../features/vocabulary/VocaListPage';
+import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
+import StatisticsPage from '../features/vocabulary/StatisticsPage';
+import LearnCardPage from '../features/vocabulary/LearnCardPage';
+import VocaDetailPage from '../features/vocabulary/VocaDetailPage';
+import TestEnTranPage from '../features/vocabulary/TestEnTranPage';
+import TestSentencePage from '../features/vocabulary/TestSentencePage';
+import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
+
+//文章模块
+import ArticlePage from '../features/reading/ArticlePage'
 
 
 
@@ -67,11 +70,17 @@ const VocaHomeStackNav = createStackNavigator(
       // 例句选词测试
       TestSentence: {
         screen: TestSentencePage,
+      },
+
+
+      //阅读文章页
+      Article:{
+        screen: ArticlePage
       }
     
     },
     {
-      initialRouteName: 'Home',
+      initialRouteName: 'Article',
       headerMode:'none',
     }
   );

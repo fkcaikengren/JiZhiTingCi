@@ -99,7 +99,7 @@ yarn add react-native-easy-grid
 
 
 
-### 安装react-navigator库
+### 安装react-navigation库
 
 gesture-handler 需要link
 
@@ -108,7 +108,7 @@ yarn add react-navigation
 yarn add react-native-gesture-handler 
 ```
 
-### 安装react-navigator库
+### 安装react-native-vector-icons库
 
 ```
 yarn add react-native-vector-icons
@@ -569,3 +569,17 @@ yarn add react-native-mock --dev
 错误：_iterator3[(intermediate value)(intermediate value)(intermediate value)] is not a function
 
 只能换成 for in的语法
+
+
+
+
+
+# Issue
+
+1. 使用react-native-webview-bridge时，react-native run-android 报错：
+
+   **Failed to install the following Android SDK packages as some licences have not been accepted**
+
+   解决办法：<https://www.rumoss.cn/archives/226/>
+
+   运行sdkmanager 同意安装所有包的证书即可。
