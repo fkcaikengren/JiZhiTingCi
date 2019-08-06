@@ -16,7 +16,7 @@ import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 
 //文章模块
 import ArticlePage from '../features/reading/ArticlePage'
-
+import AnalysisPage from '../features/reading/AnalysisPage'
 
 
 // 单词模块
@@ -76,6 +76,10 @@ const VocaHomeStackNav = createStackNavigator(
       //阅读文章页
       Article:{
         screen: ArticlePage
+      },
+      //解析页面
+      Analysis:{
+        screen:AnalysisPage
       }
     
     },

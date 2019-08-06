@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>reading</title>
+        <meta name="description" content="">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <style type="text/css">
+            @font-face{
+                font-family: 'MONACO'; 
+                src: url('../fonts/MONACO.TTF');
+               
+            }
+            @media screen and (min-width:1000px){/* 电脑,当大于1000的时候 */
+                html{font-size:16px;}
+
+            }
+            @media screen and (min-width:360px){/* 当大于340的时候 */
+                html{font-size:16px;}
+            }
+            @media screen and (min-width:340px){/* 当大于340的时候 */
+                html{font-size:14px;}
+            }
+           
+            @media screen and (max-width:320px){/* 当小于320的时候 */
+                html{font-size:10px;}
+            }
+           
+            *,
+            ::before,
+            ::after{
+                margin:0;
+                padding:0;
+                /*默认清除webkit点击高亮的效果，透明的*/
+                -webkit-tap-highlight-color: transparent;
+                /*设置所有的以边框开始计算宽度，默认是以内容开始计算宽度*/
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+
+            html{
+                /*采用微软雅黑字体，如果没有，采用移动终端默认的字体*/
+                font-family:'MONACO';
+                color: #303030;
+                background-color: #F7F5D6;
+            }
+            #container{
+                /* 布局 */
+                display:flex;
+                display:-webkit-flex;
+                flex-flow:row wrap;
+                -webkit-flex-flow: row wrap;
+                flex-grow: 1;
+                -webkit-flex-grow: 1;
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
+                height: 600px;
+                /* 字体 */
+                font-size: 1rem;
+                text-align: justify;
+                line-height: 1.5rem;
+                vertical-align:bottom;
+
+                padding: 10px;
+                background-color: #F7F5D6;
+                overflow: scroll;
+            }
+            .space{
+                margin-right: 6px;
+            }
+            .underline{
+                color:#555;
+                padding-left: 4px;
+                padding-right: 4px;
+                border-bottom:1px solid #555;
+            }
+            .selectedQuestion{
+                color:#1890FFAA;
+            }
+            .keyWord{
+                color:#F2753F;
+            }
+            .searchedWord{
+                color:#FFFFFF;
+                background-color:#F2753F;
+                border-radius: 3px;
+            }
+
+
+            /* 左对齐 */
+            /* 两端对齐 */
+            .horizontal-start{
+                justify-content: flex-start;
+                -webkit-justify-content: flex-start;
+                
+            }
+            .horizontal-around{
+                justify-content: space-around;
+                -webkit-justify-content: space-around;
+            }
+            .vertical-start{
+                align-items: flex-start;
+                -webkit-align-items: flex-start;
+            }
+            .vertical-center{
+                align-items: center;
+                -webkit-align-items: center;
+            }
+
+
+            /* 字体大小 */
+            .font-sm{
+                font-size:0.9rem;
+            }
+            .font-lg{
+                font-size:1.1rem;
+            }
+            .font-xl{
+                font-size:1.2rem;
+            }
+            /* 单词样式 */
+            /*颜色 */
+            .bg-color-white{
+                background-color:  #FFFFFF;
+            }
+            .bg-color-pink{
+                background-color:  #ffccff;
+            }
+            .bg-color-yellow{
+                background-color:  #F7F5D6;
+            }
+            .bg-color-orange{
+                background-color:  #E4CFA4;
+            }
+            
+            .bg-color-green{
+                background-color: #BADFC0;
+            }
+            .bg-color-grey{
+                background-color:  #EFEFEF;
+            }
+            .bg-color-dark{
+                background-color:  #222222;
+                
+            }
+        </style>
+
+
+    </head>
+    <body>
+        <div id='container'>
+        </div>
+    </body>
+    <script src="./js/zepto.min.js" type="text/javascript"></script>
+    <script src="./js/article.js" type="text/javascript"></script>
+    <script>
+
+        // window.ReactNativeWebView.postMessage(
+        //     JSON.stringify({command:'show', payload:{name:'jacy'}})
+        // ) 
+
+
+    </script>
+
+</html>

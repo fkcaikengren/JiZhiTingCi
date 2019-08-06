@@ -456,6 +456,29 @@ yarn add react-native-linear-gradient
 yarn add react-native-loader
 ```
 
+### 安装react-native-webview 5.8.0
+
+```jsx
+yarn add react-native-webview@5.8.0
+react-native link react-native-webview
+```
+
+
+
+# 调试
+
+1. ### 调试本地数据库
+
+2. ### 调试webview
+
+   安装spy-debugger
+
+   ```jsx
+   npm install spy-debugger -g
+   ```
+
+   参考：https://github.com/wuchangming/spy-debugger
+
 
 
 # 测试

@@ -1,6 +1,8 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform, StatusBar} from 'react-native'
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
+const WEBVIEW_HEIGHT = Platform.OS === "ios" ? height-55 : height-StatusBar.currentHeight-55 
+
 
 const styles = StyleSheet.create({
     contentWrapper:{
@@ -26,11 +28,11 @@ const styles = StyleSheet.create({
         //   borderWidth:StyleSheet.hairlineWidth,
     },
     clickQuestionBtnWrapper:{
-        fontSize:16,
+        fontSize:14,
         color:'#303030',
         paddingHorizontal:2,
         paddingBottom:1,
-        borderBottomWidth:1,
+        borderBottomWidth:StyleSheet.hairlineWidth,
         borderBottomColor:'#606060'
     },
     clickQuestionBtn:{
@@ -82,6 +84,12 @@ const styles = StyleSheet.create({
         paddingHorizontal:4,
         marginRight:18,
         marginBottom:10,
+    },
+
+    webContainer:{
+        width:width,
+        height: WEBVIEW_HEIGHT,
+
     }
 });
 

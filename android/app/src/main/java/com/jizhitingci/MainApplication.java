@@ -1,8 +1,10 @@
 package com.jizhitingci;
 
 import android.app.Application;
+import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.horcrux.svg.SvgPackage;
 import io.realm.react.RealmReactPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -41,8 +43,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new SvgPackage(),
-          new RealmReactPackage(),
+            new RNCWebViewPackage(),
+            new SvgPackage(),
+            new RealmReactPackage(),
             new AsyncStoragePackage(),
             new RNFetchBlobPackage(),
             new RNSoundPackage(),
@@ -90,5 +93,8 @@ public class MainApplication extends Application implements ReactApplication {
                     .build());
 
     realm.close();
+
+    //运行调试WebView
+    WebView.setWebContentsDebuggingEnabled(true);
   }
 }

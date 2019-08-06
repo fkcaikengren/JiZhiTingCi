@@ -3,15 +3,15 @@
 
 import RNFetchBlob from 'rn-fetch-blob'
 const Dirs = RNFetchBlob.fs.dirs
-const ARTICLE_ROOT = Dirs.DocumentDir + '/articles/'
+const ARTICLE_ROOT = Dirs.DocumentDir + '/reading/'
 
-export default class ArticleService{
+export default class FileService{
     constructor(){
 
     }
 
 
-    _loadArticle = async (filename)=>{
+    loadText = async (filename)=>{
         const path = ARTICLE_ROOT+filename
         try{
             // 读取文章
