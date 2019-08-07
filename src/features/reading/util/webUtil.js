@@ -46,17 +46,23 @@ export default class WebUtil {
             //处理
             var data = JSON.parse(e.data)
             try{
-                if(data.command === 'loadPage'){                    //加载页面
-                    initPage(data.payload.analysis, data.payload.rightAnswers, data.payload.answerArticle)
-                    toggleRightAnswers()
-                }else if(data.command === 'toggleRightAnswers'){          //显示隐藏答案
-                    toggleRightAnswers()
+                    
+                if(data.command === 'loadPage'){                            //加载页面
+                    initPage(data.payload.analysis, 
+                        data.payload.showRightAnswers,
+                        data.payload.rightAnswers, 
+                        data.payload.answerArticle,
+                        data.payload.showUserAnswers,
+                        data.payload.userAnswers)
+                    
+                }else if(data.command === 'toggleRightAnswers'){           //显示隐藏答案
+                    
                 }
             }catch(err){
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
             }
-           
-        },true);true;`;
+            
+        },true);true;`
 
 
 
@@ -66,9 +72,5 @@ export default class WebUtil {
 }
 
 {
-    // data.payload.userAnswers
-    // data.payload.rightAnswers
-    // initPage(analysisText, rightAnswers, answerArticle)
-    // toggleRightAnswers(articleAnswer)
-    
+  
 }

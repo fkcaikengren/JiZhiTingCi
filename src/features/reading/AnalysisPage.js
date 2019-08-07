@@ -14,52 +14,46 @@ export default class AnalysisPage extends React.Component {
     constructor(props){
         super(props)
         this.fileService = new FileService()
-        this.state = {
-            analysis:'',
-            //标准答案
-            
-            contents:[],
-            showAnswer:false
-        }
-        this.rightAnswers={
-            "47": "domestic",
-            "48": "communities",
-            "49": "survive",
-            "50":"gather",
-            "51": "serves",
-            "52": "surroundings",
-            "53": "recession",
-            "54": "reported",
-            "55": "households",
-            "56": "financially"
-        }
+        this.userAnswers = this.props.navigation.getParam('userAnswers')
+        this.handin = this.props.navigation.getParam('handin')
     }
-
 
     componentDidMount(){
-        // WebUtil.initPage(text)
-        // this.webref.injectJavaScript(WebUtil.initPage(text))
-        // this._loadData()
+        setTimeout(()=>{
+            this._loadAnalysis()
+        }, 1000)
 
     }
-
 
     
     // 加载答案、解析
-    _loadData = async ()=>{
+    _loadAnalysis = async ()=>{
+        
         try{
             const analysis = await this.fileService.loadText('2-analysis.txt')
             const answerArticle = await this.fileService.loadText('2-article.txt')
-            //发送文本给Web
+            const rightAnswers={
+                "47": "domestic",
+                "48": "communities",
+                "49": "survive",
+                "50":"gather",
+                "51": "serves",
+                "52": "surroundings",
+                "53": "recession",
+                "54": "reported",
+                "55": "households",
+                "56": "financially"
+            }
+            //发送给Web
             this.webref.postMessage(
                 //是否显示用户答案，是否显示答案, 显示解析
                 JSON.stringify({command:'loadPage', payload:{
-                    showUserAnswers:false,
-                    userAnswers:null, 
-                    showRightAnswers:false,
-                    rightAnswers:this.rightAnswers,
+                    analysis:analysis,
+                    showRightAnswers:true,
+                    rightAnswers:rightAnswers,
                     answerArticle:answerArticle,
-                    analysis:analysis
+                    showUserAnswers:this.handin?true:false,
+                    userAnswers:this.userAnswers
                 }})
             );
         }catch(e){
@@ -69,7 +63,7 @@ export default class AnalysisPage extends React.Component {
    
  
     _toggleRightAnswers = ()=>{
-        this._loadData()
+        this._loadAnalysis()
         //发送给Web
         this.webref.postMessage(
             //是否显示用户答案，是否显示答案, 显示解析
@@ -89,6 +83,7 @@ export default class AnalysisPage extends React.Component {
     }
 
     render() {
+        //加载web脚本
         
         return (
             <View style={styles.container}>
@@ -97,12 +92,12 @@ export default class AnalysisPage extends React.Component {
                 <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content" // or directly
-                leftComponent={ 
+                leftComponent={ this.handin?null:
                     <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
                 centerComponent={{ text: '答案解析', style: { color: '#303030', fontSize:18 } }}
-                rightComponent={
+                rightComponent={this.handin?null:
                     <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
                         <Text>显示答案</Text>
                     </TouchableWithoutFeedback>
@@ -125,15 +120,28 @@ export default class AnalysisPage extends React.Component {
                         }}
                         
                         // 发送给web的脚本
-                        injectedJavaScript={WebUtil.ANALYSIS_LISTEN_JAVASCRIPT }
+                        injectedJavaScript={WebUtil.ANALYSIS_LISTEN_JAVASCRIPT}
                         source={{
                             uri:'file:///android_asset/web/analysis.html',
                             baseUrl:'file:///android_asset/web/',
                         }}
                         style={ styles.webViewStyle}
-                        
+                            
                     />
                 </View>
+                {this.handin &&
+                    <View style={styles.bottomBar}>
+                        <TouchableWithoutFeedback>
+                            <Text style={styles.barText}>退出</Text>
+                        </TouchableWithoutFeedback>
+                        <View style={styles.seperator}></View>
+                        <TouchableWithoutFeedback onPress={()=>{
+                            this.props.navigation.goBack()
+                        }}>
+                            <Text style={styles.barText}>重做</Text>
+                        </TouchableWithoutFeedback>
+                    </View>
+                }
             </View>
         )
     }

@@ -1,13 +1,17 @@
 import React from 'react';
-import { View,Text, Button, Easing,
+import { View,Text, Button, Easing, StatusBar,
     TouchableHighlight, TouchableWithoutFeedback,TouchableOpacity} from 'react-native';
+import {Header} from 'react-native-elements'
+import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import { WebView } from 'react-native-webview';
 import styles from './ArticlePageStyle'
 import FileService from './service/FileService'
 import ModalBox from 'react-native-modalbox';
 import * as RConstant from './common/constant'
 import gstyles from '../../style'
+import ReadUtil from './util/readUtil'
 import WebUtil from './util/webUtil'
+import AliIcon from '../../component/AliIcon'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -19,13 +23,9 @@ export default class ArticlePage extends React.Component {
     constructor(props){
         super(props)
         this.fileService = new FileService()
-        this.widths = []
-        this.positionY = 0
         this.state = {
             contents:[],
             renderIndex:RConstant.RENDER_COUNT,
-            //关键字
-            keyWords:['Americans', 'struggle','Episcoal', 'Drane'],
             showKeyWords:true,
 
 
@@ -44,7 +44,9 @@ export default class ArticlePage extends React.Component {
     }
 
     componentDidMount(){
-        // this._loadArticle()
+        setTimeout(()=>{
+            this._loadArticle()
+        }, 500)
     }
 
     //显示隐藏关键词
@@ -83,18 +85,29 @@ export default class ArticlePage extends React.Component {
             ref={ref => {
                 this.answerModal = ref
             }}>
-                <View style={[gstyles.r_start,styles.answerPanel]}>
+                <View style={[gstyles.r_start,styles.answerPanel]}
+                    onMoveShouldSetResponder={(evt) => true}
+                    onResponderGrant= {(e) => {
+                        this.startY = e.nativeEvent.locationY
+                    }}
+                    onResponderRelease={(e)=>{
+                        if(e.nativeEvent.locationY - this.startY > 20){
+                            this._closeAnswerModal()
+                        }
+                    }}>
                     {
                         this.state.answerOptions.map((item, index)=>{
                             let selected = null
                             if(this._isSelectedOption(item)){
                                 selected = {color:'#1890FFAA'}
                             }
-                            return <TouchableOpacity onPress={()=>{
-                                this._clickAnswer(item)
-                            }}>
+                            return <View 
+                                onStartShouldSetResponder={(evt) => true}
+                                onResponderGrant={(e)=>{this._clickAnswer(item)}}        //点击开始时
+                                //onResponderRelease 不发生
+                            >
                                 <Text style={[styles.modalAnswerOption,selected]}>{item}</Text>
-                            </TouchableOpacity>
+                            </View>
                         })
                     }
                     
@@ -138,9 +151,12 @@ export default class ArticlePage extends React.Component {
     _loadArticle = async ()=>{
         try{
             const text = await this.fileService.loadText('2-article.txt')
+            const keywordText = await this.fileService.loadText('2-keyword.json')
+            const keywords = JSON.parse(keywordText)
             //发送文本给Web
             this.webref.postMessage(
-                JSON.stringify({command:'loadPage', payload:{text:text}})
+                //文本，关键字
+                JSON.stringify({command:'loadPage', payload:{text:text, keywords:keywords}})
             );
         }catch(e){
             console.log(e)
@@ -148,11 +164,21 @@ export default class ArticlePage extends React.Component {
     }
 
 
-
+    //查询单词
     _searchWord = (word)=>{
         alert(word)
     }
 
+    //交卷
+    _handin = ()=>{
+        //Map转对象
+        const userAnswersObj = ReadUtil.strMapToObj(this.state.userAnswers)
+        //跳到解析页面
+        this.props.navigation.navigate('Analysis',{
+            userAnswers:userAnswersObj,
+            handin:true
+        })
+    }
 
     _onMessage = (e) =>{
         let data = JSON.parse(e.nativeEvent.data);
@@ -172,21 +198,60 @@ export default class ArticlePage extends React.Component {
         
         const {showAnswerModal} = this.state
         return (
-            <View style={styles.contentWrapper}>
-                <View style={[gstyles.r_start,{width:width, height:50,}]}>
-                    <Button onPress={this._loadArticle} title='加载'/>
-                    <TouchableWithoutFeedback onPress={showAnswerModal?this._closeAnswerModal:this._openAnswerModal}>
-                        <Text style={{marginRight:10}}>{showAnswerModal?'隐藏选项':'显示选项'}</Text>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={this._toggleKeyWords}>
-                        <Text style={{marginRight:10}}>{this.state.showKeyWords?'隐藏关键词':'显示关键词'}</Text>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={()=>{
-                        console.log(this.state.userAnswers)
-                    }}>
-                        <Text>交卷</Text>
-                    </TouchableWithoutFeedback>
-                </View>
+
+            <View style={styles.container}>
+
+
+                {/* 头部 */}
+                <StatusBar translucent={true} />
+                <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content" // or directly
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }}></AliIcon> }
+                centerComponent={{ text: '选词填空', style: { color: '#303030', fontSize:18 } }}
+                rightComponent={
+                    <View style={[gstyles.r_start]}>
+                        {/* <AliIcon name='guanjianzibiaoqian' size={24} color={this.state.showKeyWords?'#FFE957':'#AAA'} 
+                            onPress={this._toggleKeyWords}/> */}
+                        <TouchableWithoutFeedback onPress={this._handin}>
+                            <Text style={styles.handinBtn}>交卷</Text>
+                        </TouchableWithoutFeedback>
+                        
+                        <Menu onSelect={()=>{}} renderer={renderers.Popover} rendererProps={{placement: 'bottom'}}>
+                            <MenuTrigger >
+                                <AliIcon name='add' size={24} color='#555'></AliIcon>
+                            </MenuTrigger>
+                            <MenuOptions style={styles.menuOptions}>
+                                <View style={styles.menuOptionView}>
+                                    <Text style={styles.menuOptionText}>显示关键词</Text>
+                                </View>
+                                <View style={styles.menuOptionView}>
+                                    <Text style={styles.menuOptionText}>颜色字号</Text>
+                                </View>
+                                <View style={styles.menuOptionView}>
+                                    <Text style={styles.menuOptionText}>分享</Text>
+                                </View>
+                                <View style={[styles.menuOptionView,{borderBottomWidth:0}]}>
+                                    <Text style={styles.menuOptionText}>纠错</Text>
+                                </View>
+                                
+                            </MenuOptions>
+                        </Menu>
+                        
+                        
+                        
+                    </View>
+                }
+                containerStyle={{
+                    backgroundColor: '#F7F5D6',
+                    justifyContent: 'space-around',
+                }}
+                />
+
+                
                 {/* 阅读文章 */}
                 <View style={styles.webContainer}>
                     <WebView
@@ -212,16 +277,17 @@ export default class ArticlePage extends React.Component {
                 {/* 答悬浮按钮 */}
                 <TouchableWithoutFeedback onPress={()=>{
                     //跳转
-                    this.props.navigation.navigate('Analysis')
+                    this.props.navigation.navigate('Analysis',{handin:false})
                     }}>
                     <View style={[styles.floatBtn]}>
-                        <Text>K</Text>
+                        <AliIcon name='iconfontyoujiantou-copy-copy-copy' size={16} color='#303030'></AliIcon>
                         <View>
-                            <Text style={styles.floatText}>答</Text>
-                            <Text style={styles.floatText}>题</Text>
+                            <Text style={styles.floatText}>解</Text>
+                            <Text style={styles.floatText}>析</Text>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
+                
                 {
                     this._createTaskListModal()
                 }

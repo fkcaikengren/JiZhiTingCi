@@ -5,11 +5,19 @@ const WEBVIEW_HEIGHT = Platform.OS === "ios" ? height-55 : height-StatusBar.curr
 
 
 const styles = StyleSheet.create({
-    contentWrapper:{
+    container:{
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
+        width:width,
     },  
+    headerBar:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        width:width,
+        height:55,
+    },
     scrollView:{
         height:height-50,
         width:width,
@@ -42,8 +50,8 @@ const styles = StyleSheet.create({
         position:'absolute',
         bottom:260,
         right:1,
-        width:40,
-        height:70,
+        width:35,
+        height:60,
         backgroundColor:'#FFE957CC',
         borderTopLeftRadius:5,
         borderBottomLeftRadius:5,
@@ -51,11 +59,8 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    floatIcon:{
-
-    },
     floatText:{
-        fontSize:16,
+        fontSize:14,
         fontWeight:'300',
         color:'#303030',
         textAlign:'center',
@@ -68,19 +73,19 @@ const styles = StyleSheet.create({
         alignItems:'center',
         width:width,
         height:190,
-        backgroundColor: "#FDFDFD"
+        backgroundColor: "#AAA"
     },
     answerPanel:{
         flexWrap:'wrap',
         width:'100%',
         padding:10,
         borderTopWidth:1,
-        borderColor:'#999'
+        borderColor:'#FFF'
     },  
     modalAnswerOption:{
         borderWidth:StyleSheet.hairlineWidth,
         borderRadius:6,
-        backgroundColor:'#EFEFEF',
+        backgroundColor:'#FDFDFD',
         paddingHorizontal:4,
         marginRight:18,
         marginBottom:10,
@@ -90,6 +95,30 @@ const styles = StyleSheet.create({
         width:width,
         height: WEBVIEW_HEIGHT,
 
+    },
+    handinBtn:{
+        backgroundColor:'#FFE957',
+        lineHeight:26,
+        paddingHorizontal:4,
+        borderRadius:3,
+        color:'#303030',
+        marginRight:20,
+    },
+    menuOptions:{
+    },
+
+    menuOptionView:{
+        width:120,
+        height:40,
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'center',
+        marginHorizontal:10,
+        borderBottomWidth:StyleSheet.hairlineWidth
+    },
+    menuOptionText:{
+        fontSize:16,
+        color:'#505050'
     }
 });
 

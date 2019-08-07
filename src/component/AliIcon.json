@@ -8,6 +8,7 @@
     "bianji": 58886,
     "weixin": 58887,
     "zanting1": 58888,
+    "iconfontyoujiantou-copy-copy-copy": 58889,
     "rili": 58894,
     "malingshuxiangmuicon-": 58895,
     "ai-list": 58896,
@@ -19,6 +20,7 @@
     "chazhao": 58909,
     "xiayige": 58911,
     "play": 58912,
+    "fuhao-xuanxiangqia": 58913,
     "tuichuzhanghao": 58914,
     "dingshi": 58918,
     "iconfontshouye": 58919,
@@ -43,7 +45,10 @@
     "fenxiang": 59054,
     "fenjishouquan": 59058,
     "yuedu": 59064,
+    "datiqia": 59085,
     "yingyong-beidanci-yingyongjianjie": 59089,
+    "tab": 59116,
+    "guanjianzibiaoqian": 59127,
     "shouye-cihuiliang": 59130,
     "zanting2": 59132,
     "icon-test": 59216,
@@ -54,5 +59,5 @@
     "chazhao1": 59764,
     "bofang1": 60365,
     "youjiantou-copy": 60366,
-    "youjiantou-copy-copy": 60367,
-};
+    "youjiantou-copy-copy": 60367
+}

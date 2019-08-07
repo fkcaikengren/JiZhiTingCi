@@ -18,6 +18,27 @@ const styles = StyleSheet.create({
         width:width,
         height: WEBVIEW_HEIGHT,
 
+    },
+    bottomBar:{
+        width:width,
+        height:40,
+        backgroundColor:'#FFE957',
+        position:'absolute',
+        bottom:0,
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'center',
+    },
+    barText:{
+        width: '50%',
+        color:'#FFF',
+        fontSize:16,
+        textAlign:'center'
+    },
+    seperator:{
+        width:1,
+        height:40,
+        backgroundColor:'#FFF'
     }
 });
 

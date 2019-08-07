@@ -42,18 +42,19 @@
 
 
             html{
-                /*采用微软雅黑字体，如果没有，采用移动终端默认的字体*/
                 font-family:'MONACO';
                 color: #303030;
                 background-color: #F7F5D6;
+                overflow-x: hidden; 
+                overflow-y: auto;
             }
             p{
                 /* 段落前留空格 */
-                text-indent:2em
+                text-indent:2rem
             }
             #container{
-                /* 布局 */
-                
+                width: 100%;
+                /* 流式布局 */
                 /* 字体 */
                 font-size: 1rem;
                 text-align: justify;
@@ -62,11 +63,44 @@
 
                 padding: 10px;
                 background-color: #F7F5D6;
-                overflow: scroll;
             }
-            #seperator{
+            #userAnswerCard{
                 width: 100%;
-                height: 20px;
+                /* flex布局 */
+                display:flex;
+                -webkit-display:flex;
+                flex-flow:row wrap;
+                -webkit-flex-flow: row wrap;
+                flex-grow: 1;
+                -webkit-flex-grow: 1;
+                justify-content: flex-start;
+                -webkit-justify-content: flex-start;
+
+                margin-bottom: 20px;
+                background-color: #F5F5F5;
+            }
+            #cardBar{
+                width: 100%;
+                padding: 5px;
+                margin-bottom: 10px;
+                display:flex;
+                -webkit-display:flex;
+                flex-direction: row;
+                -webkit-flex-direction: row;
+                flex-grow: 1;
+                -webkit-flex-grow: 1;
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
+
+                background-color: #EFEFEF;
+            }
+            #answerArticle{
+                width: 100%;
+                padding-bottom: 20px;
+            }
+            #analysis{
+                width: 100%;
+                padding-bottom: 20px;
             }
 
             .answer{
@@ -74,6 +108,21 @@
                 padding-left: 4px;
                 padding-right: 4px;
                 border-bottom:1px solid #555;
+            }
+            .userAnswerWrapper{
+                width:50%;
+                padding-bottom: 10px;
+                padding-left: 16px;
+            }
+            .userAnswerNum{
+                width: 1rem;
+                height: 1rem;
+                padding: 0.3rem;
+                font-size: 0.7rem;
+                border-radius: 1rem;
+                background-color: #F29F3F;
+                color:#FFF;
+                margin-right: 0.5rem;
             }
 
 
@@ -141,7 +190,6 @@
         <div id='container'>
                 <div id="answerArticle">
                 </div>
-                <div id="seperator"></div>
                 <div id="analysis">
                 </div>
         </div>
@@ -155,7 +203,6 @@
 // ##文章思路比较清晰，理解起来并不难。选项中也没有易混淆的干扰项，考生只要把握文章的主线，注意通过词性排除选项，很容易得出答案。
 // `
 //         var rightAnswers = {
-//             "47": "domestic",
 //             "48": "communities",
 //             "49": "survive",
 //             "50":"gather",
@@ -170,8 +217,21 @@
 // ##It’s the kind of work that’s done every day at St. Andrew’s Episcopal Church in San Antonio, People who 50点击答题 at its front door on the first and third Thursdays of each month aren’t looking for God-they’re there for something to eat, St. Andrew’s runs a food pantry(食品堂)that 51点击答题 the city and several of the 52点击答题 towns. Janet Drane is its manager.
 // ##In the wake of the 53点击答题 .the number of families in need of food assistance began to grow. It is 54点击答题 that 49 million Americans are unsure of where they will find their next meal What’s most surprising is that 36% of them live in 55点击答题 where at least one adult is working.“It used to be that one job was all you needed.” says St. Andrew’s Drane.“The people we see now have three or four part-time jobs and they’re still right on the edge 56点击答题 .”
 // `
-//         initPage(analysisText, rightAnswers,answerArticle )
-//         toggleRightAnswers()
+//         var userAnswers = {
+//             "48": "communities",
+//             "49": "survive",
+//             "50":"gather",
+//             "52": "surroundings",
+//             "53": "recession",
+//             "54": "financially",
+//             "55": "households",
+//             "56": "reported"
+//         }
+//         var showRightAnswers = true
+//         var showUserAnswers = true
+//         initPage(analysisText,showRightAnswers, rightAnswers,answerArticle, 
+//             showUserAnswers,
+//             userAnswers )
     </script>
 
 </html>
