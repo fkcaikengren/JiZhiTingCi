@@ -14,18 +14,17 @@
                
             }
             @media screen and (min-width:1000px){/* 电脑,当大于1000的时候 */
-                html{font-size:16px;}
-
+                html{font-size:18px;}
             }
-            @media screen and (min-width:360px){/* 当大于340的时候 */
-                html{font-size:16px;}
+            @media screen and (min-width:360px){/* 当大于360的时候 */
+                html{font-size:18px;}
             }
             @media screen and (min-width:340px){/* 当大于340的时候 */
-                html{font-size:14px;}
+                html{font-size:16px;}
             }
            
             @media screen and (max-width:320px){/* 当小于320的时候 */
-                html{font-size:10px;}
+                html{font-size:14px;}
             }
            
             *,
@@ -47,6 +46,8 @@
                 background-color: #F7F5D6;
                 overflow-x: hidden; 
                 overflow-y: auto;
+
+                font-size: 1rem;
             }
             p{
                 /* 段落前留空格 */
@@ -54,15 +55,14 @@
             }
             #container{
                 width: 100%;
+                height: 100%;
                 /* 流式布局 */
                 /* 字体 */
-                font-size: 1rem;
                 text-align: justify;
                 line-height: 1.5rem;
                 vertical-align:bottom;
-
                 padding: 10px;
-                background-color: #F7F5D6;
+                
             }
             #userAnswerCard{
                 width: 100%;
@@ -146,42 +146,6 @@
                 -webkit-align-items: center;
             }
 
-
-            /* 字体大小 */
-            .font-sm{
-                font-size:0.9rem;
-            }
-            .font-lg{
-                font-size:1.1rem;
-            }
-            .font-xl{
-                font-size:1.2rem;
-            }
-            /* 单词样式 */
-            /*颜色 */
-            .bg-color-white{
-                background-color:  #FFFFFF;
-            }
-            .bg-color-pink{
-                background-color:  #ffccff;
-            }
-            .bg-color-yellow{
-                background-color:  #F7F5D6;
-            }
-            .bg-color-orange{
-                background-color:  #E4CFA4;
-            }
-            
-            .bg-color-green{
-                background-color: #BADFC0;
-            }
-            .bg-color-grey{
-                background-color:  #EFEFEF;
-            }
-            .bg-color-dark{
-                background-color:  #222222;
-                
-            }
         </style>
 
 
@@ -227,11 +191,12 @@
 //             "55": "households",
 //             "56": "reported"
 //         }
-//         var showRightAnswers = true
-//         var showUserAnswers = true
+//         var showRightAnswers = false
+//         var showUserAnswers = false
 //         initPage(analysisText,showRightAnswers, rightAnswers,answerArticle, 
 //             showUserAnswers,
-//             userAnswers )
+//             userAnswers , 'blue', '1rem')
+        // toggleRightAnswers()
     </script>
 
 </html>

@@ -83,14 +83,25 @@ const styles = StyleSheet.create({
         borderColor:'#FFF'
     },  
     modalAnswerOption:{
+        fontSize:16,
         borderWidth:StyleSheet.hairlineWidth,
         borderRadius:6,
         backgroundColor:'#FDFDFD',
-        paddingHorizontal:4,
+        paddingHorizontal:2,
         marginRight:18,
         marginBottom:10,
     },
-
+    settingModal:{
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        width:width,
+        height:200,
+        backgroundColor: "#FFF"
+    },
+    settingPanel:{
+        width:'100%',
+    },
     webContainer:{
         width:width,
         height: WEBVIEW_HEIGHT,
@@ -119,7 +130,20 @@ const styles = StyleSheet.create({
     menuOptionText:{
         fontSize:16,
         color:'#505050'
-    }
+    },
+
+    settingLabel:{
+        marginHorizontal:10,
+    },  
+    colorRadioView:{
+        width:width,
+        height:60,
+    },
+    fontRemView:{
+        width:width,
+        height:60,
+    },
+
 });
 
 

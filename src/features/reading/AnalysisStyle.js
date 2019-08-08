@@ -39,6 +39,14 @@ const styles = StyleSheet.create({
         width:1,
         height:40,
         backgroundColor:'#FFF'
+    },
+    showAnswerBtn:{
+        backgroundColor:'#FFE957',
+        lineHeight:26,
+        paddingHorizontal:2,
+        borderRadius:3,
+        color:'#303030',
+        marginRight:8,
     }
 });
 

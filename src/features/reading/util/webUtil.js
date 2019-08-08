@@ -14,7 +14,7 @@ export default class WebUtil {
             try{
                     
                 if(data.command === 'loadPage'){                    //加载页面
-                    initPage(data.payload.text)
+                    initPage(data.payload.text, data.payload.keywords, data.payload.color, data.payload.size)
                     
                 }else if(data.command === 'selectAnswer'){          //选择答案
                     // 当前问题节点
@@ -31,6 +31,10 @@ export default class WebUtil {
                             node.removeClass('keyWord')
                         }
                     })
+                }else if(data.command === 'changeBgtheme'){          //改变背景色
+                    $('html').css({backgroundColor:data.payload.color})
+                }else if(data.command === 'changeFontSize'){          //改变字号
+                    $('html').css({fontSize:data.payload.size})
                 }
             }catch(err){
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
@@ -53,10 +57,12 @@ export default class WebUtil {
                         data.payload.rightAnswers, 
                         data.payload.answerArticle,
                         data.payload.showUserAnswers,
-                        data.payload.userAnswers)
+                        data.payload.userAnswers,
+                        data.payload.color, 
+                        data.payload.size)
                     
                 }else if(data.command === 'toggleRightAnswers'){           //显示隐藏答案
-                    
+                    window.toggleRightAnswers()
                 }
             }catch(err){
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
@@ -72,5 +78,4 @@ export default class WebUtil {
 }
 
 {
-  
 }

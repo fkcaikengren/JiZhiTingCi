@@ -1,4 +1,5 @@
 
+var container = $('#container');
  //匹配字符块
 var SEPERATOR_REG = /([a-z]+[\-’]?[a-z]*)|([^a-z\-’\s]+)|(\s)/ig
 //匹配单词
@@ -9,13 +10,15 @@ var CONTENT_PAD = 20            //文章显示内边距
 var EndNodes = []               //每段最后的节点
 var SelectedQuestionNode = null //选择的"点击答题" 节点
 var SelectedQuestionNum = 0
-var KeyWords = ["Church", "towns", "hanger"]
 var KeyWordNodes = []
 var SearchedWordNode = null   //正被查询的单词节点
 
  //初始化页面
- function initPage(text){
-    var container = $('#container');
+ function initPage(text,keyWords, color, size){
+    //初始化背景色和字号
+    $('html').css({backgroundColor:color})
+    $('html').css({fontSize:size})
+
     //分割文本
     var contents  = text.match(SEPERATOR_REG)
     // console.log(contents)
@@ -36,7 +39,7 @@ var SearchedWordNode = null   //正被查询的单词节点
                 node.addClass('space')
             }
             //如果是关键词
-            if(KeyWords.indexOf(obj[0]) !== -1){
+            if(keyWords.indexOf(obj[0]) !== -1){
                 KeyWordNodes.push(node);
                 node.addClass('keyWord')
             }

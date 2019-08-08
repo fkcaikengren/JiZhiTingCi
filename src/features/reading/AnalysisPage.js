@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet,StatusBar, View, Text, Button, TouchableWithoutFeedback} from 'react-native';
 import {Header} from 'react-native-elements'
 import { WebView } from 'react-native-webview';
+import {connect} from 'react-redux';
+
 import AliIcon from '../../component/AliIcon'
 import FileService from './service/FileService'
 import * as RConstant from './common/constant'
@@ -9,7 +11,7 @@ import gstyles from '../../style'
 import styles from './AnalysisStyle'
 import WebUtil from './util/webUtil'
 
-export default class AnalysisPage extends React.Component {
+class AnalysisPage extends React.Component {
   
     constructor(props){
         super(props)
@@ -21,16 +23,16 @@ export default class AnalysisPage extends React.Component {
     componentDidMount(){
         setTimeout(()=>{
             this._loadAnalysis()
-        }, 1000)
+        }, 100)
 
     }
 
     
     // 加载答案、解析
     _loadAnalysis = async ()=>{
-        
+        const {bgThemes, themeIndex, fontRem} = this.props.article
         try{
-            const analysis = await this.fileService.loadText('2-analysis.txt')
+            const analysis = await this.fileService.loadText('3-analysis.txt')
             const answerArticle = await this.fileService.loadText('2-article.txt')
             const rightAnswers={
                 "47": "domestic",
@@ -49,11 +51,13 @@ export default class AnalysisPage extends React.Component {
                 //是否显示用户答案，是否显示答案, 显示解析
                 JSON.stringify({command:'loadPage', payload:{
                     analysis:analysis,
-                    showRightAnswers:true,
+                    showRightAnswers:false,
                     rightAnswers:rightAnswers,
                     answerArticle:answerArticle,
                     showUserAnswers:this.handin?true:false,
-                    userAnswers:this.userAnswers
+                    userAnswers:this.userAnswers,
+                    color:bgThemes[themeIndex],
+                    size:fontRem+'rem'
                 }})
             );
         }catch(e){
@@ -83,8 +87,7 @@ export default class AnalysisPage extends React.Component {
     }
 
     render() {
-        //加载web脚本
-        
+        const {bgThemes, themeIndex} = this.props.article
         return (
             <View style={styles.container}>
                 {/* 头部 */}
@@ -92,18 +95,18 @@ export default class AnalysisPage extends React.Component {
                 <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content" // or directly
-                leftComponent={ this.handin?null:
-                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={{ text: '答案解析', style: { color: '#303030', fontSize:18 } }}
+                centerComponent={{ text: this.handin?'练习结果':'答案解析', style: { color: '#303030', fontSize:18 } }}
                 rightComponent={this.handin?null:
                     <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
-                        <Text>显示答案</Text>
+                        <Text style={styles.showAnswerBtn}>答案</Text>
                     </TouchableWithoutFeedback>
                 }
                 containerStyle={{
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: bgThemes[themeIndex],
                     justifyContent: 'space-around',
                 }}
                 />
@@ -148,3 +151,11 @@ export default class AnalysisPage extends React.Component {
 }
 
 
+const mapStateToProps = state =>({
+    article : state.article,
+});
+
+const mapDispatchToProps = {
+    
+};
+export default connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);

@@ -3,9 +3,13 @@
  var RightAnswers = null
  var AnswerArticle = null
 
- function initPage(analysisText,showRightAnswers, rightAnswers,answerArticle,showUserAnswers, userAnswers ){
+ function initPage(analysisText,showRightAnswers, rightAnswers,answerArticle,showUserAnswers, userAnswers,color,size ){
     RightAnswers = rightAnswers
     AnswerArticle = answerArticle
+    //初始化背景色和字号
+    $('html').css({backgroundColor:color})
+    $('html').css({fontSize:size})
+
      // 显示解析
     var paragraphNode = $('#analysis')
     analysisText.split('##').forEach(function(item, i, arr){
