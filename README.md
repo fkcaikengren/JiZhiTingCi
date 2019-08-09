@@ -108,6 +108,16 @@ yarn add react-navigation
 yarn add react-native-gesture-handler 
 ```
 
+### 安装react-navigation-redux-helpers 
+
+​	整合navigation 和redux
+
+```
+yarn add react-navigation-redux-helpers
+```
+
+
+
 ### 安装react-native-vector-icons库
 
 ```

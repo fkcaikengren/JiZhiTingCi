@@ -1,79 +1,116 @@
 import React from 'react';
 import { View , Text} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
+import {connect} from 'react-redux';
+
+import FileService from './service/FileService'
 import OptionRadio from './component/OptionRadio'
 import styles from './QuestionStyle'
 import gstyles from '../../style'
+import AliIcon from '../../component/AliIcon'
 
-const questions = [
-  
-  {
-      no:"58",
-      question:"In the Great Depression many unhappy couples close to stick together because",
-      A:"starting a new family would be hard",
-      B:"they  expected things would turn better",
-      C:"they  wanted to better protect their kids",
-      D:"living  separately would be too costly"
-  },
 
-];
 
-export default class QuestionPage extends React.Component {
+class QuestionPage extends React.Component {
 
   constructor(props){
     super(props)
+    this.fileService = new FileService()
+    
     this.state = {
-      activeSections: [],
+      activeSections: [0],
+      questionNo:"57",
+      questions:[]
     };
+
+   
   }
 
-  _renderSectionTitle = section => {
-    return (
-      <View style={styles.content}>
-        <Text>{section.content}</Text>
-      </View>
-    );
-  };
+  componentDidMount(){
+    this._loadOption()
+  }
+
+  _loadOption = async ()=>{
+    try{
+      const optionText = await this.fileService.loadText('3-option.json')
+      const questions = JSON.parse(optionText)
+      this.setState({questions})
+    }catch(e){
+      console.log(e)
+    }
+  }
 
   //手风琴的头部
   _renderHeader = q => {
+    const expand = ( this.state.questionNo === q.no)
     return (
       <View style={styles.header}>
         <Text style={styles.headerText}>{q.no+'、'+'选择题'}</Text>
+        <AliIcon name={expand?'youjiantou-copy':'youjiantou'} size={24} color='#303030' style={{marginRight:16}}/>
       </View>
     );
   };
 
   // 手风琴的内容
   _renderContent = q => {
+    const options = []
+    //对象转数组
+    for(let k in q){
+      if(k.length === 1){
+        options.push({ 
+          identifier:k, 
+          content:q[k]
+        })
+      }
+
+    }
     return (
       <View style={styles.content}>
         <Text style={styles.question}>{q.no+'. '+q.question}</Text>
         <OptionRadio 
-          options= {[{ identifier:'A', content:"starting a new family would be hard"},{
-            identifier:'B',content:"they  expected things would turn better",
-          }]}
-          containerStyle={{height:100}}
+          options= {options}
+          onChange={this._onChangeOption}
+          bgColor={'#CCC'}
         />
       </View>
     );
   };
 
+
+  _onChangeOption = (index, option)=>{
+    console.log(index)
+    console.log(option)
+  }
+
   _updateSections = activeSections => {
-    this.setState({ activeSections });
+    console.log(activeSections[0])
+    this.setState({ activeSections, questionNo:activeSections[0]!==undefined?this.state.questions[activeSections[0]].no:"" }); //[0]
   };
 
   render() {
+    const {bgThemes, themeIndex} = this.props.article
     return (
-      <Accordion
-        sections={questions}
-        activeSections={this.state.activeSections}
-        renderSectionTitle={this._renderSectionTitle}
-        renderHeader={this._renderHeader}
-        renderContent={this._renderContent}
-        onChange={this._updateSections}
-      />
+      <View style={{flex:1, backgroundColor:bgThemes[themeIndex]}}>
+        <Accordion
+          sections={this.state.questions}
+          activeSections={this.state.activeSections}
+          renderHeader={this._renderHeader}
+          renderContent={this._renderContent}
+          onChange={this._updateSections}
+        />
+      </View>
     );
   }
 
 }
+
+
+
+const mapStateToProps = state =>({
+  article : state.article,
+});
+
+const mapDispatchToProps = {
+  
+};
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionPage);

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import {View} from 'react-native'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { Container, Content, Header, Button, Text  } from 'native-base';
 import { Col, Row, Grid, } from 'react-native-easy-grid';
-
+import { createNavigationReducer,createReactNavigationReduxMiddleware,createReduxContainer} from 'react-navigation-redux-helpers';
+import { connect} from 'react-redux'
 import HomeStackNav from './HomeStackNav';
 import LoginPage from '../features/mine/LoginPage';
 import UserDao from '../features/mine/dao/UserDao'
@@ -46,24 +47,46 @@ class AuthLoadingPage extends Component {
     };
     render() {
         return (
-            <Container>
-                <Header />
+            <View>
                 <Grid>
                     <Col style={{ backgroundColor: '#635DB7', height: 200 }}></Col>
                     <Col style={{ backgroundColor: '#00CE9F', height: 200 }}></Col>
                 </Grid>
-            </Container>
+            </View>
         );
     }
 }
 
-export default createAppContainer(createSwitchNavigator(
-  {
-    AuthLoading: AuthLoadingPage,
-    Main: HomeStackNav,
-    Login: LoginPage,
-  },
-  {
-    initialRouteName: 'Main',
-  }
+const AppNavigator = createAppContainer(createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingPage,
+      Home: HomeStackNav,
+      Login: LoginPage,
+    },
+    {
+      initialRouteName: 'Home',
+    }
 ));
+
+//1. 创建reducer
+export const navReducer = createNavigationReducer(AppNavigator);
+
+//2. 创建中间件
+export const navigationReduxMiddleware = createReactNavigationReduxMiddleware(
+    state => state.nav,
+);
+
+  
+//3. 创建redux容器
+const App = createReduxContainer(AppNavigator);
+
+//4. 连接
+const mapStateToProps = (state) => ({
+    state: state.nav,
+});
+const AppWithNavigationState = connect(mapStateToProps)(App);
+export default AppWithNavigationState
+
+
+
+

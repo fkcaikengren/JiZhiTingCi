@@ -15,9 +15,8 @@ import TestSentencePage from '../features/vocabulary/TestSentencePage';
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 
 //文章模块
-import ArticlePage from '../features/reading/ArticlePage'
 import AnalysisPage from '../features/reading/AnalysisPage'
-import QuestionTabPage from '../features/reading/QuestionTabPage'
+import ArticleTabPage from '../features/reading/ArticleTabPage'
 
 // 单词模块
 const VocaHomeStackNav = createStackNavigator(
@@ -73,23 +72,20 @@ const VocaHomeStackNav = createStackNavigator(
       },
 
 
-      //阅读文章页
-      Article:{
-        screen: ArticlePage
-      },
+      
       //解析页面
       Analysis:{
         screen:AnalysisPage
       },
     
-      //问题页
-      QuestionTab:{
-        screen:QuestionTabPage
+      //文章tab页
+      ArticleTab:{
+        screen:ArticleTabPage
       }
 
     },
     {
-      initialRouteName: 'QuestionTab',
+      initialRouteName: 'ArticleTab',
       headerMode:'none',
     }
   );

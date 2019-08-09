@@ -7,16 +7,16 @@ const styles = StyleSheet.create({
     header:{
         width:width,
         height:40,
-        backgroundColor:'#EEE',
+        backgroundColor:'#CCC',
         flexDirection:'row',
-        justifyContent:'flex-start',
+        justifyContent:'space-between',
         alignItems:'center',
         
     },
     headerText:{
         marginLeft:16,
         fontSize:16,
-        fontWeight:'500'
+        color:'#303030',
     },
     content:{
         width:width,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     question:{
         color:'#303030',
         fontSize:16,
-        
+        marginBottom:16,
     }
 });
 

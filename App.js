@@ -7,7 +7,7 @@ import {store} from './src/redux/store'
 const Realm = require('realm')
 // import RNFetchBlob from 'rn-fetch-blob';
 
-import AppNavigator from './src/navigation/AppNavigator';
+import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import {createStorage} from './src/common/storage';
 import {createHttp} from './src/common/http'
 
@@ -37,7 +37,7 @@ export default class App extends React.Component {
         <MenuProvider>
           <Root>
             <Container style={styles.container}>
-              <AppNavigator/>
+              <AppWithNavigationState/>
             </Container>
           </Root>
         </MenuProvider>

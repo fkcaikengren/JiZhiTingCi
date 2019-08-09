@@ -9,9 +9,22 @@ const Dimensions = require('Dimensions');
 const styles = StyleSheet.create({
     container:{
         flexDirection:'column',
-        justifyContent:'space-between',
+        justifyContent:'flex-start',
         alignItems:'flex-start',
     },
+    optionRow:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+        paddingBottom:16,
+        paddingRight:20,
+        // borderWidth:StyleSheet.hairlineWidth
+    },
+    optionText:{
+        fontSize:16, 
+        color:'#303030', 
+        
+    }
     
 })
 
@@ -48,7 +61,7 @@ export default  class OptionRadio extends Component{
                         }
                     }
                 
-                    return <View style={[gstyles.r_start]}>
+                    return <View style={styles.optionRow}>
                         <View 
                         onStartShouldSetResponder={(e)=>true}
                         onResponderGrant={(e)=>{this.onChange(index, option)}}
@@ -59,9 +72,11 @@ export default  class OptionRadio extends Component{
                             borderRadius: 60,
                             marginRight:10,
                         }, selectedStyle]}>
-                            <Text style={{fontSize:16, color:'#303030'}}>{option.identifier}</Text>
+                            <Text style={[styles.optionText,{lineHeight:this.props.size,}]}>
+                            {option.identifier}
+                            </Text>
                         </View>
-                        <Text style={{fontSize:16, color:'#303030'}}>{option.content}</Text>
+                        <Text style={[styles.optionText,{paddingTop:4}]}>{option.content}</Text>
                     </View>
                 })
             }
@@ -82,9 +97,9 @@ OptionRadio.propTypes  = {
 }
 
 OptionRadio.defaultProps = {
-    onChange:(index, option)=>{alert(option)},
-    selectedIndex:0,
-    bgColor:'#DDD',
+    onChange:(index, option)=>{console.log(option)},
+    selectedIndex:-1,
+    bgColor:'#EEE',
     activeBgColor:'#FFE957',
     size:30,
     containerStyle: {}

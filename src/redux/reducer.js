@@ -2,7 +2,7 @@
 
 import { combineReducers } from "redux";
 
-// import {navReducer} from '../../navigator/WordNav';
+import {navReducer} from '../navigation/AppWithNavigationState';
 const vocaPlay = require('../features/vocabulary/redux/vocaPlay');
 const vocaLib = require('../features/vocabulary/redux/vocaLib');
 const home = require('../features/vocabulary/redux/home');
@@ -10,7 +10,7 @@ const home = require('../features/vocabulary/redux/home');
 const article = require("../features/reading/redux/article");
 
 const reducers =  combineReducers({
-    // nav:navReducer,
+    nav:navReducer,
     ...vocaPlay,
     ...vocaLib,
     ...home,

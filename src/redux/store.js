@@ -4,6 +4,7 @@ import logger from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage';
+import {navigationReduxMiddleware} from '../navigation/AppWithNavigationState'
 import reducers from './reducer'
 import rootSaga from './rootSaga'
 
@@ -11,7 +12,7 @@ import rootSaga from './rootSaga'
 //创建saga中间件
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
-const enhancer = composeEnhancers(applyMiddleware(sagaMiddleware, logger));
+const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware,sagaMiddleware, logger));
 
 export const store = createStore(reducers, enhancer);
 
