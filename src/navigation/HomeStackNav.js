@@ -17,7 +17,7 @@ import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 //文章模块
 import ArticlePage from '../features/reading/ArticlePage'
 import AnalysisPage from '../features/reading/AnalysisPage'
-
+import QuestionTabPage from '../features/reading/QuestionTabPage'
 
 // 单词模块
 const VocaHomeStackNav = createStackNavigator(
@@ -80,11 +80,16 @@ const VocaHomeStackNav = createStackNavigator(
       //解析页面
       Analysis:{
         screen:AnalysisPage
-      }
+      },
     
+      //问题页
+      QuestionTab:{
+        screen:QuestionTabPage
+      }
+
     },
     {
-      initialRouteName: 'Article',
+      initialRouteName: 'QuestionTab',
       headerMode:'none',
     }
   );

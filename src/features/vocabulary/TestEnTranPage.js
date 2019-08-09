@@ -15,7 +15,6 @@ import styles from './TestEnTranStyle'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
 export default class TestEnTranPage extends Component {

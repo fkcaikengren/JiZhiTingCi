@@ -465,6 +465,12 @@ react-native link react-native-webview
 
 
 
+### 安装react-native-collapsible
+
+```
+yarn add react-native-collapsible
+```
+
 
 
 

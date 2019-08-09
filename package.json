@@ -20,6 +20,7 @@
     "react-native-calendars": "^1.141.0",
     "react-native-cardview": "^2.0.2",
     "react-native-check-box": "^2.1.7",
+    "react-native-collapsible": "^1.5.1",
     "react-native-easy-grid": "^0.2.1",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.2.1",
