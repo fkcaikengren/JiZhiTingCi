@@ -1,5 +1,6 @@
 import { createStackNavigator } from 'react-navigation';
 
+import * as Constant from '../features/reading/common/constant'
 
 import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
@@ -87,6 +88,11 @@ const VocaHomeStackNav = createStackNavigator(
     {
       initialRouteName: 'ArticleTab',
       headerMode:'none',
+      initialRouteParams:{
+        vocaLibName:'read',
+        articleCode:3,
+        articleType:Constant.DETAIL_READ
+      }
     }
   );
 

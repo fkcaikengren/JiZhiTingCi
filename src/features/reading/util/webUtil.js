@@ -55,14 +55,14 @@ export default class WebUtil {
                     initPage(data.payload.analysis, 
                         data.payload.showRightAnswers,
                         data.payload.rightAnswers, 
-                        data.payload.answerArticle,
+                        data.payload.formatAnswer,
                         data.payload.showUserAnswers,
                         data.payload.userAnswers,
                         data.payload.color, 
                         data.payload.size)
                     
                 }else if(data.command === 'toggleRightAnswers'){           //显示隐藏答案
-                    window.toggleRightAnswers()
+                    toggleRightAnswers()
                 }
             }catch(err){
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));

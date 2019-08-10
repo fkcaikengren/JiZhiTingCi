@@ -161,6 +161,6 @@ function selectQuestion(e){
     console.log(questionNum)
     // 发送给RN
     window.ReactNativeWebView.postMessage(
-        JSON.stringify({command:'selectQuestion', payload:{questionNum:questionNum}})
+        JSON.stringify({command:'selectBlank', payload:{blankNum:questionNum}})
     ) 
 }

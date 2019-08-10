@@ -7,5 +7,13 @@ export default class ReadUtil{
           obj[k] = v;
         }
         return obj;
+    }
+
+    static getOptionObj = (options, no)=>{
+      for(let o of options){
+          if(o.no === no)
+              return o
       }
+      return {}
+    }
 }

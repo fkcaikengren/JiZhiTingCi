@@ -64,7 +64,7 @@
                 padding: 10px;
                 
             }
-            #userAnswerCard{
+            .answerCard{
                 width: 100%;
                 /* flex布局 */
                 display:flex;
@@ -79,7 +79,7 @@
                 margin-bottom: 20px;
                 background-color: #F5F5F5;
             }
-            #cardBar{
+            .cardBar{
                 width: 100%;
                 padding: 5px;
                 margin-bottom: 10px;
@@ -94,7 +94,7 @@
 
                 background-color: #EFEFEF;
             }
-            #answerArticle{
+            #rightAnswer{
                 width: 100%;
                 padding-bottom: 20px;
             }
@@ -105,25 +105,26 @@
 
             .answer{
                 color:#01D867;
-                padding-left: 4px;
-                padding-right: 4px;
+                padding-left: 1px;
+                padding-right: 1px;
                 border-bottom:1px solid #555;
             }
-            .userAnswerWrapper{
-                width:50%;
-                padding-bottom: 10px;
-                padding-left: 16px;
-            }
-            .userAnswerNum{
+            .answerNum{
                 width: 1rem;
                 height: 1rem;
                 padding: 0.3rem;
                 font-size: 0.7rem;
-                border-radius: 1rem;
+                border-radius: 2rem;
                 background-color: #F29F3F;
                 color:#FFF;
-                margin-right: 0.5rem;
+                margin-right: 0.4rem;
             }
+            .answerWrapper{
+                width:50%;
+                padding-bottom: 10px;
+                padding-left: 5px;
+            }
+            
 
 
             /* 左对齐 */
@@ -152,7 +153,7 @@
     </head>
     <body>
         <div id='container'>
-                <div id="answerArticle">
+                <div id="rightAnswer">
                 </div>
                 <div id="analysis">
                 </div>
@@ -191,12 +192,25 @@
 //             "55": "households",
 //             "56": "reported"
 //         }
-//         var showRightAnswers = false
-//         var showUserAnswers = false
-//         initPage(analysisText,showRightAnswers, rightAnswers,answerArticle, 
+//         const rightAnswers2 ={
+//             "48": "A communities",
+//             "49": "B survive",
+//             "50": "C gather",
+//             "51": "D serves",
+//             "52": "A surroundings",
+//             "53": "B recession",
+//             "54": "C reported",
+//             "55": "A households",
+//             "56": "A financially"
+//         }
+//         var showRightAnswers = true
+//         var showUserAnswers = true
+//         initPage(analysisText,showRightAnswers, rightAnswers,{hasArticle:true, content:answerArticle}, 
 //             showUserAnswers,
-//             userAnswers , 'blue', '1rem')
-        // toggleRightAnswers()
+//             userAnswers , 'pink', '1rem')
+//         // toggleRightAnswers()
+//         // toggleRightAnswers()
+//         // toggleRightAnswers()
     </script>
 
 </html>

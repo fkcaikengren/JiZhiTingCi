@@ -8,7 +8,7 @@ import OptionRadio from './component/OptionRadio'
 import styles from './QuestionStyle'
 import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
-
+import * as ArticleAction from './redux/action/articleAction'
 
 
 class QuestionPage extends React.Component {
@@ -30,9 +30,10 @@ class QuestionPage extends React.Component {
     this._loadOption()
   }
 
+  // 加载问题选项
   _loadOption = async ()=>{
     try{
-      const optionText = await this.fileService.loadText('3-option.json')
+      const optionText = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-option.json`)
       const questions = JSON.parse(optionText)
       this.setState({questions})
     }catch(e){
@@ -62,7 +63,6 @@ class QuestionPage extends React.Component {
           content:q[k]
         })
       }
-
     }
     return (
       <View style={styles.content}>
@@ -78,8 +78,10 @@ class QuestionPage extends React.Component {
 
 
   _onChangeOption = (index, option)=>{
-    console.log(index)
-    console.log(option)
+    const userAnswerMap = new Map(this.props.article.userAnswerMap)
+    userAnswerMap.set(this.state.questionNo, option.identifier)
+    this.props.changeUserAnswerMap(userAnswerMap)
+
   }
 
   _updateSections = activeSections => {
@@ -111,6 +113,6 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
-  
+  changeUserAnswerMap: ArticleAction.changeUserAnswerMap
 };
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionPage);

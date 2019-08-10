@@ -16,6 +16,8 @@ const defaultState ={
     fontRem:1,
     //是否显示关键词
     showKeyWords:true,
+    //用户的答案
+    userAnswerMap: new Map(),
      //加载状态
     isLoadPending:false,
 
@@ -28,5 +30,6 @@ export const article =  handleActions({
     [aAction.CHANGE_BGTHEME] : (state, action) => ({ ...state, themeIndex:action.payload.themeIndex }),  
     [aAction.CHANGE_FONT_SIZE] : (state, action) => ({ ...state, fontRem:action.payload.fontRem })  ,
     [aAction.TOGGLE_KEY_WORDS]: (state, action) => ({ ...state, showKeyWords:!state.showKeyWords }),                    //开始加载任务
+    [aAction.CHANGE_USER_ANSWER_MAP]: (state, action) => ({ ...state, userAnswerMap:action.payload.userAnswerMap }),                    //开始加载任务
    
 }, defaultState);

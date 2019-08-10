@@ -4,14 +4,15 @@ import ModalBox from 'react-native-modalbox';
 import { WebView } from 'react-native-webview';
 import {connect} from 'react-redux';
 
+import OptionRadio from './component/OptionRadio'
 import * as ArticleAction from './redux/action/articleAction'
-import styles from './ArticlePageStyle'
+import styles from './ArticleStyle'
 import FileService from './service/FileService'
 import gstyles from '../../style'
 import ReadUtil from './util/readUtil'
 import WebUtil from './util/webUtil'
 import AliIcon from '../../component/AliIcon'
-
+import * as Constant from './common/constant'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -24,18 +25,12 @@ class ArticlePage extends React.Component {
         super(props)
         this.fileService = new FileService()
         this.state = {
-
-            //以下适用于 【题型2】
             //是否显示答案选项面板
             showAnswerModal:false,
-            answerOptions:['survive','surrounding','serves','reviewed','reported','recession',
-            'households','gather','formally','financially','domestic','competition','communities',
-            'circling','accumulate'],
             //选中的问题 
-            selectedQuestion:"48",
-            //用户的答案
-            userAnswers: new Map()
+            selectedBlank:"48",
         }
+        this.options = props.options
         
     }
 
@@ -75,7 +70,6 @@ class ArticlePage extends React.Component {
     }
 
 
-
     //关闭选项面板
     _closeAnswerModal = ()=>{
         this.setState({showAnswerModal:false})
@@ -88,6 +82,19 @@ class ArticlePage extends React.Component {
 
     // 创建答案选项面板
     _createAnswerOptionModal = () =>{
+        console.log(this.options)
+        const options = []
+        if(this.props.articleType===Constant.FOUR_SELECT_READ){
+            const obj = ReadUtil.getOptionObj(this.options, this.state.selectedBlank)
+            for(let k in obj){
+                if(k.length === 1){
+                options.push({ 
+                    identifier:k, 
+                    content:obj[k]
+                })
+                }
+            }
+        }
         // 获取任务列表数据
         const {showAnswerModal} = this.state
         return <ModalBox style={[styles.answerModal]}
@@ -102,30 +109,40 @@ class ArticlePage extends React.Component {
             ref={ref => {
                 this.answerModal = ref
             }}>
-                <View style={[gstyles.r_start,styles.answerPanel]}>
-                {
-                    this.state.answerOptions.map((item, index)=>{
-                        let selected = null
-                        if(this._isSelectedOption(item)){
-                            selected = {color:'#1890FFAA'}
-                        }
-                        return <View 
-                            onStartShouldSetResponder={(evt) => true}
-                            onResponderGrant={(e)=>{this._clickAnswer(item)}}        //点击开始时
-                            //onResponderRelease 不发生
-                        >
-                            <Text style={[styles.modalAnswerOption,selected]}>{item}</Text>
-                        </View>
-                    })
+                {this.props.articleType===Constant.MULTI_SELECT_READ &&
+                    <View style={[gstyles.r_start,styles.answerPanel]}>
+                    {
+                        this.options.map((item, index)=>{
+                            let selected = null
+                            if(this._isSelectedOption(item)){
+                                selected = {color:'#1890FFAA'}
+                            }
+                            return <View 
+                                onStartShouldSetResponder={(evt) => true}
+                                onResponderGrant={(e)=>{this._clickAnswer(item)}}        //点击开始时
+                                //onResponderRelease 不发生
+                            >
+                                <Text style={[styles.modalAnswerOption,selected]}>{item}</Text>
+                            </View>
+                        })
+                    }
+                    </View>
+                } 
+                {this.props.articleType===Constant.FOUR_SELECT_READ &&
+                    <View style={[gstyles.c_start,{marginTop:10}]}>
+                        <OptionRadio 
+                            options= {options}
+                            onChange={this._onChangeOption}
+                            bgColor={'#CCC'}/>
+                    </View>
                 }
-                    
-                </View>
         </ModalBox>
     }
 
     //【题型2】判断用户是否已选 选项
     _isSelectedOption = (word)=>{
-        for(let v of this.state.userAnswers.values()){
+        const {userAnswerMap} = this.props.article
+        for(let v of userAnswerMap.values()){
             if(v === word){
                 return true
             }
@@ -133,35 +150,49 @@ class ArticlePage extends React.Component {
         return false
     }
 
-    //【题型2】点击问题
-    _clickQuestion = (questionNum)=>{
+    //【题型2】点击填空
+    _clickBlank = (blankNum)=>{
         if(this.state.showAnswerModal){
-            this.setState({selectedQuestion:questionNum})
+            this.setState({selectedBlank:blankNum})
         }else{
-            this.setState({selectedQuestion:questionNum,showAnswerModal:true})
+            this.setState({selectedBlank:blankNum,showAnswerModal:true})
         }
         
     }
     //【题型2】点击答案
     _clickAnswer = (optionWord)=>{
         //填用户答案
-        const userAnswers = new Map(this.state.userAnswers)
-        userAnswers.set(this.state.selectedQuestion, optionWord)
-        this.setState({userAnswers})
+        const userAnswerMap = new Map(this.props.article.userAnswerMap)
+        userAnswerMap.set(this.state.selectedBlank, optionWord)
+        this.props.changeUserAnswerMap(userAnswerMap)
         //发送给Web
         this.webref.postMessage(
             JSON.stringify({command:'selectAnswer', payload:{word:optionWord}})
         );
     }
-
+    //【题型3】4选一
+    _onChangeOption = (index, value)=>{
+         //填用户答案
+         const userAnswerMap = new Map(this.props.article.userAnswerMap)
+         userAnswerMap.set(this.state.selectedBlank, value.identifier)
+         this.props.changeUserAnswerMap(userAnswerMap)
+         //发送给Web
+         this.webref.postMessage(
+            JSON.stringify({command:'selectAnswer', payload:{word:value.content}})
+        );
+        //关闭
+        this._closeAnswerModal()
+    }
 
     // 加载文章
     _loadArticle = async ()=>{
         const {bgThemes, themeIndex, fontRem} = this.props.article
         try{
-            const text = await this.fileService.loadText('3-article.txt')
-            const keywordText = await this.fileService.loadText('3-keyword.json')
+            const text = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-article.txt`)
+            const keywordText = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-keyword.json`)
+            // console.log(keywordText)
             const keywords = JSON.parse(keywordText)
+            
             //发送文本给Web
             this.webref.postMessage(
                 //文本，关键字
@@ -173,6 +204,7 @@ class ArticlePage extends React.Component {
                 }})
             );
         }catch(e){
+            console.log("ArticlePage : 文本解析出错: keywordText, optionText")
             console.log(e)
         }
     }
@@ -183,23 +215,13 @@ class ArticlePage extends React.Component {
         alert(word)
     }
 
-    //交卷
-    _handin = ()=>{
-        //Map转对象
-        const userAnswersObj = ReadUtil.strMapToObj(this.state.userAnswers)
-        //跳到解析页面
-        this.props.navigation.navigate('Analysis',{
-            userAnswers:userAnswersObj,
-            handin:true
-        })
-    }
 
     _onMessage = (e) =>{
         let data = JSON.parse(e.nativeEvent.data);
         console.log(data)
         switch(data.command){
-            case 'selectQuestion':
-                this._clickQuestion(data.payload.questionNum)
+            case 'selectBlank':
+                this._clickBlank(data.payload.blankNum)
             break;
             case 'error':
 
@@ -213,7 +235,6 @@ class ArticlePage extends React.Component {
         return (
 
             <View style={styles.container}>
-
                 
                 {/* 阅读文章 */}
                 <View style={styles.webContainer}>
@@ -237,8 +258,7 @@ class ArticlePage extends React.Component {
                         
                     /> 
                 </View>
-                
-                {
+                {(this.props.articleType===Constant.FOUR_SELECT_READ || this.props.articleType===Constant.MULTI_SELECT_READ) &&
                     this._createAnswerOptionModal()
                 }
             </View>
@@ -254,6 +274,6 @@ const mapStateToProps = state =>({
 const mapDispatchToProps = {
     changeBgtheme : ArticleAction.changeBgtheme,
     changeFontSize : ArticleAction.changeFontSize,
-    
+    changeUserAnswerMap: ArticleAction.changeUserAnswerMap
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ArticlePage);

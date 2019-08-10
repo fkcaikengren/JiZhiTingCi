@@ -20,14 +20,14 @@ export default class FileService{
 
         }catch(e){
             //如果文件不存在 （加载失败）
-            console.log('下载文章')
+            console.log('下载文件')
             try{
                 //后台下载
                 await RNFetchBlob.config({
                     fileCache:true,
                     path : path
                 })
-                .fetch('GET', 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com/read/'+filename, {
+                .fetch('GET', 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com/'+filename, {
                     // more headers  ..
                 })
               
@@ -35,6 +35,7 @@ export default class FileService{
                 let text = await RNFetchBlob.fs.readFile(path) 
                 return text
             }catch(e){
+                console.log('FileService: 文件加载失败')
                 console.log(e)
             }
         }

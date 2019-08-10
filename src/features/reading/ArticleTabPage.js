@@ -16,6 +16,9 @@ import AliIcon from '../../component/AliIcon'
 import * as ArticleAction from './redux/action/articleAction'
 import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
+import * as Constant from './common/constant'
+import ReadUtil from './util/readUtil'
+import FileService from './service/FileService';
 
 /**
  *Created by Jacy on 19/08/09.
@@ -23,11 +26,25 @@ import QuestionPage from './QuestionPage';
 class ArticleTabPage extends React.Component {
     constructor(props){
         super(props);
+        this.fileService = new FileService()
+        this.options = []
+
         this.state={
             pageIndex:0,
             showKeyWords:true,
             showSettingModal:true,
         }
+    }
+
+    componentDidMount(){
+        this._laodOption()
+    }
+
+    _laodOption = async ()=>{
+        const vocaLibName = this.props.navigation.getParam('vocaLibName')
+        const articleCode = this.props.navigation.getParam('articleCode')
+        const optionsText = await this.fileService.loadText(`${vocaLibName}/${articleCode}-option.json`)
+        this.options = JSON.parse(optionsText)
     }
 
     //改变字体大小
@@ -103,21 +120,94 @@ class ArticleTabPage extends React.Component {
          </ModalBox>
     }
    
+    _renderHeaderCenter = ()=>{
+        const articleType = this.props.navigation.getParam('articleType')
+        switch(articleType){
+            case Constant.DETAIL_READ: //仔细阅读
+                let s1={}, s2={}
+                const selectStyle = {
+                    color:'#303030',
+                    borderBottomWidth:1,
+                    borderColor:'#303030'
+                }
+                if(this.state.pageIndex===0){
+                    s1 = selectStyle
+                }else{
+                    s2 = selectStyle
+                }
+            return <View style={gstyles.r_center}>
+                        <Text style={[styles.tabTitle,s1, {marginRight:10}]}>文章</Text>
+                        <Text style={[styles.tabTitle,s2]}>答题</Text>
+                    </View>
+            case Constant.MULTI_SELECT_READ: //选词填空
+            return <View style={gstyles.r_center}>
+                        <Text style={[{color:'#303030', fontSize:18}]}>选词填空</Text>
+                    </View>
+            case Constant.FOUR_SELECT_READ: //四选一
+            return <View style={gstyles.r_center}>
+                        <Text style={[{color:'#303030', fontSize:18}]}>选词填空</Text>
+                    </View>
+            case Constant.EXTENSIVE_READ: //泛读
+            return <View style={gstyles.r_center}>
+                        <Text style={[{color:'#303030', fontSize:18}]}>泛读</Text>
+                    </View>
+                
+        }
+        
+    }
 
+    //交卷
+    _handin = ()=>{
+        const vocaLibName = this.props.navigation.getParam('vocaLibName')
+        const articleCode = this.props.navigation.getParam('articleCode')
+        const articleType = this.props.navigation.getParam('articleType')
+        //Map转对象
+        const userAnswersObj = ReadUtil.strMapToObj(this.props.article.userAnswerMap)
+        //跳到解析页面
+        this.props.navigation.navigate('Analysis',{
+            userAnswers:userAnswersObj,
+            handin:true,
+            options: this.options,
+            vocaLibName,
+            articleCode,
+            articleType
+        })
+    }
+
+    
+    _renderContent = ()=>{
+        
+        //路由参数
+        const vocaLibName = this.props.navigation.getParam('vocaLibName')
+        const articleCode = this.props.navigation.getParam('articleCode')
+        const articleType = this.props.navigation.getParam('articleType')
+
+        if(articleType === Constant.DETAIL_READ){
+            return <Swiper 
+                showsPagination={false}
+                loop={false}
+                onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
+                <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} options={this.options}/>
+                <QuestionPage vocaLibName={vocaLibName} articleCode={articleCode} />
+            </Swiper>
+        }else{
+            return <Swiper 
+            showsPagination={false}
+            loop={false}
+            onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
+            <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} options={this.options}/>
+        
+        </Swiper>
+        }
+            
+
+    }
 
     render(){
         const {bgThemes, themeIndex, showKeyWords} = this.props.article
-        let s1={}, s2={}
-        const selectStyle = {
-            color:'#303030',
-            borderBottomWidth:1,
-            borderColor:'#303030'
-        }
-        if(this.state.pageIndex===0){
-            s1 = selectStyle
-        }else{
-            s2 = selectStyle
-        }
+        const vocaLibName = this.props.navigation.getParam('vocaLibName')
+        const articleCode = this.props.navigation.getParam('articleCode')
+        const articleType = this.props.navigation.getParam('articleType')
         return(
             <View style={{ flex:1, }}>
                 {/* 头部 */}
@@ -129,12 +219,7 @@ class ArticleTabPage extends React.Component {
                     <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={
-                    <View style={gstyles.r_center}>
-                        <Text style={[styles.tabTitle,s1, {marginRight:10}]}>文章</Text>
-                        <Text style={[styles.tabTitle,s2]}>答题</Text>
-                    </View>
-                }
+                centerComponent={ this._renderHeaderCenter() }
                 rightComponent={
                     <View style={[gstyles.r_start]}>
                         
@@ -155,11 +240,11 @@ class ArticleTabPage extends React.Component {
                                         <Text style={styles.menuOptionText}>主题字号</Text>
                                 </MenuOption>
                                
-                                <MenuOption onSelect={() => alert(`Delete`)} style={styles.menuOptionView}>
+                                <MenuOption onSelect={() => alert(`分享`)} style={styles.menuOptionView}>
                                         <Text style={styles.menuOptionText}>分享</Text>
                                 </MenuOption>
                                 
-                                <MenuOption onSelect={() => alert(`Delete`)} 
+                                <MenuOption onSelect={() => alert(`纠错`)} 
                                     style={[styles.menuOptionView,{borderBottomWidth:0}]}>
                                         <Text style={styles.menuOptionText}>纠错</Text>
                                 </MenuOption>
@@ -177,18 +262,19 @@ class ArticleTabPage extends React.Component {
                     justifyContent: 'space-around',
                 }}
                 />
-                <Swiper 
-                    showsPagination={false}
-                    loop={false}
-                    onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
-                    <ArticlePage />
-                    <QuestionPage />
-                    
-                </Swiper>
+                {
+                    this._renderContent()
+                }
                  {/* 答悬浮按钮 */}
                  <TouchableWithoutFeedback onPress={()=>{
                     //跳转
-                    this.props.navigation.navigate('Analysis',{handin:false})
+                    this.props.navigation.navigate('Analysis',{
+                        handin:false, 
+                        options:this.options,
+                        vocaLibName,
+                        articleCode,
+                        articleType
+                    })
                     }}>
                     <View style={[styles.floatBtn]}>
                         <AliIcon name='iconfontyoujiantou-copy-copy-copy' size={16} color='#303030'></AliIcon>

@@ -6,18 +6,17 @@ import {connect} from 'react-redux';
 
 import AliIcon from '../../component/AliIcon'
 import FileService from './service/FileService'
-import * as RConstant from './common/constant'
+import * as Constant from './common/constant'
 import gstyles from '../../style'
 import styles from './AnalysisStyle'
 import WebUtil from './util/webUtil'
+import ReadUtil from './util/readUtil';
 
 class AnalysisPage extends React.Component {
   
     constructor(props){
         super(props)
         this.fileService = new FileService()
-        this.userAnswers = this.props.navigation.getParam('userAnswers')
-        this.handin = this.props.navigation.getParam('handin')
     }
 
     componentDidMount(){
@@ -31,31 +30,48 @@ class AnalysisPage extends React.Component {
     // 加载答案、解析
     _loadAnalysis = async ()=>{
         const {bgThemes, themeIndex, fontRem} = this.props.article
+        const userAnswers = this.props.navigation.getParam('userAnswers')
+        const handin = this.props.navigation.getParam('handin')
+        const articleType = this.props.navigation.getParam('articleType')
+        const vocaLibName = this.props.navigation.getParam('vocaLibName')
+        const articleCode = this.props.navigation.getParam('articleCode')
+        const options = this.props.navigation.getParam('options')
         try{
-            const analysis = await this.fileService.loadText('3-analysis.txt')
-            const answerArticle = await this.fileService.loadText('2-article.txt')
-            const rightAnswers={
-                "47": "domestic",
-                "48": "communities",
-                "49": "survive",
-                "50":"gather",
-                "51": "serves",
-                "52": "surroundings",
-                "53": "recession",
-                "54": "reported",
-                "55": "households",
-                "56": "financially"
+            //解析
+            const analysis = await this.fileService.loadText(`${vocaLibName}/${articleCode}-analysis.txt`)
+            //正确答案
+            const rightAnswersText = await this.fileService.loadText(`${vocaLibName}/${articleCode}-answer.json`)
+            const rightAnswers = JSON.parse(rightAnswersText)
+            console.log(rightAnswers)
+            //答案的格式：文章 or 答案键值对
+            let content = null
+            let hasArticle = true
+            if(articleType===Constant.MULTI_SELECT_READ || articleType===Constant.FOUR_SELECT_READ){
+                content = await this.fileService.loadText(`${vocaLibName}/${articleCode}-article.txt`)
+            }else{
+                hasArticle = false
+                content = Object.create(null)
+                for(let k in rightAnswers){
+                    const Opt = ReadUtil.getOptionObj(options, k)
+                    const word = Opt[rightAnswers[k]]
+                    if(articleType===Constant.DETAIL_READ){
+                        content[k] = rightAnswers[k]
+                    }else{
+                        content[k] = rightAnswers[k] + ' ' + word
+                    }
+                }
             }
+            // console.log(content)
             //发送给Web
             this.webref.postMessage(
                 //是否显示用户答案，是否显示答案, 显示解析
                 JSON.stringify({command:'loadPage', payload:{
                     analysis:analysis,
-                    showRightAnswers:false,
+                    showRightAnswers:handin,
                     rightAnswers:rightAnswers,
-                    answerArticle:answerArticle,
-                    showUserAnswers:this.handin?true:false,
-                    userAnswers:this.userAnswers,
+                    formatAnswer:{hasArticle, content},
+                    showUserAnswers:handin,
+                    userAnswers:userAnswers,
                     color:bgThemes[themeIndex],
                     size:fontRem+'rem'
                 }})
@@ -67,7 +83,6 @@ class AnalysisPage extends React.Component {
    
  
     _toggleRightAnswers = ()=>{
-        this._loadAnalysis()
         //发送给Web
         this.webref.postMessage(
             //是否显示用户答案，是否显示答案, 显示解析
@@ -88,6 +103,7 @@ class AnalysisPage extends React.Component {
 
     render() {
         const {bgThemes, themeIndex} = this.props.article
+        const handin = this.props.navigation.getParam('handin')
         return (
             <View style={styles.container}>
                 {/* 头部 */}
@@ -95,12 +111,12 @@ class AnalysisPage extends React.Component {
                 <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content" // or directly
-                leftComponent={ 
+                leftComponent={ handin?null:
                     <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={{ text: this.handin?'练习结果':'答案解析', style: { color: '#303030', fontSize:18 } }}
-                rightComponent={this.handin?null:
+                centerComponent={{ text: handin?'练习结果':'答案解析', style: { color: '#303030', fontSize:18 } }}
+                rightComponent={handin?null:
                     <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
                         <Text style={styles.showAnswerBtn}>答案</Text>
                     </TouchableWithoutFeedback>
@@ -132,7 +148,7 @@ class AnalysisPage extends React.Component {
                             
                     />
                 </View>
-                {this.handin &&
+                {handin &&
                     <View style={styles.bottomBar}>
                         <TouchableWithoutFeedback>
                             <Text style={styles.barText}>退出</Text>
