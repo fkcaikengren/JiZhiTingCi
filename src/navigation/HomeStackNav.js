@@ -86,7 +86,7 @@ const VocaHomeStackNav = createStackNavigator(
 
     },
     {
-      initialRouteName: 'ArticleTab',
+      initialRouteName: 'VocaList',
       headerMode:'none',
       initialRouteParams:{
         vocaLibName:'CET-4',

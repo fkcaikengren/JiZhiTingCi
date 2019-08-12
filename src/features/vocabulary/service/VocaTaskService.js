@@ -14,11 +14,8 @@ import _ from 'lodash'
 export default class VocaTaskService {
 
     constructor(){
-        this.vtd =  new VocaTaskDao()
-        this.vtd.open()
+        this.vtd =  VocaTaskDao.getInstance()
     }
-
-
     /**
      * 关闭数据库
      */
@@ -232,4 +229,35 @@ export default class VocaTaskService {
     }
 
 
+    /**
+     *  获取错误单词列表
+     * @returns {Array}
+     */
+    getWrongList = ()=>{
+        const wrongArr = []
+        try{
+            for(let i=6; i>=1; i--){
+                //查询
+                let words = i===6?this.vtd.getWordsGEWrongNum(i) :this.vtd.getWordsEqWrongNum(i)
+                wrongArr.push({
+                    isHeader: true,
+                    checked:false,
+                    title: i===6?`答错超过5次, 共${words.length}词`:`答错${i}次, 共${words.length}词`
+                })
+                for(let w of words){
+                    wrongArr.push({
+                        isHeader: false,
+                        checked:false,
+                        content: w,
+                    })
+                }
+            }
+
+        }catch (e) {
+            console.log(e)
+            console.log('获取错词列表失败')
+        }
+
+        return wrongArr
+    }
 }

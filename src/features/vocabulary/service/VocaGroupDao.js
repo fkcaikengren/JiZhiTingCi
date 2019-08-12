@@ -59,8 +59,16 @@ const GroupWordSchema = {
 
 export default class VocaGroupDao{
 
-    constructor(props){
+    constructor(){
         this.realm = null
+    }
+
+    //单例模式
+    static getInstance() {
+        if(!this.instance) {
+            this.instance = new VocaGroupDao();
+        }
+        return this.instance;
     }
 
     /**

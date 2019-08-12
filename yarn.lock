@@ -9523,13 +9523,6 @@ react-native-cardview@^2.0.2:
   dependencies:
     prop-types "^15.6.0"
 
-react-native-check-box@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.npm.taobao.org/react-native-check-box/download/react-native-check-box-2.1.7.tgz#f349d3505a13c15d19949ec4cec40c7adc4f3626"
-  integrity sha1-80nTUFoTwV0ZlJ7EzsQMetxPNiY=
-  dependencies:
-    prop-types "^15.5.7"
-
 react-native-collapsible@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/react-native-collapsible/download/react-native-collapsible-1.4.0.tgz#ec03cac361178319b77bb9993b73677356dd89d2"

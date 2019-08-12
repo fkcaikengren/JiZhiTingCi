@@ -61,13 +61,24 @@ export default class VocaTaskDao {
         this.realm = null
     }
 
+    //单例模式
+    static getInstance() {
+        if(!this.instance) {
+            this.instance = new VocaTaskDao();
+        }
+        return this.instance;
+    }
+
     /**
      * 打开数据库
      * @returns {Promise<null>}
      */
     async open(){
         try{
-            this.realm  = await Realm.open({path: 'VocaTask.realm', schema:[ TaskWordSchema,VocaTaskSchema]})
+            if(!this.realm){
+                this.realm  = await Realm.open({path: 'VocaTask.realm', schema:[ TaskWordSchema,VocaTaskSchema]})
+                console.log(this.realm)
+            }
         }catch(err){
             console.log('VocaTaskDao: 创建VocaTask.realm数据库失败')
             console.log(err)
@@ -192,9 +203,15 @@ export default class VocaTaskDao {
     }
 
     /** 根据错词频数查询单词 */
-    getWordsByWrongNum = (num)=>{
+    getWordsEqWrongNum = (num)=>{
         let words = this.realm.objects('TaskWord').filtered('wrongNum = "'+num+'"')
         console.log(words)
+        return words;
+    }
+    /** 查询错误频数大于num 的所有单词*/
+    getWordsGEWrongNum = (num)=>{
+        let words = this.realm.objects('TaskWord').filtered('wrongNum >= "'+num+'"')
+        // console.log(words)
         return words;
     }
 

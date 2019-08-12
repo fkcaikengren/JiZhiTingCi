@@ -6,6 +6,16 @@ export default class VocaDao{
     constructor(){
         this.realm = null
     }
+
+
+    //单例模式
+    static getInstance() {
+        if(!this.instance) {
+            this.instance = new VocaDao();
+        }
+        return this.instance;
+    }
+
     /** 打开数据库 */
     async open(){
         try{
