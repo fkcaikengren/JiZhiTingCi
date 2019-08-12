@@ -13,7 +13,8 @@ export default class WebUtil {
             var data = JSON.parse(e.data)
             try{
                     
-                if(data.command === 'loadPage'){                    //加载页面
+                if(data.command === 'initPage'){                    //加载页面
+                    
                     initPage(data.payload.text, data.payload.keywords, data.payload.color, data.payload.size)
                     
                 }else if(data.command === 'selectAnswer'){          //选择答案
@@ -51,7 +52,7 @@ export default class WebUtil {
             var data = JSON.parse(e.data)
             try{
                     
-                if(data.command === 'loadPage'){                            //加载页面
+                if(data.command === 'initPage'){                            //加载页面
                     initPage(data.payload.analysis, 
                         data.payload.showRightAnswers,
                         data.payload.rightAnswers, 

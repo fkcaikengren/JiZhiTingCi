@@ -9,6 +9,7 @@ import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-nativ
 import ModalBox from 'react-native-modalbox';
 import Swiper from 'react-native-swiper'
 
+import Loader from '../../component/Loader'
 import styles from './ArticleTabStyle'
 import gstyles from '../../style'
 import ColorRadio from './component/ColorRadio'
@@ -18,7 +19,9 @@ import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
 import ReadUtil from './util/readUtil'
-import FileService from './service/FileService';
+
+
+
 
 /**
  *Created by Jacy on 19/08/09.
@@ -26,26 +29,25 @@ import FileService from './service/FileService';
 class ArticleTabPage extends React.Component {
     constructor(props){
         super(props);
-        this.fileService = new FileService()
-        this.options = []
 
         this.state={
             pageIndex:0,
             showKeyWords:true,
-            showSettingModal:true,
+            showSettingModal:false,
         }
+
+        //隐藏黄色警告
+        console.disableYellowBox=true;
     }
 
     componentDidMount(){
-        this._laodOption()
-    }
-
-    _laodOption = async ()=>{
         const vocaLibName = this.props.navigation.getParam('vocaLibName')
         const articleCode = this.props.navigation.getParam('articleCode')
-        const optionsText = await this.fileService.loadText(`${vocaLibName}/${articleCode}-option.json`)
-        this.options = JSON.parse(optionsText)
+        console.log(vocaLibName)
+        this.props.loadArticle(vocaLibName, articleCode);
     }
+
+ 
 
     //改变字体大小
     _onFontChange = (fontRem)=>{
@@ -163,53 +165,66 @@ class ArticleTabPage extends React.Component {
         const articleType = this.props.navigation.getParam('articleType')
         //Map转对象
         const userAnswersObj = ReadUtil.strMapToObj(this.props.article.userAnswerMap)
+
+        //先加载数据再跳转
+        this.props.loadAnalysis(vocaLibName, articleCode);
         //跳到解析页面
         this.props.navigation.navigate('Analysis',{
             userAnswers:userAnswersObj,
             handin:true,
-            options: this.options,
             vocaLibName,
             articleCode,
             articleType
         })
+        
     }
 
     
     _renderContent = ()=>{
-        
+        const {isLoadPending, isLoadFail} = this.props.article
         //路由参数
         const vocaLibName = this.props.navigation.getParam('vocaLibName')
         const articleCode = this.props.navigation.getParam('articleCode')
         const articleType = this.props.navigation.getParam('articleType')
 
-        if(articleType === Constant.DETAIL_READ){
-            return <Swiper 
-                showsPagination={false}
-                loop={false}
-                onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
-                <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} options={this.options}/>
-                <QuestionPage vocaLibName={vocaLibName} articleCode={articleCode} />
-            </Swiper>
+        if(isLoadFail){
+            return <View style={{flex:1}}>
+                <Text>加载失败...</Text>
+            </View>
+       
         }else{
-            return <Swiper 
-            showsPagination={false}
-            loop={false}
-            onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
-            <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} options={this.options}/>
-        
-        </Swiper>
+            if(!isLoadPending){
+                if(articleType === Constant.DETAIL_READ){
+                    return <Swiper 
+                        showsPagination={false}
+                        loop={false}
+                        onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
+                        <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} />
+                        <QuestionPage vocaLibName={vocaLibName} articleCode={articleCode} />
+                    </Swiper>
+                }else{
+                    return <Swiper 
+                        showsPagination={false}
+                        loop={false}
+                        onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
+                        <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} />
+                    
+                    </Swiper>
+                }
+            }
         }
             
 
     }
 
+   
     render(){
         const {bgThemes, themeIndex, showKeyWords} = this.props.article
         const vocaLibName = this.props.navigation.getParam('vocaLibName')
         const articleCode = this.props.navigation.getParam('articleCode')
         const articleType = this.props.navigation.getParam('articleType')
         return(
-            <View style={{ flex:1, }}>
+            <View style={{ flex:1, backgroundColor:bgThemes[themeIndex]}}>
                 {/* 头部 */}
                 <StatusBar translucent={true} />
                 <Header
@@ -217,7 +232,7 @@ class ArticleTabPage extends React.Component {
                 barStyle="light-content" // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
-                        this.props.navigation.goBack();
+                        // this.props.navigation.goBack();
                     }}></AliIcon> }
                 centerComponent={ this._renderHeaderCenter() }
                 rightComponent={
@@ -267,14 +282,16 @@ class ArticleTabPage extends React.Component {
                 }
                  {/* 答悬浮按钮 */}
                  <TouchableWithoutFeedback onPress={()=>{
+                     //先加载数据再跳转
+                    this.props.loadAnalysis(vocaLibName, articleCode);
                     //跳转
                     this.props.navigation.navigate('Analysis',{
                         handin:false, 
-                        options:this.options,
                         vocaLibName,
                         articleCode,
                         articleType
                     })
+                    
                     }}>
                     <View style={[styles.floatBtn]}>
                         <AliIcon name='iconfontyoujiantou-copy-copy-copy' size={16} color='#303030'></AliIcon>
@@ -287,6 +304,12 @@ class ArticleTabPage extends React.Component {
                 {
                     this._createSettingModal()
                 }
+                {this.props.article.isWebLoading &&
+                    <View style={[styles.loadingView ,{backgroundColor:bgThemes[themeIndex]}]}>
+                       <Loader />
+                    </View>
+                }
+                
             </View>
         );
     }
@@ -300,9 +323,11 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
+    loadArticle : ArticleAction.loadArticle,
+    loadAnalysis: ArticleAction.loadAnalysis,
+    changeWebLoading : ArticleAction.changeWebLoading,
     changeBgtheme : ArticleAction.changeBgtheme,
     changeFontSize : ArticleAction.changeFontSize,
-    toggleKeyWords : ArticleAction.toggleKeyWords
-    
+    toggleKeyWords : ArticleAction.toggleKeyWords,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ArticleTabPage);

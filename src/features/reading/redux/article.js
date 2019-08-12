@@ -14,22 +14,67 @@ const defaultState ={
     themeIndex: 2,
     //字体大小
     fontRem:1,
-    //是否显示关键词
-    showKeyWords:true,
-    //用户的答案
-    userAnswerMap: new Map(),
-     //加载状态
-    isLoadPending:false,
+    
+    showKeyWords:true,       //是否显示关键词
+    articleText:'',          //文章文本 （字符串）
+    keywords:[],             //关键词 （数组）
+    options:[],              //问题选项 （数组）
 
+    analysisText:'',        // 解析文本（字符串）
+    rightAnswers:null,      //正确答案（对象）
+    
+    userAnswerMap: new Map(), //用户的答案 （Map）
+    isLoadPending:false,      //加载状态
+    isLoadFail:false,        //数据加载失败
+    isWebLoading:false       //网页是否正加载
 }
 
 
 export const article =  handleActions({
-
-    //加载任务
+    //加载文章
+    [aAction.LOAD_ARTICLE_START]: (state, action) => ({ 
+        ...state, 
+        isLoadPending: true,
+        isWebLoading:true
+    }),    
+    [aAction.LOAD_ARTICLE_SUCCEED]: (state, action) => ({ 
+        ...state, 
+        articleText: action.articleText,
+        keywords: action.keywords,
+        options: action.options,
+        isLoadPending: false
+    }),    
+    [aAction.LOAD_ARTICLE_FAIL]: (state, action) => ({ 
+        ...state, 
+        isLoadPending: false,
+        isLoadFail: true
+    }),  
+    //加载解析和正确答案
+    [aAction.LOAD_ANALYSIS_START]: (state, action) => ({ 
+        ...state, 
+        isLoadPending: true,
+        isWebLoading:true
+    }),    
+    [aAction.LOAD_ANALYSIS_SUCCEED]: (state, action) => ({ 
+        ...state, 
+        analysisText: action.analysisText,
+        rightAnswers: action.rightAnswers,
+        isLoadPending: false
+    }),    
+  
+    //改变加载状态
+    [aAction.CHANGE_WEB_LOADING]: (state, action) => ({ 
+        ...state, 
+        isWebLoading: action.payload.isWebLoading,
+    }),   
+    //改变主题背景
     [aAction.CHANGE_BGTHEME] : (state, action) => ({ ...state, themeIndex:action.payload.themeIndex }),  
+    //改变字号
     [aAction.CHANGE_FONT_SIZE] : (state, action) => ({ ...state, fontRem:action.payload.fontRem })  ,
-    [aAction.TOGGLE_KEY_WORDS]: (state, action) => ({ ...state, showKeyWords:!state.showKeyWords }),                    //开始加载任务
-    [aAction.CHANGE_USER_ANSWER_MAP]: (state, action) => ({ ...state, userAnswerMap:action.payload.userAnswerMap }),                    //开始加载任务
-   
+    //是否显示关键字
+    [aAction.TOGGLE_KEY_WORDS]: (state, action) => ({ ...state, showKeyWords:!state.showKeyWords }),                   
+    //改变用户答案
+    [aAction.CHANGE_USER_ANSWER_MAP]: (state, action) => ({ ...state, userAnswerMap:action.payload.userAnswerMap }),                    
+    
+
 }, defaultState);

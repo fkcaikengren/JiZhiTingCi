@@ -89,9 +89,9 @@ const VocaHomeStackNav = createStackNavigator(
       initialRouteName: 'ArticleTab',
       headerMode:'none',
       initialRouteParams:{
-        vocaLibName:'read',
-        articleCode:3,
-        articleType:Constant.DETAIL_READ
+        vocaLibName:'CET-4',
+        articleCode:5,
+        articleType:Constant.FOUR_SELECT_READ
       }
     }
   );

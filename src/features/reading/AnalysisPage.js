@@ -4,6 +4,8 @@ import {Header} from 'react-native-elements'
 import { WebView } from 'react-native-webview';
 import {connect} from 'react-redux';
 
+import Loader from '../../component/Loader'
+import * as ArticleAction from './redux/action/articleAction'
 import AliIcon from '../../component/AliIcon'
 import FileService from './service/FileService'
 import * as Constant from './common/constant'
@@ -19,35 +21,19 @@ class AnalysisPage extends React.Component {
         this.fileService = new FileService()
     }
 
-    componentDidMount(){
-        setTimeout(()=>{
-            this._loadAnalysis()
-        }, 100)
-
-    }
-
     
-    // 加载答案、解析
-    _loadAnalysis = async ()=>{
-        const {bgThemes, themeIndex, fontRem} = this.props.article
-        const userAnswers = this.props.navigation.getParam('userAnswers')
+    //发送给Web, 初始化
+    _sendInitMessage = ()=>{
+        const {bgThemes, themeIndex, fontRem,articleText, options,analysisText, rightAnswers, userAnswerMap} = this.props.article
         const handin = this.props.navigation.getParam('handin')
         const articleType = this.props.navigation.getParam('articleType')
-        const vocaLibName = this.props.navigation.getParam('vocaLibName')
-        const articleCode = this.props.navigation.getParam('articleCode')
-        const options = this.props.navigation.getParam('options')
+        const userAnswers = ReadUtil.strMapToObj(userAnswerMap)
         try{
-            //解析
-            const analysis = await this.fileService.loadText(`${vocaLibName}/${articleCode}-analysis.txt`)
-            //正确答案
-            const rightAnswersText = await this.fileService.loadText(`${vocaLibName}/${articleCode}-answer.json`)
-            const rightAnswers = JSON.parse(rightAnswersText)
-            console.log(rightAnswers)
             //答案的格式：文章 or 答案键值对
             let content = null
             let hasArticle = true
             if(articleType===Constant.MULTI_SELECT_READ || articleType===Constant.FOUR_SELECT_READ){
-                content = await this.fileService.loadText(`${vocaLibName}/${articleCode}-article.txt`)
+                content = articleText
             }else{
                 hasArticle = false
                 content = Object.create(null)
@@ -64,9 +50,8 @@ class AnalysisPage extends React.Component {
             // console.log(content)
             //发送给Web
             this.webref.postMessage(
-                //是否显示用户答案，是否显示答案, 显示解析
-                JSON.stringify({command:'loadPage', payload:{
-                    analysis:analysis,
+                JSON.stringify({command:'initPage', payload:{
+                    analysis:analysisText,
                     showRightAnswers:handin,
                     rightAnswers:rightAnswers,
                     formatAnswer:{hasArticle, content},
@@ -95,6 +80,14 @@ class AnalysisPage extends React.Component {
         let data = JSON.parse(e.nativeEvent.data);
         console.log(data)
         switch(data.command){
+            case 'initStart':
+                this._sendInitMessage()
+            break;
+            case 'initFinish':
+                this.props.changeWebLoading(false)
+            break;
+            case 'exit':
+                console.log('退出')
             case 'error':
 
             break;
@@ -102,10 +95,10 @@ class AnalysisPage extends React.Component {
     }
 
     render() {
-        const {bgThemes, themeIndex} = this.props.article
+        const {bgThemes, themeIndex, isLoadPending ,isWebLoading} = this.props.article
         const handin = this.props.navigation.getParam('handin')
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {backgroundColor:bgThemes[themeIndex]}]}>
                 {/* 头部 */}
                 <StatusBar translucent={true} />
                 <Header
@@ -127,27 +120,29 @@ class AnalysisPage extends React.Component {
                 }}
                 />
                 {/* WebView : 用户答案，标准答案，解析*/}
-                <View style={styles.webContainer}>
-                    <WebView
-                        ref={r => (this.webref = r)}
-                        originWhiteList={['*']} 
-                        javaScriptEnabled={true}
-                        // 接受web的数据
-                        onMessage={this._onMessage}
-                        onError={(error) => {
-                            console.log("error", error);
-                        }}
-                        
-                        // 发送给web的脚本
-                        injectedJavaScript={WebUtil.ANALYSIS_LISTEN_JAVASCRIPT}
-                        source={{
-                            uri:'file:///android_asset/web/analysis.html',
-                            baseUrl:'file:///android_asset/web/',
-                        }}
-                        style={ styles.webViewStyle}
+                {!isLoadPending &&
+                    <View style={[styles.webContainer,{backgroundColor:bgThemes[themeIndex]}]}>
+                        <WebView
+                            ref={r => (this.webref = r)}
+                            originWhiteList={['*']} 
+                            javaScriptEnabled={true}
+                            // 接受web的数据
+                            onMessage={this._onMessage}
+                            onError={(error) => {
+                                console.log("error", error);
+                            }}
                             
-                    />
-                </View>
+                            // 发送给web的脚本
+                            injectedJavaScript={WebUtil.ANALYSIS_LISTEN_JAVASCRIPT}
+                            source={{
+                                uri:'file:///android_asset/web/analysis.html',
+                                baseUrl:'file:///android_asset/web/',
+                            }}
+                            style={[styles.webViewStyle, {backgroundColor:bgThemes[themeIndex]}]}
+                                
+                        />
+                    </View>
+                }
                 {handin &&
                     <View style={styles.bottomBar}>
                         <TouchableWithoutFeedback>
@@ -161,6 +156,11 @@ class AnalysisPage extends React.Component {
                         </TouchableWithoutFeedback>
                     </View>
                 }
+                {isWebLoading &&
+                    <View style={[styles.loadingView, {backgroundColor:bgThemes[themeIndex]}]}>
+                       <Loader />
+                    </View>
+                }
             </View>
         )
     }
@@ -172,6 +172,7 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
-    
+    loadAnalysis: ArticleAction.loadAnalysis,
+    changeWebLoading: ArticleAction.changeWebLoading
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);

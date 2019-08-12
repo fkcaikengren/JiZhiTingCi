@@ -145,8 +145,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-spinkit')
     implementation project(':react-native-webview')
-    
     implementation project(':react-native-cardview')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-svg')

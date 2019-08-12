@@ -47,7 +47,6 @@
                 font-family:'MONACO';
                 font-size: 1rem;
                 color: #303030;
-                background-color: #F7F5D6;
                 overflow-x: hidden; 
                 overflow-y: auto;
 
@@ -116,16 +115,32 @@
             
         </style>
 
-
+        <script src="./js/zepto.min.js" type="text/javascript"></script>
     </head>
     <body>
         <div id='container'>
         </div>
     </body>
-    <script src="./js/zepto.min.js" type="text/javascript"></script>
     <script src="./js/article.js" type="text/javascript"></script>
     <script>
+        //页面加载完毕
+        Zepto(function($){
+            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initStart', payload:null }));
 
+            // var text= "##One in six. Believe it or not, that’s the number of Americans who struggle with hanger To make tomorrow a little better, Feeding Action Month. As part of its 30 Ways in 30 Days program, It’s asking 48点击答题 across the country to help the more than 200 food banks and 61,000 agencies in its network provide low-income individuals and families with the fuel they need to 49点击答题 .\r\n##It’s the kind of work that’s done every day at St. Andrew’s Episcopal Church in San Antonio, People who 50点击答题 at its front door on the first and third Thursdays of each month aren’t looking for God-they’re there for something to eat, St. Andrew’s runs a food pantry(食品堂)that 51点击答题 the city and several of the 52点击答题 towns. Janet Drane is its manager.\r\n##In the wake of the 53点击答题 .the number of families in need of food assistance began to grow. It is 54点击答题 that 49 million Americans are unsure of where they will find their next meal What’s most surprising is that 36% of them live in 55点击答题 where at least one adult is working.“It used to be that one job was all you needed.” says St. Andrew’s Drane.“The people we see now have three or four part-time jobs and they’re still right on the edge 56点击答题 .”\r\n"
+            // var keywords=["individuals","Church","pantry","unsusre","towns"]
+            // var  color = "#F7F5D6"
+            // var size  = "1rem"
+            // initPage(text, keywords, color, size)
+
+            document.getElementsByTagName('body').onbeforeunload = function(){
+                //退出页面
+                window.ReactNativeWebView.postMessage(JSON.stringify({command:'exit', payload:null }));
+            }
+
+        })
+        
+        
     </script>
 
 </html>

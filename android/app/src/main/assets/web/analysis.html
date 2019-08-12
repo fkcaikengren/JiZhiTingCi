@@ -43,7 +43,6 @@
             html{
                 font-family:'MONACO';
                 color: #303030;
-                background-color: #F7F5D6;
                 overflow-x: hidden; 
                 overflow-y: auto;
 
@@ -100,7 +99,7 @@
             }
             #analysis{
                 width: 100%;
-                padding-bottom: 20px;
+                padding-bottom: 40px;
             }
 
             .answer{
@@ -151,7 +150,7 @@
 
 
     </head>
-    <body>
+    <body >
         <div id='container'>
                 <div id="rightAnswer">
                 </div>
@@ -162,6 +161,19 @@
     <script src="./js/zepto.min.js" type="text/javascript"></script>
     <script src="./js/analysis.js" type="text/javascript"></script>
     <script>
+         //页面加载完毕
+         Zepto(function($){
+            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initStart', payload:null }));
+
+            document.getElementsByTagName('body').onbeforeunload = function(){
+                //退出页面
+                window.ReactNativeWebView.postMessage(JSON.stringify({command:'exit', payload:null }));
+            }
+
+        })
+
+
+
 
 //         var analysisText = `##【解析】
 // ##这篇文章选自Time杂志，讲述的是美国采取了一系列的食品援助行动为低收入者提供食物，经济萧条让越来越多的人陷入温饱危机，其中甚至包括有工作的人。
@@ -208,9 +220,12 @@
 //         initPage(analysisText,showRightAnswers, rightAnswers,{hasArticle:true, content:answerArticle}, 
 //             showUserAnswers,
 //             userAnswers , 'pink', '1rem')
-//         // toggleRightAnswers()
-//         // toggleRightAnswers()
-//         // toggleRightAnswers()
+        // console.log(document.getElementsByTagName('body'))
+        // document.getElementsByTagName('body').onbeforeunload = function(){
+        //     //退出前清理发送退出信息
+        //     window.ReactNativeWebView.postMessage(JSON.stringify({command:'exit', payload:null }));
+        // }
+
     </script>
 
 </html>

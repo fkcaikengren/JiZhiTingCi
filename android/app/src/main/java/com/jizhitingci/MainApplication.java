@@ -19,7 +19,7 @@ import com.facebook.soloader.SoLoader;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage; 
 import com.kishanjvaghela.cardview.RNCardViewPackage;
-
+import com.react.rnspinkit.RNSpinkitPackage; 
 
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
@@ -53,7 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNGestureHandlerPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
-            new RNCardViewPackage()
+            new RNCardViewPackage(),
+            new RNSpinkitPackage()   
       );
     }
 

@@ -64,6 +64,10 @@
         //统计正确率
         cardBarNode.append($('<span>正确率: '+acc.fontcolor("#01D867")+'</span>'))
 
+        //完成初始化
+        setTimeout(function(){
+            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initFinish', payload:null }));
+        },100)
     }
  }
 

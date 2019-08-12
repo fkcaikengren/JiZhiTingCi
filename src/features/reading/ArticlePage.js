@@ -1,5 +1,5 @@
 import React from 'react';
-import { View,Text, Easing, TouchableWithoutFeedback} from 'react-native';
+import { View,Text, Easing,Button, TouchableWithoutFeedback} from 'react-native';
 import ModalBox from 'react-native-modalbox';
 import { WebView } from 'react-native-webview';
 import {connect} from 'react-redux';
@@ -30,15 +30,11 @@ class ArticlePage extends React.Component {
             //选中的问题 
             selectedBlank:"48",
         }
-        this.options = props.options
-        
     }
 
     componentDidMount(){
-        setTimeout(()=>{
-            this._loadArticle()
-        }, 100)
     }
+
 
     shouldComponentUpdate(nextProps, nextState) {
         const {bgThemes, themeIndex, fontRem, showKeyWords} = this.props.article
@@ -82,13 +78,13 @@ class ArticlePage extends React.Component {
 
     // 创建答案选项面板
     _createAnswerOptionModal = () =>{
-        console.log(this.options)
-        const options = []
+        const {options} = this.props.article
+        const radioOptions = []
         if(this.props.articleType===Constant.FOUR_SELECT_READ){
-            const obj = ReadUtil.getOptionObj(this.options, this.state.selectedBlank)
+            const obj = ReadUtil.getOptionObj(options, this.state.selectedBlank)
             for(let k in obj){
                 if(k.length === 1){
-                options.push({ 
+                radioOptions.push({ 
                     identifier:k, 
                     content:obj[k]
                 })
@@ -112,7 +108,8 @@ class ArticlePage extends React.Component {
                 {this.props.articleType===Constant.MULTI_SELECT_READ &&
                     <View style={[gstyles.r_start,styles.answerPanel]}>
                     {
-                        this.options.map((item, index)=>{
+                        options.map((item, index)=>{
+
                             let selected = null
                             if(this._isSelectedOption(item)){
                                 selected = {color:'#1890FFAA'}
@@ -131,7 +128,7 @@ class ArticlePage extends React.Component {
                 {this.props.articleType===Constant.FOUR_SELECT_READ &&
                     <View style={[gstyles.c_start,{marginTop:10}]}>
                         <OptionRadio 
-                            options= {options}
+                            options= {radioOptions}
                             onChange={this._onChangeOption}
                             bgColor={'#CCC'}/>
                     </View>
@@ -184,30 +181,7 @@ class ArticlePage extends React.Component {
         this._closeAnswerModal()
     }
 
-    // 加载文章
-    _loadArticle = async ()=>{
-        const {bgThemes, themeIndex, fontRem} = this.props.article
-        try{
-            const text = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-article.txt`)
-            const keywordText = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-keyword.json`)
-            // console.log(keywordText)
-            const keywords = JSON.parse(keywordText)
-            
-            //发送文本给Web
-            this.webref.postMessage(
-                //文本，关键字
-                JSON.stringify({command:'loadPage', payload:{
-                    text:text, 
-                    keywords:keywords,
-                    color:bgThemes[themeIndex],
-                    size:fontRem+'rem'
-                }})
-            );
-        }catch(e){
-            console.log("ArticlePage : 文本解析出错: keywordText, optionText")
-            console.log(e)
-        }
-    }
+
 
 
     //查询单词
@@ -215,11 +189,34 @@ class ArticlePage extends React.Component {
         alert(word)
     }
 
+    // 首次发送
+    _sendInitMessage = ()=>{
+        const { articleText, keywords,bgThemes, themeIndex, fontRem} = this.props.article
+        //发送文本给Web
+        this.webref.postMessage(
+            //文本，关键字
+            JSON.stringify({command:'initPage', payload:{
+                text:articleText, 
+                keywords:keywords,
+                color:bgThemes[themeIndex],
+                size:fontRem+'rem'
+            }})
+        );
+    }
 
     _onMessage = (e) =>{
         let data = JSON.parse(e.nativeEvent.data);
         console.log(data)
         switch(data.command){
+            case 'initStart':
+                this._sendInitMessage()
+            break;
+            case 'initFinish':
+                this.props.changeWebLoading(false)
+            break;
+            case 'exit':
+                console.log('退出')
+            break;
             case 'selectBlank':
                 this._clickBlank(data.payload.blankNum)
             break;
@@ -229,15 +226,12 @@ class ArticlePage extends React.Component {
         }
     }
 
-
     render() {
-        
+        const {bgThemes, themeIndex} = this.props.article
         return (
-
-            <View style={styles.container}>
-                
+            <View style={[styles.container, bgThemes[themeIndex] ]}>
                 {/* 阅读文章 */}
-                <View style={styles.webContainer}>
+                <View style={[styles.webContainer, {backgroundColor:bgThemes[themeIndex]}]}>
                     <WebView
                         nativeConfig={{props: {webContentsDebuggingEnabled: true}}} 
                         ref={r => (this.webref = r)}
@@ -255,7 +249,7 @@ class ArticlePage extends React.Component {
                             // <script src='./js/zepto.min.js'/>会以这个为根目录查找资源，否则引入的zepto.js等无效
                             baseUrl:'file:///android_asset/web/',  
                         }}
-                        
+                        style={[{backgroundColor:bgThemes[themeIndex]}]}
                     /> 
                 </View>
                 {(this.props.articleType===Constant.FOUR_SELECT_READ || this.props.articleType===Constant.MULTI_SELECT_READ) &&
@@ -272,8 +266,9 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
+    changeWebLoading : ArticleAction.changeWebLoading,
     changeBgtheme : ArticleAction.changeBgtheme,
     changeFontSize : ArticleAction.changeFontSize,
-    changeUserAnswerMap: ArticleAction.changeUserAnswerMap
+    changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ArticlePage);

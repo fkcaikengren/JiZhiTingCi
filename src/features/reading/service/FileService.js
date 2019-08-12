@@ -4,12 +4,12 @@
 import RNFetchBlob from 'rn-fetch-blob'
 const Dirs = RNFetchBlob.fs.dirs
 const ARTICLE_ROOT = Dirs.DocumentDir + '/reading/'
+const URL = 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com/'
 
 export default class FileService{
     constructor(){
 
     }
-
 
     loadText = async (filename)=>{
         const path = ARTICLE_ROOT+filename
@@ -27,7 +27,7 @@ export default class FileService{
                     fileCache:true,
                     path : path
                 })
-                .fetch('GET', 'https://test1-1259360612.cos.ap-chengdu.myqcloud.com/'+filename, {
+                .fetch('GET', URL+filename, {
                     // more headers  ..
                 })
               

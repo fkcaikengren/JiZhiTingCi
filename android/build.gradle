@@ -34,7 +34,11 @@ allprojects {
         maven {
             // stetho-realm的地址源
             url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
-        }       
+        }     
+
+        maven {                                                                                                             
+            url "https://jitpack.io"                                                                                       
+        }      
 
     }
 }

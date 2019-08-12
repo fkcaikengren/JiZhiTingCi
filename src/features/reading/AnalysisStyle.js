@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
         borderRadius:3,
         color:'#303030',
         marginRight:8,
+    },
+
+    loadingView:{
+        flex:1,
+        height:height,
+        width:width,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        position:'absolute',
+        bottom:0,
+        backgroundColor:'#FDFDFD'
     }
 });
 

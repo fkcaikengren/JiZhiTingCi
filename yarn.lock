@@ -9599,11 +9599,6 @@ react-native-linear-gradient@^2.5.4:
   resolved "https://registry.npm.taobao.org/react-native-linear-gradient/download/react-native-linear-gradient-2.5.4.tgz#dce133526f5a5510a639af94544f1ed0c984bd1e"
   integrity sha1-3OEzUm9aVRCmOa+UVE8e0MmEvR4=
 
-react-native-loader@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npm.taobao.org/react-native-loader/download/react-native-loader-1.2.1.tgz#e08589a89cfcd076595b9301c1d618f54da73329"
-  integrity sha1-4IWJqJz80HZZW5MBwdYY9U2nMyk=
-
 react-native-modal-popover@^0.0.12:
   version "0.0.12"
   resolved "https://registry.npm.taobao.org/react-native-modal-popover/download/react-native-modal-popover-0.0.12.tgz#5c0b5e9e0323490c3c5867821fc94b6582bfa3dc"
@@ -9674,6 +9669,13 @@ react-native-sound@^0.10.12:
   version "0.10.12"
   resolved "https://registry.npm.taobao.org/react-native-sound/download/react-native-sound-0.10.12.tgz#f912d6f9d6e9e2b42b391e0226787628d940f01a"
   integrity sha1-+RLW+dbp4rQrOR4CJnh2KNlA8Bo=
+
+react-native-spinkit@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npm.taobao.org/react-native-spinkit/download/react-native-spinkit-1.4.1.tgz#348e8b72b68741abdabe43fc14a9d69cd6a606de"
+  integrity sha1-NI6LcraHQavavkP8FKnWnNamBt4=
+  dependencies:
+    prop-types "^15.5.8"
 
 react-native-status-bar-height@^2.2.0:
   version "2.3.1"

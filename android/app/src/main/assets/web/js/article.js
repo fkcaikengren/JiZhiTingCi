@@ -82,7 +82,7 @@ var SearchedWordNode = null   //正被查询的单词节点
 
     }); //结束添加
 
-    container.append($('<view ></view>').css({width:'100%', height:140}))
+    container.append($('<div ></div>').css({width:'100%', height:200}))
     setTimeout(function(){
         //遍历，调整最后一行的间距
         // console.log(EndNodes)
@@ -112,8 +112,14 @@ var SearchedWordNode = null   //正被查询的单词节点
             }
 
         })
+
+         //完成初始化
+        setTimeout(function(){
+            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initFinish', payload:null }));
+        },100)
         
     }, 100)
+   
 }
 
 

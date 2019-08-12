@@ -460,10 +460,11 @@ yarn add react-native-linear-gradient
 
 
 
-### 安装react-native-loader
+### 安装react-native-spinkit
 
 ```
-yarn add react-native-loader
+yarn add react-native-spinkit
+手动link
 ```
 
 ### 安装react-native-webview 5.8.0
