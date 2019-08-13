@@ -260,4 +260,122 @@ export default class VocaTaskService {
 
         return wrongArr
     }
+
+    /**
+     *  获取PASS列表单词
+     * @returns {Array}
+     */
+    getPassList = () =>{
+        const passArr = []
+        try{
+            //查询
+            const tasks = this.vtd.getLearnedTasks()
+            // console.log(tasks)
+            for(let task of tasks){ //遍历任务
+                let hasPassedWord = false
+                let count = 0
+                const header = {
+                    isHeader: true,
+                    checked:false,
+                    title: ''
+                }
+                passArr.push(header)
+                const words = task.words
+                console.log(words)
+                for(let i in words){
+                    if(words[i].passed){
+                        count++
+                        passArr.push({
+                            isHeader: false,
+                            checked:false,
+                            content: words[i],
+                        })
+                        if(!hasPassedWord){
+                            hasPassedWord = true
+                        }
+                    }
+                }
+                header.title = `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${count}词`
+                //任务中没有passed 单词
+                if(!hasPassedWord){
+                    passArr.pop()
+                }
+            }
+
+        }catch (e) {
+            console.log(e)
+            console.log('获取PASS列表失败')
+        }
+
+        return passArr
+    }
+
+
+    /**
+     *  获取已学单词列表
+     * @returns {Array}
+     */
+    getLearnedList = ()=>{
+        const learnedArr = []
+        try{
+            const tasks = this.vtd.getLearnedTasks()
+            for(let task of tasks) { //遍历任务
+                const words = task.words
+                const header = {
+                    isHeader: true,
+                    checked: false,
+                    title: `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
+                }
+                learnedArr.push(header)
+
+                for (let i in words) {
+                    learnedArr.push({
+                        isHeader: false,
+                        checked: false,
+                        content: words[i],
+                    })
+                }
+            }
+        }catch (e) {
+            console.log(e)
+            console.log('获取已学单词列表失败')
+        }
+
+        return learnedArr
+    }
+
+
+    /**
+     *  获取未学单词列表
+     * @returns {Array}
+     */
+    getNewList = ()=>{
+        const newArr = []
+        try{
+            const tasks = this.vtd.getNotLearnedTasks()
+            for(let task of tasks) { //遍历任务
+                const words = task.words
+                const header = {
+                    isHeader: true,
+                    checked: false,
+                    title: `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
+                }
+                newArr.push(header)
+
+                for (let i in words) {
+                    newArr.push({
+                        isHeader: false,
+                        checked: false,
+                        content: words[i],
+                    })
+                }
+            }
+        }catch (e) {
+            console.log(e)
+            console.log('获取未学单词列表失败')
+        }
+
+        return newArr
+    }
+
 }

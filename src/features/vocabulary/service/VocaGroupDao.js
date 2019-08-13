@@ -77,7 +77,9 @@ export default class VocaGroupDao{
      */
     async open(){
         try{
-            this.realm  = await Realm.open({path: 'VocaGroup.realm', schema:[ GroupWordSchema,GroupSectionSchema, VocaGroupSchema]})
+            if(!this.realm){
+                this.realm  = await Realm.open({path: 'VocaGroup.realm', schema:[ GroupWordSchema,GroupSectionSchema, VocaGroupSchema]})
+            }
         }catch(err){
             console.log('Error:打开realm数据库失败, 创建VocaGroupDao对象失败')
             console.log(err)
@@ -182,9 +184,7 @@ export default class VocaGroupDao{
      * @returns {Realm.Results<any> | never}
      */
     getAllGroups = ()=>{
-        let groups = [];
-        groups = this.realm.objects('VocaGroup');
-        return groups;
+        return this.realm.objects('VocaGroup');
     }
 
 
@@ -223,6 +223,19 @@ export default class VocaGroupDao{
         return success;
     }
 
+    /**
+     *  判断是否是默认生词本
+     * @param groupName
+     * @returns {boolean|VocaGroupDao.isDefault|VocaGroupSchema.properties.isDefault|{default, optional, type}|boolean}
+     */
+    isDefault = (groupName)=>{
+        const defaultGroup = this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
+        if(defaultGroup){
+            return defaultGroup.isDefault
+        }
+        return false
+    }
+    
 
     /**
      * 添加生词到默认生词本

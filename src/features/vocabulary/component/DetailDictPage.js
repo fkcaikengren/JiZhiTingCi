@@ -62,18 +62,6 @@ const styles = StyleSheet.create({
 
 export default class DetailDictPage extends Component {
 
-  static propTypes = {
-    word: PropTypes.string.isRquired,
-    vocaDao: PropTypes.object.isRequired,
-    vocaGroupDao: PropTypes.object,
-  }
-
-  // 组件参数默认属性
-  static defaultProps = {
-    word:'',
-    vocaDao:null,
-    vocaGroupDao: null,
-  }
 
   constructor(props){
     super(props);
@@ -123,7 +111,7 @@ export default class DetailDictPage extends Component {
       enPronUrl: properties?properties[0].enPronUrl:'',
       amPhonetic: properties?properties[0].amPhonetic:'',
       amPronUrl: properties?properties[0].amPronUrl:'',
-      tran: '' //必须要
+      tran: this.props.tran?this.props.tran: null //如果没有外界传入，则需要查一遍
     }
     const vocaGroupDao = this.props.vocaGroupDao?this.props.vocaGroupDao:this.vocaGroupDao
     if(vocaGroupDao.addWordToDefault(groupWord)){
@@ -210,6 +198,19 @@ export default class DetailDictPage extends Component {
       </Container>
     );
   }
+}
 
 
+DetailDictPage.propTypes = {
+  word: PropTypes.string.isRquired,
+  vocaDao: PropTypes.object.isRequired,
+  vocaGroupDao: PropTypes.object,
+  tran: PropTypes.string
+}
+
+// 组件参数默认属性
+DetailDictPage.defaultProps = {
+  word:'',
+  vocaDao:null,
+  vocaGroupDao: null,
 }

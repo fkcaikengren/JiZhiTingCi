@@ -1,73 +1,21 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, FlatList} from 'react-native';
-import { Container, Header, Body, Button} from "native-base";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
-
+import { StatusBar, View, Text, FlatList, TouchableWithoutFeedback} from 'react-native';
+import {Header, CheckBox , Button} from 'react-native-elements'
+import VocaGroupDao from './service/VocaGroupDao'
 import {playSound} from './service/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
+
+import _ from 'lodash'
+import styles from './GroupVocaStyle'
+import gstyles from '../../style'
+
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const ITEM_HEIGHT = 80; //item的高度
-const HEADER_HEIGHT = 24;  //分组头部的高度
-const SEPARATOR_HEIGHT = 1;  //分割线的高度
-
-const styles = StyleSheet.create({
-    container:{
-        backgroundColor:'#EFEFEF'
-    },
-    center:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    c_center:{
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    iconText:{
-        width:32,
-        height:32, 
-        backgroundColor:'#1890FF', 
-        textAlign:'center', 
-        lineHeight:32, 
-        borderRadius:50,
-    },
-    headerView: {
-        justifyContent:'center',
-        height: HEADER_HEIGHT,
-        paddingLeft: 20,
-        backgroundColor: '#EFEFEF'
-    },
-    headerText: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#303030'
-    },
-    itemView: {
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        height: ITEM_HEIGHT,
-        backgroundColor:'#FFF',
-        borderBottomWidth:1,
-        borderColor:'#EFEFEF'
-    },
-    rowBetween: {
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        width:width-40,
-    }, 
-    rowStart:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'flex-start',
-    }
-});
+const ITEM_HEIGHT = 60;         //item的高度
+const HEADER_HEIGHT = 24;       //分组头部的高度
+const SEPARATOR_HEIGHT = 1;     //分割线的高度
 
 /*
     总结：禁止在react-navigation里面传递RealmObject对象， 这样对导致Realm对象留在导航里。
@@ -78,23 +26,39 @@ const styles = StyleSheet.create({
 export default class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
-        this.flatData = []
-        this.sideSections = []
-        this.sectionIndex = []
-        this.stickyHeaderIndices  = []
+        this.vgDao = VocaGroupDao.getInstance();
+
+        this.state = {
+            onEdit:false,
+            checked:false,
+            flatData:[],
+            sideSections:[], 
+            sectionIndex:[], 
+            stickyHeaderIndices:[]
+        }
+        console.disableYellowBox=true
     }
 
     componentDidMount(){
+        this._formatData()
     }
 
     componentWillUnmount(){
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if(this.state.onEdit == true && nextState.onEdit == false){
+          //清理check
+          this._cancleCheck()
+          return false
+        }
+        return true
+    }
+    
     _formatData = () => {          //数据预处理
-        const {getParam} = this.props.navigation
-        let dao = getParam('dao')
-        let groupName = getParam('groupName')
-        let group = dao.getGroup(groupName);
+        // const {getParam} = this.props.navigation
+        // const groupName = getParam('groupName')
+        const group = this.vgDao.getGroup('Mou');
         let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
@@ -107,8 +71,10 @@ export default class GroupVocaPage extends Component {
         //arr, 吸顶头部索引
         let stickyHeaderIndices = [];
 
-        console.log('sections:')
-        console.log(sections)
+        //对section排序
+        sections = _.sortBy(sections, ['section'])
+
+        //格式化sections
         for (let i = 0; i < sections.length; i++) {        //遍历章节
             
             //给右侧的滚动条进行使用的
@@ -122,7 +88,11 @@ export default class GroupVocaPage extends Component {
             totalSize ++;
             for (let w of sections[i].words) { //遍历单词
                 flatData.push({
-                    type:'word',  word:w.word, isHidden:w.isHidden, tran:w.tran, 
+                    type:'word',
+                    word:w.word,
+                    checked:false,
+                    isHidden:w.isHidden,
+                    tran:w.tran,
                     enPhonetic:w.enPhonetic, 
                     enPronUrl:w.enPronUrl
                 });
@@ -131,107 +101,173 @@ export default class GroupVocaPage extends Component {
             
         }
         // console.log(sectionIndex1); [0, 8, 16, 24, 32, 37, 45, 53, 61, 69]
-        
-        this.flatData = flatData, 
-        this.sideSections = sideSections
-        this.sectionIndex = sectionIndex
-        this.stickyHeaderIndices = stickyHeaderIndices
-        console.log('this.flatData:');
-        console.log(this.flatData);
-        console.log('this.sideSections:');
-        console.log(this.sideSections);
+        this.setState({flatData, sideSections, sectionIndex, stickyHeaderIndices})
+       
+    }
+    
+    // 取消check
+    _cancleCheck = ()=>{
+        const data = [...this.state.flatData]
+        for(let d of data){
+            d.checked = false
+        }
+        this.setState({flatData:data, checked:false})
+    }
+    
+    //多选
+    _selectItem = (index)=>{
+        const data = [...this.state.flatData]
+        let checked = this.state.checked 
+        if(data[index].checked){//取消
+            data[index].checked = false
+            let exist = false
+            //遍历判断是否存在被选中的
+            for(let d of data){
+                if(d.checked){
+                exist = true
+                break;
+                }
+            }
+            if(!exist){
+                checked = false
+            }
+        }else{                  //选中
+            data[index].checked = true
+        }
+        //如果首次被选
+        if(this.state.checked == false){
+            checked = true
+        }
+        this.setState({flatData:data, checked})
+    }
+
+    
+
+    //切换编辑状态
+    _toggleEdit = ()=>{
+        this.setState({onEdit:!this.state.onEdit})
     }
 
     render() {
-        this._formatData()
+        const groupName = 'Mou' //this.props.getParam('groupName')
+        const showCheckStyle = this.state.onEdit?{
+            backgroundColor:'#FFE957',
+            borderColor:'#FFE957',
+        }:null
         return (
-            <Container style={styles.container}>
-                <StatusBar
-                    translucent={true}
-                    // hidden
+            <View style={styles.container}>
+                <StatusBar translucent={true} />
+                <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content" // or directly
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }}></AliIcon> }
+                centerComponent={{ text: groupName, style: { color: '#303030', fontSize:18 } }}
+                rightComponent={
+                    <TouchableWithoutFeedback onPress={this._toggleEdit}>
+                         <Text style={[styles.editBtn,showCheckStyle]}>编辑</Text>
+                    </TouchableWithoutFeedback>
+                }
+                containerStyle={{
+                    backgroundColor: '#FCFCFC',
+                    justifyContent: 'space-around',
+                }}
                 />
-
-                <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
-                {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
-                    <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
-                            this.props.navigation.goBack();
-                        }}></AliIcon>
-                    </Button>
-                    <Body style={{flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',}}>
-                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>我的生词</Text>
-                    </Body>
-                </Header> 
-                {(this.flatData.length > 0) &&
-                        <View >
-                            <FlatList
-                                ref={ref => this._list = ref}
-                                data={this.flatData}
-                                renderItem={this._renderItem}
-                                getItemLayout={this._getItemLayout}
-                                keyExtractor={item => item.type}
-                                stickyHeaderIndices={this.stickyHeaderIndices}/> 
-                                
-                                <IndexSectionList
-                                sections={ this.sideSections}
-                                onSectionSelect={this._onSectionselect}/> 
-                        </View>
-                    }
+               
+                {this.state.flatData.length > 0 &&
+                    <View style={{flex:1}}>
+                        <FlatList
+                            ref={ref => this._list = ref}
+                            data={this.state.flatData}
+                            renderItem={this._renderItem}
+                            extraData={this.state}
+                            getItemLayout={this._getItemLayout}
+                            keyExtractor={item => item.type}
+                            stickyHeaderIndices={this.state.stickyHeaderIndices}/> 
+                        <IndexSectionList
+                        sections={ this.state.sideSections}
+                        onSectionSelect={this._onSectionselect}/> 
+                    </View>
+                }
               
-            </Container>
+            </View>
         );
     }
 
 
 
      //这边返回的是A,0这样的数据
-     _onSectionselect = (section, index) => {
+    _onSectionselect = (section, index) => {
         //跳转到某一项
-        console.log('=>'+index);
-        this._list.scrollToIndex({animated: false, index: this.sectionIndex[index], viewPosition:0});
+        // console.log('=>'+index);
+        this._list.scrollToIndex({animated: false, index: this.state.sectionIndex[index], viewPosition:0});
     }
 
-    
+    //data:flatData, index: item的下标
     _getItemLayout = (data, index)=> {
-        let [length, separator, header] = [ITEM_HEIGHT, SEPARATOR_HEIGHT, HEADER_HEIGHT];
+        let length = ITEM_HEIGHT
+        if(this.state.sectionIndex.includes(index)){
+            console.log(`include --- ${index}`)
+            length = HEADER_HEIGHT
+        }
+
         //  计算几个header,设计偏移量算法
         // sectionIndex [0, 8, 16, 24, 32, 37, 45, 53, 61, 69]
-        let headCount = 0;
-        for (let i in this.sectionIndex){
-            if(this.sectionIndex[i] >= index){
-                headCount = i;
+        let headerCount = 0;
+        for (let i in this.state.sectionIndex){
+            if(this.state.sectionIndex[i] < index){
+                headerCount++;
+            }else{
                 break;
             }
         }
-        // console.log(`index:${index}-headCount: ${headCount}`); //所有项的索引，section个数
-        return {index, offset:(length+separator)*(index-headCount) + header*(headCount) , length};
+        const offset = (index-headerCount)*(ITEM_HEIGHT+SEPARATOR_HEIGHT) + headerCount*(HEADER_HEIGHT+SEPARATOR_HEIGHT)
+        console.log(`offset : ${offset}`); 
+        return {index, offset, length};
     }
 
     _renderItem = ({item,index}) => {
         let flag = (item.type === 'chapter');
+        const itemPaddingLeft = this.state.onEdit?0:20
+        const bodyWidth = this.state.onEdit?width-60:width-40
         return (
                 flag
                 ?<View key={'h'+index} style={styles.headerView}>
                         <Text style={styles.headerText}>{item.section}</Text>
                     </View>
-                :<View key={'w'+index} style={styles.itemView}>
-                    <View style={styles.rowBetween}>
-                        <View style={styles.rowStart}>
-                            <Text style={{fontSize:16, color:'#1890FF'}}>1</Text>
-                            <Text style={{fontSize:16, color:'#303030', marginLeft:10}}>{item.word}</Text>
+                :<View style={[gstyles.r_start, styles.itemView, {paddingLeft:itemPaddingLeft}]}>
+                    {this.state.onEdit &&
+                        <CheckBox
+                        containerStyle={styles.checkBox}
+                        onPress={()=>{this._selectItem(index)}}
+                        checked={item.checked}
+                        iconType='ionicon'
+                        checkedIcon='ios-checkmark-circle'
+                        uncheckedIcon='ios-radio-button-off'
+                        checkedColor='#F29F3F'
+                        />
+                    }
+                    <View key={'w'+index} style={[gstyles.c_center, {width:bodyWidth}]}>
+                        <View style={[gstyles.r_between, {width:'100%'}]}>
+                            <View style={[gstyles.r_start]}>
+                                    <Text style={{fontSize:16, color:'#303030'}}>{item.word}</Text>
+                                    <Text style={{fontSize:12, color:'#AAA', fontWeight:'300', marginLeft:10}}>{`英 ${item.enPhonetic}`}</Text>
+                            </View>
+                            <AliIcon name='shengyin' size={24}  color='#666' onPress={()=>{
+                                playSound(item.enPronUrl)
+                            }} />
                         </View>
-                        <MaterialIcons name='volume-up' size={24} color='#3F51B5'  onPress={()=>{
-                            playSound(item.enPronUrl)
-                        }}/>
-                    </View>
-                    <View style={[styles.rowStart,{width:width-40}]}>
-                        <Text numberOfLines={1} style={{fontSize:14, color:'#606060', }}>{item.tran}</Text>
+                        <View style={[gstyles.r_start,{width:'100%'}]}>
+                            <Text numberOfLines={1} style={{fontSize:14, color:'#666', }}>{item.tran}</Text>
+                        </View>
                     </View>
                 </View>
+                    
         )
         
     }
 }
+
+

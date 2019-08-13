@@ -28,6 +28,8 @@ export default class VocaSearchPage extends Component {
     }
     this.vocaDao = new VocaDao();
     this.vocaGroupDao = new VocaGroupDao()
+
+    console.disableYellowBox = true;
   }
 
   componentDidMount(){

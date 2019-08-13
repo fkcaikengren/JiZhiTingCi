@@ -77,7 +77,7 @@ export default class VocaTaskDao {
         try{
             if(!this.realm){
                 this.realm  = await Realm.open({path: 'VocaTask.realm', schema:[ TaskWordSchema,VocaTaskSchema]})
-                console.log(this.realm)
+                // console.log(this.realm)
             }
         }catch(err){
             console.log('VocaTaskDao: 创建VocaTask.realm数据库失败')
@@ -159,6 +159,13 @@ export default class VocaTaskDao {
         this.realm.write(fn)
     }
 
+    /**
+     *  查询全部任务
+     * @returns {Realm.Results<any> | never}
+     */
+    getAllTasks = ()=>{
+        return this.realm.objects('VocaTask')
+    }
 
     /**
      * 获取今日任务 (具有一定顺序)
@@ -190,7 +197,7 @@ export default class VocaTaskDao {
         return vocaTasks;
     }
 
-    //-----------------------------------------------
+
     /**
      * 根据taskOrder获取任务
      * @param taskOrder

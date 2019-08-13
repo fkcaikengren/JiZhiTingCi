@@ -6,6 +6,14 @@ const styles = StyleSheet.create({
         backgroundColor:'#FDFDFD',
         flex: 1
     },
+    editBtn:{
+        fontSize:14,
+        color:'#303030',
+        borderWidth:StyleSheet.hairlineWidth,
+        padding:2,
+        borderRadius:2,
+        borderColor:'#555'
+    },
     tabBar:{
         flexDirection:'row',
         justifyContent:'space-around',
@@ -49,11 +57,13 @@ const styles = StyleSheet.create({
     },
     itemCenter:{
         flex:4,
-        paddingLeft:10
+        paddingLeft:10,
+        paddingVertical:10,
     },
  
     itemRight:{
         flex:1,
+        paddingLeft:10,
     },
     checkBox:{
         margin:0,
@@ -64,10 +74,14 @@ const styles = StyleSheet.create({
         fontSize:16,
     },
 
-    iconStyle:{
-        width:20,
-        height:20,
-        marginRight: 20,
+    bottomBtn:{
+        position:'absolute', 
+        alignSelf:'center', 
+        width:'60%',
+        height:40,
+        bottom:10,
+        // backgroundColor:'#FFE957',
+
     }
 });
 

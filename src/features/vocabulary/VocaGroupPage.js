@@ -9,16 +9,21 @@ import { WingBlank } from "@ant-design/react-native";
 import {Header, Button,Icon, Input} from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modalbox';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import CardView from 'react-native-cardview'
+import Toast, {DURATION} from 'react-native-easy-toast'
+
 import AliIcon from '../../component/AliIcon';
 import VocaGroupDao from './service/VocaGroupDao'
 import styles from './VocaGroupStyle'
+import gstyles from '../../style'
 
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
+
+VocaGroupDao.getInstance().open()
 
 export default class VocaGroupPage extends Component {
 
@@ -34,29 +39,26 @@ export default class VocaGroupPage extends Component {
             selectedName: '',
             refresh: true,          //用来刷新
           };
-        this.dao = new VocaGroupDao();
+        this.vgDao = VocaGroupDao.getInstance();
+
+        console.disableYellowBox=true;
     }
 
     componentDidMount(){
-        //打开数据库
-        this.dao.open()
-        .then(()=>{
-            let vocaGroups = this.dao.getAllGroups();
-            console.log('all groups:')
-            console.log(vocaGroups[0].groupName)
-            console.log(vocaGroups[0].sections.section)
-            if(vocaGroups.length == 0){
-                this.dao.addGroup('0默认生词本')
-                this.dao.updateToDefault('0默认生词本')
-            }
-            this.setState({vocaGroups})
-        })
+        let vocaGroups = this.vgDao.getAllGroups();
+        console.log('all groups:')
+        console.log(vocaGroups.length)
+        if(vocaGroups.length == 0){
+            this.vgDao.addGroup('默认生词本')
+            this.vgDao.updateToDefault('默认生词本')
+        }
+        this.setState({vocaGroups})
        
     }
 
     componentWillUnmount(){
-        alert('vocaGroup out, close realm')
-        this.dao.close()
+        // alert('vocaGroup out, close realm')
+        this.vgDao.close()
     }
 
     
@@ -82,9 +84,12 @@ export default class VocaGroupPage extends Component {
 
     //创建弹框
     _createModal = (isAdd) =>{
-        return <Modal style={[styles.modal, styles.modal2]}
+        return <Modal style={[gstyles.c_center, styles.modal]}
                 isOpen={isAdd?this.state.isAddModalOpen:this.state.isUpdateModalOpen} 
-                backdrop={false}  
+                onOpened={isAdd?this._openAddModal:this._openUpdateModal}
+                onClosed={isAdd?this._closeAddModal:this._closeUpdateModal}
+                backdrop={true} 
+                backdropPressToClose={true}
                 position={"center"} 
                 ref={ref => {
                     isAdd
@@ -104,7 +109,7 @@ export default class VocaGroupPage extends Component {
                 
                 <Button type='clear' onPress={isAdd?this._closeAddModal:this._closeUpdateModal}
                 title='取消'
-                titleStyle={{fontSize:16, color:'#999'}}>
+                titleStyle={{fontSize:16, color:'#555'}}>
                 </Button>
                 <Button type='clear' onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}
                 title='确定'
@@ -124,9 +129,7 @@ export default class VocaGroupPage extends Component {
    _isNameExist = (name)=>{
         let isExist = false;
         for(let g of this.state.vocaGroups){
-            let gName = g.groupName.substring(1)
-            if(gName === name){
-                alert(gName);
+            if(g.groupName === name){
                 isExist = true;
                 break;
             }
@@ -142,15 +145,13 @@ export default class VocaGroupPage extends Component {
         let isExist = this._isNameExist(this.state.addName);
         //添加生词本
         if(this.state.addName === ''){
-            alert('名称不能为空，添加失败')
+            this.refs.toast.show('名称不能为空，添加失败', 1000);
         }else if(isExist){
-            alert('重名了，添加失败')
+            this.refs.toast.show('重名了，添加失败', 1000);
         }else{
-            // addVocaGroup(0+this.state.addName);
-            
-            alert('添加成功:'+this.state.addName)
-            this.dao.addGroup(0+this.state.addName)
+            this.vgDao.addGroup(this.state.addName)
             this.setState({addName:''});
+            this.refs.toast.show('添加成功', 500);
             
         }
    }
@@ -159,24 +160,29 @@ export default class VocaGroupPage extends Component {
    _updateVocaGroup = () =>{
         this._closeUpdateModal()
         let isExist = this._isNameExist(this.state.updateName);
-        
          //添加生词本
         if(this.state.updateName === ''){
-            alert('名称不能为空，修改失败')
+            this.refs.toast.show('名称不能为空，修改失败', 1000);
         }else if(isExist){
-            alert('重名了，修改失败')
+            this.refs.toast.show('重名了，修改失败', 1000);
         }else{
-            this.dao.updateGroupName(this.state.selectedName, 0+this.state.updateName);
+            this.vgDao.updateGroupName(this.state.selectedName, this.state.updateName);
             this.setState({updateName:'',selectedName:''})
-            alert('修改成功')
+            this.refs.toast.show('修改成功', 500);
         }
    }
 
     //删除生词本
     _deleteVocaGroup = (deleteName) =>{
-        this.dao.deleteGroup(deleteName)
-        alert('删除成功');
-        this.setState({refresh:!this.state.refresh})
+        //默认生词本不能删除
+        if(this.vgDao.isDefault(deleteName)){
+            this.refs.toast.show('无法删除默认生词本', 1000 );
+        }else{
+            this.vgDao.deleteGroup(deleteName)
+            this.refs.toast.show('删除成功', 500);
+            this.setState({refresh:!this.state.refresh})
+        }
+        
     }
 
 
@@ -202,9 +208,9 @@ export default class VocaGroupPage extends Component {
                     justifyContent: 'space-around',
                 }}
                 />
-
-                <WingBlank size='lg'>
-                    <ScrollView style={{ flex: 1 }}
+                {/* 生词本列表 */}
+                <View style={styles.content}>
+                    <ScrollView style={{flex: 1, paddingBottom:40}}
                     pagingEnabled={false}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
@@ -212,45 +218,37 @@ export default class VocaGroupPage extends Component {
                     >
                         {this.state.vocaGroups.map((item, index)=>{
                             //判断是什么类型的生词本
-                            let iconName = ''
-                            if(item.groupName.startsWith('0')){  //自定义
-                                iconName = 'zi'
-                            }else if(item.groupName.startsWith('1')){    //阅读生词本
-                                iconName = 'yuedu'
-                            } 
-                            let groupName = item.groupName.substring(1);
                             return (
                                 <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={()=>{
                                     //加载生词
                                     this.props.navigation.navigate('GroupVoca',{
-                                        dao:this.dao, 
                                         groupName:item.groupName
                                     });
                                         
                                 }}>
                                     <View style={styles.groupItem}>
                                         <View style={[styles.row, {flex:1,}]}>
-                                            <View style={styles.iconBg}>
+                                            <LinearGradient colors={['#FFE957', '#F29F3F',]} style={styles.iconBg}>
                                                 <Text style={{color:'#FFF', fontSize:16, fontWeight:'500'}}>
-                                                    {item.groupName[1]}
+                                                    {item.groupName[0]}
                                                 </Text>
-                                            </View>
+                                            </LinearGradient>
+                                          
                                             <View>
-                                                <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10}}>{groupName}</Text>
+                                                <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10,}}>{item.groupName}</Text>
                                                 <Text style={{fontSize:14, marginLeft:10}}>共{item.count}词</Text>
                                             </View>
                                         </View>
                                         {!this.state.inEdit &&  item.isDefault &&
-                                            <Ionicons name='ios-star' color={'#EE4'} size={30} />
+                                            <AliIcon name='pingfen' size={26} color='#F29F3F'  style={{marginRight:10}}/>
                                         }
                                         {this.state.inEdit &&
                                             <View style={[styles.row, {flex:1}]}>
                                                 <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
                                                     {/* 设置为默认生词本 */}
-                                                    <Ionicons name='ios-star' color={item.isDefault?'#EE4':'#909090'} size={30} onPress={()=>{
+                                                    <AliIcon name={item.isDefault?'pingfen':'malingshuxiangmuicon-'} color={item.isDefault?'#F29F3F':'#888'} size={26} onPress={()=>{
                                                         if(!item.isDefault){ //不是默认
-                                                            alert('设置为默认的');
-                                                            this.dao.updateToDefault(0+groupName)
+                                                            this.vgDao.updateToDefault(item.groupName)
                                                             this.setState({refresh:!this.state.refresh})
                                                         }
                                                         }}/>
@@ -258,13 +256,13 @@ export default class VocaGroupPage extends Component {
                                                     <TouchableNativeFeedback onPress={()=>{
                                                         this.setState({isUpdateModalOpen:true,selectedName:item.groupName})
                                                     }}>
-                                                        <Text style={{fontSize:14, color:'#1890FF', marginRight:10}}>修改名称</Text>
+                                                        <Text style={{fontSize:14, color:'#1890FF', marginHorizontal:10}}>修改名称</Text>
                                                     </TouchableNativeFeedback>
                                                     {/* 删除 */}
                                                     <TouchableNativeFeedback onPress={()=>{
                                                         Alert.alert(
                                                             '删除生词本',
-                                                            `是否删除${groupName}?`,
+                                                            `是否删除${item.groupName}?`,
                                                             [
                                                             {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                                                             {text: '确认', onPress: () => {this._deleteVocaGroup(item.groupName)}}
@@ -285,50 +283,33 @@ export default class VocaGroupPage extends Component {
                         })}
 
                     </ScrollView>   
-                </WingBlank>
 
-
-                <View style={styles.footer}>
-                    {/* 添加 */}
-                    <Button 
-                    containerStyle={{width:width*2/5,height:36}}
-                    ViewComponent={LinearGradient} // Don't forget this!
-                    linearGradientProps={{
-                      colors: ['#FFE957', '#F29F3F'],
-                      start: { x: 0, y: 0.5 },
-                      end: { x: 1, y: 0.5 },
-                    }}
-                    icon={
-                        <Icon
-                          name="add"
-                          size={16}
-                          color="white"
-                        />}
-                    title='添加'
-                    titleStyle={{fontSize:14,color:'#FFF', fontWeight:'500'}}
-                    onPress={this._openAddModal}>
-                    </Button>
-                    {/* 编辑 */}
-                    <Button 
-                    containerStyle={{width:width*2/5,height:40}}
-                    ViewComponent={LinearGradient} 
-                    linearGradientProps={{
-                      colors: ['#FFE957', '#F29F3F'],
-                      start: { x: 0, y: 0.5 },
-                      end: { x: 1, y: 0.5 },
-                    }}
-                    icon={
-                        <Icon
-                          name="edit"
-                          size={14}
-                          color="white"
-                        />}
-                    title={this.state.inEdit?'退出编辑':'编辑'}
-                    titleStyle={{fontSize:14,color:'#FFF', fontWeight:'500'}}
-                    onPress={this._toggleEdit}>
-                    </Button>
                 </View>
-                
+                {/* 添加 编辑*/}
+                <CardView
+                    cardElevation={5}
+                    cardMaxElevation={5}
+                    cornerRadius={20}
+                    style={styles.footer}>
+                        <View style={styles.bottomBtnGroup}>
+                            <Button 
+                            type="clear"
+                            icon={ <Icon name="add"  size={16} color="#303030" />}
+                            title='添加'
+                            titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                            onPress={this._openAddModal}>
+                            </Button>
+                            <View style={{width:1,height:20,backgroundColor:'#555'}}></View>
+                            <Button 
+                            type="clear"
+                            icon={ <Icon name="edit"  size={16} color="#303030" />}
+                            title={this.state.inEdit?'取消':'编辑'}
+                            titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                            onPress={this._toggleEdit}>
+                            </Button>
+                        </View>
+                </CardView>
+                <Toast ref="toast"/>
                 {
                     this._createModal(true) //创建添加弹框
                 }

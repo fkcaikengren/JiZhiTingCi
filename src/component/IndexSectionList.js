@@ -23,7 +23,6 @@ export  default class IndexSectionList extends PureComponent {
     }
 
     componentWillUnmount(){
-        alert('IndexSections out')
     }
 
 
@@ -97,12 +96,6 @@ export  default class IndexSectionList extends PureComponent {
 
     detectAndScrollToSection = (e) => {
         var ev = e.nativeEvent.touches[0];
-        // 手指按下的时候需要修改颜色
-        this.refs.view.setNativeProps({
-            style: {
-                backgroundColor: 'rgba(0,0,0,0.3)'
-            }
-        })
         let targetY = ev.pageY;
         const {y, height} = this.measure;
         if (!y || targetY < y) {
@@ -170,23 +163,23 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         backgroundColor: 'transparent',
-        alignItems: 'center',
+        flexDirection: 'column',
         justifyContent: 'center',
+        alignItems: 'center',
+        
         right: 0,
         top: 0,
         bottom: 0,
-        paddingTop: 50,
-        paddingBottom: 50,
         width: 15,
     },
 
     sectionView: {
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1
     },
 
     sectionItem: {
-        fontSize: 12
+        fontSize: 12,
+        color:'#F29F3F'
     }
 });

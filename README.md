@@ -476,13 +476,19 @@ react-native link react-native-webview
 
 
 
-### 安装react-native-collapsible
+### 安装react-native-collapsible (手风琴)
 
 ```
 yarn add react-native-collapsible
 ```
 
 
+
+### react-native-easy-toast
+
+```
+yarn add react-native-easy-toast
+```
 
 
 

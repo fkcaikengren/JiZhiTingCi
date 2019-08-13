@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
         backgroundColor:'#FDFDFD',
         flex: 1
     },
+    content:{
+        flex:1,
+        paddingHorizontal:10,
+    },
     center:{
         flexDirection:'row',
         justifyContent:'center',
@@ -42,12 +46,6 @@ const styles = StyleSheet.create({
         marginLeft:10,
     },
     modal: {
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-      },
-
-    modal2: {
         width:width-100,
         height: 230,
         backgroundColor: "#EFEFEF"
@@ -62,14 +60,19 @@ const styles = StyleSheet.create({
 
     footer: {
         position:'absolute',
-        bottom:0,
-        width:width,
-        height:55,
+        bottom:10,
+        alignSelf:'center',
+        width:'60%',
+        height:40,
         backgroundColor: '#FDFDFD',
-        flexDirection:'row',
+       
+    },
+    bottomBtnGroup:{
+         flexDirection:'row',
         justifyContent:'space-around',
         alignItems:'center',
     }
+   
 });
 
 export default styles

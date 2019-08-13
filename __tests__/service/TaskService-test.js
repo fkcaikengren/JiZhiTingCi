@@ -10,10 +10,12 @@ import {createHttp} from "../../src/common/http";
 import * as Constant from '../../src/features/vocabulary/common/constant'
 import VocaTaskService from "../../src/features/vocabulary/service/VocaTaskService";
 import _util from "../../src/common/util";
+import VocaTaskDao from "../../src/features/vocabulary/service/VocaTaskDao";
 const fs = require("fs");
 
 
 let myhttp = createHttp()
+VocaTaskDao.getInstance().open()
 let vts = new VocaTaskService()
 let taskCount = 1
 let oldTasks = [{
@@ -417,4 +419,14 @@ it('获取错误单词列表', ()=>{
     console.log(vts.getWrongList())
 })
 
+it('获取PASS单词列表', ()=>{
+    console.log(vts.getPassList())
+})
 
+it('获取已学单词列表', ()=>{
+    console.log(vts.getLearnedList())
+})
+
+it('获取未学单词列表', ()=>{
+    console.log(vts.getNewList())
+})

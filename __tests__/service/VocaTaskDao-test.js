@@ -10,6 +10,9 @@ afterEach(()=>{
     return vtd.close()
 })
 
+it('查询全部任务', ()=>{
+    console.log(vtd.getAllTasks())
+})
 
 it('getTodayTasks ', ()=>{
     console.log(vtd.getTodayTasks())

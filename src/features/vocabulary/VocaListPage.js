@@ -1,111 +1,195 @@
-import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, TouchableWithoutFeedback} from 'react-native';
-import {connect} from 'react-redux';   
-import Swiper from 'react-native-swiper'
+import React from "react";
+import { FlatList , View, Text,} from "react-native";
+import { CheckBox , Button} from 'react-native-elements'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
-import {Header, Button} from 'react-native-elements'
+import TogglePane from './component/TogglePane'
+import * as Constant from './common/constant'
 import AliIcon from '../../component/AliIcon';
-import VocaListTabNavgator from "./navigation/VocaListTabNav";
-import * as VocaListAction from './redux/action/vocaListAction'
-import VocaTaskDao from "./service/VocaTaskDao";
-import WrongListPage from "./WrongListPage";
-import PassListPage from "./PassListPage";
-import LearnedListPage from "./LearnedListPage";
-import NewListPage from "./NewListPage";
+import gstyles from '../../style'
 import styles from './VocaListStyle'
+import * as VocaListAction from './redux/action/vocaListAction'
+import VocaTaskService from './service/VocaTaskService'
 
-//暂时
-VocaTaskDao.getInstance().open()
 
-class VocaListPage extends Component {
+export default class VocaListPage extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      data:[],
+      stickyHeaderIndices: [],
+      checked:false, //是否有被选的
+    };
 
-    constructor(props){
-        super(props)
-        this.state = {
-            pageIndex:0,
-        }
-         //隐藏黄色警告
-         console.disableYellowBox=true;
+    this.vtService = new VocaTaskService()
+  }
+
+  componentWillMount() {
+    //获取数据
+    let data = []
+    switch(this.props.type){
+      case Constant.WRONG_LIST:
+          data= this.vtService.getWrongList()
+      break;
+      case Constant.PASS_LIST:
+          data= this.vtService.getPassList()
+      break;
+      case Constant.LEARNED_LIST:
+          data= this.vtService.getLearnedList()
+      break;
+      case Constant.NEW_LIST:
+          data= this.vtService.getNewList()
+      break;
+
     }
+    
+    const headers = [];
+    data.map(item => {
+      if (item.isHeader) {
+        headers.push(data.indexOf(item));
+      }
+    });
+    headers.push(0);
+    this.setState({
+      data: data,
+      stickyHeaderIndices: headers
+    });
+  }
 
-    render() {
-        const selectPageStyle = {
-            borderBottomWidth:2,
-            borderBottomColor:'#F29F3F'
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.props.vocaList.onEdit == true && nextProps.vocaList.onEdit == false){
+      //清理check
+      this._cancleCheck()
+      return false
+    }
+    return true
+  }
+
+  // 取消check
+  _cancleCheck = ()=>{
+    const data = [...this.state.data]
+    for(let d of data){
+      d.checked = false
+    }
+    this.setState({data, checked:false})
+  }
+
+  //多选
+  _selectItem = (index)=>{
+    const data = [...this.state.data]
+    let checked = this.state.checked 
+    if(data[index].checked){//取消
+      data[index].checked = false
+      let exist = false
+      //遍历判断是否存在被选中的
+      for(let d of data){
+        if(d.checked){
+          exist = true
+          break;
         }
-        const index = this.state.pageIndex
+      }
+      if(!exist){
+        checked = false
+      }
+    }else{                  //选中
+      data[index].checked = true
+    }
+    //如果首次被选
+    if(this.state.checked == false){
+      checked = true
+    }
+    this.setState({data, checked})
+  }
 
-        return (
-            <View style={{flex:1}}>
-                <StatusBar translucent={true} />
-                <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
-                leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
-                        this.props.navigation.goBack();
-                    }}/> }
-                rightComponent={
-                    <TouchableWithoutFeedback onPress={()=>{this.props.toggleEdit()}}>
-                         <Text>编辑</Text>
-                    </TouchableWithoutFeedback>
-                }
-                centerComponent={{ text: '单词列表', style: { color: '#303030', fontSize:18 } }}
-                containerStyle={{
-                    backgroundColor: '#FCFCFC',
-                    justifyContent: 'space-around',
-                }}
+  renderItem = ({ item, index }) => {
+    const {onEdit} = this.props.vocaList
+    if (item.isHeader) {
+      return (
+        <View style={styles.headerView}
+        >
+          <Text style={styles.headerText}>{item.title}</Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={[gstyles.r_start, styles.item]}>
+          <View style={[styles.itemLeft]}>
+            {this.props.vocaList.onEdit &&
+              <CheckBox
+                containerStyle={styles.checkBox}
+                onPress={()=>{this._selectItem(index)}}
+                checked={item.checked}
+                iconType='ionicon'
+                checkedIcon='ios-checkmark-circle'
+                uncheckedIcon='ios-radio-button-off'
+                checkedColor='#F29F3F'
                 />
-                <View style={styles.tabBar}>
-                    <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:0})}}
-                    >
-                        <Text style={[styles.tabText, index===0?selectPageStyle:null]}>错词</Text>
-                    </View>
-                    <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:1})}}
-                    >
-                        <Text style={[styles.tabText, index===1?selectPageStyle:null]}>PASS</Text>
-                    </View>
-                    <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:2})}}
-                    >
-                        <Text style={[styles.tabText, index===2?selectPageStyle:null]}>未学</Text>
-                    </View>
-                    <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:3})}}
-                    >
-                        <Text style={[styles.tabText, index===3?selectPageStyle:null]}>新学</Text>
-                    </View>
-                </View>
-               <Swiper 
-                    showsPagination={false}
-                    loop={false}
-                    onIndexChanged={(index)=>{this.setState({pageIndex:index})}}
-                    index={this.state.pageIndex}
-                    scrollEnabled={!this.props.vocaList.onEdit}
-                    >
-                    <WrongListPage />
-                    <PassListPage />
-                    <LearnedListPage />
-                    <NewListPage />
-                </Swiper>
-            </View>
-        );
+            }
+            <Text style={[styles.word, {marginLeft:onEdit?0:10}]}>
+              {item.content.word}
+            </Text>
+          </View>
+          <View style={styles.itemCenter}>
+            <TogglePane content='v.这是一个单词，喜欢，吃喝'/>
+          </View>
+          <View style={[styles.itemRight]}>
+            <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>
+          </View>
+        </View>
+        
+      );
     }
+  };
+  
+  render() {
+    let title = ''
+    
+    switch(this.props.type){
+      case Constant.WRONG_LIST:
+          title='开始测试'
+      break;
+      case Constant.PASS_LIST:
+          title='一键还原'
+      break;
+      case Constant.LEARNED_LIST:
+          title='开始测试'
+      break;
+      case Constant.NEW_LIST:
+          title='开始测试'
+      break;
+
+    }
+
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.data}
+          renderItem={this.renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          stickyHeaderIndices={this.state.stickyHeaderIndices}
+          extraData={this.props.vocaList} 
+             
+        />
+        {this.props.vocaList.onEdit &&
+          <Button
+            containerStyle={styles.bottomBtn}
+            buttonStyle={{ backgroundColor:'#FFE957',}}
+            disabled={!this.state.checked}
+            title={title}
+            type="solid"
+          />
+        } 
+      </View>
+    );
+  }
 }
 
-const mapStateToProps = state =>({
-    vocaList: state.vocaList
-});
-
-const mapDispatchToProps = {
-    toggleEdit: VocaListAction.toggleEdit
-}
+VocaListPage.propTypes = {
+  type: PropTypes.string.isRequired,
+};
 
 
-export default connect(mapStateToProps,mapDispatchToProps )(VocaListPage);
+
+

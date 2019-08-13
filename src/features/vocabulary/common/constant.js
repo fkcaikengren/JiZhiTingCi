@@ -39,3 +39,12 @@ export const IN_REVIEW_PLAY = 'IN_REVIEW_PLAY'
 export const IN_REVIEW_TEST = 'IN_REVIEW_TEST' 
 export const IN_REVIEW_RETEST = 'IN_REVIEW_RETEST'
 export const IN_REVIEW_FINISH = 'IN_REVIEW_FINISH'
+
+
+
+
+//单词列表
+export const WRONG_LIST = 'WRONG_LIST' 
+export const PASS_LIST = 'PASS_LIST' 
+export const LEARNED_LIST = 'LEARNED_LIST' 
+export const NEW_LIST = 'NEW_LIST' 

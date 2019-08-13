@@ -6,7 +6,7 @@ export default class VocaUtil{
 
 
     /**
-     *
+     * 浅拷贝任务
      * @param task
      * @returns
      */

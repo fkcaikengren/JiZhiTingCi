@@ -1,3 +1,5 @@
 // import './HomePage.story'
 // import './VocaPlayPage.story'
 // import './component/DetailDictPage.story'
+import '../../component/IndexSectionList.story'
+import './GroupVocaPage.story'

@@ -6,7 +6,7 @@ import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../features/vocabulary/VocaPlayPage';
 import VocaLibPage from '../features/vocabulary/VocaLibPage';
-import VocaListPage from '../features/vocabulary/VocaListPage';
+import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import StatisticsPage from '../features/vocabulary/StatisticsPage';
 import LearnCardPage from '../features/vocabulary/LearnCardPage';
@@ -35,8 +35,8 @@ const VocaHomeStackNav = createStackNavigator(
         screen:VocaLibPage,
       },
       // 单词列表
-      VocaList:{
-        screen:VocaListPage,
+      VocaListTab:{
+        screen:VocaListTabPage,
       },
       // 生词本
       VocaGroup:{
@@ -86,7 +86,7 @@ const VocaHomeStackNav = createStackNavigator(
 
     },
     {
-      initialRouteName: 'VocaList',
+      initialRouteName: 'VocaGroup',
       headerMode:'none',
       initialRouteParams:{
         vocaLibName:'CET-4',
