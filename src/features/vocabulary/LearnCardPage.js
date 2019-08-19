@@ -22,25 +22,11 @@ export default class LearnCardPage extends Component {
     constructor(props){
         super(props)
         this.state = {task:{curIndex:0, taskWords:null}, refresh:false}
-        this.taskDao = this.props.navigation.getParam('taskDao');
-        this.VocaDao = this.props.navigation.getParam('vocaDao');
-        this.taskOrder = this.props.navigation.getParam('taskOrder')
+        
     }
 
     componentDidMount(){
-        //加载当前task数据
-        let task = this.taskDao.getTask(this.taskOrder)
         
-        //查询task里面的单词信息，补充进去（需要先判断是否查询并写入过数据）
-        if(!task.dataCompleted){
-            this.taskDao.modify(()=>{
-                this.VocaDao.writeInfoToTask(task)
-            })  
-        }
-       
-        console.log('task:')
-        console.log(task)
-        this.setState({task})
     }
 
     componentWillUnmount(){
@@ -128,68 +114,13 @@ export default class LearnCardPage extends Component {
                     </Body>
                 </Header> 
 
-                <Content padder style={{ backgroundColor:'#FDFDFD', }}>
-                    <Grid>
-                        {/* 单词 */}
-                        <Row>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#F6B056'}}>{taskWords?taskWords[curIndex].word:''}</Text>
-                        </Row>
-                        {/* 音标 */}
-                        <Row style={[styles.row, ]}>
-                            <View style={styles.row}>
-                                <Text style={styles.phonetic}>{taskWords?taskWords[curIndex].enPhonetic:''}</Text>
-                                <AliIcon name='shengyin' size={26} color='#E59AAA'></AliIcon>
-                            </View>
-                            <View style={[{marginLeft:20}, styles.row]}>
-                                <Text style={styles.phonetic}>{taskWords?taskWords[curIndex].amPhonetic:''}</Text>
-                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
-                            </View>
-                        </Row>
-                        {/* 英英释义 */}
-                        <Row style={[styles.col, {marginTop:16}]}>
-                            <View style={[styles.row]}>
-                                <Text style={{fontSize:18,color:'#303030'}}>
-                                    {taskWords && taskWords[curIndex] && taskWords[curIndex].trans && taskWords[curIndex].trans[0] && `${taskWords[curIndex].trans[0].property}. `}
-                                </Text>
-                                <Text>| 英英释义</Text>
-                            </View>
-                            <View style={{width:'100%', backgroundColor:'#C0E5FF', padding:4, borderRadius:4,}}>
-                                <Text style={styles.fonts}>{taskWords?taskWords[curIndex].def:''}</Text>
-                            </View>
-                        </Row>
-                        {/* 例句 */}
-                        <Row style={[styles.col, {marginTop:16,} ]}>
-                            <View style={[styles.row]}>
-                                <AliIcon name='shengyin' size={26} color='#3F51B5'></AliIcon>
-                                <Text>例句</Text>
-                            </View>
-                            <View style={{width:'100%', backgroundColor:'#C0E5FF', padding:5, borderRadius:4,}}>
-                                <Text style={styles.fonts}>{taskWords?taskWords[curIndex].sentence:''}</Text>
-                            </View>
-                        </Row>
-
-                        <Row style={[styles.col, {marginTop:16,}]}>
-                            {taskWords && taskWords[curIndex] && taskWords[curIndex].trans &&
-                                taskWords[curIndex].trans.map((item, index)=>(
-                                    <View key={index} style={{flex:1, padding:5, borderRadius:4,}}>
-                                        <Text numberOfLines={1} style={styles.fonts}>{`${item.property}. ${item.tran}`}</Text>
-                                    </View>
-                                ))
-
-                            }
-                            
-                        </Row>
-                        
-                    </Grid>
-                </Content>
-
                 <Footer >
                     <FooterTab style={{backgroundColor:'#FDFDFD'}}>
                         <Button onPress={this._nextWord}>
                             <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>下一个</Text>
                         </Button>
                         <Button onPress={()=>{
-                            this.props.navigation.navigate('VocaDetail');
+                            
                         }}>
                             <Text style={{fontSize:14,color:'#1890FF', fontWeight:'500'}}>详情</Text>
                         </Button>

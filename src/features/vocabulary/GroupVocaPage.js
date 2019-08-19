@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { StatusBar, View, Text, FlatList, TouchableWithoutFeedback} from 'react-native';
-import {Header, CheckBox , Button} from 'react-native-elements'
+import {Header, CheckBox , Button, Icon, } from 'react-native-elements'
+import _ from 'lodash'
+import CardView from 'react-native-cardview'
+import Toast, {DURATION} from 'react-native-easy-toast'
+
 import VocaGroupDao from './service/VocaGroupDao'
 import {playSound} from './service/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 
-import _ from 'lodash'
 import styles from './GroupVocaStyle'
 import gstyles from '../../style'
 
@@ -31,6 +34,7 @@ export default class GroupVocaPage extends Component {
         this.state = {
             onEdit:false,
             checked:false,
+            checkedIndex:[], //选中的索引
             flatData:[],
             sideSections:[], 
             sectionIndex:[], 
@@ -48,7 +52,7 @@ export default class GroupVocaPage extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if(this.state.onEdit == true && nextState.onEdit == false){
-          //清理check
+          //清理checked
           this._cancleCheck()
           return false
         }
@@ -68,8 +72,6 @@ export default class GroupVocaPage extends Component {
         let sideSections = [];
         //分组头在列表中的位置
         let sectionIndex = [];
-        //arr, 吸顶头部索引
-        let stickyHeaderIndices = [];
 
         //对section排序
         sections = _.sortBy(sections, ['section'])
@@ -80,10 +82,9 @@ export default class GroupVocaPage extends Component {
             //给右侧的滚动条进行使用的
             sideSections[i] = sections[i].section,
             sectionIndex[i] = totalSize;
-            stickyHeaderIndices.push(totalSize);
             //FlatList的数据
             flatData.push({
-                type:'chapter', section:sections[i].section,
+                type:'section', section:sections[i].section,
             });
             totalSize ++;
             for (let w of sections[i].words) { //遍历单词
@@ -101,51 +102,77 @@ export default class GroupVocaPage extends Component {
             
         }
         // console.log(sectionIndex1); [0, 8, 16, 24, 32, 37, 45, 53, 61, 69]
-        this.setState({flatData, sideSections, sectionIndex, stickyHeaderIndices})
+        this.setState({flatData, sideSections, sectionIndex})
        
     }
     
     // 取消check
     _cancleCheck = ()=>{
-        const data = [...this.state.flatData]
-        for(let d of data){
-            d.checked = false
-        }
-        this.setState({flatData:data, checked:false})
+        this.setState({checkedIndex:[], checked:false})
     }
     
     //多选
     _selectItem = (index)=>{
-        const data = [...this.state.flatData]
         let checked = this.state.checked 
-        if(data[index].checked){//取消
-            data[index].checked = false
-            let exist = false
-            //遍历判断是否存在被选中的
-            for(let d of data){
-                if(d.checked){
-                exist = true
-                break;
-                }
-            }
-            if(!exist){
-                checked = false
-            }
-        }else{                  //选中
-            data[index].checked = true
+        let checkedIndex = this.state.checkedIndex
+        if(checkedIndex.includes(index)){ //取消
+            checkedIndex = checkedIndex.filter((item,i)=>{
+                return item !== index
+            })
+        }else{                            //选中
+            checkedIndex.push(index)
+        }
+       
+        if(checkedIndex.length <= 0){
+            checked = false
         }
         //如果首次被选
         if(this.state.checked == false){
             checked = true
         }
-        this.setState({flatData:data, checked})
+        this.setState({checkedIndex, checked})
     }
 
-    
 
     //切换编辑状态
     _toggleEdit = ()=>{
         this.setState({onEdit:!this.state.onEdit})
+    }
+
+    //批量删除单词
+    _deleteWords = ()=>{
+        //删除
+        // const groupName = this.props.navigation.getParam('groupName')
+        const groupName = 'Mou'
+        const words = this.state.checkedIndex.map((itemIndex, i)=>{
+            return this.state.flatData[itemIndex].word
+        })
+        const result = this.vgDao.deleteWords(groupName, words)
+        if(result.success){
+            this.refs.toast.show(`成功删除${result.deletedWords.length}个生词`, 1000);
+            //刷新
+            const flatData = this.state.flatData.filter((item, index)=>{
+                let deleted = false
+                if(item.type === 'section'){
+                    deleted = result.deletedSections.includes(item.section)
+                }
+                return !deleted && !this.state.checkedIndex.includes(index)
+            })
+            const sectionIndex = []  //重新计算头部索引
+            for(let i in flatData){
+                if(flatData[i].type === 'section'){
+                    sectionIndex.push(parseInt(i))
+                }
+            }
+            const sideSections = this.state.sideSections.filter((item, index)=>{
+                return !result.deletedSections.includes(item)
+            })
+            this.setState({flatData, sectionIndex, sideSections, onEdit:false})
+        }else{
+            this.refs.toast.show('删除失败', 1000);
+            //不刷新
+        }
+        
     }
 
     render() {
@@ -154,6 +181,8 @@ export default class GroupVocaPage extends Component {
             backgroundColor:'#FFE957',
             borderColor:'#FFE957',
         }:null
+        const delIconColor = this.state.checked?'#F2753F':'#999'
+        const playIconColor= this.state.checked?'#FFE957':'#999'
         return (
             <View style={styles.container}>
                 <StatusBar translucent={true} />
@@ -175,7 +204,14 @@ export default class GroupVocaPage extends Component {
                     justifyContent: 'space-around',
                 }}
                 />
-               
+                <Toast
+                    ref="toast"
+                    position='top'
+                    positionValue={200}
+                    fadeInDuration={750}
+                    fadeOutDuration={1000}
+                    opacity={0.8}
+                />
                 {this.state.flatData.length > 0 &&
                     <View style={{flex:1}}>
                         <FlatList
@@ -184,12 +220,40 @@ export default class GroupVocaPage extends Component {
                             renderItem={this._renderItem}
                             extraData={this.state}
                             getItemLayout={this._getItemLayout}
-                            keyExtractor={item => item.type}
-                            stickyHeaderIndices={this.state.stickyHeaderIndices}/> 
+                            keyExtractor={(item,index) => index.toString()}
+                            stickyHeaderIndices={this.state.sectionIndex}/> 
                         <IndexSectionList
                         sections={ this.state.sideSections}
                         onSectionSelect={this._onSectionselect}/> 
                     </View>
+                }
+
+                {//this.state.onEdit &&
+                    <CardView
+                        cardElevation={5}
+                        cardMaxElevation={5}
+                        cornerRadius={20}
+                        style={styles.footer}>
+                            <View style={gstyles.r_around}>
+                                <Button 
+                                    disabled={!this.state.checked}
+                                    type="clear"
+                                    icon={ <AliIcon name='shanchu' size={26} color={delIconColor} />}
+                                    title='删除'
+                                    titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                                    onPress={this._deleteWords}>
+                                </Button>
+                                <View style={{width:1,height:20,backgroundColor:'#999'}}></View>
+                                <Button 
+                                    disabled={!this.state.checked}
+                                    type="clear"
+                                    icon={ <AliIcon name='Home_tv_x' size={26} color={playIconColor} />}
+                                    title='播放'
+                                    titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                                    onPress={this._toggleEdit}>
+                                </Button>
+                            </View>
+                    </CardView>
                 }
               
             </View>
@@ -229,9 +293,11 @@ export default class GroupVocaPage extends Component {
     }
 
     _renderItem = ({item,index}) => {
-        let flag = (item.type === 'chapter');
+        let flag = (item.type === 'section');
         const itemPaddingLeft = this.state.onEdit?0:20
         const bodyWidth = this.state.onEdit?width-60:width-40
+        const itemChecked = this.state.checkedIndex.includes(index)
+        console.log(itemChecked)
         return (
                 flag
                 ?<View key={'h'+index} style={styles.headerView}>
@@ -242,7 +308,7 @@ export default class GroupVocaPage extends Component {
                         <CheckBox
                         containerStyle={styles.checkBox}
                         onPress={()=>{this._selectItem(index)}}
-                        checked={item.checked}
+                        checked={itemChecked}
                         iconType='ionicon'
                         checkedIcon='ios-checkmark-circle'
                         uncheckedIcon='ios-radio-button-off'

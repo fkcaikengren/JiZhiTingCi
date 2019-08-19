@@ -370,10 +370,10 @@ export default class VocaGroupDao{
      * 批量删除单词
      * @param groupName
      * @param words 单词数组
-     * @returns {boolean}  生词本不存在，删除失败，返回false; 否则返回true
+     * @returns {object} result 结果信息
      */
     deleteWords = (groupName, words)=>{
-        let success = true
+        let result = {success:true, deletedSections:[], deletedWords:[]}
         let group = this.realm.objects('VocaGroup').filtered('groupName = "'+groupName+'"')[0];
         if(group){
             try{
@@ -385,21 +385,28 @@ export default class VocaGroupDao{
                             for(let key in section.words){
                                 let w = section.words[key]
                                 if(w && w.word === word ){
+                                    result.deletedWords.push(word)
                                     this.realm.delete(w);
                                 }
+                            }
+                            console.log(section.words.length)
+                            //如果section下没有单词
+                            if(section.words.length <= 0){
+                                result.deletedSections.push(section.section)
+                                this.realm.delete(section)
                             }
                         }
                     }
                 })
             }catch (e) {
-                success = false
+                result.success = false
                 console.log(e)
             }
         }else{
             console.warn(`${groupName} 生词本不存在`)
-            success = false
+            result.success = false
         }
-        return success
+        return result
     }
 
     /**

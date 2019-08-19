@@ -5,7 +5,6 @@ import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, TouchableNativeFeedback, Alert,
     ScrollView
 } from 'react-native';
-import { WingBlank } from "@ant-design/react-native";
 import {Header, Button,Icon, Input} from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modalbox';
@@ -309,7 +308,14 @@ export default class VocaGroupPage extends Component {
                             </Button>
                         </View>
                 </CardView>
-                <Toast ref="toast"/>
+                <Toast
+                    ref="toast"
+                    position='top'
+                    positionValue={200}
+                    fadeInDuration={750}
+                    fadeOutDuration={1000}
+                    opacity={0.8}
+                />
                 {
                     this._createModal(true) //创建添加弹框
                 }

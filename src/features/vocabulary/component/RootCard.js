@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import {StyleSheet, View, Text} from 'react-native';
+import {PropTypes} from 'prop-types';
 
 import AliIcon from '../../../component/AliIcon';
+import gstyles from '../../../style'
 
 const styles = StyleSheet.create({
     topView:{
         width: '100%',
         borderTopLeftRadius:5, 
         borderTopRightRadius:5, 
-        backgroundColor:'#C0E5FF',
+        backgroundColor:'#FFE95799',
         padding:5,
 
     },
@@ -20,23 +22,30 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius:5, 
         borderBottomRightRadius:5,
         padding:5,
+        backgroundColor:'#FFF'
         
     },
-    iconText:{
-        width:36,
-        height:20,
+    iconView:{
+        width:30,
+        height:16,
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'green',
+        backgroundColor:'#F29F3F',
         borderRadius:2,
         marginRight: 10,
+        marginTop:4,
+        flex:1,
     },
-    row:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'center',
-        marginTop:10,
+    iconFont:{
+        color:'#FFF',
+        fontSize:12,
+        lineHeight:16,
+    },
+    iconInfo:{
+        fontSize:16,
+        color:'#303030',
+        flex:9,
     },
     col:{
         width: '100%',
@@ -46,22 +55,20 @@ const styles = StyleSheet.create({
         paddingLeft:20,
         borderBottomWidth:1,
         borderColor:'#F0F0F0',
-        paddingVertical:10,
+        paddingVertical:5,
 
     },
     fonts:{
         fontSize:16,
-        color:'#404040',
-        lineHeight:24,
+        color:'#303030',
     },
     keyFonts:{
         fontSize:16,
-        color:'#101010',
-        lineHeight:24,
+        color:'#303030',
     },
     wordFonts:{
         fontSize:16,
-        color:'#1890FF',
+        color:'#F29F3F',
         lineHeight:24,
     }
 });
@@ -69,7 +76,7 @@ const styles = StyleSheet.create({
 /**
  *Created by Jacy on 19/05/22.
  */
-export default class DictCard extends React.Component {
+export default class RootCard extends React.Component {
     constructor(props){
         super(props);
         this.state={}
@@ -89,52 +96,46 @@ export default class DictCard extends React.Component {
 
                 {/* 卡片上半部分 */}
                 <View style={styles.topView}>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>单词</Text></View>
-                        <Text style={styles.keyFonts}>abandon</Text>
+                    <View style={gstyles.r_start_top}>
+                        <View style={styles.iconView}><Text style={styles.iconFont}>词根</Text></View>
+                        <Text style={styles.iconInfo}>{this.props.wordRoot.root}</Text>
                     </View>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>记忆</Text></View>
-                        <Text style={styles.keyFonts}>a 不+ban+don 给予=不禁止给出去=放弃</Text>
+                    <View style={gstyles.r_start_top}>
+                        <View style={styles.iconView}><Text style={styles.iconFont}>记忆</Text></View>
+                        <Text style={styles.iconInfo}>{this.props.wordRoot.memory}</Text>
                     </View>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>释义</Text></View>
-                        <Text style={styles.keyFonts}>v 抛弃,放弃</Text>
+                    <View style={gstyles.r_start_top}>
+                        <View style={styles.iconView}><Text style={styles.iconFont}>释义</Text></View>
+                        <Text style={styles.iconInfo}>{this.props.wordRoot.tran}</Text>
                     </View>
-                    <View style={styles.row}>
-                        <View style={styles.iconText}><Text style={{color:'#FFF',fontSize:14}}>词根</Text></View>
-                        <Text style={styles.keyFonts}>ban=prohibit,表示“禁止”</Text>
-                    </View>
+                   
 
                 </View>
 
                 {/* 卡片下半部分 */}
                 <View style={styles.bottomView}>
-                    <View style={styles.col}>
-                        <Text style={styles.wordFonts}>banal</Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>ban+al=被禁止的=陈腐的 </Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>a 平庸的,陈腐的</Text>
-                    </View>
-                    <View style={styles.col}>
-                        <Text style={styles.wordFonts}>banal</Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>ban+al=被禁止的=陈腐的 </Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>a 平庸的,陈腐的</Text>
-                    </View>
-
-                    <View style={styles.col}>
-                        <Text style={styles.wordFonts}>banish</Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>ban+ish 表动词=禁止入境=驱逐 </Text>
-                        <AliIcon name='xiangxiajiantou' size={16} color='green'></AliIcon>
-                        <Text style={styles.fonts}>v 流放,驱逐出境</Text>
-                    </View>
-                    
+                   {
+                       this.props.relativeRoots.map((item, i)=>{
+                            return <View style={styles.col}>
+                            <Text style={styles.wordFonts}>{item.word}</Text>
+                            <AliIcon name='xiangxiajiantou' size={8} color='#FFE957'></AliIcon>
+                            <Text style={styles.fonts}>{item.memory}</Text>
+                            <AliIcon name='xiangxiajiantou' size={8} color='#FFE957'></AliIcon>
+                            <Text style={styles.fonts}>{item.tran}</Text>
+                        </View>
+                    })
+                   }
                 </View>
             </View>
         );
     }
+}
+
+RootCard.propTypes = {
+    wordRoot:PropTypes.object.isRequired,
+    relativeRoots:PropTypes.array.isRequired,
+}
+  
+RootCard.defaultProps = {
+
 }

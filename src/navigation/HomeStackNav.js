@@ -10,7 +10,6 @@ import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import StatisticsPage from '../features/vocabulary/StatisticsPage';
 import LearnCardPage from '../features/vocabulary/LearnCardPage';
-import VocaDetailPage from '../features/vocabulary/VocaDetailPage';
 import TestEnTranPage from '../features/vocabulary/TestEnTranPage';
 import TestSentencePage from '../features/vocabulary/TestSentencePage';
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
@@ -55,14 +54,13 @@ const VocaHomeStackNav = createStackNavigator(
       LearnCard: {
         screen: LearnCardPage,
       },
-      // 单词详情
-      VocaDetail: {
-        screen: VocaDetailPage,
-      },
+     
       // 生词本的生词页
       GroupVoca: {
         screen: GroupVocaPage,
       },
+
+
       // 英英释义选词测试
       TestEnTran: {
         screen: TestEnTranPage,
@@ -71,6 +69,9 @@ const VocaHomeStackNav = createStackNavigator(
       TestSentence: {
         screen: TestSentencePage,
       },
+      // 中义选单词测试
+
+      // 听音选中义测试
 
 
       

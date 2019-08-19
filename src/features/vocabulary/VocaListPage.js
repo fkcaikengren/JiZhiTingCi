@@ -148,16 +148,16 @@ export default class VocaListPage extends React.Component {
     
     switch(this.props.type){
       case Constant.WRONG_LIST:
-          title='开始测试'
+          title='播放'
       break;
       case Constant.PASS_LIST:
-          title='一键还原'
+          title='还原'
       break;
       case Constant.LEARNED_LIST:
-          title='开始测试'
+          title='播放'
       break;
       case Constant.NEW_LIST:
-          title='开始测试'
+          title='播放'
       break;
 
     }

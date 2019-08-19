@@ -70,7 +70,7 @@ it('默认生词本不存在时，添加生词', ()=>{
 it('默认生词本存在时，添加生词', ()=>{
     let groupWord = {
         id: 'xx',
-        word: 'file',
+        word: 'love',
         // isHidden: false,
         enPhonetic: '/share/',
         enPronUrl: '/en/yy',
@@ -104,7 +104,7 @@ it('批量删除生词本下的单词', ()=>{
     //删除存在的单词
     // expect(vgd.deleteWords('Sunny', ['share','love'])).toBeTruthy()
     //删除不存在的单词
-    expect(vgd.deleteWords('Sunny', ['share','love'])).toBeTruthy()
+    expect(vgd.deleteWords('默认生词本', ['love', 'like'])).toBeTruthy()
 })
 
 it('生词本下有生词时，删除生词本以及单词',()=>{

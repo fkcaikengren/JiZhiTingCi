@@ -50,6 +50,15 @@ const styles = StyleSheet.create({
         margin:0,
         padding:0,
     },
+    footer: {
+        position:'absolute',
+        bottom:10,
+        alignSelf:'center',
+        width:'60%',
+        height:40,
+        backgroundColor: '#FDFDFD',
+       
+    },
 });
 
 export default styles
