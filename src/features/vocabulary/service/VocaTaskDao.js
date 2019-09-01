@@ -22,8 +22,6 @@ const VocaTaskSchema = {
         leftTimes:{type: 'int',optional:true, default: Constant.LEARN_PLAY_TIMES}, //默认是新学阶段，3遍轮播
             //延迟天数
         delayDays:{type: 'int',optional:true, default: 0},
-            //判断单词数据是否已查询写入
-        dataCompleted:{type: 'bool',optional:true, default: false},
             //创建时间
         createTime:'int?',
             //是否同步
@@ -45,13 +43,6 @@ const VocaTaskSchema = {
       passed: {type: 'bool', optional:true, default: false},
       wrongNum:	'int?',
       testWrongNum: 'int?',
-      enPhonetic: 'string?',
-      enPronUrl: 'string?',
-      amPhonetic: 'string?',
-      amPronUrl: 'string?',
-      def:'string?',
-      sentence:'string?',
-      tran: 'string?'
     }
   };
 

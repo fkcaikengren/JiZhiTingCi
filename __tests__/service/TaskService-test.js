@@ -41,7 +41,7 @@ afterEach(()=>{
 })
 
 it('测试时间工具', ()=>{
-    console.log(_util.getTodayTime(0))
+    console.log(_util.getDayTime(0))
 })
 
 it('获取全部书籍信息',async ()=>{

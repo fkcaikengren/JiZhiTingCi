@@ -19,6 +19,7 @@ export default class VocaDao{
     /** 打开数据库 */
     async open(){
         try{
+            console.log('打开voca.realm')
             this.realm  = await Realm.open({path: 'voca.realm'})
         }catch(err){
             console.log('Error: 打开realm数据库失败, 创建VocaDao对象失败')
@@ -44,31 +45,11 @@ export default class VocaDao{
      */
     searchWord = (searchText)=>{
         //不区分大小写，查询以searchText开头的
-        let wordObjs = this.realm.objects('WordInfo').filtered('word BEGINSWITH "'+searchText+'" AND inflection_type = "prototype"'); 
+        let wordInfos = this.realm.objects('WordInfo').filtered('word BEGINSWITH "'+searchText+'" AND inflection_type != "transform"');
         let data = []
-        let d = null
-        let preWord = {}
         //放到集合里，如果和上一个重复，对上一个进行叠加产生一个新的对象
-        for(let wo of wordObjs){
-            let myTran = `${wo.property}. ${wo.tran}`
-            if(wo.word === preWord){
-                //删除上一个
-                let pre = data.pop()
-                d = {
-                    word: wo.word,
-                    enPhonetic: wo.en_phonetic,
-                    trans: wo.tran?`${pre.trans}；${myTran}`:'',
-                }
-            }else{
-                d = {
-                    word: wo.word,
-                    enPhonetic: wo.en_phonetic,
-                    trans: wo.tran?myTran:'',
-                }
-            }
-            preWord = wo.word
-            data.push(d);
-
+        for(let wi of wordInfos){
+            data.push(wi)
             if(data.length >= 8){
                 console.log('break at 8')
                 break;
@@ -83,99 +64,104 @@ export default class VocaDao{
      * @description 获取单词详情
      * @memberof VocaDao
      */
-    getWordDetail = (word)=>{
+    getWordInfo = (word)=>{
         let wordObj = null
         try{
             //查询单词基本信息
-            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'"'); //数组
-            wordObj = { //构成一级对象
-                word:word,
-                properties:[]
-            };
-            for(let wi of wordInfos){
-
-                //查询单词英英释义
-                let wordDefs = this.realm.objects('WordDef').filtered('word_id="'+wi.id+'"');
-                let propertyObj = {//构建二级对象
-                    property:wi.property,
-                    enPhonetic:wi.en_phonetic,
-                    amPhonetic:wi.am_phonetic,
-                    enPronUrl:wi.en_pron_url,
-                    amPronUrl:wi.am_pron_url,
-                    defs:[]
-                }
-                for(let wd of wordDefs){
-
-
-                    //查询单词句子
-                    let sens = this.realm.objects('WordSentence').filtered('def_id="'+wd.id+'"')
-                    let sentenceObj = {
-                        def:wd.def,
-                        defTran:wd.def_tran,
-                        syn: wd.syn,
-                        phrase: wd.phrase,
-                        sentences:[]
-                    }
-                    sentenceObj.sentences = sens;
-
-                    propertyObj.defs.push(sentenceObj);
-                }
-                wordObj.properties.push(propertyObj);
+            let wordInfo = this.realm.objects('WordInfo').filtered('word="'+word+'" AND inflection_type != "transform"'   ); //数组
+            if(wordInfo[0]){
+                wordObj=wordInfo[0]
             }
-            console.log(wordObj);
+
         }catch (e) {
             console.log(e)
-            console.log('VocaDao : getWordDetail() Error')
+            console.log('VocaDao : getWordInfo() Error')
+        }
+        return wordObj
+    }
+
+
+    /**
+     * 批量查询
+     * @param words
+     * @returns [] 返回一个数组
+     */
+    getWordInfos = (words)=>{
+        try{
+            const len = words.length
+            if(len && len>0){
+                //拼接
+                let str = ''
+                for(let i in words){
+                    if(i==(len-1)){
+                        str += 'word="'+words[i]+'"';
+                    }else{
+                        str += 'word="'+words[i]+'" OR ';
+                    }
+                }
+                let wordInfos = this.realm.objects('WordInfo').filtered('('+str+') AND inflection_type != "transform"'   ); //数组
+                return wordInfos
+            }else{
+                return []
+            }
+
+        }catch (e) {
+            console.log(e)
+            console.log('VocaDao : getWordInfo() Error')
+        }
+    }
+
+    /**
+     *  查询单词词根信息
+     * @param word
+     * @returns {object}
+     */
+    getWordRoot = (id)=>{
+        let wordObj = null
+        try{
+            //查询单词基本信息
+            let wordRoot = this.realm.objects('WordRoot').filtered('id='+id ); //数组
+            if(wordRoot[0]){
+                wordObj=wordRoot[0]
+            }
+
+        }catch (e) {
+            console.log(e)
+            console.log('VocaDao : getWordRoot() Error')
         }
         return wordObj
     }
 
     /**
-     * @description 查询任务的单词信息，补充进去
-     * @memberof VocaDao
+     *  批量查询单词词根信息
+     * @param idStr id字符串
+     * @returns {Array}
      */
-    writeInfoToTask = (task)=>{
-        for(let w of task.words){      //遍历每个单词
-            console.log(w.word);
-            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+w.word+'"');
-            //音标
-            w.enPhonetic  = wordInfos[0]?wordInfos[0].en_phonetic:''
-            w.enPronUrl = wordInfos[0]?wordInfos[0].en_pron_url:''
-            w.amPhonetic = wordInfos[0]?wordInfos[0].am_phonetic:''
-            w.amPronUrl  = wordInfos[0]?wordInfos[0].am_pron_url:''
+    getWordRoots = (idStr, max=0, isLimit=false)=>{
+        const arr = []
+        try{
+            if(idStr && idStr !== ''){
+                const ids = idStr.split(',')
+                for(let id of ids){
+                    let wordRoot = this.realm.objects('WordRoot').filtered('id='+parseInt(id) ); //数组
+                    if(wordRoot[0]){
+                        arr.push(wordRoot[0])
+                    }
 
-
-            //词性数组
-            let trans = []
-            for(let wi of wordInfos){   
-
-                trans.push({
-                    property : wi.property,     //词性
-                    tran : wi.tran              //释义
-                });
-
-            }
-
-            //第一个释义和例句
-            if(wordInfos[0] ){
-                let id = wordInfos[0].id
-                let def0 = this.realm.objects('WordDef').filtered('word_id="'+id+'"')[0];
-                w.def = ''
-                if(def0){
-                    w.def = def0.def
-                    if(def0.id){
-                        let defId = def0.id
-                        let s = this.realm.objects('WordSentence').filtered('def_id="'+defId+'"')[0]
-                        w.sentence = s?s.sentence:''
+                    if(isLimit){
+                        if(arr.length>=max){
+                            break
+                        }
                     }
                 }
             }
-            
-            w.tran = JSON.stringify(trans); //把词性数组当做string存入单词的tran
-        }
-        console.log(task)
-        //数据填充完成
-        task.dataCompleted = true
-    }
 
+        }catch (e) {
+            console.log(e)
+            console.log('VocaDao : getWordRoot() Error')
+        }
+        return arr
+    }
 }
+
+

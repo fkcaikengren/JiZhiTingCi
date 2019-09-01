@@ -67,45 +67,7 @@ export default class VocaCard extends Component{
         }
         console.disableYellowBox=true
 
-        this.data = {
-            word:'abandon',
-            inflection_type:'prototype',
-            inflections:1,
-            freq:4,
-            en_phonetic:'',
-            en_pron_url:'',
-            am_phonetic:'',
-            am_pron_url:'',
-            sentence:'',
-            sen_pron_url:'',
-            root_id:1,
-            trans: {
-                "n": "放任；狂热",
-                "v": "遗弃；放弃"
-            },
-            examples:[{
-                "origin":"《新飞跃比弗利 第3季 第20集》",
-                "sen":"You can't just <em>abandon<em/> your son for five months, and then show up one day and think that's okay." , 
-                "sen_tran":"抛下自己的儿子五个多月，之后突然出现还觉得是理所当然。", 
-                "pic_url":"https://img.91dict.com/img2/4a3c9616b9cdfa5a1e4bf3e748c9b5fd/49.jpg",
-                "pron_url":"/mp32/4a3c9616b9cdfa5a1e4bf3e748c9b5fd/458.mp3"
-            },
-            {
-                "origin":"《24小时 第8季 第2集》",
-                "sen":"My country agrees to <em>abandon<em/> the pursuit of nuclear weapons." , 
-                "sen_tran":"我国同意放弃核武器的开发研制。", 
-                "pic_url":"https://img.91dict.com/img2/e0a992b6e271ad237a615809ac4fe09d/476.jpg",
-                "pron_url":"/"
-            },
-            {
-                "origin":"《打工姐妹花 第3季 第19集》",
-                "sen":"I'll be forced to <em>abandon<em/> you, move to the Midwest," , 
-                "sen_tran":"那我就一定得丢下你 搬去中西部,", 
-                "pic_url":"https://img.91dict.com/img2/4fd3f07a9a56fe89207a901c74e3fb83/1.jpg",
-                "pron_url":"/"
-            }
-        ]
-        }
+        console.log(this.props.wordInfo)
         this.wordRoot={
             word: 'abandon',        
             root: 'ban=prohibit,表示“禁止”',        
@@ -150,6 +112,7 @@ export default class VocaCard extends Component{
     }
 
     render(){
+        const WordInfo = this.props.wordInfo
         return (
             
         <ScrollView style={{ flex: 1 }}
@@ -165,7 +128,7 @@ export default class VocaCard extends Component{
                     <Col style={styles.basic}>
                         {/* 单词 */}
                         <Row style={gstyles.r_between}>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{this.data.word}</Text>
+                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{WordInfo.word}</Text>
                             <View style={gstyles.r_end}>
                                 <Text style={styles.errBtn}>报错</Text>
                                 {this.state.added && //从生词本移除
@@ -211,7 +174,7 @@ export default class VocaCard extends Component{
                     </Col>
                     {/* 场景例句 */}
                     <Col style={styles.carousel}>
-                        <ExampleCarousel examples={this.data.examples}/>
+                        <ExampleCarousel examples={WordInfo.examples}/>
                     </Col>
                     <Col style={styles.root}>
                         <RootCard wordRoot={this.wordRoot} relativeRoots={this.relativeRoots}/>
@@ -227,7 +190,7 @@ export default class VocaCard extends Component{
 
 
 VocaCard.propTypes = {
-   
+    wordInfo:PropTypes.object.isRequired
 }
   
 VocaCard.defaultProps = {

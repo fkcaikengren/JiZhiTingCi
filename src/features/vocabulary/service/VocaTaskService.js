@@ -15,6 +15,7 @@ export default class VocaTaskService {
 
     constructor(){
         this.vtd =  VocaTaskDao.getInstance()
+        this.vtd.open()
     }
     /**
      * 关闭数据库

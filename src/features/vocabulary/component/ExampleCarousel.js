@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, Image, Dimensions, StyleSheet} from 'react-native'
+import { StyleSheet,Text, View, Image, Dimensions, TouchableWithoutFeedback} from 'react-native'
 import Swiper from 'react-native-swiper'
 import {PropTypes} from 'prop-types';
+import {playSound} from '../service/AudioFetch'
 import Loader from '../../../component/Loader';
 
 const { width } = Dimensions.get('window')
-
+const Location = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -59,24 +60,38 @@ export default class ExampleCarousel extends Component {
     })
   }
   _renderText = (text)=>{
-    const s = text.split(/<em>|<em\/>/)
+    const s = text.split(/<em>|<\/em>/)
     return <Text style={{color:'#FFF', fontSize:14, fontWeight:'500'}}>
-        {s[0]}
-        <Text style={{color:'#F2753F',fontSize:14, fontWeight:'500' }}>{s[1]}</Text>
-        {s[2]}
+        {
+          s.map((text, index)=>{
+              if(index%2 === 0){
+                return text
+              }else{
+                return <Text style={{color:'#F2753F',fontSize:14, fontWeight:'500' }}>{text}</Text>
+              }
+          })
+        }
     </Text>
   }
+ 
   render () {
     return (
         <Swiper 
         style={styles.wrapper} 
         showsPagination={false}
         loop={false} 
+        onIndexChanged={(i)=>{
+          playSound(this.props.examples[i].pron_url)
+        }}
         loadMinimal loadMinimalSize={1} >
             {
                 this.props.examples.map((item, i)=>{
                     return <View style={styles.slide}>
-                        <Image onLoad={()=>{this._loadHandle(i)}} style={styles.image} source={{uri: item.pic_url}} />
+                        <TouchableWithoutFeedback onPress={()=>{
+                          playSound(item.pron_url)
+                        }}>
+                          <Image onLoad={()=>{this._loadHandle(i)}} style={styles.image} source={{uri: Location+item.pic_url}} />
+                        </TouchableWithoutFeedback>
                         <Text style={styles.origin}>{item.origin}</Text>
                         <View style={styles.bottomView}>
                             {this._renderText(item.sen)}

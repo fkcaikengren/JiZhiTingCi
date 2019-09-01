@@ -10,8 +10,9 @@ const styles = StyleSheet.create({
         width: '100%',
         borderTopLeftRadius:5, 
         borderTopRightRadius:5, 
-        backgroundColor:'#FFE95799',
         padding:5,
+        borderBottomColor:'#E0E0E0',
+        borderBottomWidth:1,
 
     },
     bottomView:{
@@ -58,13 +59,13 @@ const styles = StyleSheet.create({
         paddingVertical:5,
 
     },
-    fonts:{
-        fontSize:16,
-        color:'#303030',
-    },
     keyFonts:{
         fontSize:16,
         color:'#303030',
+    },
+    grayFont:{
+        color:'#505050',
+        fontSize:16,
     },
     wordFonts:{
         fontSize:16,
@@ -102,7 +103,7 @@ export default class RootCard extends React.Component {
                     </View>
                     <View style={gstyles.r_start_top}>
                         <View style={styles.iconView}><Text style={styles.iconFont}>记忆</Text></View>
-                        <Text style={styles.iconInfo}>{this.props.wordRoot.memory}</Text>
+                        <Text style={[styles.iconInfo,styles.grayFont]}>{this.props.wordRoot.memory}</Text>
                     </View>
                     <View style={gstyles.r_start_top}>
                         <View style={styles.iconView}><Text style={styles.iconFont}>释义</Text></View>
@@ -119,9 +120,9 @@ export default class RootCard extends React.Component {
                             return <View style={styles.col}>
                             <Text style={styles.wordFonts}>{item.word}</Text>
                             <AliIcon name='xiangxiajiantou' size={8} color='#FFE957'></AliIcon>
-                            <Text style={styles.fonts}>{item.memory}</Text>
+                            <Text style={styles.grayFont}>{item.memory}</Text>
                             <AliIcon name='xiangxiajiantou' size={8} color='#FFE957'></AliIcon>
-                            <Text style={styles.fonts}>{item.tran}</Text>
+                            <Text style={styles.keyFonts}>{item.tran}</Text>
                         </View>
                     })
                    }

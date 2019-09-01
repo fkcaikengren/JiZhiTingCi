@@ -199,7 +199,7 @@ const task = {
     ]
 }
 
-const vd = new VocaDao()
+const vd = VocaDao.getInstance()
 beforeEach(() => {
     //打开数据库
     return vd.open()
@@ -208,23 +208,36 @@ afterEach(()=>{
     return vd.close()
 })
 
-it('单词模糊查询', ()=>{
-    expect(vd.isOpen()).toBeTruthy()
-    vd.getWordDetail('mother')
 
-})
 
 it('查词（模糊查询匹配的前8个单词）', ()=>{
     expect(vd.isOpen()).toBeTruthy()
     let data = vd.searchWord('se')
     console.log(data)
-    expect(data.length).toBeLessThanOrEqual(8)
+    // expect(data.length).toBeLessThanOrEqual(8)
+})
+
+
+it('获取单词详情', ()=>{
+    expect(vd.isOpen()).toBeTruthy()
+    let wi = vd.getWordInfo('detail')
+    console.log(wi)
 })
 
 
 
-
-it('用单词数据填充任务',()=>{
-    vd.writeInfoToTask(task)
-    console.log(task)
+it('批量获取单词详情', ()=>{
+    expect(vd.isOpen()).toBeTruthy()
+    let infos = vd.getWordInfos(['detail','miss','sock'])
+    console.log(infos)
 })
+
+it('查询词根信息', ()=>{
+    expect(vd.isOpen()).toBeTruthy()
+    let r = vd.getWordRoot(2)
+    console.log(r)
+    let rs = vd.getWordRoots(r.relatives,3,true)
+    console.log(rs)
+})
+
+

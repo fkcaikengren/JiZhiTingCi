@@ -15,7 +15,7 @@ import {createHttp} from './src/common/http'
 
 //设置全局变量 (注：这部分代码只在安装App时运行一次)
 Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重新拷贝
-console.log('copy voca.realm');
+console.log('copy realm');
 // global.Storage = createStorage();
 // global.Http = createHttp()
 
