@@ -16,6 +16,10 @@ import HomeHeader from './component/HomeHeader'
 import Task from './component/Task'
 import HomeFooter from './component/HomeFooter';
 
+//数据库
+import VocaDao from '../vocabulary/service/VocaDao'
+import VocaTaskDao from '../vocabulary/service/VocaTaskDao'
+
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -39,14 +43,7 @@ let tasks = [{
   words:[{word: 'abandon',
       passed: false,
       wrongNum: 0,
-      testWrongNum: '',
-      enPhonetic: '',
-      enPronUrl: '',
-      amPhonetic: '',
-      amPronUrl: '',
-      def: '',
-      sentence: '',
-      tran: ''},]
+      testWrongNum: ''},]
 },{
   taskOrder: 2,
   status: 2,
@@ -63,13 +60,7 @@ let tasks = [{
       passed: false,
       wrongNum: 0,
       testWrongNum: '',
-      enPhonetic: '',
-      enPronUrl: '',
-      amPhonetic: '',
-      amPronUrl: '',
-      def: '',
-      sentence: '',
-      tran: ''},]
+      },]
 },{
   taskOrder: 1,
   status: 1,
@@ -86,44 +77,46 @@ let tasks = [{
       passed: false,
       wrongNum: 0,
       testWrongNum: '',
-      enPhonetic: '',
-      enPronUrl: '',
-      amPhonetic: '',
-      amPronUrl: '',
-      def: '',
-      sentence: '',
-      tran: ''},]
+      },]
 }]
 
-
-storiesOf('HomePage', module)
-  .add('Home', () =>
-    <Provider store={store}>
-        <MenuProvider>
-            <Root>
-                <Container style={styles.container}>
-                  <HomePage />
-                </Container>
-            </Root>
-        </MenuProvider>
-    </Provider>
-  )
-  .add('Header', ()=> 
-    <HomeHeader  offset={new Animated.Value(0)} current={0}>
-        
-    </HomeHeader>
-  )
-  .add('Task', ()=>
-    <Task tasks={tasks}  />
-  )
-  .add('Footer', ()=>{
-    <View style={{
-        flex: 1,
-        backgroundColor: '#F9F9F9'
-    }}>
-      <HomeFooter task={tasks[1]}/>
-    </View>
+const vocaDao = VocaDao.getInstance()
+const vocaTaskDao = VocaTaskDao.getInstance()
+vocaDao.open()
+.then(realm=>{
+  vocaTaskDao.open()
+  .then(realm2=>{
+    //页面
+    storiesOf('HomePage', module)
+    .add('Home', () =>
+      <Provider store={store}>
+          <MenuProvider>
+              <Root>
+                  <Container style={styles.container}>
+                    <HomePage />
+                  </Container>
+              </Root>
+          </MenuProvider>
+      </Provider>
+    )
+    .add('Header', ()=> 
+      <HomeHeader  offset={new Animated.Value(0)} current={0}>
+          
+      </HomeHeader>
+    )
+    .add('Task', ()=>
+      <Task tasks={tasks}  />
+    )
+    .add('Footer', ()=>{
+      <View style={{
+          flex: 1,
+          backgroundColor: '#F9F9F9'
+      }}>
+        <HomeFooter task={tasks[1]}/>
+      </View>
+    })
   })
+})
 
 
 

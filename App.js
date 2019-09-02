@@ -10,6 +10,9 @@ const Realm = require('realm')
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import {createStorage} from './src/common/storage';
 import {createHttp} from './src/common/http'
+import VocaDao from './src/features/vocabulary/service/VocaDao';
+import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
+import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
 
 
 
@@ -18,6 +21,11 @@ Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重
 console.log('copy realm');
 // global.Storage = createStorage();
 // global.Http = createHttp()
+
+//开启数据库
+VocaDao.getInstance().open()
+VocaTaskDao.getInstance().open()
+VocaGroupDao.getInstance().open()
 
 const styles = StyleSheet.create({
   container: {

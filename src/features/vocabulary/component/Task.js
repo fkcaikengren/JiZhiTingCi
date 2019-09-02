@@ -1,10 +1,11 @@
 
 import React, { Component } from 'react';
-import {
-  StyleSheet, Text, View, Image
-} from 'react-native';
+import {  StyleSheet, Text, View, Image} from 'react-native';
+import {Button} from 'react-native-elements'
 import {PropTypes} from 'prop-types';
 import TaskItem from './TaskItem';
+import gstyles from '../../../style'
+
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
@@ -26,8 +27,22 @@ export default class Task extends Component {
             this.renderTaskItems() 
           }
           {this.props.tasks<=0 &&
-            <View >
-                <Image source={require('../../../image/plan.jpg')} style={{width:200, height:200}} />
+            <View style={[gstyles.r_center,{height:200}]}>
+                <Button 
+                  title='制定计划'
+                  titleStyle={{
+                    fontSize:18,
+                    color:'#303030',
+                    fontWeight:'500'
+                  }}
+                  containerStyle={{
+                    width:'80%'
+                  }}
+                  buttonStyle={{
+                    backgroundColor:'#FFE957',
+                    borderRadius:50,
+                  }}
+                />
             </View>
           } 
         </View>
@@ -38,14 +53,15 @@ export default class Task extends Component {
   renderTaskItems = ()=> {
     return (
       this.props.tasks.map((item, index) => {
+        let separator
         if (index < this.props.tasks.length - 1) {
-          const separator = {
+          separator = {
             borderColor: '#F4F4F4',
             borderBottomWidth: StyleSheet.hairlineWidth,
           };
         }
         return (
-          <TaskItem  index={index+1} item={item} separator={separator} />
+          <TaskItem {...this.props} index={index+1} item={item} separator={separator} />
         );
       })
     );
@@ -64,5 +80,6 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12
   },
+ 
 });
 

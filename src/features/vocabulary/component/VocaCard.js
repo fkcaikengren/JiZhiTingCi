@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar,StyleSheet, ScrollView, View, Text} from 'react-native';
+import {Platform, StatusBar,StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback} from 'react-native';
 import {PropTypes} from 'prop-types';
 import {Grid, Row, Col} from 'react-native-easy-grid'
 import { Button } from 'react-native-elements';
@@ -8,15 +8,20 @@ import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
 import RootCard from './RootCard'
+import VocaDao from '../service/VocaDao'
+import AudioFetch from '../service/AudioFetch';
+
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     contentContainer:{
         paddingVertical:16,
-        backgroundColor:'#EFEFEF',
+        backgroundColor:'#F9F9F9',
     },
     grid:{
         marginHorizontal:10,
-        backgroundColor:'#EFEFEF',
+        backgroundColor:'#F9F9F9',
     },
     basic:{
         backgroundColor:'#FFF',
@@ -55,7 +60,17 @@ const styles = StyleSheet.create({
     marginTop:{
         marginTop:10,
     },
-   
+   clickView:{
+        width:'100%',
+        height:height/2,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+   },
+   clickText:{
+       fontSize:16,
+       color:'#555',
+   }
 })
 
 export default class VocaCard extends Component{
@@ -67,52 +82,56 @@ export default class VocaCard extends Component{
         }
         console.disableYellowBox=true
 
-        console.log(this.props.wordInfo)
-        this.wordRoot={
-            word: 'abandon',        
-            root: 'ban=prohibit,表示“禁止”',        
-            memory: 'a 不+ban+don 给予=不禁止给出去=放弃 抛弃 放弃',      
-            tran: 'v 抛弃,放弃',        
-            relatives: '649,648'     
+        
+
+        if(this.props.wordInfo){
+            this.wordInfo = this.props.wordInfo
+        }else{
+            // 自动获取
+            // VocaDao.getInstance
         }
-        this.relativeRoots=[
-            {
-                word: 'banal',        
-                root: 'ban=prohibit,表示“禁止”',        
-                memory: 'ban+al=被禁止的=陈腐的 ',      
-                tran: 'a 平庸的,陈腐的',        
-                relatives: ''    
-            },{
-                word: 'banish',        
-                root: '-ish 动词后缀',        
-                memory: 'ban 禁止,放弃+ish',      
-                tran: 'v 放逐,摒弃',        
-                relatives: ''    
-            },{
-                word: 'banish',        
-                root: '-ish 动词后缀',        
-                memory: 'ban 禁止,放弃+ish',      
-                tran: 'v 放逐,摒弃',        
-                relatives: ''    
-            },{
-                word: 'banish',        
-                root: '-ish 动词后缀',        
-                memory: 'ban 禁止,放弃+ish',      
-                tran: 'v 放逐,摒弃',        
-                relatives: ''    
-            }
-        ]
+
+        this.state = {
+            showAll : this.props.showAll,
+            wordRoot : null,
+            relativeRoots : []
+        }
+        
+        this.audioFetch = AudioFetch.getInstance()
         
     }
+
+    componentDidMount(){
+        const wordRoot = VocaDao.getInstance().getWordRoot(this.wordInfo.root_id)
+        if(wordRoot){
+            const relativeRoots = VocaDao.getInstance().getWordRoots(wordRoot.relatives,3,true)
+            this.setState({wordRoot, relativeRoots})
+        }
+    }
+
+    _genTrans = (transStr)=>{
+        const trans = JSON.parse(transStr)
+        const comps = []
+        if(trans){
+            for(let k in trans)
+            comps.push(<Text style={styles.darkFont}>{`${k}. ${trans[k]}`}</Text>)
+        }
+        return comps
+    }
+
     _removeWord = ()=>{
 
     }
     _addWord = ()=>{
 
     }
+    // 点击显示
+    _showAll = ()=>{
+        this.setState({showAll:true})
+    }
 
     render(){
-        const WordInfo = this.props.wordInfo
+        
         return (
             
         <ScrollView style={{ flex: 1 }}
@@ -120,6 +139,7 @@ export default class VocaCard extends Component{
             automaticallyAdjustContentInsets={false}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
+            style={{backgroundColor:'#F9F9F9'}}
             contentContainerStyle={styles.contentContainer}
         >
             <Grid style={styles.grid}>
@@ -128,7 +148,7 @@ export default class VocaCard extends Component{
                     <Col style={styles.basic}>
                         {/* 单词 */}
                         <Row style={gstyles.r_between}>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{WordInfo.word}</Text>
+                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{this.wordInfo.word}</Text>
                             <View style={gstyles.r_end}>
                                 <Text style={styles.errBtn}>报错</Text>
                                 {this.state.added && //从生词本移除
@@ -152,36 +172,57 @@ export default class VocaCard extends Component{
                         </Row>
                         {/* 音标 */}
                         <Row style={[gstyles.r_start, ]}>
-                            <Text style={styles.grayFont}>/əˈbændən/</Text>
-                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{marginLeft:10}} />
+                            <Text style={styles.grayFont}>{this.wordInfo.am_phonetic}</Text>
+                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{marginLeft:10}} onPress={()=>{
+                                this.audioFetch.playSound(this.wordInfo.am_pron_url)
+                            }}/>
                         </Row>
                         {/* 英英释义 */}
-                        <Row style={[gstyles.c_center, styles.marginTop]}>
-                            <Text style={styles.grayFont}>to leave someone, especially someone you are responsible for</Text>
+                        <Row style={[gstyles.r_start, styles.marginTop]}>
+                            <Text style={styles.grayFont}>{this.wordInfo.def}</Text>
                         </Row>
                         {/* 例句 */}
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
-                            <Text style={[styles.darkFont, {flex:10}]}>How could she abandon her own child?How cou she abandon her own child?</Text>
-                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{flex:1,marginLeft:10}} />
+                            <Text style={[styles.darkFont, {flex:10}]}>{this.wordInfo.sentence}</Text>
+                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{flex:1,marginLeft:10}} onPress={()=>{
+                                this.audioFetch.playSound(this.wordInfo.sen_pron_url)
+                            }}/>
                         </Row>
-                        <Row style={styles.marginTop}>
-                            <Col>
-                                <Text style={styles.darkFont}>v.抛弃，遗弃〔某人〕</Text>
-                                <Text style={styles.darkFont}>n.尽情; 放任</Text>
-                            </Col>
-                        </Row>
+                        {/* 释义 */}
+                        {this.state.showAll &&
+                            <Row style={styles.marginTop}>
+                                <Col>
+                                    {
+                                        this._genTrans(this.wordInfo.trans)
+                                    }
+                                </Col>
+                            </Row>
+                        }
                         {/* 详细词典 */}
                     </Col>
                     {/* 场景例句 */}
-                    <Col style={styles.carousel}>
-                        <ExampleCarousel examples={WordInfo.examples}/>
-                    </Col>
-                    <Col style={styles.root}>
-                        <RootCard wordRoot={this.wordRoot} relativeRoots={this.relativeRoots}/>
-                    </Col>
+                    {this.state.showAll && this.wordInfo.examples.length>0 &&
+                        <Col style={styles.carousel}>
+                            <ExampleCarousel examples={this.wordInfo.examples}/>
+                        </Col>
+                    }
+                    {/* 词根 */}
+                    {this.state.showAll && this.state.wordRoot &&
+                        <Col style={styles.root}>
+                            <RootCard wordRoot={this.state.wordRoot} relativeRoots={this.state.relativeRoots}/>
+                        </Col>
+                    }
+                    
+                    
                 </Col>
-
             </Grid>
+             {!this.state.showAll &&
+                <TouchableWithoutFeedback onPress={this._showAll}>
+                    <View style={styles.clickView}>
+                        <Text style={styles.clickText}>点击显示</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            }
         </ScrollView>
 
         )
@@ -190,9 +231,10 @@ export default class VocaCard extends Component{
 
 
 VocaCard.propTypes = {
-    wordInfo:PropTypes.object.isRequired
+    wordInfo:PropTypes.object.isRequired,
+    showAll:PropTypes.boolean
 }
   
 VocaCard.defaultProps = {
-
+    showAll:true
 }

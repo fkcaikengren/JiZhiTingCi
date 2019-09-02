@@ -28,8 +28,8 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
   toggleTaskModal,passWord } = createActions({
 
     //加载任务  
-    [LOAD_TASK] : (task, vocaDao, taskDao)=>{
-      return { task, vocaDao, taskDao};
+    [LOAD_TASK] : (task,wordInfos)=>{
+      return {task,wordInfos};
     },
     //暂停、播放
     [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{ 

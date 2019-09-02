@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#F29F3F',
         borderRadius:2,
         marginRight: 10,
-        marginTop:4,
+        marginTop:8,
         flex:1,
     },
     iconFont:{
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:'#303030',
         flex:9,
+        lineHeight:30,
     },
     col:{
         width: '100%',

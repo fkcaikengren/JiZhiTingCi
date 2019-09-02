@@ -18,6 +18,8 @@ import PlayController from './component/PlayController';
 import StudyPlayController from './component/StudyPlayController'
 import VocaUtil from './common/vocaUtil'
 import gstyles from '../../style'
+import VocaTaskDao from './service/VocaTaskDao';
+import VocaDao from './service/VocaDao';
 
 
 const ITEM_H = 55;
@@ -30,30 +32,32 @@ global.VocaPlayFlatList = null; //声明全局遍历对象
 class VocaPlayPage extends React.Component {
 
     static propTypes = {
-        vocaDao: PropTypes.object,
-        taskDao: PropTypes.object,
         mode: PropTypes.string,
         task: PropTypes.object,
     }
 
     constructor(props){
         super(props);
-        // this.taskDao = this.props.navigation.getParam('taskDao',null)
-        this.taskDao = this.props.taskDao
-        // this.vocaDao = this.props.navigation.getParam('vocaDao', null)
-        this.vocaDao = this.props.vocaDao
+        this.taskDao = VocaTaskDao.getInstance()
+        this.vocaDao = VocaDao.getInstance()
         // this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
         this.mode = this.props.mode
         this.isStudyMode = false
         if(this.mode !== Constant.NORMAL_PLAY){  //新学和复习统称学习模式
             this.isStudyMode = true
         }
+
+        console.disableYellowBox = true
     }
     componentDidMount(){
-        const { loadTask} = this.props
-        //加载task
-        // const task = navigation.getParam('task', null)
-        loadTask(this.props.task, this.vocaDao, this.taskDao)
+        //加载task 和word
+        let task = this.props.navigation.getParam('task')
+        if(!task){
+            const taskOrder = this.props.navigation.getParam('taskOrder')
+            task = this.taskDao.getTaskByOrder(taskOrder)
+        }
+        const wordInfos = this.vocaDao.getWordInfos(task.words.map((item, i)=>item.word))
+        this.props.loadTask(task,wordInfos)
 
         //判断是否自动播放，task是从navigation中获取，一定存在curIndex
         if(this.isStudyMode){
@@ -91,7 +95,7 @@ class VocaPlayPage extends React.Component {
      */
     _autoplay = (index) => {
         const {task} = this.props.vocaPlay;
-        const { words, wordCount} = task 
+        const { wordCount} = task 
         const {changePlayTimer} = this.props;
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated:true, index, viewPosition:0.5 };
@@ -165,21 +169,9 @@ class VocaPlayPage extends React.Component {
     }
 
     _renderItem = ({item, index})=>{
-        const {showWord,showTran,curIndex,themes, themeId, autoPlayTimer} = this.props.vocaPlay;
+        const { showWord,showTran,curIndex,themes, themeId, autoPlayTimer} = this.props.vocaPlay;
         //处理中文翻译
-        let translation = ''
-        if(item.tran !==null && item.tran.length>0){
-            const trans = JSON.parse(item.tran)
-            for(let i in trans){
-                let processdTran = ''
-                if(i==0 && trans.length>1 && trans[i].tran.length>9){
-                    processdTran = trans[i].tran.substr(0,9) + '..'
-                }else{
-                    processdTran = trans[i].tran
-                }
-                translation += `${trans[i].property}.${processdTran}；`
-            }
-        }
+        const translation = VocaUtil.transToText(item.trans)
         //主题
         const Theme = themes[themeId]
         //字幕的样式
@@ -259,7 +251,11 @@ class VocaPlayPage extends React.Component {
                 clearTimeout(autoPlayTimer);
                 changePlayTimer(0);
             }
-            loadTask(item, this.vocaDao, this.taskDao)
+            
+            //数据库加载任务
+            this.taskDao.getTaskByOrder(item.taskOrder)
+            
+
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             if(item.wordCount>0){
                 this._autoplay(0)
@@ -318,7 +314,7 @@ class VocaPlayPage extends React.Component {
 
     render(){
 
-        const {task,  themeId, themes, autoPlayTimer, isLoadPending} = this.props.vocaPlay;
+        const {task, wordInfos, themeId, themes, autoPlayTimer, isLoadPending} = this.props.vocaPlay;
         const {words} = task
         const Theme = themes[themeId]
 
@@ -328,11 +324,13 @@ class VocaPlayPage extends React.Component {
         const contentHeight = this.isStudyMode?height-STATUSBAR_HEIGHT-200:height-STATUSBAR_HEIGHT-240
         //单词列表处理
         const showWords = []
-        for(let w of words){
-            if(!w.passed ){
-                showWords.push(w)
+        for(let i in words){
+            if(!words[i].passed ){
+                showWords.push(wordInfos[i])
             }
         }
+
+        console.log(typeof showWords)
 
         let flatListProps = {
             ref: component => {

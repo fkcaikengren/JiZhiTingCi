@@ -1,0 +1,2446 @@
+----第1天-----
+taskOrder:1, status:0,leftTimes:3,  date: Mon Sep 02 2019
+taskOrder:1, status:1,leftTimes:12,  date: Mon Sep 02 2019
+----第2天-----
+taskOrder:2, status:0,leftTimes:3,  date: Tue Sep 03 2019
+taskOrder:1, status:2,leftTimes:12,  date: Tue Sep 03 2019
+taskOrder:2, status:1,leftTimes:12,  date: Tue Sep 03 2019
+----第3天-----
+taskOrder:3, status:0,leftTimes:3,  date: Wed Sep 04 2019
+taskOrder:2, status:2,leftTimes:12,  date: Wed Sep 04 2019
+taskOrder:3, status:1,leftTimes:12,  date: Wed Sep 04 2019
+----第4天-----
+taskOrder:4, status:0,leftTimes:3,  date: Thu Sep 05 2019
+taskOrder:1, status:4,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:3, status:2,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:4, status:1,leftTimes:12,  date: Thu Sep 05 2019
+----第5天-----
+taskOrder:5, status:0,leftTimes:3,  date: Fri Sep 06 2019
+taskOrder:2, status:4,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:4, status:2,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:5, status:1,leftTimes:12,  date: Fri Sep 06 2019
+----第6天-----
+taskOrder:6, status:0,leftTimes:3,  date: Sat Sep 07 2019
+taskOrder:3, status:4,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:5, status:2,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:6, status:1,leftTimes:12,  date: Sat Sep 07 2019
+----第7天-----
+taskOrder:7, status:0,leftTimes:3,  date: Sun Sep 08 2019
+taskOrder:1, status:7,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:4, status:4,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:6, status:2,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:7, status:1,leftTimes:12,  date: Sun Sep 08 2019
+----第8天-----
+taskOrder:8, status:0,leftTimes:3,  date: Mon Sep 09 2019
+taskOrder:2, status:7,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:5, status:4,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:7, status:2,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:8, status:1,leftTimes:12,  date: Mon Sep 09 2019
+----第9天-----
+taskOrder:9, status:0,leftTimes:3,  date: Tue Sep 10 2019
+taskOrder:3, status:7,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:6, status:4,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:8, status:2,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:9, status:1,leftTimes:12,  date: Tue Sep 10 2019
+----第10天-----
+taskOrder:10, status:0,leftTimes:3,  date: Wed Sep 11 2019
+taskOrder:4, status:7,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:7, status:4,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:9, status:2,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:10, status:1,leftTimes:12,  date: Wed Sep 11 2019
+----第11天-----
+taskOrder:11, status:0,leftTimes:3,  date: Thu Sep 12 2019
+taskOrder:5, status:7,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:8, status:4,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:10, status:2,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:11, status:1,leftTimes:12,  date: Thu Sep 12 2019
+----第12天-----
+taskOrder:12, status:0,leftTimes:3,  date: Fri Sep 13 2019
+taskOrder:6, status:7,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:9, status:4,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:11, status:2,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:12, status:1,leftTimes:12,  date: Fri Sep 13 2019
+----第13天-----
+taskOrder:13, status:0,leftTimes:3,  date: Sat Sep 14 2019
+taskOrder:7, status:7,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:10, status:4,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:12, status:2,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:13, status:1,leftTimes:12,  date: Sat Sep 14 2019
+----第14天-----
+taskOrder:14, status:0,leftTimes:3,  date: Sun Sep 15 2019
+taskOrder:8, status:7,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:11, status:4,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:13, status:2,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:14, status:1,leftTimes:12,  date: Sun Sep 15 2019
+----第15天-----
+taskOrder:15, status:0,leftTimes:3,  date: Mon Sep 16 2019
+taskOrder:1, status:15,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:9, status:7,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:12, status:4,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:14, status:2,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:15, status:1,leftTimes:12,  date: Mon Sep 16 2019
+----第16天-----
+taskOrder:16, status:0,leftTimes:3,  date: Tue Sep 17 2019
+taskOrder:2, status:15,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:10, status:7,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:13, status:4,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:15, status:2,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:16, status:1,leftTimes:12,  date: Tue Sep 17 2019
+----第17天-----
+taskOrder:17, status:0,leftTimes:3,  date: Wed Sep 18 2019
+taskOrder:3, status:15,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:11, status:7,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:14, status:4,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:16, status:2,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:17, status:1,leftTimes:12,  date: Wed Sep 18 2019
+----第18天-----
+taskOrder:18, status:0,leftTimes:3,  date: Thu Sep 19 2019
+taskOrder:4, status:15,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:12, status:7,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:15, status:4,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:17, status:2,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:18, status:1,leftTimes:12,  date: Thu Sep 19 2019
+----第19天-----
+taskOrder:19, status:0,leftTimes:3,  date: Fri Sep 20 2019
+taskOrder:5, status:15,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:13, status:7,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:16, status:4,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:18, status:2,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:19, status:1,leftTimes:12,  date: Fri Sep 20 2019
+----第20天-----
+taskOrder:20, status:0,leftTimes:3,  date: Sat Sep 21 2019
+taskOrder:6, status:15,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:14, status:7,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:17, status:4,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:19, status:2,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:20, status:1,leftTimes:12,  date: Sat Sep 21 2019
+----第21天-----
+taskOrder:21, status:0,leftTimes:3,  date: Sun Sep 22 2019
+taskOrder:7, status:15,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:15, status:7,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:18, status:4,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:20, status:2,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:21, status:1,leftTimes:12,  date: Sun Sep 22 2019
+----第22天-----
+taskOrder:22, status:0,leftTimes:3,  date: Mon Sep 23 2019
+taskOrder:8, status:15,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:16, status:7,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:19, status:4,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:21, status:2,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:22, status:1,leftTimes:12,  date: Mon Sep 23 2019
+----第23天-----
+taskOrder:23, status:0,leftTimes:3,  date: Tue Sep 24 2019
+taskOrder:9, status:15,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:17, status:7,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:20, status:4,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:22, status:2,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:23, status:1,leftTimes:12,  date: Tue Sep 24 2019
+----第24天-----
+taskOrder:24, status:0,leftTimes:3,  date: Wed Sep 25 2019
+taskOrder:10, status:15,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:18, status:7,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:21, status:4,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:23, status:2,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:24, status:1,leftTimes:12,  date: Wed Sep 25 2019
+----第25天-----
+taskOrder:25, status:0,leftTimes:3,  date: Thu Sep 26 2019
+taskOrder:11, status:15,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:19, status:7,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:22, status:4,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:24, status:2,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:25, status:1,leftTimes:12,  date: Thu Sep 26 2019
+----第26天-----
+taskOrder:26, status:0,leftTimes:3,  date: Fri Sep 27 2019
+taskOrder:12, status:15,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:20, status:7,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:23, status:4,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:25, status:2,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:26, status:1,leftTimes:12,  date: Fri Sep 27 2019
+----第27天-----
+taskOrder:27, status:0,leftTimes:3,  date: Sat Sep 28 2019
+taskOrder:13, status:15,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:21, status:7,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:24, status:4,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:26, status:2,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:27, status:1,leftTimes:12,  date: Sat Sep 28 2019
+----第28天-----
+taskOrder:28, status:0,leftTimes:3,  date: Sun Sep 29 2019
+taskOrder:14, status:15,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:22, status:7,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:25, status:4,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:27, status:2,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:28, status:1,leftTimes:12,  date: Sun Sep 29 2019
+----第29天-----
+taskOrder:29, status:0,leftTimes:3,  date: Mon Sep 30 2019
+taskOrder:15, status:15,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:23, status:7,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:26, status:4,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:28, status:2,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:29, status:1,leftTimes:12,  date: Mon Sep 30 2019
+----第30天-----
+taskOrder:30, status:0,leftTimes:3,  date: Tue Oct 01 2019
+taskOrder:16, status:15,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:24, status:7,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:27, status:4,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:29, status:2,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:30, status:1,leftTimes:12,  date: Tue Oct 01 2019
+----第31天-----
+taskOrder:17, status:15,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:25, status:7,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:28, status:4,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:30, status:1,leftTimes:12,  date: Wed Oct 02 2019
+----第32天-----
+taskOrder:30, status:0,leftTimes:3,  date: Thu Oct 03 2019
+taskOrder:18, status:15,leftTimes:12,  date: Thu Oct 03 2019
+taskOrder:26, status:7,leftTimes:12,  date: Thu Oct 03 2019
+taskOrder:29, status:4,leftTimes:12,  date: Thu Oct 03 2019
+taskOrder:30, status:1,leftTimes:12,  date: Thu Oct 03 2019
+----第33天-----
+taskOrder:19, status:15,leftTimes:12,  date: Fri Oct 04 2019
+taskOrder:27, status:7,leftTimes:12,  date: Fri Oct 04 2019
+taskOrder:30, status:1,leftTimes:12,  date: Fri Oct 04 2019
+----第34天-----
+taskOrder:30, status:0,leftTimes:3,  date: Sat Oct 05 2019
+taskOrder:20, status:15,leftTimes:12,  date: Sat Oct 05 2019
+taskOrder:28, status:7,leftTimes:12,  date: Sat Oct 05 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sat Oct 05 2019
+----第35天-----
+taskOrder:21, status:15,leftTimes:12,  date: Sun Oct 06 2019
+taskOrder:29, status:7,leftTimes:12,  date: Sun Oct 06 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sun Oct 06 2019
+----第36天-----
+taskOrder:30, status:0,leftTimes:3,  date: Mon Oct 07 2019
+taskOrder:22, status:15,leftTimes:12,  date: Mon Oct 07 2019
+taskOrder:30, status:1,leftTimes:12,  date: Mon Oct 07 2019
+----第37天-----
+taskOrder:23, status:15,leftTimes:12,  date: Tue Oct 08 2019
+taskOrder:30, status:1,leftTimes:12,  date: Tue Oct 08 2019
+----第38天-----
+taskOrder:30, status:0,leftTimes:3,  date: Wed Oct 09 2019
+taskOrder:24, status:15,leftTimes:12,  date: Wed Oct 09 2019
+taskOrder:30, status:1,leftTimes:12,  date: Wed Oct 09 2019
+----第39天-----
+taskOrder:25, status:15,leftTimes:12,  date: Thu Oct 10 2019
+taskOrder:30, status:1,leftTimes:12,  date: Thu Oct 10 2019
+----第40天-----
+taskOrder:30, status:0,leftTimes:3,  date: Fri Oct 11 2019
+taskOrder:26, status:15,leftTimes:12,  date: Fri Oct 11 2019
+taskOrder:30, status:1,leftTimes:12,  date: Fri Oct 11 2019
+----第41天-----
+taskOrder:27, status:15,leftTimes:12,  date: Sat Oct 12 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sat Oct 12 2019
+----第42天-----
+taskOrder:30, status:0,leftTimes:3,  date: Sun Oct 13 2019
+taskOrder:28, status:15,leftTimes:12,  date: Sun Oct 13 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sun Oct 13 2019
+----第43天-----
+taskOrder:29, status:15,leftTimes:12,  date: Mon Oct 14 2019
+taskOrder:30, status:1,leftTimes:12,  date: Mon Oct 14 2019
+----第44天-----
+taskOrder:30, status:0,leftTimes:3,  date: Tue Oct 15 2019
+taskOrder:30, status:1,leftTimes:12,  date: Tue Oct 15 2019
+----第45天-----
+taskOrder:30, status:1,leftTimes:12,  date: Wed Oct 16 2019
+----第46天-----
+taskOrder:30, status:0,leftTimes:3,  date: Thu Oct 17 2019
+taskOrder:30, status:1,leftTimes:12,  date: Thu Oct 17 2019
+----第47天-----
+taskOrder:30, status:1,leftTimes:12,  date: Fri Oct 18 2019
+----第48天-----
+taskOrder:30, status:0,leftTimes:3,  date: Sat Oct 19 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sat Oct 19 2019
+----第49天-----
+taskOrder:30, status:1,leftTimes:12,  date: Sun Oct 20 2019
+----第50天-----
+taskOrder:30, status:0,leftTimes:3,  date: Mon Oct 21 2019
+taskOrder:30, status:1,leftTimes:12,  date: Mon Oct 21 2019
+----第51天-----
+taskOrder:30, status:1,leftTimes:12,  date: Tue Oct 22 2019
+----第52天-----
+taskOrder:30, status:0,leftTimes:3,  date: Wed Oct 23 2019
+taskOrder:30, status:1,leftTimes:12,  date: Wed Oct 23 2019
+----第53天-----
+taskOrder:30, status:1,leftTimes:12,  date: Thu Oct 24 2019
+----第54天-----
+taskOrder:30, status:0,leftTimes:3,  date: Fri Oct 25 2019
+taskOrder:30, status:1,leftTimes:12,  date: Fri Oct 25 2019
+----第55天-----
+taskOrder:30, status:1,leftTimes:12,  date: Sat Oct 26 2019
+----第56天-----
+taskOrder:30, status:0,leftTimes:3,  date: Sun Oct 27 2019
+taskOrder:30, status:1,leftTimes:12,  date: Sun Oct 27 2019
+----第57天-----
+taskOrder:30, status:1,leftTimes:12,  date: Mon Oct 28 2019
+----第58天-----
+taskOrder:30, status:0,leftTimes:3,  date: Tue Oct 29 2019
+taskOrder:30, status:1,leftTimes:12,  date: Tue Oct 29 2019
+----第59天-----
+taskOrder:30, status:1,leftTimes:12,  date: Wed Oct 30 2019
+----第60天-----
+taskOrder:30, status:0,leftTimes:3,  date: Thu Oct 31 2019
+taskOrder:30, status:1,leftTimes:12,  date: Thu Oct 31 2019
+----第61天-----
+taskOrder:31, status:0,leftTimes:3,  date: Fri Nov 01 2019
+taskOrder:30, status:2,leftTimes:12,  date: Fri Nov 01 2019
+taskOrder:31, status:1,leftTimes:12,  date: Fri Nov 01 2019
+----第62天-----
+taskOrder:32, status:0,leftTimes:3,  date: Sat Nov 02 2019
+taskOrder:31, status:2,leftTimes:12,  date: Sat Nov 02 2019
+taskOrder:32, status:1,leftTimes:12,  date: Sat Nov 02 2019
+----第63天-----
+taskOrder:33, status:0,leftTimes:3,  date: Sun Nov 03 2019
+taskOrder:30, status:4,leftTimes:12,  date: Sun Nov 03 2019
+taskOrder:32, status:2,leftTimes:12,  date: Sun Nov 03 2019
+taskOrder:33, status:1,leftTimes:12,  date: Sun Nov 03 2019
+----第64天-----
+taskOrder:34, status:0,leftTimes:3,  date: Mon Nov 04 2019
+taskOrder:31, status:4,leftTimes:12,  date: Mon Nov 04 2019
+taskOrder:33, status:2,leftTimes:12,  date: Mon Nov 04 2019
+taskOrder:34, status:1,leftTimes:12,  date: Mon Nov 04 2019
+----第65天-----
+taskOrder:35, status:0,leftTimes:3,  date: Tue Nov 05 2019
+taskOrder:32, status:4,leftTimes:12,  date: Tue Nov 05 2019
+taskOrder:34, status:2,leftTimes:12,  date: Tue Nov 05 2019
+taskOrder:35, status:1,leftTimes:12,  date: Tue Nov 05 2019
+----第66天-----
+taskOrder:36, status:0,leftTimes:3,  date: Wed Nov 06 2019
+taskOrder:30, status:7,leftTimes:12,  date: Wed Nov 06 2019
+taskOrder:33, status:4,leftTimes:12,  date: Wed Nov 06 2019
+taskOrder:35, status:2,leftTimes:12,  date: Wed Nov 06 2019
+taskOrder:36, status:1,leftTimes:12,  date: Wed Nov 06 2019
+----第67天-----
+taskOrder:37, status:0,leftTimes:3,  date: Thu Nov 07 2019
+taskOrder:31, status:7,leftTimes:12,  date: Thu Nov 07 2019
+taskOrder:34, status:4,leftTimes:12,  date: Thu Nov 07 2019
+taskOrder:36, status:2,leftTimes:12,  date: Thu Nov 07 2019
+taskOrder:37, status:1,leftTimes:12,  date: Thu Nov 07 2019
+----第68天-----
+taskOrder:38, status:0,leftTimes:3,  date: Fri Nov 08 2019
+taskOrder:32, status:7,leftTimes:12,  date: Fri Nov 08 2019
+taskOrder:35, status:4,leftTimes:12,  date: Fri Nov 08 2019
+taskOrder:37, status:2,leftTimes:12,  date: Fri Nov 08 2019
+taskOrder:38, status:1,leftTimes:12,  date: Fri Nov 08 2019
+----第69天-----
+taskOrder:39, status:0,leftTimes:3,  date: Sat Nov 09 2019
+taskOrder:33, status:7,leftTimes:12,  date: Sat Nov 09 2019
+taskOrder:36, status:4,leftTimes:12,  date: Sat Nov 09 2019
+taskOrder:38, status:2,leftTimes:12,  date: Sat Nov 09 2019
+taskOrder:39, status:1,leftTimes:12,  date: Sat Nov 09 2019
+----第70天-----
+taskOrder:40, status:0,leftTimes:3,  date: Sun Nov 10 2019
+taskOrder:34, status:7,leftTimes:12,  date: Sun Nov 10 2019
+taskOrder:37, status:4,leftTimes:12,  date: Sun Nov 10 2019
+taskOrder:39, status:2,leftTimes:12,  date: Sun Nov 10 2019
+taskOrder:40, status:1,leftTimes:12,  date: Sun Nov 10 2019
+----第71天-----
+taskOrder:41, status:0,leftTimes:3,  date: Mon Nov 11 2019
+taskOrder:35, status:7,leftTimes:12,  date: Mon Nov 11 2019
+taskOrder:38, status:4,leftTimes:12,  date: Mon Nov 11 2019
+taskOrder:40, status:2,leftTimes:12,  date: Mon Nov 11 2019
+taskOrder:41, status:1,leftTimes:12,  date: Mon Nov 11 2019
+----第72天-----
+taskOrder:42, status:0,leftTimes:3,  date: Tue Nov 12 2019
+taskOrder:36, status:7,leftTimes:12,  date: Tue Nov 12 2019
+taskOrder:39, status:4,leftTimes:12,  date: Tue Nov 12 2019
+taskOrder:41, status:2,leftTimes:12,  date: Tue Nov 12 2019
+taskOrder:42, status:1,leftTimes:12,  date: Tue Nov 12 2019
+----第73天-----
+taskOrder:43, status:0,leftTimes:3,  date: Wed Nov 13 2019
+taskOrder:37, status:7,leftTimes:12,  date: Wed Nov 13 2019
+taskOrder:40, status:4,leftTimes:12,  date: Wed Nov 13 2019
+taskOrder:42, status:2,leftTimes:12,  date: Wed Nov 13 2019
+taskOrder:43, status:1,leftTimes:12,  date: Wed Nov 13 2019
+----第74天-----
+taskOrder:44, status:0,leftTimes:3,  date: Thu Nov 14 2019
+taskOrder:30, status:15,leftTimes:12,  date: Thu Nov 14 2019
+taskOrder:38, status:7,leftTimes:12,  date: Thu Nov 14 2019
+taskOrder:41, status:4,leftTimes:12,  date: Thu Nov 14 2019
+taskOrder:43, status:2,leftTimes:12,  date: Thu Nov 14 2019
+taskOrder:44, status:1,leftTimes:12,  date: Thu Nov 14 2019
+----第75天-----
+taskOrder:45, status:0,leftTimes:3,  date: Fri Nov 15 2019
+taskOrder:31, status:15,leftTimes:12,  date: Fri Nov 15 2019
+taskOrder:39, status:7,leftTimes:12,  date: Fri Nov 15 2019
+taskOrder:42, status:4,leftTimes:12,  date: Fri Nov 15 2019
+taskOrder:44, status:2,leftTimes:12,  date: Fri Nov 15 2019
+taskOrder:45, status:1,leftTimes:12,  date: Fri Nov 15 2019
+----第76天-----
+taskOrder:46, status:0,leftTimes:3,  date: Sat Nov 16 2019
+taskOrder:32, status:15,leftTimes:12,  date: Sat Nov 16 2019
+taskOrder:40, status:7,leftTimes:12,  date: Sat Nov 16 2019
+taskOrder:43, status:4,leftTimes:12,  date: Sat Nov 16 2019
+taskOrder:45, status:2,leftTimes:12,  date: Sat Nov 16 2019
+taskOrder:46, status:1,leftTimes:12,  date: Sat Nov 16 2019
+----第77天-----
+taskOrder:47, status:0,leftTimes:3,  date: Sun Nov 17 2019
+taskOrder:33, status:15,leftTimes:12,  date: Sun Nov 17 2019
+taskOrder:41, status:7,leftTimes:12,  date: Sun Nov 17 2019
+taskOrder:44, status:4,leftTimes:12,  date: Sun Nov 17 2019
+taskOrder:46, status:2,leftTimes:12,  date: Sun Nov 17 2019
+taskOrder:47, status:1,leftTimes:12,  date: Sun Nov 17 2019
+----第78天-----
+taskOrder:48, status:0,leftTimes:3,  date: Mon Nov 18 2019
+taskOrder:34, status:15,leftTimes:12,  date: Mon Nov 18 2019
+taskOrder:42, status:7,leftTimes:12,  date: Mon Nov 18 2019
+taskOrder:45, status:4,leftTimes:12,  date: Mon Nov 18 2019
+taskOrder:47, status:2,leftTimes:12,  date: Mon Nov 18 2019
+taskOrder:48, status:1,leftTimes:12,  date: Mon Nov 18 2019
+----第79天-----
+taskOrder:49, status:0,leftTimes:3,  date: Tue Nov 19 2019
+taskOrder:35, status:15,leftTimes:12,  date: Tue Nov 19 2019
+taskOrder:43, status:7,leftTimes:12,  date: Tue Nov 19 2019
+taskOrder:46, status:4,leftTimes:12,  date: Tue Nov 19 2019
+taskOrder:48, status:2,leftTimes:12,  date: Tue Nov 19 2019
+taskOrder:49, status:1,leftTimes:12,  date: Tue Nov 19 2019
+----第80天-----
+taskOrder:50, status:0,leftTimes:3,  date: Wed Nov 20 2019
+taskOrder:36, status:15,leftTimes:12,  date: Wed Nov 20 2019
+taskOrder:44, status:7,leftTimes:12,  date: Wed Nov 20 2019
+taskOrder:47, status:4,leftTimes:12,  date: Wed Nov 20 2019
+taskOrder:49, status:2,leftTimes:12,  date: Wed Nov 20 2019
+taskOrder:50, status:1,leftTimes:12,  date: Wed Nov 20 2019
+----第81天-----
+taskOrder:51, status:0,leftTimes:3,  date: Thu Nov 21 2019
+taskOrder:37, status:15,leftTimes:12,  date: Thu Nov 21 2019
+taskOrder:45, status:7,leftTimes:12,  date: Thu Nov 21 2019
+taskOrder:48, status:4,leftTimes:12,  date: Thu Nov 21 2019
+taskOrder:50, status:2,leftTimes:12,  date: Thu Nov 21 2019
+taskOrder:51, status:1,leftTimes:12,  date: Thu Nov 21 2019
+----第82天-----
+taskOrder:52, status:0,leftTimes:3,  date: Fri Nov 22 2019
+taskOrder:38, status:15,leftTimes:12,  date: Fri Nov 22 2019
+taskOrder:46, status:7,leftTimes:12,  date: Fri Nov 22 2019
+taskOrder:49, status:4,leftTimes:12,  date: Fri Nov 22 2019
+taskOrder:51, status:2,leftTimes:12,  date: Fri Nov 22 2019
+taskOrder:52, status:1,leftTimes:12,  date: Fri Nov 22 2019
+----第83天-----
+taskOrder:53, status:0,leftTimes:3,  date: Sat Nov 23 2019
+taskOrder:39, status:15,leftTimes:12,  date: Sat Nov 23 2019
+taskOrder:47, status:7,leftTimes:12,  date: Sat Nov 23 2019
+taskOrder:50, status:4,leftTimes:12,  date: Sat Nov 23 2019
+taskOrder:52, status:2,leftTimes:12,  date: Sat Nov 23 2019
+taskOrder:53, status:1,leftTimes:12,  date: Sat Nov 23 2019
+----第84天-----
+taskOrder:54, status:0,leftTimes:3,  date: Sun Nov 24 2019
+taskOrder:40, status:15,leftTimes:12,  date: Sun Nov 24 2019
+taskOrder:48, status:7,leftTimes:12,  date: Sun Nov 24 2019
+taskOrder:51, status:4,leftTimes:12,  date: Sun Nov 24 2019
+taskOrder:53, status:2,leftTimes:12,  date: Sun Nov 24 2019
+taskOrder:54, status:1,leftTimes:12,  date: Sun Nov 24 2019
+----第85天-----
+taskOrder:55, status:0,leftTimes:3,  date: Mon Nov 25 2019
+taskOrder:41, status:15,leftTimes:12,  date: Mon Nov 25 2019
+taskOrder:49, status:7,leftTimes:12,  date: Mon Nov 25 2019
+taskOrder:52, status:4,leftTimes:12,  date: Mon Nov 25 2019
+taskOrder:54, status:2,leftTimes:12,  date: Mon Nov 25 2019
+taskOrder:55, status:1,leftTimes:12,  date: Mon Nov 25 2019
+----第86天-----
+taskOrder:56, status:0,leftTimes:3,  date: Tue Nov 26 2019
+taskOrder:42, status:15,leftTimes:12,  date: Tue Nov 26 2019
+taskOrder:50, status:7,leftTimes:12,  date: Tue Nov 26 2019
+taskOrder:53, status:4,leftTimes:12,  date: Tue Nov 26 2019
+taskOrder:55, status:2,leftTimes:12,  date: Tue Nov 26 2019
+taskOrder:56, status:1,leftTimes:12,  date: Tue Nov 26 2019
+----第87天-----
+taskOrder:57, status:0,leftTimes:3,  date: Wed Nov 27 2019
+taskOrder:43, status:15,leftTimes:12,  date: Wed Nov 27 2019
+taskOrder:51, status:7,leftTimes:12,  date: Wed Nov 27 2019
+taskOrder:54, status:4,leftTimes:12,  date: Wed Nov 27 2019
+taskOrder:56, status:2,leftTimes:12,  date: Wed Nov 27 2019
+taskOrder:57, status:1,leftTimes:12,  date: Wed Nov 27 2019
+----第88天-----
+taskOrder:58, status:0,leftTimes:3,  date: Thu Nov 28 2019
+taskOrder:44, status:15,leftTimes:12,  date: Thu Nov 28 2019
+taskOrder:52, status:7,leftTimes:12,  date: Thu Nov 28 2019
+taskOrder:55, status:4,leftTimes:12,  date: Thu Nov 28 2019
+taskOrder:57, status:2,leftTimes:12,  date: Thu Nov 28 2019
+taskOrder:58, status:1,leftTimes:12,  date: Thu Nov 28 2019
+----第89天-----
+taskOrder:59, status:0,leftTimes:3,  date: Fri Nov 29 2019
+taskOrder:45, status:15,leftTimes:12,  date: Fri Nov 29 2019
+taskOrder:53, status:7,leftTimes:12,  date: Fri Nov 29 2019
+taskOrder:56, status:4,leftTimes:12,  date: Fri Nov 29 2019
+taskOrder:58, status:2,leftTimes:12,  date: Fri Nov 29 2019
+taskOrder:59, status:1,leftTimes:12,  date: Fri Nov 29 2019
+----第90天-----
+taskOrder:60, status:0,leftTimes:3,  date: Sat Nov 30 2019
+taskOrder:46, status:15,leftTimes:12,  date: Sat Nov 30 2019
+taskOrder:54, status:7,leftTimes:12,  date: Sat Nov 30 2019
+taskOrder:57, status:4,leftTimes:12,  date: Sat Nov 30 2019
+taskOrder:59, status:2,leftTimes:12,  date: Sat Nov 30 2019
+taskOrder:60, status:1,leftTimes:12,  date: Sat Nov 30 2019
+----第91天-----
+taskOrder:61, status:0,leftTimes:3,  date: Sun Dec 01 2019
+taskOrder:47, status:15,leftTimes:12,  date: Sun Dec 01 2019
+taskOrder:55, status:7,leftTimes:12,  date: Sun Dec 01 2019
+taskOrder:58, status:4,leftTimes:12,  date: Sun Dec 01 2019
+taskOrder:60, status:2,leftTimes:12,  date: Sun Dec 01 2019
+taskOrder:61, status:1,leftTimes:12,  date: Sun Dec 01 2019
+----第92天-----
+taskOrder:62, status:0,leftTimes:3,  date: Mon Dec 02 2019
+taskOrder:48, status:15,leftTimes:12,  date: Mon Dec 02 2019
+taskOrder:56, status:7,leftTimes:12,  date: Mon Dec 02 2019
+taskOrder:59, status:4,leftTimes:12,  date: Mon Dec 02 2019
+taskOrder:61, status:2,leftTimes:12,  date: Mon Dec 02 2019
+taskOrder:62, status:1,leftTimes:12,  date: Mon Dec 02 2019
+----第93天-----
+taskOrder:63, status:0,leftTimes:3,  date: Tue Dec 03 2019
+taskOrder:49, status:15,leftTimes:12,  date: Tue Dec 03 2019
+taskOrder:57, status:7,leftTimes:12,  date: Tue Dec 03 2019
+taskOrder:60, status:4,leftTimes:12,  date: Tue Dec 03 2019
+taskOrder:62, status:2,leftTimes:12,  date: Tue Dec 03 2019
+taskOrder:63, status:1,leftTimes:12,  date: Tue Dec 03 2019
+----第94天-----
+taskOrder:64, status:0,leftTimes:3,  date: Wed Dec 04 2019
+taskOrder:50, status:15,leftTimes:12,  date: Wed Dec 04 2019
+taskOrder:58, status:7,leftTimes:12,  date: Wed Dec 04 2019
+taskOrder:61, status:4,leftTimes:12,  date: Wed Dec 04 2019
+taskOrder:63, status:2,leftTimes:12,  date: Wed Dec 04 2019
+taskOrder:64, status:1,leftTimes:12,  date: Wed Dec 04 2019
+----第95天-----
+taskOrder:65, status:0,leftTimes:3,  date: Thu Dec 05 2019
+taskOrder:51, status:15,leftTimes:12,  date: Thu Dec 05 2019
+taskOrder:59, status:7,leftTimes:12,  date: Thu Dec 05 2019
+taskOrder:62, status:4,leftTimes:12,  date: Thu Dec 05 2019
+taskOrder:64, status:2,leftTimes:12,  date: Thu Dec 05 2019
+taskOrder:65, status:1,leftTimes:12,  date: Thu Dec 05 2019
+----第96天-----
+taskOrder:66, status:0,leftTimes:3,  date: Fri Dec 06 2019
+taskOrder:52, status:15,leftTimes:12,  date: Fri Dec 06 2019
+taskOrder:60, status:7,leftTimes:12,  date: Fri Dec 06 2019
+taskOrder:63, status:4,leftTimes:12,  date: Fri Dec 06 2019
+taskOrder:65, status:2,leftTimes:12,  date: Fri Dec 06 2019
+taskOrder:66, status:1,leftTimes:12,  date: Fri Dec 06 2019
+----第97天-----
+taskOrder:67, status:0,leftTimes:3,  date: Sat Dec 07 2019
+taskOrder:53, status:15,leftTimes:12,  date: Sat Dec 07 2019
+taskOrder:61, status:7,leftTimes:12,  date: Sat Dec 07 2019
+taskOrder:64, status:4,leftTimes:12,  date: Sat Dec 07 2019
+taskOrder:66, status:2,leftTimes:12,  date: Sat Dec 07 2019
+taskOrder:67, status:1,leftTimes:12,  date: Sat Dec 07 2019
+----第98天-----
+taskOrder:68, status:0,leftTimes:3,  date: Sun Dec 08 2019
+taskOrder:54, status:15,leftTimes:12,  date: Sun Dec 08 2019
+taskOrder:62, status:7,leftTimes:12,  date: Sun Dec 08 2019
+taskOrder:65, status:4,leftTimes:12,  date: Sun Dec 08 2019
+taskOrder:67, status:2,leftTimes:12,  date: Sun Dec 08 2019
+taskOrder:68, status:1,leftTimes:12,  date: Sun Dec 08 2019
+----第99天-----
+taskOrder:69, status:0,leftTimes:3,  date: Mon Dec 09 2019
+taskOrder:55, status:15,leftTimes:12,  date: Mon Dec 09 2019
+taskOrder:63, status:7,leftTimes:12,  date: Mon Dec 09 2019
+taskOrder:66, status:4,leftTimes:12,  date: Mon Dec 09 2019
+taskOrder:68, status:2,leftTimes:12,  date: Mon Dec 09 2019
+taskOrder:69, status:1,leftTimes:12,  date: Mon Dec 09 2019
+----第100天-----
+taskOrder:70, status:0,leftTimes:3,  date: Tue Dec 10 2019
+taskOrder:56, status:15,leftTimes:12,  date: Tue Dec 10 2019
+taskOrder:64, status:7,leftTimes:12,  date: Tue Dec 10 2019
+taskOrder:67, status:4,leftTimes:12,  date: Tue Dec 10 2019
+taskOrder:69, status:2,leftTimes:12,  date: Tue Dec 10 2019
+taskOrder:70, status:1,leftTimes:12,  date: Tue Dec 10 2019
+----第101天-----
+taskOrder:71, status:0,leftTimes:3,  date: Wed Dec 11 2019
+taskOrder:57, status:15,leftTimes:12,  date: Wed Dec 11 2019
+taskOrder:65, status:7,leftTimes:12,  date: Wed Dec 11 2019
+taskOrder:68, status:4,leftTimes:12,  date: Wed Dec 11 2019
+taskOrder:70, status:2,leftTimes:12,  date: Wed Dec 11 2019
+taskOrder:71, status:1,leftTimes:12,  date: Wed Dec 11 2019
+----第102天-----
+taskOrder:72, status:0,leftTimes:3,  date: Thu Dec 12 2019
+taskOrder:58, status:15,leftTimes:12,  date: Thu Dec 12 2019
+taskOrder:66, status:7,leftTimes:12,  date: Thu Dec 12 2019
+taskOrder:69, status:4,leftTimes:12,  date: Thu Dec 12 2019
+taskOrder:71, status:2,leftTimes:12,  date: Thu Dec 12 2019
+taskOrder:72, status:1,leftTimes:12,  date: Thu Dec 12 2019
+----第103天-----
+taskOrder:73, status:0,leftTimes:3,  date: Fri Dec 13 2019
+taskOrder:59, status:15,leftTimes:12,  date: Fri Dec 13 2019
+taskOrder:67, status:7,leftTimes:12,  date: Fri Dec 13 2019
+taskOrder:70, status:4,leftTimes:12,  date: Fri Dec 13 2019
+taskOrder:72, status:2,leftTimes:12,  date: Fri Dec 13 2019
+taskOrder:73, status:1,leftTimes:12,  date: Fri Dec 13 2019
+----第104天-----
+taskOrder:74, status:0,leftTimes:3,  date: Sat Dec 14 2019
+taskOrder:60, status:15,leftTimes:12,  date: Sat Dec 14 2019
+taskOrder:68, status:7,leftTimes:12,  date: Sat Dec 14 2019
+taskOrder:71, status:4,leftTimes:12,  date: Sat Dec 14 2019
+taskOrder:73, status:2,leftTimes:12,  date: Sat Dec 14 2019
+taskOrder:74, status:1,leftTimes:12,  date: Sat Dec 14 2019
+----第105天-----
+taskOrder:75, status:0,leftTimes:3,  date: Sun Dec 15 2019
+taskOrder:61, status:15,leftTimes:12,  date: Sun Dec 15 2019
+taskOrder:69, status:7,leftTimes:12,  date: Sun Dec 15 2019
+taskOrder:72, status:4,leftTimes:12,  date: Sun Dec 15 2019
+taskOrder:74, status:2,leftTimes:12,  date: Sun Dec 15 2019
+taskOrder:75, status:1,leftTimes:12,  date: Sun Dec 15 2019
+----第106天-----
+taskOrder:76, status:0,leftTimes:3,  date: Mon Dec 16 2019
+taskOrder:62, status:15,leftTimes:12,  date: Mon Dec 16 2019
+taskOrder:70, status:7,leftTimes:12,  date: Mon Dec 16 2019
+taskOrder:73, status:4,leftTimes:12,  date: Mon Dec 16 2019
+taskOrder:75, status:2,leftTimes:12,  date: Mon Dec 16 2019
+taskOrder:76, status:1,leftTimes:12,  date: Mon Dec 16 2019
+----第107天-----
+taskOrder:77, status:0,leftTimes:3,  date: Tue Dec 17 2019
+taskOrder:63, status:15,leftTimes:12,  date: Tue Dec 17 2019
+taskOrder:71, status:7,leftTimes:12,  date: Tue Dec 17 2019
+taskOrder:74, status:4,leftTimes:12,  date: Tue Dec 17 2019
+taskOrder:76, status:2,leftTimes:12,  date: Tue Dec 17 2019
+taskOrder:77, status:1,leftTimes:12,  date: Tue Dec 17 2019
+----第108天-----
+taskOrder:78, status:0,leftTimes:3,  date: Wed Dec 18 2019
+taskOrder:64, status:15,leftTimes:12,  date: Wed Dec 18 2019
+taskOrder:72, status:7,leftTimes:12,  date: Wed Dec 18 2019
+taskOrder:75, status:4,leftTimes:12,  date: Wed Dec 18 2019
+taskOrder:77, status:2,leftTimes:12,  date: Wed Dec 18 2019
+taskOrder:78, status:1,leftTimes:12,  date: Wed Dec 18 2019
+----第109天-----
+taskOrder:79, status:0,leftTimes:3,  date: Thu Dec 19 2019
+taskOrder:65, status:15,leftTimes:12,  date: Thu Dec 19 2019
+taskOrder:73, status:7,leftTimes:12,  date: Thu Dec 19 2019
+taskOrder:76, status:4,leftTimes:12,  date: Thu Dec 19 2019
+taskOrder:78, status:2,leftTimes:12,  date: Thu Dec 19 2019
+taskOrder:79, status:1,leftTimes:12,  date: Thu Dec 19 2019
+----第110天-----
+taskOrder:80, status:0,leftTimes:3,  date: Fri Dec 20 2019
+taskOrder:66, status:15,leftTimes:12,  date: Fri Dec 20 2019
+taskOrder:74, status:7,leftTimes:12,  date: Fri Dec 20 2019
+taskOrder:77, status:4,leftTimes:12,  date: Fri Dec 20 2019
+taskOrder:79, status:2,leftTimes:12,  date: Fri Dec 20 2019
+taskOrder:80, status:1,leftTimes:12,  date: Fri Dec 20 2019
+----第111天-----
+taskOrder:81, status:0,leftTimes:3,  date: Sat Dec 21 2019
+taskOrder:67, status:15,leftTimes:12,  date: Sat Dec 21 2019
+taskOrder:75, status:7,leftTimes:12,  date: Sat Dec 21 2019
+taskOrder:78, status:4,leftTimes:12,  date: Sat Dec 21 2019
+taskOrder:80, status:2,leftTimes:12,  date: Sat Dec 21 2019
+taskOrder:81, status:1,leftTimes:12,  date: Sat Dec 21 2019
+----第112天-----
+taskOrder:82, status:0,leftTimes:3,  date: Sun Dec 22 2019
+taskOrder:68, status:15,leftTimes:12,  date: Sun Dec 22 2019
+taskOrder:76, status:7,leftTimes:12,  date: Sun Dec 22 2019
+taskOrder:79, status:4,leftTimes:12,  date: Sun Dec 22 2019
+taskOrder:81, status:2,leftTimes:12,  date: Sun Dec 22 2019
+taskOrder:82, status:1,leftTimes:12,  date: Sun Dec 22 2019
+----第113天-----
+taskOrder:83, status:0,leftTimes:3,  date: Mon Dec 23 2019
+taskOrder:69, status:15,leftTimes:12,  date: Mon Dec 23 2019
+taskOrder:77, status:7,leftTimes:12,  date: Mon Dec 23 2019
+taskOrder:80, status:4,leftTimes:12,  date: Mon Dec 23 2019
+taskOrder:82, status:2,leftTimes:12,  date: Mon Dec 23 2019
+taskOrder:83, status:1,leftTimes:12,  date: Mon Dec 23 2019
+----第114天-----
+taskOrder:84, status:0,leftTimes:3,  date: Tue Dec 24 2019
+taskOrder:70, status:15,leftTimes:12,  date: Tue Dec 24 2019
+taskOrder:78, status:7,leftTimes:12,  date: Tue Dec 24 2019
+taskOrder:81, status:4,leftTimes:12,  date: Tue Dec 24 2019
+taskOrder:83, status:2,leftTimes:12,  date: Tue Dec 24 2019
+taskOrder:84, status:1,leftTimes:12,  date: Tue Dec 24 2019
+----第115天-----
+taskOrder:85, status:0,leftTimes:3,  date: Wed Dec 25 2019
+taskOrder:71, status:15,leftTimes:12,  date: Wed Dec 25 2019
+taskOrder:79, status:7,leftTimes:12,  date: Wed Dec 25 2019
+taskOrder:82, status:4,leftTimes:12,  date: Wed Dec 25 2019
+taskOrder:84, status:2,leftTimes:12,  date: Wed Dec 25 2019
+taskOrder:85, status:1,leftTimes:12,  date: Wed Dec 25 2019
+----第116天-----
+taskOrder:86, status:0,leftTimes:3,  date: Thu Dec 26 2019
+taskOrder:72, status:15,leftTimes:12,  date: Thu Dec 26 2019
+taskOrder:80, status:7,leftTimes:12,  date: Thu Dec 26 2019
+taskOrder:83, status:4,leftTimes:12,  date: Thu Dec 26 2019
+taskOrder:85, status:2,leftTimes:12,  date: Thu Dec 26 2019
+taskOrder:86, status:1,leftTimes:12,  date: Thu Dec 26 2019
+----第117天-----
+taskOrder:87, status:0,leftTimes:3,  date: Fri Dec 27 2019
+taskOrder:73, status:15,leftTimes:12,  date: Fri Dec 27 2019
+taskOrder:81, status:7,leftTimes:12,  date: Fri Dec 27 2019
+taskOrder:84, status:4,leftTimes:12,  date: Fri Dec 27 2019
+taskOrder:86, status:2,leftTimes:12,  date: Fri Dec 27 2019
+taskOrder:87, status:1,leftTimes:12,  date: Fri Dec 27 2019
+----第118天-----
+taskOrder:88, status:0,leftTimes:3,  date: Sat Dec 28 2019
+taskOrder:74, status:15,leftTimes:12,  date: Sat Dec 28 2019
+taskOrder:82, status:7,leftTimes:12,  date: Sat Dec 28 2019
+taskOrder:85, status:4,leftTimes:12,  date: Sat Dec 28 2019
+taskOrder:87, status:2,leftTimes:12,  date: Sat Dec 28 2019
+taskOrder:88, status:1,leftTimes:12,  date: Sat Dec 28 2019
+----第119天-----
+taskOrder:89, status:0,leftTimes:3,  date: Sun Dec 29 2019
+taskOrder:75, status:15,leftTimes:12,  date: Sun Dec 29 2019
+taskOrder:83, status:7,leftTimes:12,  date: Sun Dec 29 2019
+taskOrder:86, status:4,leftTimes:12,  date: Sun Dec 29 2019
+taskOrder:88, status:2,leftTimes:12,  date: Sun Dec 29 2019
+taskOrder:89, status:1,leftTimes:12,  date: Sun Dec 29 2019
+----第120天-----
+taskOrder:90, status:0,leftTimes:3,  date: Mon Dec 30 2019
+taskOrder:76, status:15,leftTimes:12,  date: Mon Dec 30 2019
+taskOrder:84, status:7,leftTimes:12,  date: Mon Dec 30 2019
+taskOrder:87, status:4,leftTimes:12,  date: Mon Dec 30 2019
+taskOrder:89, status:2,leftTimes:12,  date: Mon Dec 30 2019
+taskOrder:90, status:1,leftTimes:12,  date: Mon Dec 30 2019
+----第121天-----
+taskOrder:91, status:0,leftTimes:3,  date: Tue Dec 31 2019
+taskOrder:77, status:15,leftTimes:12,  date: Tue Dec 31 2019
+taskOrder:85, status:7,leftTimes:12,  date: Tue Dec 31 2019
+taskOrder:88, status:4,leftTimes:12,  date: Tue Dec 31 2019
+taskOrder:90, status:2,leftTimes:12,  date: Tue Dec 31 2019
+taskOrder:91, status:1,leftTimes:12,  date: Tue Dec 31 2019
+----第122天-----
+taskOrder:92, status:0,leftTimes:3,  date: Wed Jan 01 2020
+taskOrder:78, status:15,leftTimes:12,  date: Wed Jan 01 2020
+taskOrder:86, status:7,leftTimes:12,  date: Wed Jan 01 2020
+taskOrder:89, status:4,leftTimes:12,  date: Wed Jan 01 2020
+taskOrder:91, status:2,leftTimes:12,  date: Wed Jan 01 2020
+taskOrder:92, status:1,leftTimes:12,  date: Wed Jan 01 2020
+----第123天-----
+taskOrder:93, status:0,leftTimes:3,  date: Thu Jan 02 2020
+taskOrder:79, status:15,leftTimes:12,  date: Thu Jan 02 2020
+taskOrder:87, status:7,leftTimes:12,  date: Thu Jan 02 2020
+taskOrder:90, status:4,leftTimes:12,  date: Thu Jan 02 2020
+taskOrder:92, status:2,leftTimes:12,  date: Thu Jan 02 2020
+taskOrder:93, status:1,leftTimes:12,  date: Thu Jan 02 2020
+----第124天-----
+taskOrder:94, status:0,leftTimes:3,  date: Fri Jan 03 2020
+taskOrder:80, status:15,leftTimes:12,  date: Fri Jan 03 2020
+taskOrder:88, status:7,leftTimes:12,  date: Fri Jan 03 2020
+taskOrder:91, status:4,leftTimes:12,  date: Fri Jan 03 2020
+taskOrder:93, status:2,leftTimes:12,  date: Fri Jan 03 2020
+taskOrder:94, status:1,leftTimes:12,  date: Fri Jan 03 2020
+----第125天-----
+taskOrder:95, status:0,leftTimes:3,  date: Sat Jan 04 2020
+taskOrder:81, status:15,leftTimes:12,  date: Sat Jan 04 2020
+taskOrder:89, status:7,leftTimes:12,  date: Sat Jan 04 2020
+taskOrder:92, status:4,leftTimes:12,  date: Sat Jan 04 2020
+taskOrder:94, status:2,leftTimes:12,  date: Sat Jan 04 2020
+taskOrder:95, status:1,leftTimes:12,  date: Sat Jan 04 2020
+----第126天-----
+taskOrder:96, status:0,leftTimes:3,  date: Sun Jan 05 2020
+taskOrder:82, status:15,leftTimes:12,  date: Sun Jan 05 2020
+taskOrder:90, status:7,leftTimes:12,  date: Sun Jan 05 2020
+taskOrder:93, status:4,leftTimes:12,  date: Sun Jan 05 2020
+taskOrder:95, status:2,leftTimes:12,  date: Sun Jan 05 2020
+taskOrder:96, status:1,leftTimes:12,  date: Sun Jan 05 2020
+----第127天-----
+taskOrder:97, status:0,leftTimes:3,  date: Mon Jan 06 2020
+taskOrder:83, status:15,leftTimes:12,  date: Mon Jan 06 2020
+taskOrder:91, status:7,leftTimes:12,  date: Mon Jan 06 2020
+taskOrder:94, status:4,leftTimes:12,  date: Mon Jan 06 2020
+taskOrder:96, status:2,leftTimes:12,  date: Mon Jan 06 2020
+taskOrder:97, status:1,leftTimes:12,  date: Mon Jan 06 2020
+----第128天-----
+taskOrder:98, status:0,leftTimes:3,  date: Tue Jan 07 2020
+taskOrder:84, status:15,leftTimes:12,  date: Tue Jan 07 2020
+taskOrder:92, status:7,leftTimes:12,  date: Tue Jan 07 2020
+taskOrder:95, status:4,leftTimes:12,  date: Tue Jan 07 2020
+taskOrder:97, status:2,leftTimes:12,  date: Tue Jan 07 2020
+taskOrder:98, status:1,leftTimes:12,  date: Tue Jan 07 2020
+----第129天-----
+taskOrder:99, status:0,leftTimes:3,  date: Wed Jan 08 2020
+taskOrder:85, status:15,leftTimes:12,  date: Wed Jan 08 2020
+taskOrder:93, status:7,leftTimes:12,  date: Wed Jan 08 2020
+taskOrder:96, status:4,leftTimes:12,  date: Wed Jan 08 2020
+taskOrder:98, status:2,leftTimes:12,  date: Wed Jan 08 2020
+taskOrder:99, status:1,leftTimes:12,  date: Wed Jan 08 2020
+----第130天-----
+taskOrder:100, status:0,leftTimes:3,  date: Thu Jan 09 2020
+taskOrder:86, status:15,leftTimes:12,  date: Thu Jan 09 2020
+taskOrder:94, status:7,leftTimes:12,  date: Thu Jan 09 2020
+taskOrder:97, status:4,leftTimes:12,  date: Thu Jan 09 2020
+taskOrder:99, status:2,leftTimes:12,  date: Thu Jan 09 2020
+taskOrder:100, status:1,leftTimes:12,  date: Thu Jan 09 2020
+----第131天-----
+taskOrder:101, status:0,leftTimes:3,  date: Fri Jan 10 2020
+taskOrder:87, status:15,leftTimes:12,  date: Fri Jan 10 2020
+taskOrder:95, status:7,leftTimes:12,  date: Fri Jan 10 2020
+taskOrder:98, status:4,leftTimes:12,  date: Fri Jan 10 2020
+taskOrder:100, status:2,leftTimes:12,  date: Fri Jan 10 2020
+taskOrder:101, status:1,leftTimes:12,  date: Fri Jan 10 2020
+----第132天-----
+taskOrder:102, status:0,leftTimes:3,  date: Sat Jan 11 2020
+taskOrder:88, status:15,leftTimes:12,  date: Sat Jan 11 2020
+taskOrder:96, status:7,leftTimes:12,  date: Sat Jan 11 2020
+taskOrder:99, status:4,leftTimes:12,  date: Sat Jan 11 2020
+taskOrder:101, status:2,leftTimes:12,  date: Sat Jan 11 2020
+taskOrder:102, status:1,leftTimes:12,  date: Sat Jan 11 2020
+----第133天-----
+taskOrder:103, status:0,leftTimes:3,  date: Sun Jan 12 2020
+taskOrder:89, status:15,leftTimes:12,  date: Sun Jan 12 2020
+taskOrder:97, status:7,leftTimes:12,  date: Sun Jan 12 2020
+taskOrder:100, status:4,leftTimes:12,  date: Sun Jan 12 2020
+taskOrder:102, status:2,leftTimes:12,  date: Sun Jan 12 2020
+taskOrder:103, status:1,leftTimes:12,  date: Sun Jan 12 2020
+----第134天-----
+taskOrder:104, status:0,leftTimes:3,  date: Mon Jan 13 2020
+taskOrder:90, status:15,leftTimes:12,  date: Mon Jan 13 2020
+taskOrder:98, status:7,leftTimes:12,  date: Mon Jan 13 2020
+taskOrder:101, status:4,leftTimes:12,  date: Mon Jan 13 2020
+taskOrder:103, status:2,leftTimes:12,  date: Mon Jan 13 2020
+taskOrder:104, status:1,leftTimes:12,  date: Mon Jan 13 2020
+----第135天-----
+taskOrder:105, status:0,leftTimes:3,  date: Tue Jan 14 2020
+taskOrder:91, status:15,leftTimes:12,  date: Tue Jan 14 2020
+taskOrder:99, status:7,leftTimes:12,  date: Tue Jan 14 2020
+taskOrder:102, status:4,leftTimes:12,  date: Tue Jan 14 2020
+taskOrder:104, status:2,leftTimes:12,  date: Tue Jan 14 2020
+taskOrder:105, status:1,leftTimes:12,  date: Tue Jan 14 2020
+----第136天-----
+taskOrder:106, status:0,leftTimes:3,  date: Wed Jan 15 2020
+taskOrder:92, status:15,leftTimes:12,  date: Wed Jan 15 2020
+taskOrder:100, status:7,leftTimes:12,  date: Wed Jan 15 2020
+taskOrder:103, status:4,leftTimes:12,  date: Wed Jan 15 2020
+taskOrder:105, status:2,leftTimes:12,  date: Wed Jan 15 2020
+taskOrder:106, status:1,leftTimes:12,  date: Wed Jan 15 2020
+----第137天-----
+taskOrder:107, status:0,leftTimes:3,  date: Thu Jan 16 2020
+taskOrder:93, status:15,leftTimes:12,  date: Thu Jan 16 2020
+taskOrder:101, status:7,leftTimes:12,  date: Thu Jan 16 2020
+taskOrder:104, status:4,leftTimes:12,  date: Thu Jan 16 2020
+taskOrder:106, status:2,leftTimes:12,  date: Thu Jan 16 2020
+taskOrder:107, status:1,leftTimes:12,  date: Thu Jan 16 2020
+----第138天-----
+taskOrder:108, status:0,leftTimes:3,  date: Fri Jan 17 2020
+taskOrder:94, status:15,leftTimes:12,  date: Fri Jan 17 2020
+taskOrder:102, status:7,leftTimes:12,  date: Fri Jan 17 2020
+taskOrder:105, status:4,leftTimes:12,  date: Fri Jan 17 2020
+taskOrder:107, status:2,leftTimes:12,  date: Fri Jan 17 2020
+taskOrder:108, status:1,leftTimes:12,  date: Fri Jan 17 2020
+----第139天-----
+taskOrder:109, status:0,leftTimes:3,  date: Sat Jan 18 2020
+taskOrder:95, status:15,leftTimes:12,  date: Sat Jan 18 2020
+taskOrder:103, status:7,leftTimes:12,  date: Sat Jan 18 2020
+taskOrder:106, status:4,leftTimes:12,  date: Sat Jan 18 2020
+taskOrder:108, status:2,leftTimes:12,  date: Sat Jan 18 2020
+taskOrder:109, status:1,leftTimes:12,  date: Sat Jan 18 2020
+----第140天-----
+taskOrder:110, status:0,leftTimes:3,  date: Sun Jan 19 2020
+taskOrder:96, status:15,leftTimes:12,  date: Sun Jan 19 2020
+taskOrder:104, status:7,leftTimes:12,  date: Sun Jan 19 2020
+taskOrder:107, status:4,leftTimes:12,  date: Sun Jan 19 2020
+taskOrder:109, status:2,leftTimes:12,  date: Sun Jan 19 2020
+taskOrder:110, status:1,leftTimes:12,  date: Sun Jan 19 2020
+----第141天-----
+taskOrder:111, status:0,leftTimes:3,  date: Mon Jan 20 2020
+taskOrder:97, status:15,leftTimes:12,  date: Mon Jan 20 2020
+taskOrder:105, status:7,leftTimes:12,  date: Mon Jan 20 2020
+taskOrder:108, status:4,leftTimes:12,  date: Mon Jan 20 2020
+taskOrder:110, status:2,leftTimes:12,  date: Mon Jan 20 2020
+taskOrder:111, status:1,leftTimes:12,  date: Mon Jan 20 2020
+----第142天-----
+taskOrder:112, status:0,leftTimes:3,  date: Tue Jan 21 2020
+taskOrder:98, status:15,leftTimes:12,  date: Tue Jan 21 2020
+taskOrder:106, status:7,leftTimes:12,  date: Tue Jan 21 2020
+taskOrder:109, status:4,leftTimes:12,  date: Tue Jan 21 2020
+taskOrder:111, status:2,leftTimes:12,  date: Tue Jan 21 2020
+taskOrder:112, status:1,leftTimes:12,  date: Tue Jan 21 2020
+----第143天-----
+taskOrder:113, status:0,leftTimes:3,  date: Wed Jan 22 2020
+taskOrder:99, status:15,leftTimes:12,  date: Wed Jan 22 2020
+taskOrder:107, status:7,leftTimes:12,  date: Wed Jan 22 2020
+taskOrder:110, status:4,leftTimes:12,  date: Wed Jan 22 2020
+taskOrder:112, status:2,leftTimes:12,  date: Wed Jan 22 2020
+taskOrder:113, status:1,leftTimes:12,  date: Wed Jan 22 2020
+----第144天-----
+taskOrder:114, status:0,leftTimes:3,  date: Thu Jan 23 2020
+taskOrder:100, status:15,leftTimes:12,  date: Thu Jan 23 2020
+taskOrder:108, status:7,leftTimes:12,  date: Thu Jan 23 2020
+taskOrder:111, status:4,leftTimes:12,  date: Thu Jan 23 2020
+taskOrder:113, status:2,leftTimes:12,  date: Thu Jan 23 2020
+taskOrder:114, status:1,leftTimes:12,  date: Thu Jan 23 2020
+----第145天-----
+taskOrder:115, status:0,leftTimes:3,  date: Fri Jan 24 2020
+taskOrder:101, status:15,leftTimes:12,  date: Fri Jan 24 2020
+taskOrder:109, status:7,leftTimes:12,  date: Fri Jan 24 2020
+taskOrder:112, status:4,leftTimes:12,  date: Fri Jan 24 2020
+taskOrder:114, status:2,leftTimes:12,  date: Fri Jan 24 2020
+taskOrder:115, status:1,leftTimes:12,  date: Fri Jan 24 2020
+----第146天-----
+taskOrder:116, status:0,leftTimes:3,  date: Sat Jan 25 2020
+taskOrder:102, status:15,leftTimes:12,  date: Sat Jan 25 2020
+taskOrder:110, status:7,leftTimes:12,  date: Sat Jan 25 2020
+taskOrder:113, status:4,leftTimes:12,  date: Sat Jan 25 2020
+taskOrder:115, status:2,leftTimes:12,  date: Sat Jan 25 2020
+taskOrder:116, status:1,leftTimes:12,  date: Sat Jan 25 2020
+----第147天-----
+taskOrder:117, status:0,leftTimes:3,  date: Sun Jan 26 2020
+taskOrder:103, status:15,leftTimes:12,  date: Sun Jan 26 2020
+taskOrder:111, status:7,leftTimes:12,  date: Sun Jan 26 2020
+taskOrder:114, status:4,leftTimes:12,  date: Sun Jan 26 2020
+taskOrder:116, status:2,leftTimes:12,  date: Sun Jan 26 2020
+taskOrder:117, status:1,leftTimes:12,  date: Sun Jan 26 2020
+----第148天-----
+taskOrder:118, status:0,leftTimes:3,  date: Mon Jan 27 2020
+taskOrder:104, status:15,leftTimes:12,  date: Mon Jan 27 2020
+taskOrder:112, status:7,leftTimes:12,  date: Mon Jan 27 2020
+taskOrder:115, status:4,leftTimes:12,  date: Mon Jan 27 2020
+taskOrder:117, status:2,leftTimes:12,  date: Mon Jan 27 2020
+taskOrder:118, status:1,leftTimes:12,  date: Mon Jan 27 2020
+----第149天-----
+taskOrder:119, status:0,leftTimes:3,  date: Tue Jan 28 2020
+taskOrder:105, status:15,leftTimes:12,  date: Tue Jan 28 2020
+taskOrder:113, status:7,leftTimes:12,  date: Tue Jan 28 2020
+taskOrder:116, status:4,leftTimes:12,  date: Tue Jan 28 2020
+taskOrder:118, status:2,leftTimes:12,  date: Tue Jan 28 2020
+taskOrder:119, status:1,leftTimes:12,  date: Tue Jan 28 2020
+----第150天-----
+taskOrder:120, status:0,leftTimes:3,  date: Wed Jan 29 2020
+taskOrder:106, status:15,leftTimes:12,  date: Wed Jan 29 2020
+taskOrder:114, status:7,leftTimes:12,  date: Wed Jan 29 2020
+taskOrder:117, status:4,leftTimes:12,  date: Wed Jan 29 2020
+taskOrder:119, status:2,leftTimes:12,  date: Wed Jan 29 2020
+taskOrder:120, status:1,leftTimes:12,  date: Wed Jan 29 2020
+----第151天-----
+taskOrder:121, status:0,leftTimes:3,  date: Thu Jan 30 2020
+taskOrder:107, status:15,leftTimes:12,  date: Thu Jan 30 2020
+taskOrder:115, status:7,leftTimes:12,  date: Thu Jan 30 2020
+taskOrder:118, status:4,leftTimes:12,  date: Thu Jan 30 2020
+taskOrder:120, status:2,leftTimes:12,  date: Thu Jan 30 2020
+taskOrder:121, status:1,leftTimes:12,  date: Thu Jan 30 2020
+----第152天-----
+taskOrder:122, status:0,leftTimes:3,  date: Fri Jan 31 2020
+taskOrder:108, status:15,leftTimes:12,  date: Fri Jan 31 2020
+taskOrder:116, status:7,leftTimes:12,  date: Fri Jan 31 2020
+taskOrder:119, status:4,leftTimes:12,  date: Fri Jan 31 2020
+taskOrder:121, status:2,leftTimes:12,  date: Fri Jan 31 2020
+taskOrder:122, status:1,leftTimes:12,  date: Fri Jan 31 2020
+----第153天-----
+taskOrder:123, status:0,leftTimes:3,  date: Sat Feb 01 2020
+taskOrder:109, status:15,leftTimes:12,  date: Sat Feb 01 2020
+taskOrder:117, status:7,leftTimes:12,  date: Sat Feb 01 2020
+taskOrder:120, status:4,leftTimes:12,  date: Sat Feb 01 2020
+taskOrder:122, status:2,leftTimes:12,  date: Sat Feb 01 2020
+taskOrder:123, status:1,leftTimes:12,  date: Sat Feb 01 2020
+----第154天-----
+taskOrder:124, status:0,leftTimes:3,  date: Sun Feb 02 2020
+taskOrder:110, status:15,leftTimes:12,  date: Sun Feb 02 2020
+taskOrder:118, status:7,leftTimes:12,  date: Sun Feb 02 2020
+taskOrder:121, status:4,leftTimes:12,  date: Sun Feb 02 2020
+taskOrder:123, status:2,leftTimes:12,  date: Sun Feb 02 2020
+taskOrder:124, status:1,leftTimes:12,  date: Sun Feb 02 2020
+----第155天-----
+taskOrder:125, status:0,leftTimes:3,  date: Mon Feb 03 2020
+taskOrder:111, status:15,leftTimes:12,  date: Mon Feb 03 2020
+taskOrder:119, status:7,leftTimes:12,  date: Mon Feb 03 2020
+taskOrder:122, status:4,leftTimes:12,  date: Mon Feb 03 2020
+taskOrder:124, status:2,leftTimes:12,  date: Mon Feb 03 2020
+taskOrder:125, status:1,leftTimes:12,  date: Mon Feb 03 2020
+----第156天-----
+taskOrder:126, status:0,leftTimes:3,  date: Tue Feb 04 2020
+taskOrder:112, status:15,leftTimes:12,  date: Tue Feb 04 2020
+taskOrder:120, status:7,leftTimes:12,  date: Tue Feb 04 2020
+taskOrder:123, status:4,leftTimes:12,  date: Tue Feb 04 2020
+taskOrder:125, status:2,leftTimes:12,  date: Tue Feb 04 2020
+taskOrder:126, status:1,leftTimes:12,  date: Tue Feb 04 2020
+----第157天-----
+taskOrder:127, status:0,leftTimes:3,  date: Wed Feb 05 2020
+taskOrder:113, status:15,leftTimes:12,  date: Wed Feb 05 2020
+taskOrder:121, status:7,leftTimes:12,  date: Wed Feb 05 2020
+taskOrder:124, status:4,leftTimes:12,  date: Wed Feb 05 2020
+taskOrder:126, status:2,leftTimes:12,  date: Wed Feb 05 2020
+taskOrder:127, status:1,leftTimes:12,  date: Wed Feb 05 2020
+----第158天-----
+taskOrder:128, status:0,leftTimes:3,  date: Thu Feb 06 2020
+taskOrder:114, status:15,leftTimes:12,  date: Thu Feb 06 2020
+taskOrder:122, status:7,leftTimes:12,  date: Thu Feb 06 2020
+taskOrder:125, status:4,leftTimes:12,  date: Thu Feb 06 2020
+taskOrder:127, status:2,leftTimes:12,  date: Thu Feb 06 2020
+taskOrder:128, status:1,leftTimes:12,  date: Thu Feb 06 2020
+----第159天-----
+taskOrder:129, status:0,leftTimes:3,  date: Fri Feb 07 2020
+taskOrder:115, status:15,leftTimes:12,  date: Fri Feb 07 2020
+taskOrder:123, status:7,leftTimes:12,  date: Fri Feb 07 2020
+taskOrder:126, status:4,leftTimes:12,  date: Fri Feb 07 2020
+taskOrder:128, status:2,leftTimes:12,  date: Fri Feb 07 2020
+taskOrder:129, status:1,leftTimes:12,  date: Fri Feb 07 2020
+----第160天-----
+taskOrder:130, status:0,leftTimes:3,  date: Sat Feb 08 2020
+taskOrder:116, status:15,leftTimes:12,  date: Sat Feb 08 2020
+taskOrder:124, status:7,leftTimes:12,  date: Sat Feb 08 2020
+taskOrder:127, status:4,leftTimes:12,  date: Sat Feb 08 2020
+taskOrder:129, status:2,leftTimes:12,  date: Sat Feb 08 2020
+taskOrder:130, status:1,leftTimes:12,  date: Sat Feb 08 2020
+----第161天-----
+taskOrder:131, status:0,leftTimes:3,  date: Sun Feb 09 2020
+taskOrder:117, status:15,leftTimes:12,  date: Sun Feb 09 2020
+taskOrder:125, status:7,leftTimes:12,  date: Sun Feb 09 2020
+taskOrder:128, status:4,leftTimes:12,  date: Sun Feb 09 2020
+taskOrder:130, status:2,leftTimes:12,  date: Sun Feb 09 2020
+taskOrder:131, status:1,leftTimes:12,  date: Sun Feb 09 2020
+----第162天-----
+taskOrder:132, status:0,leftTimes:3,  date: Mon Feb 10 2020
+taskOrder:118, status:15,leftTimes:12,  date: Mon Feb 10 2020
+taskOrder:126, status:7,leftTimes:12,  date: Mon Feb 10 2020
+taskOrder:129, status:4,leftTimes:12,  date: Mon Feb 10 2020
+taskOrder:131, status:2,leftTimes:12,  date: Mon Feb 10 2020
+taskOrder:132, status:1,leftTimes:12,  date: Mon Feb 10 2020
+----第163天-----
+taskOrder:133, status:0,leftTimes:3,  date: Tue Feb 11 2020
+taskOrder:119, status:15,leftTimes:12,  date: Tue Feb 11 2020
+taskOrder:127, status:7,leftTimes:12,  date: Tue Feb 11 2020
+taskOrder:130, status:4,leftTimes:12,  date: Tue Feb 11 2020
+taskOrder:132, status:2,leftTimes:12,  date: Tue Feb 11 2020
+taskOrder:133, status:1,leftTimes:12,  date: Tue Feb 11 2020
+----第164天-----
+taskOrder:134, status:0,leftTimes:3,  date: Wed Feb 12 2020
+taskOrder:120, status:15,leftTimes:12,  date: Wed Feb 12 2020
+taskOrder:128, status:7,leftTimes:12,  date: Wed Feb 12 2020
+taskOrder:131, status:4,leftTimes:12,  date: Wed Feb 12 2020
+taskOrder:133, status:2,leftTimes:12,  date: Wed Feb 12 2020
+taskOrder:134, status:1,leftTimes:12,  date: Wed Feb 12 2020
+----第165天-----
+taskOrder:135, status:0,leftTimes:3,  date: Thu Feb 13 2020
+taskOrder:121, status:15,leftTimes:12,  date: Thu Feb 13 2020
+taskOrder:129, status:7,leftTimes:12,  date: Thu Feb 13 2020
+taskOrder:132, status:4,leftTimes:12,  date: Thu Feb 13 2020
+taskOrder:134, status:2,leftTimes:12,  date: Thu Feb 13 2020
+taskOrder:135, status:1,leftTimes:12,  date: Thu Feb 13 2020
+----第166天-----
+taskOrder:136, status:0,leftTimes:3,  date: Fri Feb 14 2020
+taskOrder:122, status:15,leftTimes:12,  date: Fri Feb 14 2020
+taskOrder:130, status:7,leftTimes:12,  date: Fri Feb 14 2020
+taskOrder:133, status:4,leftTimes:12,  date: Fri Feb 14 2020
+taskOrder:135, status:2,leftTimes:12,  date: Fri Feb 14 2020
+taskOrder:136, status:1,leftTimes:12,  date: Fri Feb 14 2020
+----第167天-----
+taskOrder:137, status:0,leftTimes:3,  date: Sat Feb 15 2020
+taskOrder:123, status:15,leftTimes:12,  date: Sat Feb 15 2020
+taskOrder:131, status:7,leftTimes:12,  date: Sat Feb 15 2020
+taskOrder:134, status:4,leftTimes:12,  date: Sat Feb 15 2020
+taskOrder:136, status:2,leftTimes:12,  date: Sat Feb 15 2020
+taskOrder:137, status:1,leftTimes:12,  date: Sat Feb 15 2020
+----第168天-----
+taskOrder:138, status:0,leftTimes:3,  date: Sun Feb 16 2020
+taskOrder:124, status:15,leftTimes:12,  date: Sun Feb 16 2020
+taskOrder:132, status:7,leftTimes:12,  date: Sun Feb 16 2020
+taskOrder:135, status:4,leftTimes:12,  date: Sun Feb 16 2020
+taskOrder:137, status:2,leftTimes:12,  date: Sun Feb 16 2020
+taskOrder:138, status:1,leftTimes:12,  date: Sun Feb 16 2020
+----第169天-----
+taskOrder:139, status:0,leftTimes:3,  date: Mon Feb 17 2020
+taskOrder:125, status:15,leftTimes:12,  date: Mon Feb 17 2020
+taskOrder:133, status:7,leftTimes:12,  date: Mon Feb 17 2020
+taskOrder:136, status:4,leftTimes:12,  date: Mon Feb 17 2020
+taskOrder:138, status:2,leftTimes:12,  date: Mon Feb 17 2020
+taskOrder:139, status:1,leftTimes:12,  date: Mon Feb 17 2020
+----第170天-----
+taskOrder:140, status:0,leftTimes:3,  date: Tue Feb 18 2020
+taskOrder:126, status:15,leftTimes:12,  date: Tue Feb 18 2020
+taskOrder:134, status:7,leftTimes:12,  date: Tue Feb 18 2020
+taskOrder:137, status:4,leftTimes:12,  date: Tue Feb 18 2020
+taskOrder:139, status:2,leftTimes:12,  date: Tue Feb 18 2020
+taskOrder:140, status:1,leftTimes:12,  date: Tue Feb 18 2020
+----第171天-----
+taskOrder:141, status:0,leftTimes:3,  date: Wed Feb 19 2020
+taskOrder:127, status:15,leftTimes:12,  date: Wed Feb 19 2020
+taskOrder:135, status:7,leftTimes:12,  date: Wed Feb 19 2020
+taskOrder:138, status:4,leftTimes:12,  date: Wed Feb 19 2020
+taskOrder:140, status:2,leftTimes:12,  date: Wed Feb 19 2020
+taskOrder:141, status:1,leftTimes:12,  date: Wed Feb 19 2020
+----第172天-----
+taskOrder:142, status:0,leftTimes:3,  date: Thu Feb 20 2020
+taskOrder:128, status:15,leftTimes:12,  date: Thu Feb 20 2020
+taskOrder:136, status:7,leftTimes:12,  date: Thu Feb 20 2020
+taskOrder:139, status:4,leftTimes:12,  date: Thu Feb 20 2020
+taskOrder:141, status:2,leftTimes:12,  date: Thu Feb 20 2020
+taskOrder:142, status:1,leftTimes:12,  date: Thu Feb 20 2020
+----第173天-----
+taskOrder:143, status:0,leftTimes:3,  date: Fri Feb 21 2020
+taskOrder:129, status:15,leftTimes:12,  date: Fri Feb 21 2020
+taskOrder:137, status:7,leftTimes:12,  date: Fri Feb 21 2020
+taskOrder:140, status:4,leftTimes:12,  date: Fri Feb 21 2020
+taskOrder:142, status:2,leftTimes:12,  date: Fri Feb 21 2020
+taskOrder:143, status:1,leftTimes:12,  date: Fri Feb 21 2020
+----第174天-----
+taskOrder:144, status:0,leftTimes:3,  date: Sat Feb 22 2020
+taskOrder:130, status:15,leftTimes:12,  date: Sat Feb 22 2020
+taskOrder:138, status:7,leftTimes:12,  date: Sat Feb 22 2020
+taskOrder:141, status:4,leftTimes:12,  date: Sat Feb 22 2020
+taskOrder:143, status:2,leftTimes:12,  date: Sat Feb 22 2020
+taskOrder:144, status:1,leftTimes:12,  date: Sat Feb 22 2020
+----第175天-----
+taskOrder:145, status:0,leftTimes:3,  date: Sun Feb 23 2020
+taskOrder:131, status:15,leftTimes:12,  date: Sun Feb 23 2020
+taskOrder:139, status:7,leftTimes:12,  date: Sun Feb 23 2020
+taskOrder:142, status:4,leftTimes:12,  date: Sun Feb 23 2020
+taskOrder:144, status:2,leftTimes:12,  date: Sun Feb 23 2020
+taskOrder:145, status:1,leftTimes:12,  date: Sun Feb 23 2020
+----第176天-----
+taskOrder:146, status:0,leftTimes:3,  date: Mon Feb 24 2020
+taskOrder:132, status:15,leftTimes:12,  date: Mon Feb 24 2020
+taskOrder:140, status:7,leftTimes:12,  date: Mon Feb 24 2020
+taskOrder:143, status:4,leftTimes:12,  date: Mon Feb 24 2020
+taskOrder:145, status:2,leftTimes:12,  date: Mon Feb 24 2020
+taskOrder:146, status:1,leftTimes:12,  date: Mon Feb 24 2020
+----第177天-----
+taskOrder:147, status:0,leftTimes:3,  date: Tue Feb 25 2020
+taskOrder:133, status:15,leftTimes:12,  date: Tue Feb 25 2020
+taskOrder:141, status:7,leftTimes:12,  date: Tue Feb 25 2020
+taskOrder:144, status:4,leftTimes:12,  date: Tue Feb 25 2020
+taskOrder:146, status:2,leftTimes:12,  date: Tue Feb 25 2020
+taskOrder:147, status:1,leftTimes:12,  date: Tue Feb 25 2020
+----第178天-----
+taskOrder:148, status:0,leftTimes:3,  date: Wed Feb 26 2020
+taskOrder:134, status:15,leftTimes:12,  date: Wed Feb 26 2020
+taskOrder:142, status:7,leftTimes:12,  date: Wed Feb 26 2020
+taskOrder:145, status:4,leftTimes:12,  date: Wed Feb 26 2020
+taskOrder:147, status:2,leftTimes:12,  date: Wed Feb 26 2020
+taskOrder:148, status:1,leftTimes:12,  date: Wed Feb 26 2020
+----第179天-----
+taskOrder:149, status:0,leftTimes:3,  date: Thu Feb 27 2020
+taskOrder:135, status:15,leftTimes:12,  date: Thu Feb 27 2020
+taskOrder:143, status:7,leftTimes:12,  date: Thu Feb 27 2020
+taskOrder:146, status:4,leftTimes:12,  date: Thu Feb 27 2020
+taskOrder:148, status:2,leftTimes:12,  date: Thu Feb 27 2020
+taskOrder:149, status:1,leftTimes:12,  date: Thu Feb 27 2020
+----第180天-----
+taskOrder:150, status:0,leftTimes:3,  date: Fri Feb 28 2020
+taskOrder:136, status:15,leftTimes:12,  date: Fri Feb 28 2020
+taskOrder:144, status:7,leftTimes:12,  date: Fri Feb 28 2020
+taskOrder:147, status:4,leftTimes:12,  date: Fri Feb 28 2020
+taskOrder:149, status:2,leftTimes:12,  date: Fri Feb 28 2020
+taskOrder:150, status:1,leftTimes:12,  date: Fri Feb 28 2020
+----第181天-----
+taskOrder:151, status:0,leftTimes:3,  date: Sat Feb 29 2020
+taskOrder:137, status:15,leftTimes:12,  date: Sat Feb 29 2020
+taskOrder:145, status:7,leftTimes:12,  date: Sat Feb 29 2020
+taskOrder:148, status:4,leftTimes:12,  date: Sat Feb 29 2020
+taskOrder:150, status:2,leftTimes:12,  date: Sat Feb 29 2020
+taskOrder:151, status:1,leftTimes:12,  date: Sat Feb 29 2020
+----第182天-----
+taskOrder:152, status:0,leftTimes:3,  date: Sun Mar 01 2020
+taskOrder:138, status:15,leftTimes:12,  date: Sun Mar 01 2020
+taskOrder:146, status:7,leftTimes:12,  date: Sun Mar 01 2020
+taskOrder:149, status:4,leftTimes:12,  date: Sun Mar 01 2020
+taskOrder:151, status:2,leftTimes:12,  date: Sun Mar 01 2020
+taskOrder:152, status:1,leftTimes:12,  date: Sun Mar 01 2020
+----第183天-----
+taskOrder:153, status:0,leftTimes:3,  date: Mon Mar 02 2020
+taskOrder:139, status:15,leftTimes:12,  date: Mon Mar 02 2020
+taskOrder:147, status:7,leftTimes:12,  date: Mon Mar 02 2020
+taskOrder:150, status:4,leftTimes:12,  date: Mon Mar 02 2020
+taskOrder:152, status:2,leftTimes:12,  date: Mon Mar 02 2020
+taskOrder:153, status:1,leftTimes:12,  date: Mon Mar 02 2020
+----第184天-----
+taskOrder:154, status:0,leftTimes:3,  date: Tue Mar 03 2020
+taskOrder:140, status:15,leftTimes:12,  date: Tue Mar 03 2020
+taskOrder:148, status:7,leftTimes:12,  date: Tue Mar 03 2020
+taskOrder:151, status:4,leftTimes:12,  date: Tue Mar 03 2020
+taskOrder:153, status:2,leftTimes:12,  date: Tue Mar 03 2020
+taskOrder:154, status:1,leftTimes:12,  date: Tue Mar 03 2020
+----第185天-----
+taskOrder:155, status:0,leftTimes:3,  date: Wed Mar 04 2020
+taskOrder:141, status:15,leftTimes:12,  date: Wed Mar 04 2020
+taskOrder:149, status:7,leftTimes:12,  date: Wed Mar 04 2020
+taskOrder:152, status:4,leftTimes:12,  date: Wed Mar 04 2020
+taskOrder:154, status:2,leftTimes:12,  date: Wed Mar 04 2020
+taskOrder:155, status:1,leftTimes:12,  date: Wed Mar 04 2020
+----第186天-----
+taskOrder:156, status:0,leftTimes:3,  date: Thu Mar 05 2020
+taskOrder:142, status:15,leftTimes:12,  date: Thu Mar 05 2020
+taskOrder:150, status:7,leftTimes:12,  date: Thu Mar 05 2020
+taskOrder:153, status:4,leftTimes:12,  date: Thu Mar 05 2020
+taskOrder:155, status:2,leftTimes:12,  date: Thu Mar 05 2020
+taskOrder:156, status:1,leftTimes:12,  date: Thu Mar 05 2020
+----第187天-----
+taskOrder:157, status:0,leftTimes:3,  date: Fri Mar 06 2020
+taskOrder:143, status:15,leftTimes:12,  date: Fri Mar 06 2020
+taskOrder:151, status:7,leftTimes:12,  date: Fri Mar 06 2020
+taskOrder:154, status:4,leftTimes:12,  date: Fri Mar 06 2020
+taskOrder:156, status:2,leftTimes:12,  date: Fri Mar 06 2020
+taskOrder:157, status:1,leftTimes:12,  date: Fri Mar 06 2020
+----第188天-----
+taskOrder:158, status:0,leftTimes:3,  date: Sat Mar 07 2020
+taskOrder:144, status:15,leftTimes:12,  date: Sat Mar 07 2020
+taskOrder:152, status:7,leftTimes:12,  date: Sat Mar 07 2020
+taskOrder:155, status:4,leftTimes:12,  date: Sat Mar 07 2020
+taskOrder:157, status:2,leftTimes:12,  date: Sat Mar 07 2020
+taskOrder:158, status:1,leftTimes:12,  date: Sat Mar 07 2020
+----第189天-----
+taskOrder:159, status:0,leftTimes:3,  date: Sun Mar 08 2020
+taskOrder:145, status:15,leftTimes:12,  date: Sun Mar 08 2020
+taskOrder:153, status:7,leftTimes:12,  date: Sun Mar 08 2020
+taskOrder:156, status:4,leftTimes:12,  date: Sun Mar 08 2020
+taskOrder:158, status:2,leftTimes:12,  date: Sun Mar 08 2020
+taskOrder:159, status:1,leftTimes:12,  date: Sun Mar 08 2020
+----第190天-----
+taskOrder:160, status:0,leftTimes:3,  date: Mon Mar 09 2020
+taskOrder:146, status:15,leftTimes:12,  date: Mon Mar 09 2020
+taskOrder:154, status:7,leftTimes:12,  date: Mon Mar 09 2020
+taskOrder:157, status:4,leftTimes:12,  date: Mon Mar 09 2020
+taskOrder:159, status:2,leftTimes:12,  date: Mon Mar 09 2020
+taskOrder:160, status:1,leftTimes:12,  date: Mon Mar 09 2020
+----第191天-----
+taskOrder:161, status:0,leftTimes:3,  date: Tue Mar 10 2020
+taskOrder:147, status:15,leftTimes:12,  date: Tue Mar 10 2020
+taskOrder:155, status:7,leftTimes:12,  date: Tue Mar 10 2020
+taskOrder:158, status:4,leftTimes:12,  date: Tue Mar 10 2020
+taskOrder:160, status:2,leftTimes:12,  date: Tue Mar 10 2020
+taskOrder:161, status:1,leftTimes:12,  date: Tue Mar 10 2020
+----第192天-----
+taskOrder:162, status:0,leftTimes:3,  date: Wed Mar 11 2020
+taskOrder:148, status:15,leftTimes:12,  date: Wed Mar 11 2020
+taskOrder:156, status:7,leftTimes:12,  date: Wed Mar 11 2020
+taskOrder:159, status:4,leftTimes:12,  date: Wed Mar 11 2020
+taskOrder:161, status:2,leftTimes:12,  date: Wed Mar 11 2020
+taskOrder:162, status:1,leftTimes:12,  date: Wed Mar 11 2020
+----第193天-----
+taskOrder:163, status:0,leftTimes:3,  date: Thu Mar 12 2020
+taskOrder:149, status:15,leftTimes:12,  date: Thu Mar 12 2020
+taskOrder:157, status:7,leftTimes:12,  date: Thu Mar 12 2020
+taskOrder:160, status:4,leftTimes:12,  date: Thu Mar 12 2020
+taskOrder:162, status:2,leftTimes:12,  date: Thu Mar 12 2020
+taskOrder:163, status:1,leftTimes:12,  date: Thu Mar 12 2020
+----第194天-----
+taskOrder:164, status:0,leftTimes:3,  date: Fri Mar 13 2020
+taskOrder:150, status:15,leftTimes:12,  date: Fri Mar 13 2020
+taskOrder:158, status:7,leftTimes:12,  date: Fri Mar 13 2020
+taskOrder:161, status:4,leftTimes:12,  date: Fri Mar 13 2020
+taskOrder:163, status:2,leftTimes:12,  date: Fri Mar 13 2020
+taskOrder:164, status:1,leftTimes:12,  date: Fri Mar 13 2020
+----第195天-----
+taskOrder:165, status:0,leftTimes:3,  date: Sat Mar 14 2020
+taskOrder:151, status:15,leftTimes:12,  date: Sat Mar 14 2020
+taskOrder:159, status:7,leftTimes:12,  date: Sat Mar 14 2020
+taskOrder:162, status:4,leftTimes:12,  date: Sat Mar 14 2020
+taskOrder:164, status:2,leftTimes:12,  date: Sat Mar 14 2020
+taskOrder:165, status:1,leftTimes:12,  date: Sat Mar 14 2020
+----第196天-----
+taskOrder:166, status:0,leftTimes:3,  date: Sun Mar 15 2020
+taskOrder:152, status:15,leftTimes:12,  date: Sun Mar 15 2020
+taskOrder:160, status:7,leftTimes:12,  date: Sun Mar 15 2020
+taskOrder:163, status:4,leftTimes:12,  date: Sun Mar 15 2020
+taskOrder:165, status:2,leftTimes:12,  date: Sun Mar 15 2020
+taskOrder:166, status:1,leftTimes:12,  date: Sun Mar 15 2020
+----第197天-----
+taskOrder:167, status:0,leftTimes:3,  date: Mon Mar 16 2020
+taskOrder:153, status:15,leftTimes:12,  date: Mon Mar 16 2020
+taskOrder:161, status:7,leftTimes:12,  date: Mon Mar 16 2020
+taskOrder:164, status:4,leftTimes:12,  date: Mon Mar 16 2020
+taskOrder:166, status:2,leftTimes:12,  date: Mon Mar 16 2020
+taskOrder:167, status:1,leftTimes:12,  date: Mon Mar 16 2020
+----第198天-----
+taskOrder:168, status:0,leftTimes:3,  date: Tue Mar 17 2020
+taskOrder:154, status:15,leftTimes:12,  date: Tue Mar 17 2020
+taskOrder:162, status:7,leftTimes:12,  date: Tue Mar 17 2020
+taskOrder:165, status:4,leftTimes:12,  date: Tue Mar 17 2020
+taskOrder:167, status:2,leftTimes:12,  date: Tue Mar 17 2020
+taskOrder:168, status:1,leftTimes:12,  date: Tue Mar 17 2020
+----第199天-----
+taskOrder:169, status:0,leftTimes:3,  date: Wed Mar 18 2020
+taskOrder:155, status:15,leftTimes:12,  date: Wed Mar 18 2020
+taskOrder:163, status:7,leftTimes:12,  date: Wed Mar 18 2020
+taskOrder:166, status:4,leftTimes:12,  date: Wed Mar 18 2020
+taskOrder:168, status:2,leftTimes:12,  date: Wed Mar 18 2020
+taskOrder:169, status:1,leftTimes:12,  date: Wed Mar 18 2020
+----第200天-----
+taskOrder:170, status:0,leftTimes:3,  date: Thu Mar 19 2020
+taskOrder:156, status:15,leftTimes:12,  date: Thu Mar 19 2020
+taskOrder:164, status:7,leftTimes:12,  date: Thu Mar 19 2020
+taskOrder:167, status:4,leftTimes:12,  date: Thu Mar 19 2020
+taskOrder:169, status:2,leftTimes:12,  date: Thu Mar 19 2020
+taskOrder:170, status:1,leftTimes:12,  date: Thu Mar 19 2020
+----第201天-----
+taskOrder:171, status:0,leftTimes:3,  date: Fri Mar 20 2020
+taskOrder:157, status:15,leftTimes:12,  date: Fri Mar 20 2020
+taskOrder:165, status:7,leftTimes:12,  date: Fri Mar 20 2020
+taskOrder:168, status:4,leftTimes:12,  date: Fri Mar 20 2020
+taskOrder:170, status:2,leftTimes:12,  date: Fri Mar 20 2020
+taskOrder:171, status:1,leftTimes:12,  date: Fri Mar 20 2020
+----第202天-----
+taskOrder:172, status:0,leftTimes:3,  date: Sat Mar 21 2020
+taskOrder:158, status:15,leftTimes:12,  date: Sat Mar 21 2020
+taskOrder:166, status:7,leftTimes:12,  date: Sat Mar 21 2020
+taskOrder:169, status:4,leftTimes:12,  date: Sat Mar 21 2020
+taskOrder:171, status:2,leftTimes:12,  date: Sat Mar 21 2020
+taskOrder:172, status:1,leftTimes:12,  date: Sat Mar 21 2020
+----第203天-----
+taskOrder:173, status:0,leftTimes:3,  date: Sun Mar 22 2020
+taskOrder:159, status:15,leftTimes:12,  date: Sun Mar 22 2020
+taskOrder:167, status:7,leftTimes:12,  date: Sun Mar 22 2020
+taskOrder:170, status:4,leftTimes:12,  date: Sun Mar 22 2020
+taskOrder:172, status:2,leftTimes:12,  date: Sun Mar 22 2020
+taskOrder:173, status:1,leftTimes:12,  date: Sun Mar 22 2020
+----第204天-----
+taskOrder:174, status:0,leftTimes:3,  date: Mon Mar 23 2020
+taskOrder:160, status:15,leftTimes:12,  date: Mon Mar 23 2020
+taskOrder:168, status:7,leftTimes:12,  date: Mon Mar 23 2020
+taskOrder:171, status:4,leftTimes:12,  date: Mon Mar 23 2020
+taskOrder:173, status:2,leftTimes:12,  date: Mon Mar 23 2020
+taskOrder:174, status:1,leftTimes:12,  date: Mon Mar 23 2020
+----第205天-----
+taskOrder:175, status:0,leftTimes:3,  date: Tue Mar 24 2020
+taskOrder:161, status:15,leftTimes:12,  date: Tue Mar 24 2020
+taskOrder:169, status:7,leftTimes:12,  date: Tue Mar 24 2020
+taskOrder:172, status:4,leftTimes:12,  date: Tue Mar 24 2020
+taskOrder:174, status:2,leftTimes:12,  date: Tue Mar 24 2020
+taskOrder:175, status:1,leftTimes:12,  date: Tue Mar 24 2020
+----第206天-----
+taskOrder:176, status:0,leftTimes:3,  date: Wed Mar 25 2020
+taskOrder:162, status:15,leftTimes:12,  date: Wed Mar 25 2020
+taskOrder:170, status:7,leftTimes:12,  date: Wed Mar 25 2020
+taskOrder:173, status:4,leftTimes:12,  date: Wed Mar 25 2020
+taskOrder:175, status:2,leftTimes:12,  date: Wed Mar 25 2020
+taskOrder:176, status:1,leftTimes:12,  date: Wed Mar 25 2020
+----第207天-----
+taskOrder:177, status:0,leftTimes:3,  date: Thu Mar 26 2020
+taskOrder:163, status:15,leftTimes:12,  date: Thu Mar 26 2020
+taskOrder:171, status:7,leftTimes:12,  date: Thu Mar 26 2020
+taskOrder:174, status:4,leftTimes:12,  date: Thu Mar 26 2020
+taskOrder:176, status:2,leftTimes:12,  date: Thu Mar 26 2020
+taskOrder:177, status:1,leftTimes:12,  date: Thu Mar 26 2020
+----第208天-----
+taskOrder:178, status:0,leftTimes:3,  date: Fri Mar 27 2020
+taskOrder:164, status:15,leftTimes:12,  date: Fri Mar 27 2020
+taskOrder:172, status:7,leftTimes:12,  date: Fri Mar 27 2020
+taskOrder:175, status:4,leftTimes:12,  date: Fri Mar 27 2020
+taskOrder:177, status:2,leftTimes:12,  date: Fri Mar 27 2020
+taskOrder:178, status:1,leftTimes:12,  date: Fri Mar 27 2020
+----第209天-----
+taskOrder:179, status:0,leftTimes:3,  date: Sat Mar 28 2020
+taskOrder:165, status:15,leftTimes:12,  date: Sat Mar 28 2020
+taskOrder:173, status:7,leftTimes:12,  date: Sat Mar 28 2020
+taskOrder:176, status:4,leftTimes:12,  date: Sat Mar 28 2020
+taskOrder:178, status:2,leftTimes:12,  date: Sat Mar 28 2020
+taskOrder:179, status:1,leftTimes:12,  date: Sat Mar 28 2020
+----第210天-----
+taskOrder:180, status:0,leftTimes:3,  date: Sun Mar 29 2020
+taskOrder:166, status:15,leftTimes:12,  date: Sun Mar 29 2020
+taskOrder:174, status:7,leftTimes:12,  date: Sun Mar 29 2020
+taskOrder:177, status:4,leftTimes:12,  date: Sun Mar 29 2020
+taskOrder:179, status:2,leftTimes:12,  date: Sun Mar 29 2020
+taskOrder:180, status:1,leftTimes:12,  date: Sun Mar 29 2020
+----第211天-----
+taskOrder:181, status:0,leftTimes:3,  date: Mon Mar 30 2020
+taskOrder:167, status:15,leftTimes:12,  date: Mon Mar 30 2020
+taskOrder:175, status:7,leftTimes:12,  date: Mon Mar 30 2020
+taskOrder:178, status:4,leftTimes:12,  date: Mon Mar 30 2020
+taskOrder:180, status:2,leftTimes:12,  date: Mon Mar 30 2020
+taskOrder:181, status:1,leftTimes:12,  date: Mon Mar 30 2020
+----第212天-----
+taskOrder:182, status:0,leftTimes:3,  date: Tue Mar 31 2020
+taskOrder:168, status:15,leftTimes:12,  date: Tue Mar 31 2020
+taskOrder:176, status:7,leftTimes:12,  date: Tue Mar 31 2020
+taskOrder:179, status:4,leftTimes:12,  date: Tue Mar 31 2020
+taskOrder:181, status:2,leftTimes:12,  date: Tue Mar 31 2020
+taskOrder:182, status:1,leftTimes:12,  date: Tue Mar 31 2020
+----第213天-----
+taskOrder:183, status:0,leftTimes:3,  date: Wed Apr 01 2020
+taskOrder:169, status:15,leftTimes:12,  date: Wed Apr 01 2020
+taskOrder:177, status:7,leftTimes:12,  date: Wed Apr 01 2020
+taskOrder:180, status:4,leftTimes:12,  date: Wed Apr 01 2020
+taskOrder:182, status:2,leftTimes:12,  date: Wed Apr 01 2020
+taskOrder:183, status:1,leftTimes:12,  date: Wed Apr 01 2020
+----第214天-----
+taskOrder:184, status:0,leftTimes:3,  date: Thu Apr 02 2020
+taskOrder:170, status:15,leftTimes:12,  date: Thu Apr 02 2020
+taskOrder:178, status:7,leftTimes:12,  date: Thu Apr 02 2020
+taskOrder:181, status:4,leftTimes:12,  date: Thu Apr 02 2020
+taskOrder:183, status:2,leftTimes:12,  date: Thu Apr 02 2020
+taskOrder:184, status:1,leftTimes:12,  date: Thu Apr 02 2020
+----第215天-----
+taskOrder:185, status:0,leftTimes:3,  date: Fri Apr 03 2020
+taskOrder:171, status:15,leftTimes:12,  date: Fri Apr 03 2020
+taskOrder:179, status:7,leftTimes:12,  date: Fri Apr 03 2020
+taskOrder:182, status:4,leftTimes:12,  date: Fri Apr 03 2020
+taskOrder:184, status:2,leftTimes:12,  date: Fri Apr 03 2020
+taskOrder:185, status:1,leftTimes:12,  date: Fri Apr 03 2020
+----第216天-----
+taskOrder:186, status:0,leftTimes:3,  date: Sat Apr 04 2020
+taskOrder:172, status:15,leftTimes:12,  date: Sat Apr 04 2020
+taskOrder:180, status:7,leftTimes:12,  date: Sat Apr 04 2020
+taskOrder:183, status:4,leftTimes:12,  date: Sat Apr 04 2020
+taskOrder:185, status:2,leftTimes:12,  date: Sat Apr 04 2020
+taskOrder:186, status:1,leftTimes:12,  date: Sat Apr 04 2020
+----第217天-----
+taskOrder:187, status:0,leftTimes:3,  date: Sun Apr 05 2020
+taskOrder:173, status:15,leftTimes:12,  date: Sun Apr 05 2020
+taskOrder:181, status:7,leftTimes:12,  date: Sun Apr 05 2020
+taskOrder:184, status:4,leftTimes:12,  date: Sun Apr 05 2020
+taskOrder:186, status:2,leftTimes:12,  date: Sun Apr 05 2020
+taskOrder:187, status:1,leftTimes:12,  date: Sun Apr 05 2020
+----第218天-----
+taskOrder:188, status:0,leftTimes:3,  date: Mon Apr 06 2020
+taskOrder:174, status:15,leftTimes:12,  date: Mon Apr 06 2020
+taskOrder:182, status:7,leftTimes:12,  date: Mon Apr 06 2020
+taskOrder:185, status:4,leftTimes:12,  date: Mon Apr 06 2020
+taskOrder:187, status:2,leftTimes:12,  date: Mon Apr 06 2020
+taskOrder:188, status:1,leftTimes:12,  date: Mon Apr 06 2020
+----第219天-----
+taskOrder:189, status:0,leftTimes:3,  date: Tue Apr 07 2020
+taskOrder:175, status:15,leftTimes:12,  date: Tue Apr 07 2020
+taskOrder:183, status:7,leftTimes:12,  date: Tue Apr 07 2020
+taskOrder:186, status:4,leftTimes:12,  date: Tue Apr 07 2020
+taskOrder:188, status:2,leftTimes:12,  date: Tue Apr 07 2020
+taskOrder:189, status:1,leftTimes:12,  date: Tue Apr 07 2020
+----第220天-----
+taskOrder:190, status:0,leftTimes:3,  date: Wed Apr 08 2020
+taskOrder:176, status:15,leftTimes:12,  date: Wed Apr 08 2020
+taskOrder:184, status:7,leftTimes:12,  date: Wed Apr 08 2020
+taskOrder:187, status:4,leftTimes:12,  date: Wed Apr 08 2020
+taskOrder:189, status:2,leftTimes:12,  date: Wed Apr 08 2020
+taskOrder:190, status:1,leftTimes:12,  date: Wed Apr 08 2020
+----第221天-----
+taskOrder:191, status:0,leftTimes:3,  date: Thu Apr 09 2020
+taskOrder:177, status:15,leftTimes:12,  date: Thu Apr 09 2020
+taskOrder:185, status:7,leftTimes:12,  date: Thu Apr 09 2020
+taskOrder:188, status:4,leftTimes:12,  date: Thu Apr 09 2020
+taskOrder:190, status:2,leftTimes:12,  date: Thu Apr 09 2020
+taskOrder:191, status:1,leftTimes:12,  date: Thu Apr 09 2020
+----第222天-----
+taskOrder:192, status:0,leftTimes:3,  date: Fri Apr 10 2020
+taskOrder:178, status:15,leftTimes:12,  date: Fri Apr 10 2020
+taskOrder:186, status:7,leftTimes:12,  date: Fri Apr 10 2020
+taskOrder:189, status:4,leftTimes:12,  date: Fri Apr 10 2020
+taskOrder:191, status:2,leftTimes:12,  date: Fri Apr 10 2020
+taskOrder:192, status:1,leftTimes:12,  date: Fri Apr 10 2020
+----第223天-----
+taskOrder:193, status:0,leftTimes:3,  date: Sat Apr 11 2020
+taskOrder:179, status:15,leftTimes:12,  date: Sat Apr 11 2020
+taskOrder:187, status:7,leftTimes:12,  date: Sat Apr 11 2020
+taskOrder:190, status:4,leftTimes:12,  date: Sat Apr 11 2020
+taskOrder:192, status:2,leftTimes:12,  date: Sat Apr 11 2020
+taskOrder:193, status:1,leftTimes:12,  date: Sat Apr 11 2020
+----第224天-----
+taskOrder:194, status:0,leftTimes:3,  date: Sun Apr 12 2020
+taskOrder:180, status:15,leftTimes:12,  date: Sun Apr 12 2020
+taskOrder:188, status:7,leftTimes:12,  date: Sun Apr 12 2020
+taskOrder:191, status:4,leftTimes:12,  date: Sun Apr 12 2020
+taskOrder:193, status:2,leftTimes:12,  date: Sun Apr 12 2020
+taskOrder:194, status:1,leftTimes:12,  date: Sun Apr 12 2020
+----第225天-----
+taskOrder:195, status:0,leftTimes:3,  date: Mon Apr 13 2020
+taskOrder:181, status:15,leftTimes:12,  date: Mon Apr 13 2020
+taskOrder:189, status:7,leftTimes:12,  date: Mon Apr 13 2020
+taskOrder:192, status:4,leftTimes:12,  date: Mon Apr 13 2020
+taskOrder:194, status:2,leftTimes:12,  date: Mon Apr 13 2020
+taskOrder:195, status:1,leftTimes:12,  date: Mon Apr 13 2020
+----第226天-----
+taskOrder:196, status:0,leftTimes:3,  date: Tue Apr 14 2020
+taskOrder:182, status:15,leftTimes:12,  date: Tue Apr 14 2020
+taskOrder:190, status:7,leftTimes:12,  date: Tue Apr 14 2020
+taskOrder:193, status:4,leftTimes:12,  date: Tue Apr 14 2020
+taskOrder:195, status:2,leftTimes:12,  date: Tue Apr 14 2020
+taskOrder:196, status:1,leftTimes:12,  date: Tue Apr 14 2020
+----第227天-----
+taskOrder:197, status:0,leftTimes:3,  date: Wed Apr 15 2020
+taskOrder:183, status:15,leftTimes:12,  date: Wed Apr 15 2020
+taskOrder:191, status:7,leftTimes:12,  date: Wed Apr 15 2020
+taskOrder:194, status:4,leftTimes:12,  date: Wed Apr 15 2020
+taskOrder:196, status:2,leftTimes:12,  date: Wed Apr 15 2020
+taskOrder:197, status:1,leftTimes:12,  date: Wed Apr 15 2020
+----第228天-----
+taskOrder:198, status:0,leftTimes:3,  date: Thu Apr 16 2020
+taskOrder:184, status:15,leftTimes:12,  date: Thu Apr 16 2020
+taskOrder:192, status:7,leftTimes:12,  date: Thu Apr 16 2020
+taskOrder:195, status:4,leftTimes:12,  date: Thu Apr 16 2020
+taskOrder:197, status:2,leftTimes:12,  date: Thu Apr 16 2020
+taskOrder:198, status:1,leftTimes:12,  date: Thu Apr 16 2020
+----第229天-----
+taskOrder:199, status:0,leftTimes:3,  date: Fri Apr 17 2020
+taskOrder:185, status:15,leftTimes:12,  date: Fri Apr 17 2020
+taskOrder:193, status:7,leftTimes:12,  date: Fri Apr 17 2020
+taskOrder:196, status:4,leftTimes:12,  date: Fri Apr 17 2020
+taskOrder:198, status:2,leftTimes:12,  date: Fri Apr 17 2020
+taskOrder:199, status:1,leftTimes:12,  date: Fri Apr 17 2020
+----第230天-----
+taskOrder:200, status:0,leftTimes:3,  date: Sat Apr 18 2020
+taskOrder:186, status:15,leftTimes:12,  date: Sat Apr 18 2020
+taskOrder:194, status:7,leftTimes:12,  date: Sat Apr 18 2020
+taskOrder:197, status:4,leftTimes:12,  date: Sat Apr 18 2020
+taskOrder:199, status:2,leftTimes:12,  date: Sat Apr 18 2020
+taskOrder:200, status:1,leftTimes:12,  date: Sat Apr 18 2020
+----第231天-----
+taskOrder:201, status:0,leftTimes:3,  date: Sun Apr 19 2020
+taskOrder:187, status:15,leftTimes:12,  date: Sun Apr 19 2020
+taskOrder:195, status:7,leftTimes:12,  date: Sun Apr 19 2020
+taskOrder:198, status:4,leftTimes:12,  date: Sun Apr 19 2020
+taskOrder:200, status:2,leftTimes:12,  date: Sun Apr 19 2020
+taskOrder:201, status:1,leftTimes:12,  date: Sun Apr 19 2020
+----第232天-----
+taskOrder:202, status:0,leftTimes:3,  date: Mon Apr 20 2020
+taskOrder:188, status:15,leftTimes:12,  date: Mon Apr 20 2020
+taskOrder:196, status:7,leftTimes:12,  date: Mon Apr 20 2020
+taskOrder:199, status:4,leftTimes:12,  date: Mon Apr 20 2020
+taskOrder:201, status:2,leftTimes:12,  date: Mon Apr 20 2020
+taskOrder:202, status:1,leftTimes:12,  date: Mon Apr 20 2020
+----第233天-----
+taskOrder:203, status:0,leftTimes:3,  date: Tue Apr 21 2020
+taskOrder:189, status:15,leftTimes:12,  date: Tue Apr 21 2020
+taskOrder:197, status:7,leftTimes:12,  date: Tue Apr 21 2020
+taskOrder:200, status:4,leftTimes:12,  date: Tue Apr 21 2020
+taskOrder:202, status:2,leftTimes:12,  date: Tue Apr 21 2020
+taskOrder:203, status:1,leftTimes:12,  date: Tue Apr 21 2020
+----第234天-----
+taskOrder:204, status:0,leftTimes:3,  date: Wed Apr 22 2020
+taskOrder:190, status:15,leftTimes:12,  date: Wed Apr 22 2020
+taskOrder:198, status:7,leftTimes:12,  date: Wed Apr 22 2020
+taskOrder:201, status:4,leftTimes:12,  date: Wed Apr 22 2020
+taskOrder:203, status:2,leftTimes:12,  date: Wed Apr 22 2020
+taskOrder:204, status:1,leftTimes:12,  date: Wed Apr 22 2020
+----第235天-----
+taskOrder:205, status:0,leftTimes:3,  date: Thu Apr 23 2020
+taskOrder:191, status:15,leftTimes:12,  date: Thu Apr 23 2020
+taskOrder:199, status:7,leftTimes:12,  date: Thu Apr 23 2020
+taskOrder:202, status:4,leftTimes:12,  date: Thu Apr 23 2020
+taskOrder:204, status:2,leftTimes:12,  date: Thu Apr 23 2020
+taskOrder:205, status:1,leftTimes:12,  date: Thu Apr 23 2020
+----第236天-----
+taskOrder:206, status:0,leftTimes:3,  date: Fri Apr 24 2020
+taskOrder:192, status:15,leftTimes:12,  date: Fri Apr 24 2020
+taskOrder:200, status:7,leftTimes:12,  date: Fri Apr 24 2020
+taskOrder:203, status:4,leftTimes:12,  date: Fri Apr 24 2020
+taskOrder:205, status:2,leftTimes:12,  date: Fri Apr 24 2020
+taskOrder:206, status:1,leftTimes:12,  date: Fri Apr 24 2020
+----第237天-----
+taskOrder:207, status:0,leftTimes:3,  date: Sat Apr 25 2020
+taskOrder:193, status:15,leftTimes:12,  date: Sat Apr 25 2020
+taskOrder:201, status:7,leftTimes:12,  date: Sat Apr 25 2020
+taskOrder:204, status:4,leftTimes:12,  date: Sat Apr 25 2020
+taskOrder:206, status:2,leftTimes:12,  date: Sat Apr 25 2020
+taskOrder:207, status:1,leftTimes:12,  date: Sat Apr 25 2020
+----第238天-----
+taskOrder:208, status:0,leftTimes:3,  date: Sun Apr 26 2020
+taskOrder:194, status:15,leftTimes:12,  date: Sun Apr 26 2020
+taskOrder:202, status:7,leftTimes:12,  date: Sun Apr 26 2020
+taskOrder:205, status:4,leftTimes:12,  date: Sun Apr 26 2020
+taskOrder:207, status:2,leftTimes:12,  date: Sun Apr 26 2020
+taskOrder:208, status:1,leftTimes:12,  date: Sun Apr 26 2020
+----第239天-----
+taskOrder:209, status:0,leftTimes:3,  date: Mon Apr 27 2020
+taskOrder:195, status:15,leftTimes:12,  date: Mon Apr 27 2020
+taskOrder:203, status:7,leftTimes:12,  date: Mon Apr 27 2020
+taskOrder:206, status:4,leftTimes:12,  date: Mon Apr 27 2020
+taskOrder:208, status:2,leftTimes:12,  date: Mon Apr 27 2020
+taskOrder:209, status:1,leftTimes:12,  date: Mon Apr 27 2020
+----第240天-----
+taskOrder:210, status:0,leftTimes:3,  date: Tue Apr 28 2020
+taskOrder:196, status:15,leftTimes:12,  date: Tue Apr 28 2020
+taskOrder:204, status:7,leftTimes:12,  date: Tue Apr 28 2020
+taskOrder:207, status:4,leftTimes:12,  date: Tue Apr 28 2020
+taskOrder:209, status:2,leftTimes:12,  date: Tue Apr 28 2020
+taskOrder:210, status:1,leftTimes:12,  date: Tue Apr 28 2020
+----第241天-----
+taskOrder:211, status:0,leftTimes:3,  date: Wed Apr 29 2020
+taskOrder:197, status:15,leftTimes:12,  date: Wed Apr 29 2020
+taskOrder:205, status:7,leftTimes:12,  date: Wed Apr 29 2020
+taskOrder:208, status:4,leftTimes:12,  date: Wed Apr 29 2020
+taskOrder:210, status:2,leftTimes:12,  date: Wed Apr 29 2020
+taskOrder:211, status:1,leftTimes:12,  date: Wed Apr 29 2020
+----第242天-----
+taskOrder:212, status:0,leftTimes:3,  date: Thu Apr 30 2020
+taskOrder:198, status:15,leftTimes:12,  date: Thu Apr 30 2020
+taskOrder:206, status:7,leftTimes:12,  date: Thu Apr 30 2020
+taskOrder:209, status:4,leftTimes:12,  date: Thu Apr 30 2020
+taskOrder:211, status:2,leftTimes:12,  date: Thu Apr 30 2020
+taskOrder:212, status:1,leftTimes:12,  date: Thu Apr 30 2020
+----第243天-----
+taskOrder:213, status:0,leftTimes:3,  date: Fri May 01 2020
+taskOrder:199, status:15,leftTimes:12,  date: Fri May 01 2020
+taskOrder:207, status:7,leftTimes:12,  date: Fri May 01 2020
+taskOrder:210, status:4,leftTimes:12,  date: Fri May 01 2020
+taskOrder:212, status:2,leftTimes:12,  date: Fri May 01 2020
+taskOrder:213, status:1,leftTimes:12,  date: Fri May 01 2020
+----第244天-----
+taskOrder:214, status:0,leftTimes:3,  date: Sat May 02 2020
+taskOrder:200, status:15,leftTimes:12,  date: Sat May 02 2020
+taskOrder:208, status:7,leftTimes:12,  date: Sat May 02 2020
+taskOrder:211, status:4,leftTimes:12,  date: Sat May 02 2020
+taskOrder:213, status:2,leftTimes:12,  date: Sat May 02 2020
+taskOrder:214, status:1,leftTimes:12,  date: Sat May 02 2020
+----第245天-----
+taskOrder:215, status:0,leftTimes:3,  date: Sun May 03 2020
+taskOrder:201, status:15,leftTimes:12,  date: Sun May 03 2020
+taskOrder:209, status:7,leftTimes:12,  date: Sun May 03 2020
+taskOrder:212, status:4,leftTimes:12,  date: Sun May 03 2020
+taskOrder:214, status:2,leftTimes:12,  date: Sun May 03 2020
+taskOrder:215, status:1,leftTimes:12,  date: Sun May 03 2020
+----第246天-----
+taskOrder:216, status:0,leftTimes:3,  date: Mon May 04 2020
+taskOrder:202, status:15,leftTimes:12,  date: Mon May 04 2020
+taskOrder:210, status:7,leftTimes:12,  date: Mon May 04 2020
+taskOrder:213, status:4,leftTimes:12,  date: Mon May 04 2020
+taskOrder:215, status:2,leftTimes:12,  date: Mon May 04 2020
+taskOrder:216, status:1,leftTimes:12,  date: Mon May 04 2020
+----第247天-----
+taskOrder:217, status:0,leftTimes:3,  date: Tue May 05 2020
+taskOrder:203, status:15,leftTimes:12,  date: Tue May 05 2020
+taskOrder:211, status:7,leftTimes:12,  date: Tue May 05 2020
+taskOrder:214, status:4,leftTimes:12,  date: Tue May 05 2020
+taskOrder:216, status:2,leftTimes:12,  date: Tue May 05 2020
+taskOrder:217, status:1,leftTimes:12,  date: Tue May 05 2020
+----第248天-----
+taskOrder:218, status:0,leftTimes:3,  date: Wed May 06 2020
+taskOrder:204, status:15,leftTimes:12,  date: Wed May 06 2020
+taskOrder:212, status:7,leftTimes:12,  date: Wed May 06 2020
+taskOrder:215, status:4,leftTimes:12,  date: Wed May 06 2020
+taskOrder:217, status:2,leftTimes:12,  date: Wed May 06 2020
+taskOrder:218, status:1,leftTimes:12,  date: Wed May 06 2020
+----第249天-----
+taskOrder:219, status:0,leftTimes:3,  date: Thu May 07 2020
+taskOrder:205, status:15,leftTimes:12,  date: Thu May 07 2020
+taskOrder:213, status:7,leftTimes:12,  date: Thu May 07 2020
+taskOrder:216, status:4,leftTimes:12,  date: Thu May 07 2020
+taskOrder:218, status:2,leftTimes:12,  date: Thu May 07 2020
+taskOrder:219, status:1,leftTimes:12,  date: Thu May 07 2020
+----第250天-----
+taskOrder:220, status:0,leftTimes:3,  date: Fri May 08 2020
+taskOrder:206, status:15,leftTimes:12,  date: Fri May 08 2020
+taskOrder:214, status:7,leftTimes:12,  date: Fri May 08 2020
+taskOrder:217, status:4,leftTimes:12,  date: Fri May 08 2020
+taskOrder:219, status:2,leftTimes:12,  date: Fri May 08 2020
+taskOrder:220, status:1,leftTimes:12,  date: Fri May 08 2020
+----第251天-----
+taskOrder:221, status:0,leftTimes:3,  date: Sat May 09 2020
+taskOrder:207, status:15,leftTimes:12,  date: Sat May 09 2020
+taskOrder:215, status:7,leftTimes:12,  date: Sat May 09 2020
+taskOrder:218, status:4,leftTimes:12,  date: Sat May 09 2020
+taskOrder:220, status:2,leftTimes:12,  date: Sat May 09 2020
+taskOrder:221, status:1,leftTimes:12,  date: Sat May 09 2020
+----第252天-----
+taskOrder:222, status:0,leftTimes:3,  date: Sun May 10 2020
+taskOrder:208, status:15,leftTimes:12,  date: Sun May 10 2020
+taskOrder:216, status:7,leftTimes:12,  date: Sun May 10 2020
+taskOrder:219, status:4,leftTimes:12,  date: Sun May 10 2020
+taskOrder:221, status:2,leftTimes:12,  date: Sun May 10 2020
+taskOrder:222, status:1,leftTimes:12,  date: Sun May 10 2020
+----第253天-----
+taskOrder:223, status:0,leftTimes:3,  date: Mon May 11 2020
+taskOrder:209, status:15,leftTimes:12,  date: Mon May 11 2020
+taskOrder:217, status:7,leftTimes:12,  date: Mon May 11 2020
+taskOrder:220, status:4,leftTimes:12,  date: Mon May 11 2020
+taskOrder:222, status:2,leftTimes:12,  date: Mon May 11 2020
+taskOrder:223, status:1,leftTimes:12,  date: Mon May 11 2020
+----第254天-----
+taskOrder:224, status:0,leftTimes:3,  date: Tue May 12 2020
+taskOrder:210, status:15,leftTimes:12,  date: Tue May 12 2020
+taskOrder:218, status:7,leftTimes:12,  date: Tue May 12 2020
+taskOrder:221, status:4,leftTimes:12,  date: Tue May 12 2020
+taskOrder:223, status:2,leftTimes:12,  date: Tue May 12 2020
+taskOrder:224, status:1,leftTimes:12,  date: Tue May 12 2020
+----第255天-----
+taskOrder:225, status:0,leftTimes:3,  date: Wed May 13 2020
+taskOrder:211, status:15,leftTimes:12,  date: Wed May 13 2020
+taskOrder:219, status:7,leftTimes:12,  date: Wed May 13 2020
+taskOrder:222, status:4,leftTimes:12,  date: Wed May 13 2020
+taskOrder:224, status:2,leftTimes:12,  date: Wed May 13 2020
+taskOrder:225, status:1,leftTimes:12,  date: Wed May 13 2020
+----第256天-----
+taskOrder:226, status:0,leftTimes:3,  date: Thu May 14 2020
+taskOrder:212, status:15,leftTimes:12,  date: Thu May 14 2020
+taskOrder:220, status:7,leftTimes:12,  date: Thu May 14 2020
+taskOrder:223, status:4,leftTimes:12,  date: Thu May 14 2020
+taskOrder:225, status:2,leftTimes:12,  date: Thu May 14 2020
+taskOrder:226, status:1,leftTimes:12,  date: Thu May 14 2020
+----第257天-----
+taskOrder:227, status:0,leftTimes:3,  date: Fri May 15 2020
+taskOrder:213, status:15,leftTimes:12,  date: Fri May 15 2020
+taskOrder:221, status:7,leftTimes:12,  date: Fri May 15 2020
+taskOrder:224, status:4,leftTimes:12,  date: Fri May 15 2020
+taskOrder:226, status:2,leftTimes:12,  date: Fri May 15 2020
+taskOrder:227, status:1,leftTimes:12,  date: Fri May 15 2020
+----第258天-----
+taskOrder:228, status:0,leftTimes:3,  date: Sat May 16 2020
+taskOrder:214, status:15,leftTimes:12,  date: Sat May 16 2020
+taskOrder:222, status:7,leftTimes:12,  date: Sat May 16 2020
+taskOrder:225, status:4,leftTimes:12,  date: Sat May 16 2020
+taskOrder:227, status:2,leftTimes:12,  date: Sat May 16 2020
+taskOrder:228, status:1,leftTimes:12,  date: Sat May 16 2020
+----第259天-----
+taskOrder:229, status:0,leftTimes:3,  date: Sun May 17 2020
+taskOrder:215, status:15,leftTimes:12,  date: Sun May 17 2020
+taskOrder:223, status:7,leftTimes:12,  date: Sun May 17 2020
+taskOrder:226, status:4,leftTimes:12,  date: Sun May 17 2020
+taskOrder:228, status:2,leftTimes:12,  date: Sun May 17 2020
+taskOrder:229, status:1,leftTimes:12,  date: Sun May 17 2020
+----第260天-----
+taskOrder:230, status:0,leftTimes:3,  date: Mon May 18 2020
+taskOrder:216, status:15,leftTimes:12,  date: Mon May 18 2020
+taskOrder:224, status:7,leftTimes:12,  date: Mon May 18 2020
+taskOrder:227, status:4,leftTimes:12,  date: Mon May 18 2020
+taskOrder:229, status:2,leftTimes:12,  date: Mon May 18 2020
+taskOrder:230, status:1,leftTimes:12,  date: Mon May 18 2020
+----第261天-----
+taskOrder:231, status:0,leftTimes:3,  date: Tue May 19 2020
+taskOrder:217, status:15,leftTimes:12,  date: Tue May 19 2020
+taskOrder:225, status:7,leftTimes:12,  date: Tue May 19 2020
+taskOrder:228, status:4,leftTimes:12,  date: Tue May 19 2020
+taskOrder:230, status:2,leftTimes:12,  date: Tue May 19 2020
+taskOrder:231, status:1,leftTimes:12,  date: Tue May 19 2020
+----第262天-----
+taskOrder:232, status:0,leftTimes:3,  date: Wed May 20 2020
+taskOrder:218, status:15,leftTimes:12,  date: Wed May 20 2020
+taskOrder:226, status:7,leftTimes:12,  date: Wed May 20 2020
+taskOrder:229, status:4,leftTimes:12,  date: Wed May 20 2020
+taskOrder:231, status:2,leftTimes:12,  date: Wed May 20 2020
+taskOrder:232, status:1,leftTimes:12,  date: Wed May 20 2020
+----第263天-----
+taskOrder:233, status:0,leftTimes:3,  date: Thu May 21 2020
+taskOrder:219, status:15,leftTimes:12,  date: Thu May 21 2020
+taskOrder:227, status:7,leftTimes:12,  date: Thu May 21 2020
+taskOrder:230, status:4,leftTimes:12,  date: Thu May 21 2020
+taskOrder:232, status:2,leftTimes:12,  date: Thu May 21 2020
+taskOrder:233, status:1,leftTimes:12,  date: Thu May 21 2020
+----第264天-----
+taskOrder:234, status:0,leftTimes:3,  date: Fri May 22 2020
+taskOrder:220, status:15,leftTimes:12,  date: Fri May 22 2020
+taskOrder:228, status:7,leftTimes:12,  date: Fri May 22 2020
+taskOrder:231, status:4,leftTimes:12,  date: Fri May 22 2020
+taskOrder:233, status:2,leftTimes:12,  date: Fri May 22 2020
+taskOrder:234, status:1,leftTimes:12,  date: Fri May 22 2020
+----第265天-----
+taskOrder:235, status:0,leftTimes:3,  date: Sat May 23 2020
+taskOrder:221, status:15,leftTimes:12,  date: Sat May 23 2020
+taskOrder:229, status:7,leftTimes:12,  date: Sat May 23 2020
+taskOrder:232, status:4,leftTimes:12,  date: Sat May 23 2020
+taskOrder:234, status:2,leftTimes:12,  date: Sat May 23 2020
+taskOrder:235, status:1,leftTimes:12,  date: Sat May 23 2020
+----第266天-----
+taskOrder:236, status:0,leftTimes:3,  date: Sun May 24 2020
+taskOrder:222, status:15,leftTimes:12,  date: Sun May 24 2020
+taskOrder:230, status:7,leftTimes:12,  date: Sun May 24 2020
+taskOrder:233, status:4,leftTimes:12,  date: Sun May 24 2020
+taskOrder:235, status:2,leftTimes:12,  date: Sun May 24 2020
+taskOrder:236, status:1,leftTimes:12,  date: Sun May 24 2020
+----第267天-----
+taskOrder:237, status:0,leftTimes:3,  date: Mon May 25 2020
+taskOrder:223, status:15,leftTimes:12,  date: Mon May 25 2020
+taskOrder:231, status:7,leftTimes:12,  date: Mon May 25 2020
+taskOrder:234, status:4,leftTimes:12,  date: Mon May 25 2020
+taskOrder:236, status:2,leftTimes:12,  date: Mon May 25 2020
+taskOrder:237, status:1,leftTimes:12,  date: Mon May 25 2020
+----第268天-----
+taskOrder:238, status:0,leftTimes:3,  date: Tue May 26 2020
+taskOrder:224, status:15,leftTimes:12,  date: Tue May 26 2020
+taskOrder:232, status:7,leftTimes:12,  date: Tue May 26 2020
+taskOrder:235, status:4,leftTimes:12,  date: Tue May 26 2020
+taskOrder:237, status:2,leftTimes:12,  date: Tue May 26 2020
+taskOrder:238, status:1,leftTimes:12,  date: Tue May 26 2020
+----第269天-----
+taskOrder:239, status:0,leftTimes:3,  date: Wed May 27 2020
+taskOrder:225, status:15,leftTimes:12,  date: Wed May 27 2020
+taskOrder:233, status:7,leftTimes:12,  date: Wed May 27 2020
+taskOrder:236, status:4,leftTimes:12,  date: Wed May 27 2020
+taskOrder:238, status:2,leftTimes:12,  date: Wed May 27 2020
+taskOrder:239, status:1,leftTimes:12,  date: Wed May 27 2020
+----第270天-----
+taskOrder:240, status:0,leftTimes:3,  date: Thu May 28 2020
+taskOrder:226, status:15,leftTimes:12,  date: Thu May 28 2020
+taskOrder:234, status:7,leftTimes:12,  date: Thu May 28 2020
+taskOrder:237, status:4,leftTimes:12,  date: Thu May 28 2020
+taskOrder:239, status:2,leftTimes:12,  date: Thu May 28 2020
+taskOrder:240, status:1,leftTimes:12,  date: Thu May 28 2020
+----第271天-----
+taskOrder:241, status:0,leftTimes:3,  date: Fri May 29 2020
+taskOrder:227, status:15,leftTimes:12,  date: Fri May 29 2020
+taskOrder:235, status:7,leftTimes:12,  date: Fri May 29 2020
+taskOrder:238, status:4,leftTimes:12,  date: Fri May 29 2020
+taskOrder:240, status:2,leftTimes:12,  date: Fri May 29 2020
+taskOrder:241, status:1,leftTimes:12,  date: Fri May 29 2020
+----第272天-----
+taskOrder:242, status:0,leftTimes:3,  date: Sat May 30 2020
+taskOrder:228, status:15,leftTimes:12,  date: Sat May 30 2020
+taskOrder:236, status:7,leftTimes:12,  date: Sat May 30 2020
+taskOrder:239, status:4,leftTimes:12,  date: Sat May 30 2020
+taskOrder:241, status:2,leftTimes:12,  date: Sat May 30 2020
+taskOrder:242, status:1,leftTimes:12,  date: Sat May 30 2020
+----第273天-----
+taskOrder:243, status:0,leftTimes:3,  date: Sun May 31 2020
+taskOrder:229, status:15,leftTimes:12,  date: Sun May 31 2020
+taskOrder:237, status:7,leftTimes:12,  date: Sun May 31 2020
+taskOrder:240, status:4,leftTimes:12,  date: Sun May 31 2020
+taskOrder:242, status:2,leftTimes:12,  date: Sun May 31 2020
+taskOrder:243, status:1,leftTimes:12,  date: Sun May 31 2020
+----第274天-----
+taskOrder:244, status:0,leftTimes:3,  date: Mon Jun 01 2020
+taskOrder:230, status:15,leftTimes:12,  date: Mon Jun 01 2020
+taskOrder:238, status:7,leftTimes:12,  date: Mon Jun 01 2020
+taskOrder:241, status:4,leftTimes:12,  date: Mon Jun 01 2020
+taskOrder:243, status:2,leftTimes:12,  date: Mon Jun 01 2020
+taskOrder:244, status:1,leftTimes:12,  date: Mon Jun 01 2020
+----第275天-----
+taskOrder:245, status:0,leftTimes:3,  date: Tue Jun 02 2020
+taskOrder:231, status:15,leftTimes:12,  date: Tue Jun 02 2020
+taskOrder:239, status:7,leftTimes:12,  date: Tue Jun 02 2020
+taskOrder:242, status:4,leftTimes:12,  date: Tue Jun 02 2020
+taskOrder:244, status:2,leftTimes:12,  date: Tue Jun 02 2020
+taskOrder:245, status:1,leftTimes:12,  date: Tue Jun 02 2020
+----第276天-----
+taskOrder:246, status:0,leftTimes:3,  date: Wed Jun 03 2020
+taskOrder:232, status:15,leftTimes:12,  date: Wed Jun 03 2020
+taskOrder:240, status:7,leftTimes:12,  date: Wed Jun 03 2020
+taskOrder:243, status:4,leftTimes:12,  date: Wed Jun 03 2020
+taskOrder:245, status:2,leftTimes:12,  date: Wed Jun 03 2020
+taskOrder:246, status:1,leftTimes:12,  date: Wed Jun 03 2020
+----第277天-----
+taskOrder:247, status:0,leftTimes:3,  date: Thu Jun 04 2020
+taskOrder:233, status:15,leftTimes:12,  date: Thu Jun 04 2020
+taskOrder:241, status:7,leftTimes:12,  date: Thu Jun 04 2020
+taskOrder:244, status:4,leftTimes:12,  date: Thu Jun 04 2020
+taskOrder:246, status:2,leftTimes:12,  date: Thu Jun 04 2020
+taskOrder:247, status:1,leftTimes:12,  date: Thu Jun 04 2020
+----第278天-----
+taskOrder:248, status:0,leftTimes:3,  date: Fri Jun 05 2020
+taskOrder:234, status:15,leftTimes:12,  date: Fri Jun 05 2020
+taskOrder:242, status:7,leftTimes:12,  date: Fri Jun 05 2020
+taskOrder:245, status:4,leftTimes:12,  date: Fri Jun 05 2020
+taskOrder:247, status:2,leftTimes:12,  date: Fri Jun 05 2020
+taskOrder:248, status:1,leftTimes:12,  date: Fri Jun 05 2020
+----第279天-----
+taskOrder:249, status:0,leftTimes:3,  date: Sat Jun 06 2020
+taskOrder:235, status:15,leftTimes:12,  date: Sat Jun 06 2020
+taskOrder:243, status:7,leftTimes:12,  date: Sat Jun 06 2020
+taskOrder:246, status:4,leftTimes:12,  date: Sat Jun 06 2020
+taskOrder:248, status:2,leftTimes:12,  date: Sat Jun 06 2020
+taskOrder:249, status:1,leftTimes:12,  date: Sat Jun 06 2020
+----第280天-----
+taskOrder:250, status:0,leftTimes:3,  date: Sun Jun 07 2020
+taskOrder:236, status:15,leftTimes:12,  date: Sun Jun 07 2020
+taskOrder:244, status:7,leftTimes:12,  date: Sun Jun 07 2020
+taskOrder:247, status:4,leftTimes:12,  date: Sun Jun 07 2020
+taskOrder:249, status:2,leftTimes:12,  date: Sun Jun 07 2020
+taskOrder:250, status:1,leftTimes:12,  date: Sun Jun 07 2020
+----第281天-----
+taskOrder:251, status:0,leftTimes:3,  date: Mon Jun 08 2020
+taskOrder:237, status:15,leftTimes:12,  date: Mon Jun 08 2020
+taskOrder:245, status:7,leftTimes:12,  date: Mon Jun 08 2020
+taskOrder:248, status:4,leftTimes:12,  date: Mon Jun 08 2020
+taskOrder:250, status:2,leftTimes:12,  date: Mon Jun 08 2020
+taskOrder:251, status:1,leftTimes:12,  date: Mon Jun 08 2020
+----第282天-----
+taskOrder:252, status:0,leftTimes:3,  date: Tue Jun 09 2020
+taskOrder:238, status:15,leftTimes:12,  date: Tue Jun 09 2020
+taskOrder:246, status:7,leftTimes:12,  date: Tue Jun 09 2020
+taskOrder:249, status:4,leftTimes:12,  date: Tue Jun 09 2020
+taskOrder:251, status:2,leftTimes:12,  date: Tue Jun 09 2020
+taskOrder:252, status:1,leftTimes:12,  date: Tue Jun 09 2020
+----第283天-----
+taskOrder:253, status:0,leftTimes:3,  date: Wed Jun 10 2020
+taskOrder:239, status:15,leftTimes:12,  date: Wed Jun 10 2020
+taskOrder:247, status:7,leftTimes:12,  date: Wed Jun 10 2020
+taskOrder:250, status:4,leftTimes:12,  date: Wed Jun 10 2020
+taskOrder:252, status:2,leftTimes:12,  date: Wed Jun 10 2020
+taskOrder:253, status:1,leftTimes:12,  date: Wed Jun 10 2020
+----第284天-----
+taskOrder:254, status:0,leftTimes:3,  date: Thu Jun 11 2020
+taskOrder:240, status:15,leftTimes:12,  date: Thu Jun 11 2020
+taskOrder:248, status:7,leftTimes:12,  date: Thu Jun 11 2020
+taskOrder:251, status:4,leftTimes:12,  date: Thu Jun 11 2020
+taskOrder:253, status:2,leftTimes:12,  date: Thu Jun 11 2020
+taskOrder:254, status:1,leftTimes:12,  date: Thu Jun 11 2020
+----第285天-----
+taskOrder:241, status:15,leftTimes:12,  date: Fri Jun 12 2020
+taskOrder:249, status:7,leftTimes:12,  date: Fri Jun 12 2020
+taskOrder:252, status:4,leftTimes:12,  date: Fri Jun 12 2020
+taskOrder:254, status:2,leftTimes:12,  date: Fri Jun 12 2020
+----第286天-----
+taskOrder:242, status:15,leftTimes:12,  date: Sat Jun 13 2020
+taskOrder:250, status:7,leftTimes:12,  date: Sat Jun 13 2020
+taskOrder:253, status:4,leftTimes:12,  date: Sat Jun 13 2020
+----第287天-----
+taskOrder:243, status:15,leftTimes:12,  date: Sun Jun 14 2020
+taskOrder:251, status:7,leftTimes:12,  date: Sun Jun 14 2020
+taskOrder:254, status:4,leftTimes:12,  date: Sun Jun 14 2020
+----第288天-----
+taskOrder:244, status:15,leftTimes:12,  date: Mon Jun 15 2020
+taskOrder:252, status:7,leftTimes:12,  date: Mon Jun 15 2020
+----第289天-----
+taskOrder:245, status:15,leftTimes:12,  date: Tue Jun 16 2020
+taskOrder:253, status:7,leftTimes:12,  date: Tue Jun 16 2020
+----第290天-----
+taskOrder:246, status:15,leftTimes:12,  date: Wed Jun 17 2020
+taskOrder:254, status:7,leftTimes:12,  date: Wed Jun 17 2020
+----第291天-----
+taskOrder:247, status:15,leftTimes:12,  date: Thu Jun 18 2020
+----第292天-----
+taskOrder:248, status:15,leftTimes:12,  date: Fri Jun 19 2020
+----第293天-----
+taskOrder:249, status:15,leftTimes:12,  date: Sat Jun 20 2020
+----第294天-----
+taskOrder:250, status:15,leftTimes:12,  date: Sun Jun 21 2020
+----第295天-----
+taskOrder:251, status:15,leftTimes:12,  date: Mon Jun 22 2020
+----第296天-----
+taskOrder:252, status:15,leftTimes:12,  date: Tue Jun 23 2020
+----第297天-----
+taskOrder:253, status:15,leftTimes:12,  date: Wed Jun 24 2020
+----第298天-----
+taskOrder:254, status:15,leftTimes:12,  date: Thu Jun 25 2020
+----第1天-----
+taskOrder:1, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 02 2019
+taskOrder:1, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 02 2019
+----第2天-----
+taskOrder:2, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 03 2019
+taskOrder:1, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 03 2019
+taskOrder:2, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 03 2019
+----第3天-----
+taskOrder:3, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 04 2019
+taskOrder:2, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+taskOrder:3, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+----第4天-----
+taskOrder:4, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 05 2019
+taskOrder:1, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:3, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:4, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+----第5天-----
+taskOrder:5, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 06 2019
+taskOrder:2, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:4, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:5, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+----第6天-----
+taskOrder:6, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 07 2019
+taskOrder:3, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:5, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:6, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+----第7天-----
+taskOrder:7, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 08 2019
+taskOrder:1, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:4, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:6, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:7, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+----第8天-----
+taskOrder:8, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 09 2019
+taskOrder:2, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:5, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:7, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:8, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+----第9天-----
+taskOrder:9, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 10 2019
+taskOrder:3, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:6, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:8, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:9, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+----第10天-----
+taskOrder:10, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 11 2019
+taskOrder:4, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:7, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:9, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:10, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+----第11天-----
+taskOrder:11, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 12 2019
+taskOrder:5, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:8, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:10, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:11, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+----第12天-----
+taskOrder:12, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 13 2019
+taskOrder:6, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:9, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:11, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:12, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+----第13天-----
+taskOrder:13, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 14 2019
+taskOrder:7, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:10, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:12, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:13, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+----第14天-----
+taskOrder:14, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 15 2019
+taskOrder:8, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:11, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:13, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:14, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+----第15天-----
+taskOrder:15, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 16 2019
+taskOrder:1, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:9, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:12, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:14, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:15, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+----第16天-----
+taskOrder:16, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 17 2019
+taskOrder:2, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:10, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:13, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:15, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:16, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+----第17天-----
+taskOrder:17, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 18 2019
+taskOrder:3, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:11, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:14, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:16, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:17, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+----第18天-----
+taskOrder:18, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 19 2019
+taskOrder:4, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:12, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:15, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:17, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:18, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+----第19天-----
+taskOrder:19, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 20 2019
+taskOrder:5, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:13, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:16, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:18, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:19, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+----第20天-----
+taskOrder:20, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 21 2019
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:20, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+----第21天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+----第22天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+----第23天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+----第24天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+----第25天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+----第26天-----
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+----第27天-----
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+----第28天-----
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+----第29天-----
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+----第30天-----
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+----第1天-----
+taskOrder:1, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 03 2019
+taskOrder:1, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 03 2019
+----第2天-----
+taskOrder:2, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 04 2019
+taskOrder:1, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+taskOrder:2, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+----第3天-----
+taskOrder:3, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 05 2019
+taskOrder:2, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:3, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+----第4天-----
+taskOrder:4, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 06 2019
+taskOrder:1, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:3, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:4, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+----第5天-----
+taskOrder:5, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 07 2019
+taskOrder:2, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:4, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:5, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+----第6天-----
+taskOrder:6, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 08 2019
+taskOrder:3, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:5, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:6, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+----第7天-----
+taskOrder:7, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 09 2019
+taskOrder:1, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:4, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:6, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:7, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+----第8天-----
+taskOrder:8, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 10 2019
+taskOrder:2, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:5, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:7, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:8, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+----第9天-----
+taskOrder:9, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 11 2019
+taskOrder:3, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:6, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:8, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:9, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+----第10天-----
+taskOrder:10, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 12 2019
+taskOrder:4, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:7, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:9, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:10, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+----第11天-----
+taskOrder:11, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 13 2019
+taskOrder:5, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:8, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:10, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:11, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+----第12天-----
+taskOrder:12, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 14 2019
+taskOrder:6, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:9, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:11, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:12, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+----第13天-----
+taskOrder:13, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 15 2019
+taskOrder:7, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:10, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:12, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:13, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+----第14天-----
+taskOrder:14, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 16 2019
+taskOrder:8, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:11, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:13, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:14, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+----第15天-----
+taskOrder:15, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 17 2019
+taskOrder:1, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:9, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:12, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:14, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:15, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+----第16天-----
+taskOrder:16, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 18 2019
+taskOrder:2, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:10, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:13, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:15, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:16, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+----第17天-----
+taskOrder:17, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 19 2019
+taskOrder:3, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:11, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:14, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:16, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:17, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+----第18天-----
+taskOrder:18, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 20 2019
+taskOrder:4, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:12, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:15, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:17, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:18, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+----第19天-----
+taskOrder:19, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 21 2019
+taskOrder:5, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:13, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:16, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:18, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:19, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+----第20天-----
+taskOrder:20, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 22 2019
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:20, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+----第21天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+----第22天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+----第23天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+----第24天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+----第25天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+----第26天-----
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+----第27天-----
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+----第28天-----
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+----第29天-----
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+----第30天-----
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019
+----第1天-----
+taskOrder:1, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 03 2019
+taskOrder:1, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 03 2019
+----第2天-----
+taskOrder:2, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 04 2019
+taskOrder:1, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+taskOrder:2, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 04 2019
+----第3天-----
+taskOrder:3, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 05 2019
+taskOrder:2, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+taskOrder:3, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 05 2019
+----第4天-----
+taskOrder:4, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 06 2019
+taskOrder:1, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:3, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+taskOrder:4, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 06 2019
+----第5天-----
+taskOrder:5, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 07 2019
+taskOrder:2, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:4, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+taskOrder:5, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 07 2019
+----第6天-----
+taskOrder:6, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 08 2019
+taskOrder:3, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:5, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+taskOrder:6, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 08 2019
+----第7天-----
+taskOrder:7, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 09 2019
+taskOrder:1, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:4, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:6, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+taskOrder:7, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 09 2019
+----第8天-----
+taskOrder:8, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 10 2019
+taskOrder:2, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:5, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:7, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+taskOrder:8, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 10 2019
+----第9天-----
+taskOrder:9, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 11 2019
+taskOrder:3, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:6, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:8, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+taskOrder:9, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 11 2019
+----第10天-----
+taskOrder:10, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 12 2019
+taskOrder:4, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:7, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:9, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+taskOrder:10, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 12 2019
+----第11天-----
+taskOrder:11, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 13 2019
+taskOrder:5, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:8, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:10, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+taskOrder:11, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 13 2019
+----第12天-----
+taskOrder:12, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 14 2019
+taskOrder:6, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:9, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:11, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+taskOrder:12, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 14 2019
+----第13天-----
+taskOrder:13, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 15 2019
+taskOrder:7, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:10, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:12, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+taskOrder:13, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 15 2019
+----第14天-----
+taskOrder:14, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Mon Sep 16 2019
+taskOrder:8, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:11, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:13, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+taskOrder:14, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 16 2019
+----第15天-----
+taskOrder:15, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Tue Sep 17 2019
+taskOrder:1, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:9, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:12, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:14, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+taskOrder:15, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 17 2019
+----第16天-----
+taskOrder:16, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Wed Sep 18 2019
+taskOrder:2, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:10, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:13, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:15, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+taskOrder:16, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 18 2019
+----第17天-----
+taskOrder:17, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Thu Sep 19 2019
+taskOrder:3, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:11, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:14, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:16, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+taskOrder:17, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 19 2019
+----第18天-----
+taskOrder:18, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Fri Sep 20 2019
+taskOrder:4, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:12, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:15, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:17, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+taskOrder:18, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 20 2019
+----第19天-----
+taskOrder:19, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sat Sep 21 2019
+taskOrder:5, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:13, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:16, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:18, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+taskOrder:19, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 21 2019
+----第20天-----
+taskOrder:20, status:0,process:IN_LEARN_PLAY,leftTimes:3,  date: Sun Sep 22 2019
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+taskOrder:20, status:1,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 22 2019
+----第21天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 23 2019
+----第22天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+taskOrder:19, status:2,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Sep 24 2019
+----第23天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:17, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Sep 25 2019
+----第24天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:14, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+taskOrder:18, status:4,process:IN_REVIEW_PLAY,leftTimes:12,  date: Thu Sep 26 2019
+----第25天-----
+taskOrder:6, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:15, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Fri Sep 27 2019
+----第26天-----
+taskOrder:7, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+taskOrder:16, status:7,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sat Sep 28 2019
+----第27天-----
+taskOrder:8, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Sun Sep 29 2019
+----第28天-----
+taskOrder:9, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Mon Sep 30 2019
+----第29天-----
+taskOrder:10, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Tue Oct 01 2019
+----第30天-----
+taskOrder:11, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:12, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019
+taskOrder:13, status:15,process:IN_REVIEW_PLAY,leftTimes:12,  date: Wed Oct 02 2019

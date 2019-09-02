@@ -10,7 +10,7 @@ import VocaCard from './VocaCard'
 const styles = StyleSheet.create({
     container: {
       flex:1,
-      backgroundColor:'#FDFDFD',
+      backgroundColor:'#F9F9F9',
     }
   });
 
@@ -20,7 +20,7 @@ vocaDao.open()
 .then(realm=>{
     storiesOf('VocaCard', module)
     .add('VocaCard', () =>
-      <VocaCard  wordInfo={vocaDao.getWordInfo('detail')}/>
+      <VocaCard  wordInfo={vocaDao.getWordInfo('current')} />
     )
 })
 

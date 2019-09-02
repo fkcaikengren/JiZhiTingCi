@@ -6,55 +6,39 @@ const StatusBarHeight = StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#F0F0F0',
+        flex:1,
+        backgroundColor:'#FEFEFE',
     },
-    center:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    row:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    col:{
+    content:{
+        padding:10,
         flexDirection:'column',
-        justifyContent:'flex-start',
-        alignItems:'flex-start',
+        justifyContent:'center',
+        alignItems:'center',
+        height:'35%'
     },
-    tipRow:{
-        width:'100%',
+    phoneticView:{
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
     },
-    enFont:{
-        fontSize:18,
-        color:'#303030'
+    wordFont:{
+        fontSize:30,
+        color:'#202020',
+        fontWeight:'600'
     },
     btnFont:{
+        width:'90%',
         fontSize:16,
-        color:'#303030',
-        fontWeight:'500'
+        color:'#202020',
+        textAlign:'left'
     },
     selectBtn:{
-        borderWidth:1,
-        borderColor:'#FDFDFD',
-        backgroundColor:'#FDFDFD',
-        width:'100%',
-        elevation:0,
-    
+        backgroundColor:'#EFEFEF',
+        borderRadius:8,
     },
     modal: {
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-      },
-
-    modal2: {
         width:width,
-        height: height-StatusBarHeight,
+        height: height-StatusBarHeight-80,
         backgroundColor: "#FDFDFD"
     },
     modalBtn:{
@@ -69,12 +53,10 @@ const styles = StyleSheet.create({
     modalBottom:{
         position:'absolute', 
         bottom:0, 
-        width:width,
-        height:50,
-        flexDirection:'row',
-        justifyContent:'space-around',
-        alignItems:'center',
-        backgroundColor:'#EFEFEF'
+        width:'100%',
+        height:60,
+        flex:1,
+        paddingHorizontal:10,
     }
    
     

@@ -39,18 +39,20 @@ export default class VocaTaskService {
      *     今日任务：新学任务，1复，其他复习任务
      * @returns {any[]}
      */
-    getTodayTasks = (oldTasks, n)=>{
+    getTodayTasks = (oldTasks, n=0)=>{
         //判断oldTasks 是否过时
         let today = _util.getDayTime(0)
+        console.log(today)
         if(oldTasks && oldTasks[0] && oldTasks[0].vocaTaskDate === today){ //数据未过时
             return oldTasks
         }else{                                 //数据过时，从数据库重新加载
             //1. 查询
             const tasks = this.vtd.getTodayTasks(n)
+            console.log((tasks))
             let copyTasks = []
             let reviewTask = null
             let reviewTasks = []
-            //2. 深拷贝
+            //2. 浅拷贝
             for(let task of tasks){
                 let copyTask = VocaUtil.copyTask(task)
                 copyTasks.push(copyTask)

@@ -7,7 +7,7 @@ export const playSound = (url)=>{
     const baseUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
     console.log(baseUrl+url)
     const sound = new Sound(baseUrl+url,null, err => {
-        console.log('play')
+      console.log('play')
       if (err) {        //获取失败
         console.log(err)
         return;
@@ -20,22 +20,45 @@ export const playSound = (url)=>{
     
 }
 
+export default class AudioFetch{
+  
+  constructor(){
+    this.sound = null
+  }
 
-        // let wordAudio = new Sound(words[index].word+'.wav', Sound.MAIN_BUNDLE, (error) => {
-        //     if (error) {
-        //       console.log('failed to load the sound', error);
-        //       return;
-        //     }
-        //     // loaded successfully
-        //     // console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
-          
-        //     // Play the sound with an onEnd callback
-        //     wordAudio.play((success) => {
-        //       if (success) {
-        //         console.log('successfully finished playing');
-        //         wordAudio.release();
-        //       } else {
-        //         console.log('playback failed due to audio decoding errors');
-        //     }
-        //     });
-        // });
+  //单例模式
+  static getInstance(){
+    if(!this.instance) {
+        this.instance = new AudioFetch();
+    }
+    return this.instance;
+  }
+
+  //播放音频
+  playSound = (url)=>{
+    const baseUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
+    console.log(baseUrl+url)
+    //先暂停
+    if(this.sound){
+      this.sound.pause();
+      this.sound.release();
+    }
+    //再重新构建一个声音播放
+    this.sound = new Sound(baseUrl+url,null, err => {
+      console.log('play')
+      if (err) {        //获取失败
+        console.log(err)
+        this.sound.release();
+        this.sound = null
+        return;
+      }
+      this.sound.play(() => {  //播放
+        console.log('success play')
+        this.sound.release();
+        this.sound = null
+      });
+    })
+    
+}
+
+}

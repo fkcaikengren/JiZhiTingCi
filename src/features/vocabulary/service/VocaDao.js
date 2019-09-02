@@ -87,6 +87,7 @@ export default class VocaDao{
      * @returns [] 返回一个数组
      */
     getWordInfos = (words)=>{
+        const arr = []
         try{
             const len = words.length
             if(len && len>0){
@@ -100,15 +101,16 @@ export default class VocaDao{
                     }
                 }
                 let wordInfos = this.realm.objects('WordInfo').filtered('('+str+') AND inflection_type != "transform"'   ); //数组
-                return wordInfos
-            }else{
-                return []
+                for(let wi of wordInfos){
+                    arr.push(wi)
+                }
             }
 
         }catch (e) {
             console.log(e)
             console.log('VocaDao : getWordInfo() Error')
         }
+        return arr
     }
 
     /**

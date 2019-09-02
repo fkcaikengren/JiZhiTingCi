@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet,Text, View, Image, Dimensions, TouchableWithoutFeedback} from 'react-native'
 import Swiper from 'react-native-swiper'
 import {PropTypes} from 'prop-types';
-import {playSound} from '../service/AudioFetch'
-import Loader from '../../../component/Loader';
+import AudioFetch from '../service/AudioFetch'
 
 const { width } = Dimensions.get('window')
 const Location = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
@@ -38,7 +37,15 @@ const styles = StyleSheet.create({
         bottom:5,
         width:'100%',
         paddingHorizontal:5,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+    },
+    dotPosition:{
+      position:'absolute',
+      top:5,
+      right:5,
+      flexDirection:'row',
+      justifyContent:'flex-end',
+      alignItems:'flex-start',
     }
 
 })
@@ -51,7 +58,9 @@ export default class ExampleCarousel extends Component {
     this.state = {
       loadQueue: [0, 0, 0]
     }
+    this.audioFetch = AudioFetch.getInstance()
   }
+
   _loadHandle (i) {
     let loadQueue = this.state.loadQueue
     loadQueue[i] = 1
@@ -78,17 +87,20 @@ export default class ExampleCarousel extends Component {
     return (
         <Swiper 
         style={styles.wrapper} 
-        showsPagination={false}
+        showsPagination={true}
+        paginationStyle={styles.dotPosition}
+        dotColor='#FFFFFFAA'
+        activeDotColor='#FFE957'
         loop={false} 
         onIndexChanged={(i)=>{
-          playSound(this.props.examples[i].pron_url)
+          this.audioFetch.playSound(this.props.examples[i].pron_url)
         }}
         loadMinimal loadMinimalSize={1} >
             {
                 this.props.examples.map((item, i)=>{
                     return <View style={styles.slide}>
                         <TouchableWithoutFeedback onPress={()=>{
-                          playSound(item.pron_url)
+                          this.audioFetch.playSound(item.pron_url)
                         }}>
                           <Image onLoad={()=>{this._loadHandle(i)}} style={styles.image} source={{uri: Location+item.pic_url}} />
                         </TouchableWithoutFeedback>
@@ -110,7 +122,7 @@ export default class ExampleCarousel extends Component {
 
 
 ExampleCarousel.propTypes = {
-   examples: PropTypes.object.isRequired
+   examples: PropTypes.object.isRequired,
 }
   
 ExampleCarousel.defaultProps = {

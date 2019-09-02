@@ -10,7 +10,7 @@ import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import StatisticsPage from '../features/vocabulary/StatisticsPage';
 import LearnCardPage from '../features/vocabulary/LearnCardPage';
-import TestEnTranPage from '../features/vocabulary/TestEnTranPage';
+import TestVocaTranPage from '../features/vocabulary/TestVocaTranPage';
 import TestSentencePage from '../features/vocabulary/TestSentencePage';
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 
@@ -61,13 +61,13 @@ const VocaHomeStackNav = createStackNavigator(
       },
 
 
-      // 英英释义选词测试
-      TestEnTran: {
-        screen: TestEnTranPage,
-      },
       // 例句选词测试
       TestSentence: {
         screen: TestSentencePage,
+      },
+      // 单词选中义测试
+      VocaTran: {
+        screen: TestVocaTranPage,
       },
       // 中义选单词测试
 
@@ -87,12 +87,9 @@ const VocaHomeStackNav = createStackNavigator(
 
     },
     {
-      initialRouteName: 'VocaGroup',
+      initialRouteName: 'Home',
       headerMode:'none',
       initialRouteParams:{
-        vocaLibName:'CET-4',
-        articleCode:5,
-        articleType:Constant.FOUR_SELECT_READ
       }
     }
   );

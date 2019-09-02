@@ -12,8 +12,8 @@ const defaultState ={
 
 export const home =  handleActions({
   
-    [ha.LOAD_TASKS_SUCCEED] : (state, action) => {
-        return { ...state, tasks:action.tasks, isLoadPending:false};
+    [ha.LOAD_TASKS] : (state, action) => {
+        return { ...state, tasks:action.payload.tasks};
     },
 
 }, defaultState);

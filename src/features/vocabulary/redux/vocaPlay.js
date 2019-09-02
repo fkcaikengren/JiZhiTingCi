@@ -12,10 +12,11 @@ import * as Constant from '../common/constant'
 
 const defaultState ={
 
-    //任务,包含了单词列表 (不进行持久化)
+    //任务,包含了单词列表 
     task:{
         words:[]
     },
+    wordInfos:[],
     //当前下标
     curIndex:0,
     //是否播放, <=0表示暂停，>0表示播放
@@ -41,12 +42,12 @@ const defaultState ={
 
 export const vocaPlay =  handleActions({
 
-    //加载任务
-    [vpAction.LOAD_TASK_START] : (state, action) => ({ ...state, isLoadPending:true }),                             //开始加载任务
-    [vpAction.LOAD_TASK_SUCCEED] : (state, action) => ({ ...state, 
-        task:action.task, 
-        curIndex:action.task.curIndex,
-        isLoadPending:false }),         //任务加载成功
+    //加载任务         
+    [vpAction.LOAD_TASK] : (state, action) => ({ ...state, 
+        task:action.payload.task, 
+        curIndex:action.payload.task.curIndex,
+        wordInfos:action.payload.wordInfos,
+        }),         
     //暂停、播放
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     //更新当前单词

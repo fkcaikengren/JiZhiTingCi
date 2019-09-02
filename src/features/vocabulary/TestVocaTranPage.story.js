@@ -10,7 +10,7 @@ import {Provider} from 'react-redux';
 import {store} from '../../redux/store'
 import _util from '../../common/util'
 
-import VocaPlayPage from './VocaPlayPage';
+import TestVocaTranPage from './TestVocaTranPage'
 import * as Constant from './common/constant'
 import VocaTaskDao from './service/VocaTaskDao';
 import VocaDao from './service/VocaDao'
@@ -232,13 +232,13 @@ vocaDao.open()
   vocaTaskDao.open()
   .then(realm2=>{
     //页面
-    storiesOf('VocaPlayPage', module)
-    .add('VocaPlay', () =>
+    storiesOf('TestVocaTranPage', module)
+    .add('TestVocaTran', () =>
       <Provider store={store}>
           <MenuProvider>
               <Root>
                   <Container style={styles.container}>
-                    <VocaPlayPage mode={mode} task={task}/>
+                    <TestVocaTranPage  />
                   </Container>
               </Root>
           </MenuProvider>
@@ -246,11 +246,3 @@ vocaDao.open()
     )
   })
 })
-
-
-
-
-
-
-
-

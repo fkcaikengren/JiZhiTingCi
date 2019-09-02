@@ -3,4 +3,5 @@
 // import './component/DetailDictPage.story'
 // import '../../component/IndexSectionList.story'
 // import './GroupVocaPage.story'
-import './component/VocaCard.story'
+// import './component/VocaCard.story'
+import './TestVocaTranPage.story'

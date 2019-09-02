@@ -12,7 +12,7 @@ import styles from './VocaListStyle'
 import * as Constant from './common/constant'
 
 //暂时
-VocaTaskDao.getInstance().open()
+// VocaTaskDao.getInstance().open()
 
 class VocaListTabPage extends Component {
 

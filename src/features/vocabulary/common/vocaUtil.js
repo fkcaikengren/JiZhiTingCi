@@ -19,7 +19,6 @@ export default class VocaUtil{
             curIndex:task.curIndex,
             leftTimes:task.leftTimes,
             delayDays:task.delayDays,
-            dataCompleted:task.dataCompleted,
             createTime:task.createTime,
             isSync: task.isSync,
             words: [],
@@ -46,7 +45,6 @@ export default class VocaUtil{
             curIndex:task.curIndex,
             leftTimes:task.leftTimes,
             delayDays:task.delayDays,
-            dataCompleted:task.dataCompleted,
             createTime:task.createTime,
             isSync: task.isSync,
             words: [],
@@ -59,13 +57,6 @@ export default class VocaUtil{
                 passed: ws[i].passed,
                 wrongNum: ws[i].wrongNum,
                 testWrongNum: ws[i].testWrongNum,
-                enPhonetic: ws[i].enPhonetic,
-                enPronUrl: ws[i].enPronUrl,
-                amPhonetic: ws[i].amPhonetic,
-                amPronUrl: ws[i].amPronUrl,
-                def: ws[i].def,
-                sentence: ws[i].sentence,
-                tran: ws[i].tran
             })
         }
         return copyTask
@@ -176,6 +167,58 @@ export default class VocaUtil{
             name = ''+taskOrder
         }
         return name
+    }
+
+
+    /**
+     * @description 生成一个minNum到maxMum间的随机数
+     * @memberof VocaUtil
+     */
+    static randomNum = (minNum, maxNum) => {
+        if((typeof minNum !== "number") || (typeof maxNum !== "number") ){
+            throw new Error('参数类型错误，minNum, maxNum 应该是number')
+        }
+        return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
+    }
+
+    /**
+     * @description 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
+     * @memberof VocaUtil
+     */
+    static randomArr = (minNum, maxNum, num) => {
+        //判断错误
+        if((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof num !== "number")){
+            throw new Error('参数类型错误，minNum, maxNum, num 应该是number')
+        }
+        let options = []
+
+        for(let i of [1,2,3]){ //产生3个选项
+            let option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
+            while(options.includes(option) || option == num){
+                option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
+            }
+            options.push(option)
+        }
+        return options
+    }
+
+    /**
+     * @description 解析json对象并转换成文本
+     * @static
+     * @memberof VocaUtil
+     */
+    static transToText = (trans)=>{
+        if(!trans || trans===''){
+            return ''
+        }
+        let translation = ''
+        const obj = JSON.parse(trans)
+        if(obj){
+            for(let k in obj){
+                translation += `${k}. ${obj[k]} `
+            }
+        }
+        return translation
     }
 }
 
