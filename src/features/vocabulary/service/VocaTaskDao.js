@@ -29,7 +29,7 @@ const VocaTaskSchema = {
         //任务单词数组
         words: 'TaskWord[]',
         //未被pass的单词数量
-        wordCount: {type: 'int',optional:true, default: VConfig.DEFAULT_TASK_WORD_COUNT}
+        wordCount: {type: 'int',optional:true, default: 0}
     }
   };
  
@@ -41,8 +41,8 @@ const VocaTaskSchema = {
     properties: {
       word: 'string',
       passed: {type: 'bool', optional:true, default: false},
-      wrongNum:	'int?',
-      testWrongNum: 'int?',
+      wrongNum:	{type: 'int',optional:true, default: 0},
+      testWrongNum: {type: 'int',optional:true, default: 0},
     }
   };
 

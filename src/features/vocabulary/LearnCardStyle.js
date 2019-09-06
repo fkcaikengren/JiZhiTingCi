@@ -4,43 +4,18 @@ const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    center:{
-        flexDirection:'row',
+    nextBtn:{
+        width:60,
+        height:60,
+        backgroundColor:'#FFE957',
+        borderRadius:50,
+        elevation:5,
+        flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-    },
-    row:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'center',
-    },
-    col:{
-        flexDirection:'column',
-        justifyContent:'flex-start',
-        alignItems:'flex-start',
-    },
-    iconText:{
-        width:32,
-        height:32, 
-        backgroundColor:'#1890FF', 
-        textAlign:'center', 
-        lineHeight:32, 
-        borderRadius:50,
-    },
-    bottomBtn:{
-        width: (width-80)/2,
-        elevation: 0,
-        backgroundColor: '#1890FF',
-
-    }, 
-    fonts:{
-        fontSize:16,
-        color:'#404040',
-        lineHeight:24,
-    },
-    phonetic:{
-        fontSize: 16,
-        color: '#101010',
+        position:'absolute',
+        bottom:10,
+        alignSelf:'center'
     }
 });
 

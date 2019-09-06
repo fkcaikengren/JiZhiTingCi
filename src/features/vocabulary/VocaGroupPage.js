@@ -289,7 +289,7 @@ export default class VocaGroupPage extends Component {
                     cardElevation={5}
                     cardMaxElevation={5}
                     cornerRadius={20}
-                    style={styles.footer}>
+                    style={gstyles.footer}>
                         <View style={styles.bottomBtnGroup}>
                             <Button 
                             type="clear"

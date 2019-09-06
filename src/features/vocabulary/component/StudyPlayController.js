@@ -53,8 +53,6 @@ export default class StudyPlayController extends React.Component {
     constructor(props){
         super(props);
     }
-
-
     
     //选择播放时间间隔
     _chooseInterval = (interval)=>{
@@ -79,6 +77,14 @@ export default class StudyPlayController extends React.Component {
         }
     }
 
+    //控制翻译
+    _toggleTran = ()=>{
+        this.props.toggleTran()
+        if(this.props.finishedTimes === 0 && this.props.vocaPlay.showTran===false){
+            //提示第一遍不看释义
+            this.props.toastRef.show('建议第一遍不看释义哦', 1000);
+        }
+    }
 
     render(){
         const {task, themes, themeId, autoPlayTimer,showWord, showTran, interval, } = this.props.vocaPlay;
@@ -112,7 +118,7 @@ export default class StudyPlayController extends React.Component {
                     </TouchableWithoutFeedback>
                   
                     {/* 中文按钮 */}
-                    <TouchableWithoutFeedback onPress={this.props.toggleTran}>
+                    <TouchableWithoutFeedback onPress={this._toggleTran}>
                         <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>
                             zh
                         </Text>
@@ -152,7 +158,10 @@ export default class StudyPlayController extends React.Component {
                     paddingHorizontal:30,
                 }}>
                     {/* 退出 */}
-                    <AliIcon name='iconfontshouye' size={26} color='#FFF'></AliIcon>
+                    <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={()=>{
+                        this.props.updateTask(task)
+                        this.props.navigation.goBack()
+                    }}/>
                     {/* 控制播放 */}
                     <View style={{
                         width:width*(1/2),

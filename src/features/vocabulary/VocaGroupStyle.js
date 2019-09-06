@@ -58,15 +58,7 @@ const styles = StyleSheet.create({
         marginTop:10
     },
 
-    footer: {
-        position:'absolute',
-        bottom:10,
-        alignSelf:'center',
-        width:'60%',
-        height:40,
-        backgroundColor: '#FDFDFD',
-       
-    },
+    
     bottomBtnGroup:{
          flexDirection:'row',
         justifyContent:'space-around',

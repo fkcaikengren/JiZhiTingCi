@@ -6,10 +6,9 @@ import * as homeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
-
+import vocaUtil from './common/vocaUtil'
 
 const styles = StyleSheet.create({
-    
     content:{
         padding:10,
         flexDirection:'column',
@@ -17,19 +16,15 @@ const styles = StyleSheet.create({
         alignItems:'center',
         height:'35%'
     },
-    phoneticView:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-    },
-    wordFont:{
-        fontSize:30,
-        color:'#202020',
-        fontWeight:'600'
-    },
+    tranFont:{
+        width:'70%',
+        color:'#303030',
+        fontSize:18,
+        textAlign:'center'
+    }
 });
 
-class TestVocaTranPage extends Component {
+class TestTranVocaPage extends Component {
 
     constructor(props){
         super(props);
@@ -37,17 +32,21 @@ class TestVocaTranPage extends Component {
     }
 
     _renderContent = (showWordInfos, curIndex)=>{
-        const word = showWordInfos[curIndex]?showWordInfos[curIndex].word:''
-        const phonetic = showWordInfos[curIndex]?showWordInfos[curIndex].am_phonetic:''
+        const trans = showWordInfos[curIndex]?JSON.parse(showWordInfos[curIndex].trans):null
+        let property = ''
+        let translation = ''
+        if(trans){
+            for(let k in trans){
+                property = k
+                translation = trans[k]
+                break;
+            }
+        }
         return <View  style={styles.content}>
-            <View style={{}}>
-                <Text style={styles.wordFont}>{word}</Text>
-            </View>
-            <View style={styles.phoneticView}>
-                <Text>{'[美]'+phonetic}</Text>
-                <AliIcon name='shengyin' size={26} color='#555' style={{marginLeft:5}}/>
-                {/* <Text style={{color:'#EC6760',fontSize:16,}}>{`答错${testWrongNum}次`}</Text> */}
-            </View>
+           <Text style={styles.tranFont}>
+               <Text style={{fontSize:16}}>{`${property}. `}</Text>
+                {translation}
+           </Text>
         </View>
     }
  
@@ -56,7 +55,7 @@ class TestVocaTranPage extends Component {
             <TestPage 
                 {...this.props}
                 mode='study'
-                type={Constant.WORD_TRAN}
+                type={Constant.TRAN_WORD}
                 renderContent={this._renderContent}
             />
         )
@@ -74,4 +73,4 @@ const mapDispatchToProps = {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TestVocaTranPage)
+export default connect(mapStateToProps, mapDispatchToProps)(TestTranVocaPage)

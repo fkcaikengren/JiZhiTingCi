@@ -13,6 +13,7 @@ const Realm = require('realm');
 //设置全局变量和拷贝realm (注：这部分代码只在安装App时运行一次)
 global.Storage = createStorage();
 global.Http = createHttp()
+global.VocaPlayFlatList = null; 
 
 AppRegistry.registerComponent(appName, () => App);
 

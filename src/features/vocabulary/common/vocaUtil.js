@@ -1,5 +1,7 @@
 
 import * as Constant from './constant'
+import VocaDao from '../service/VocaDao'
+import {NavigationActions, StackActions} from 'react-navigation'
 
 
 export default class VocaUtil{
@@ -212,13 +214,48 @@ export default class VocaUtil{
             return ''
         }
         let translation = ''
-        const obj = JSON.parse(trans)
-        if(obj){
-            for(let k in obj){
-                translation += `${k}. ${obj[k]} `
+        try{
+            const obj = JSON.parse(trans)
+            if(obj){
+                for(let k in obj){
+                    translation += `${k}. ${obj[k]} `
+                }
             }
+        }catch(e){
+            console.log('Error: vocaUtil.transToText, 格式错误')
+            console.log(e)
         }
         return translation
+    }
+
+    /**
+     * 获取没有pass的单词信息
+     * @param {*} words  task的words
+     */
+    static getShowWordInfos(words){
+        if(!words){
+            return []
+        }
+        showWordInfos = []
+        for(let i in words){
+            const wordInfos = VocaDao.getInstance().getWordInfos(words.map((item, i)=>item.word))
+            //过滤
+            if(words[i].passed===false){
+                showWordInfos.push(wordInfos[i])
+            }
+        }
+        return showWordInfos
+    } 
+
+    static goPageWithoutStack = (navigation,routeName, params={})=>{
+        // 抹掉stack，跳转到指定路由
+        const  resetAction = StackActions.reset({  
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName,params})
+            ]
+        });
+        navigation.dispatch(resetAction);
     }
 }
 

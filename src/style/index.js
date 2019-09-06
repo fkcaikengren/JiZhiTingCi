@@ -1,4 +1,7 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, StatusBar} from 'react-native'
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
+const StatusBarHeight = StatusBar.currentHeight;
 
 const gstyles = StyleSheet.create({
     r_center:{
@@ -53,8 +56,31 @@ const gstyles = StyleSheet.create({
     pageTitle:{
         color:'#FFF', 
         fontSize:18
-    }
+    },
 
+
+    modal: {
+        width:width,
+        height: height-StatusBarHeight-80,
+        backgroundColor: "#FDFDFD"
+    },
+    modalBottom:{
+        position:'absolute', 
+        bottom:0, 
+        width:'100%',
+        height:60,
+        flex:1,
+        paddingHorizontal:10,
+    },
+    footer: {
+        position:'absolute',
+        bottom:10,
+        alignSelf:'center',
+        width:'60%',
+        height:40,
+        backgroundColor: '#FDFDFD',
+       
+    },
 });
 
 export default gstyles

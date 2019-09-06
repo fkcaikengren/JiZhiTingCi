@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     content:{
-        width:width-120,
+        width:'100%'
+        // width:width-120,
     },
     backgroundVideo: {
         position: 'absolute',
@@ -56,7 +57,6 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        width:'100%',
         height: ITEM_H,
         backgroundColor:'#FFFFFF00'
     },
@@ -167,6 +167,8 @@ const styles = StyleSheet.create({
         lineHeight: 16,
     },
    
+
+  
     
 });
 

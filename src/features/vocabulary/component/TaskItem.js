@@ -20,6 +20,30 @@ export default class TaskItem extends Component {
   }
 
   
+  //开始学习
+  _startStudy = ()=>{
+      //根据进度进行不同的跳转
+      const {index, item } = this.props
+      switch(item.process){
+        case Constant.IN_LEARN_PLAY:
+          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY})
+        break;
+        case Constant.IN_LEARN_CARD:
+          this.props.navigation.navigate('LearnCard',{task:item})
+        break;
+        case Constant.IN_LEARN_TEST_1:
+          this.props.navigation.navigate('TestPronTran',{task:item})
+        break;
+        //复习
+        case Constant.IN_REVIEW_PLAY:
+          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY})
+        break;
+        case Constant.IN_REVIEW_TEST:
+          this.props.navigation.navigate('TestVocaTran',{task:item})
+        break;
+        
+      }
+  }
 
   render() {
     const {index, item } = this.props
@@ -31,10 +55,7 @@ export default class TaskItem extends Component {
     
 
     return (
-      <TouchableOpacity onPress={()=>{
-        //跳转到播放
-        this.props.navigation.navigate('VocaPlay',{task:item})
-      }}>
+      <TouchableOpacity onPress={this._startStudy}>
         <View style={[styles.taskItem, this.props.separator, styles.container]}>
           <View style={styles.leftView}>
             <View style={styles.serialView}>

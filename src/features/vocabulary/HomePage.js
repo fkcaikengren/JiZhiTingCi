@@ -13,8 +13,6 @@ class HomePage extends Component {
     constructor(props) {
         super(props);
         this.taskService = new VocaTaskService()
-        // this.vocaDao = VocaDao.getInstance()
-
         console.disableYellowBox = true
     }
 
@@ -43,7 +41,8 @@ class HomePage extends Component {
 }
 
 const mapStateToProps = state =>({
-    home: state.home
+    home: state.home,
+    vocaPlay: state.vocaPlay
 })
   
   

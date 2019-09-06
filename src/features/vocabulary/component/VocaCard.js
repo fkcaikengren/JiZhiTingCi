@@ -81,16 +81,8 @@ export default class VocaCard extends Component{
             added:false
         }
         console.disableYellowBox=true
-
         
-
-        if(this.props.wordInfo){
-            this.wordInfo = this.props.wordInfo
-        }else{
-            // 自动获取
-            // VocaDao.getInstance
-        }
-
+       
         this.state = {
             showAll : this.props.showAll,
             wordRoot : null,
@@ -102,7 +94,7 @@ export default class VocaCard extends Component{
     }
 
     componentDidMount(){
-        const wordRoot = VocaDao.getInstance().getWordRoot(this.wordInfo.root_id)
+        const wordRoot = VocaDao.getInstance().getWordRoot(this.props.wordInfo.root_id)
         if(wordRoot){
             const relativeRoots = VocaDao.getInstance().getWordRoots(wordRoot.relatives,3,true)
             this.setState({wordRoot, relativeRoots})
@@ -131,9 +123,9 @@ export default class VocaCard extends Component{
     }
 
     render(){
-        
+        const wordInfo = this.props.wordInfo
+
         return (
-            
         <ScrollView style={{ flex: 1 }}
             pagingEnabled={false}
             automaticallyAdjustContentInsets={false}
@@ -148,7 +140,7 @@ export default class VocaCard extends Component{
                     <Col style={styles.basic}>
                         {/* 单词 */}
                         <Row style={gstyles.r_between}>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{this.wordInfo.word}</Text>
+                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{wordInfo.word}</Text>
                             <View style={gstyles.r_end}>
                                 <Text style={styles.errBtn}>报错</Text>
                                 {this.state.added && //从生词本移除
@@ -172,20 +164,20 @@ export default class VocaCard extends Component{
                         </Row>
                         {/* 音标 */}
                         <Row style={[gstyles.r_start, ]}>
-                            <Text style={styles.grayFont}>{this.wordInfo.am_phonetic}</Text>
+                            <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
                             <AliIcon name='shengyin' size={26} color='#F29F3F' style={{marginLeft:10}} onPress={()=>{
-                                this.audioFetch.playSound(this.wordInfo.am_pron_url)
+                                this.audioFetch.playSound(wordInfo.am_pron_url)
                             }}/>
                         </Row>
                         {/* 英英释义 */}
                         <Row style={[gstyles.r_start, styles.marginTop]}>
-                            <Text style={styles.grayFont}>{this.wordInfo.def}</Text>
+                            <Text style={styles.grayFont}>{wordInfo.def}</Text>
                         </Row>
                         {/* 例句 */}
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
-                            <Text style={[styles.darkFont, {flex:10}]}>{this.wordInfo.sentence}</Text>
+                            <Text style={[styles.darkFont, {flex:10}]}>{wordInfo.sentence}</Text>
                             <AliIcon name='shengyin' size={26} color='#F29F3F' style={{flex:1,marginLeft:10}} onPress={()=>{
-                                this.audioFetch.playSound(this.wordInfo.sen_pron_url)
+                                this.audioFetch.playSound(wordInfo.sen_pron_url)
                             }}/>
                         </Row>
                         {/* 释义 */}
@@ -193,7 +185,7 @@ export default class VocaCard extends Component{
                             <Row style={styles.marginTop}>
                                 <Col>
                                     {
-                                        this._genTrans(this.wordInfo.trans)
+                                        this._genTrans(wordInfo.trans)
                                     }
                                 </Col>
                             </Row>
@@ -201,9 +193,9 @@ export default class VocaCard extends Component{
                         {/* 详细词典 */}
                     </Col>
                     {/* 场景例句 */}
-                    {this.state.showAll && this.wordInfo.examples.length>0 &&
+                    {this.state.showAll && wordInfo.examples.length>0 &&
                         <Col style={styles.carousel}>
-                            <ExampleCarousel examples={this.wordInfo.examples}/>
+                            <ExampleCarousel examples={wordInfo.examples}/>
                         </Col>
                     }
                     {/* 词根 */}

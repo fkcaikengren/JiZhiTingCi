@@ -28,7 +28,10 @@ export default class VocaTaskService {
      * 保存任务数据
      * @param tasks
      */
-    saveVocaTasks(tasks){
+    saveVocaTasks(tasks, wordCount){
+        for(let t of tasks){
+            t.wordCount = wordCount
+        }
         this.vtd.saveVocaTasks(tasks)
     }
 

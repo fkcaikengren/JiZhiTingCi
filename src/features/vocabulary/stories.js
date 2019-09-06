@@ -4,4 +4,5 @@
 // import '../../component/IndexSectionList.story'
 // import './GroupVocaPage.story'
 // import './component/VocaCard.story'
-import './TestVocaTranPage.story'
+// import './TestVocaTranPage.story'
+import './LearnCardPage.story'

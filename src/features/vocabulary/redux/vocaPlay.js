@@ -1,6 +1,7 @@
 import {  handleActions } from 'redux-actions';
 import * as vpAction from './action/vocaPlayAction';
 import {Themes} from '../common/vocaConfig'
+import VocaTaskDao from '../service/VocaTaskDao'
 import * as Constant from '../common/constant'
 
 /**
@@ -16,7 +17,7 @@ const defaultState ={
     task:{
         words:[]
     },
-    wordInfos:[],
+    showWordInfos:[],
     //当前下标
     curIndex:0,
     //是否播放, <=0表示暂停，>0表示播放
@@ -46,7 +47,7 @@ export const vocaPlay =  handleActions({
     [vpAction.LOAD_TASK] : (state, action) => ({ ...state, 
         task:action.payload.task, 
         curIndex:action.payload.task.curIndex,
-        wordInfos:action.payload.wordInfos,
+        showWordInfos:action.payload.showWordInfos,
         }),         
     //暂停、播放
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
@@ -63,7 +64,13 @@ export const vocaPlay =  handleActions({
         }
         
         if(isStudyMode){//1.学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
-
+            if(state.task.leftTimes !== leftTimes){
+                //剩余遍数写入数据库
+                VocaTaskDao.getInstance().modifyTask({
+                    taskOrder:state.task.taskOrder,
+                    leftTimes:leftTimes
+                })
+            }
             newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes}
         }
         //2.普通模式轮播
@@ -74,32 +81,39 @@ export const vocaPlay =  handleActions({
     //改变播放间隔
     [vpAction.CHANGE_INTERVAL] : (state, action) => ({ ...state, interval:action.payload.interval }),
     //是否显示单词
-    [vpAction.TOGGLE_WORD] : (state, action) => ({ ...state, showWord:!state.showWord }),
+    [vpAction.TOGGLE_WORD] : (state, action) => {
+        if(action.payload.showWord === null){
+            return { ...state, showWord:!state.showWord }
+        }else{
+            return { ...state, showTran:action.payload.showWord }
+        }
+        
+    },
     //是否显示翻译
-    [vpAction.TOGGLE_TRAN] : (state, action) => ({ ...state, showTran:!state.showTran }),
+    [vpAction.TOGGLE_TRAN] : (state, action) => {
+        if(action.payload.showTran === null){
+            return { ...state, showTran:!state.showTran }
+        }else{
+            return { ...state, showTran:action.payload.showTran }
+        }
+    },
     //改变主题
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
     [vpAction.TOGGLE_TASK_MODAL]: (state, action) => ({ ...state, tasksModalOpened:action.payload.tasksModalOpened }),
+    //Pass单词
     [vpAction.PASS_WORD]: (state, action) => {
-        const isStudyMode = action.payload.isStudyMode
+        const taskDao = VocaTaskDao.getInstance()
         let beforeCount = state.task.wordCount
         let index = state.curIndex
         let newTask = state.task
+        const word = action.payload.word
 
-        //后面修改，可以实现统一-----------------------------------------------------
+        //修改realm数据库的 pass
         for(let w of state.task.words){ 
-            if(w.word === action.payload.word){ //pass
-                if(isStudyMode){                                //1.学习模式下的轮播
+            if(w.word === word){ //pass
+                taskDao.modify(()=>{     
                     w.passed = true
-                 
-                }else if(!isStudyMode ){                        //2.普通模式轮播
-                    //保存至Realm
-                    if(action.payload.taskDao){
-                        action.payload.taskDao.modify(()=>{     
-                            w.passed = true
-                        })
-                    }
-                }
+                })
             }
         }
         
@@ -108,17 +122,28 @@ export const vocaPlay =  handleActions({
             index = 0
         }
 
-        //保存至Realm
-        if(action.payload.taskDao){
-            action.payload.taskDao.modifyTask({
-                taskOrder:state.task.taskOrder,
-                wordCount:beforeCount-1,
-            })
-        }
+        //保存至realm数据库
+        taskDao.modifyTask({
+            taskOrder:state.task.taskOrder,
+            wordCount:beforeCount-1,
+        })
+
+
+         //删除showWordInfos的指定元素
+         const infos = state.showWordInfos.filter((item, i)=>{
+            if(item){
+                if(item.word === word){
+                    return false
+                }else{
+                    return true
+                }
+            }
+        })
 
         return { ...state, 
             task:{...newTask,wordCount:beforeCount-1,curIndex:index,}, 
-            curIndex:index
+            curIndex:index,
+            showWordInfos:infos
         }
     },
 }, defaultState);

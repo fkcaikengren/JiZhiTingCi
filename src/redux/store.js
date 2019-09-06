@@ -12,9 +12,18 @@ import rootSaga from './rootSaga'
 //创建saga中间件
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
-const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware,sagaMiddleware, logger));
+const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware,sagaMiddleware));
 
-export const store = createStore(reducers, enhancer);
+//redux持久化
+const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['home']
+  }
+
+export const persistedReducer = persistReducer(persistConfig, reducers)
+export const store = createStore(persistedReducer, enhancer);
+export const persistor = persistStore(store);
 
 //运行saga中间件
 sagaMiddleware.run(rootSaga, store);

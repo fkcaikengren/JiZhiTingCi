@@ -101,9 +101,15 @@ export default class VocaDao{
                     }
                 }
                 let wordInfos = this.realm.objects('WordInfo').filtered('('+str+') AND inflection_type != "transform"'   ); //数组
-                for(let wi of wordInfos){
-                    arr.push(wi)
+                //排序
+                for(let word of words){
+                    for(let wi of wordInfos){
+                        if(wi.word === word){
+                            arr.push(wi)
+                        }
+                    }
                 }
+               
             }
 
         }catch (e) {

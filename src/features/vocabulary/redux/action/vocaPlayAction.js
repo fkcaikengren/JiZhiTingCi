@@ -2,11 +2,9 @@
 
 import { createActions } from 'redux-actions';
 
-// 加载任务（加载单词列表）
-export const LOAD_TASK = 'LOAD_TASK';                       
-export const LOAD_TASK_START = 'LOAD_TASK_START';                       
-export const LOAD_TASK_SUCCEED = 'LOAD_TASK_SUCCEED';                       
-export const LOAD_TASK_FAIL = 'LOAD_TASK_FAIL';                       
+
+export const LOAD_TASK = 'LOAD_TASK';                     //加载任务           
+export const CHANGE_SHOW_WORD_INFOS = 'CHANGE_SHOW_WORD_INFOS'  //改变要显示的单词信息数组         
 
 export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';             //暂停播放
 export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';               // 更新当前单词
@@ -18,18 +16,21 @@ export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
 export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 
-export const GET_WORD_INFO = 'GET_WORD_INFO';         //查词
 
 
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, changeTheme,
+export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, changeTheme,
   toggleTaskModal,passWord } = createActions({
 
     //加载任务  
-    [LOAD_TASK] : (task,wordInfos)=>{
-      return {task,wordInfos};
+    [LOAD_TASK] : (task,showWordInfos)=>{
+      return {task,showWordInfos};
+    },
+    //改变需要显示的单词信息数组
+    [CHANGE_SHOW_WORD_INFOS]: (showWordInfos)=>{
+      return {showWordInfos}
     },
     //暂停、播放
     [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{ 
@@ -44,13 +45,12 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
       return {interval};
     },
     //是否显示单词
-    [TOGGLE_WORD]: ()=>{
-      console.log('toggleWord')
-      return {};
+    [TOGGLE_WORD]: (showWord=null)=>{
+      return {showWord}
     },
     //是否显示翻译
-    [TOGGLE_TRAN]: ()=>{
-      return {};
+    [TOGGLE_TRAN]: (showTran=null)=>{
+      return {showTran}
     },
     //改变主题
     [CHANGE_THEME]: (themeId)=>{ 
@@ -60,8 +60,9 @@ export const {loadTask, changePlayTimer, changeCurIndex, changeInterval, toggleW
     [TOGGLE_TASK_MODAL]: (tasksModalOpened)=>{
       return {tasksModalOpened}
     },
-    [PASS_WORD] : (word,status,isStudyMode,taskDao)=>{
-      return {word,status,isStudyMode, taskDao}
+    //pass单词
+    [PASS_WORD] : (word,status)=>{
+      return {word,status}
     },
    
   });
