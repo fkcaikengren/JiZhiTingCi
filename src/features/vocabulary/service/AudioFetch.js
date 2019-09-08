@@ -63,6 +63,14 @@ export default class AudioFetch{
       });
     })
     
-}
+  }
+
+  //停止播放，释放
+  releaseSound = ()=>{
+      if(this.sound){
+        this.sound.release();
+        this.sound = null
+      }
+  }
 
 }

@@ -38,7 +38,8 @@ class TestTranVocaPage extends Component {
         console.disableYellowBox=true
     }
 
-    _renderContent = (showWordInfos, curIndex, task)=>{
+    _renderContent = (state)=>{
+        const {showWordInfos, curIndex, task} = state
         const trans = showWordInfos[curIndex]?JSON.parse(showWordInfos[curIndex].trans):null
         const words = vocaUtil.getNotPassedWords(task.words)
         const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0

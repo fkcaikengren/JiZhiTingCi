@@ -44,7 +44,8 @@ class TestVocaTranPage extends Component {
         console.disableYellowBox=true
     }
 
-    _renderContent = (showWordInfos, curIndex, task)=>{
+    _renderContent = (state)=>{
+        const {showWordInfos, curIndex, task} = state
         const words = vocaUtil.getNotPassedWords(task.words)
         const word = showWordInfos[curIndex]?showWordInfos[curIndex].word:''
         const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''

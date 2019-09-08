@@ -21,8 +21,8 @@ export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, changeTheme,
-  toggleTaskModal,passWord } = createActions({
+export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, 
+  changeTheme,passWord } = createActions({
 
     //加载任务  
     [LOAD_TASK] : (task,showWordInfos)=>{
@@ -37,8 +37,8 @@ export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, cha
       return { autoPlayTimer};
     },
     //更新当前单词
-    [CHANGE_CUR_INDEX]: (curIndex, isStudyMode)=> {
-      return { curIndex,isStudyMode };
+    [CHANGE_CUR_INDEX]: (curIndex)=> {
+      return { curIndex };
     },
     //改变播放间隔
     [CHANGE_INTERVAL]: (interval)=>{
@@ -56,10 +56,7 @@ export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, cha
     [CHANGE_THEME]: (themeId)=>{ 
       return { themeId};
     },
-    //显示隐藏任务列表面板
-    [TOGGLE_TASK_MODAL]: (tasksModalOpened)=>{
-      return {tasksModalOpened}
-    },
+    
     //pass单词
     [PASS_WORD] : (word,status)=>{
       return {word,status}

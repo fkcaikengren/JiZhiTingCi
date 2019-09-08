@@ -59,6 +59,21 @@ export default class ExampleCarousel extends Component {
       loadQueue: [0, 0, 0]
     }
     this.audioFetch = AudioFetch.getInstance()
+    this.curIndex = 0
+    this.shouldPlay = true
+  }
+
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.props.examples === nextProps.examples){
+      return false
+    }else{
+      if(this._swiper && this.curIndex !== 0){
+        this._swiper.scrollBy(0-this.curIndex,false)
+        this.shouldPlay = false
+      }
+      return true
+    }
   }
 
   _loadHandle (i) {
@@ -86,6 +101,7 @@ export default class ExampleCarousel extends Component {
   render () {
     return (
         <Swiper 
+        ref={ref => this._swiper = ref} 
         style={styles.wrapper} 
         showsPagination={true}
         paginationStyle={styles.dotPosition}
@@ -93,7 +109,13 @@ export default class ExampleCarousel extends Component {
         activeDotColor='#FFE957'
         loop={false} 
         onIndexChanged={(i)=>{
-          this.audioFetch.playSound(this.props.examples[i].pron_url)
+          this.curIndex = i
+          if(!this.shouldPlay){
+            this.shouldPlay = true
+          }else{
+            this.audioFetch.playSound(this.props.examples[i].pron_url)
+          }
+          
         }}
         loadMinimal loadMinimalSize={1} >
             {

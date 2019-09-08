@@ -56,7 +56,8 @@ class TestPronTranPage extends Component {
         this.setState({isPlaying:false})
     }
 
-    _renderContent = (showWordInfos, curIndex,task)=>{
+    _renderContent = (state)=>{
+        const {showWordInfos, curIndex, task} = state
         const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''
         const words = vocaUtil.getNotPassedWords(task.words)
         const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0

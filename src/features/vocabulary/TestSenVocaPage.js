@@ -39,7 +39,8 @@ class TestSenVocaPage extends Component {
         console.disableYellowBox=true
     }
 
-    _renderContent = (showWordInfos, curIndex, task)=>{
+    _renderContent = (state)=>{
+        const {showWordInfos, curIndex, task, showAnswer} = state
         const sentence = showWordInfos[curIndex]?showWordInfos[curIndex].sentence:null
         const pronUrl =  showWordInfos[curIndex]?showWordInfos[curIndex].sen_pron_url:null
         const words = vocaUtil.getNotPassedWords(task.words)
@@ -51,7 +52,7 @@ class TestSenVocaPage extends Component {
                 if(index%2 === 0){
                   return text
                 }else{
-                  return <Text style={{color:'#F2753F',fontSize:16 }}>____</Text>
+                  return <Text style={{color:showAnswer?'#1890FF':'#F2753F',fontSize:16 }}>{showAnswer?text:'____'}</Text>
                 }
             })
         }
@@ -67,12 +68,14 @@ class TestSenVocaPage extends Component {
         </View>
     }
  
+    //监听选择后的结果
     render() {
         return (
             <TestPage 
                 {...this.props}
                 mode='study'
                 type={Constant.TRAN_WORD}
+                playType='sentence'
                 testTime={16}
                 renderContent={this._renderContent}
             />

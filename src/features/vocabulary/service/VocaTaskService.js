@@ -45,7 +45,6 @@ export default class VocaTaskService {
     getTodayTasks = (oldTasks, n=0)=>{
         //判断oldTasks 是否过时
         let today = _util.getDayTime(0)
-        console.log(today)
         if(oldTasks && oldTasks[0] && oldTasks[0].vocaTaskDate === today){ //数据未过时
             return oldTasks
         }else{                                 //数据过时，从数据库重新加载

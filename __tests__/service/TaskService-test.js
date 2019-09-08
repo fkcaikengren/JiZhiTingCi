@@ -17,7 +17,7 @@ const fs = require("fs");
 let myhttp = createHttp()
 VocaTaskDao.getInstance().open()
 let vts = new VocaTaskService()
-let taskCount = 10
+let taskCount = 1
 let oldTasks = [{
     taskOrder: 1,
     status: 0,
@@ -52,13 +52,13 @@ it('获取全部书籍信息',async ()=>{
 it('提交计划, tasks存入realm',async ()=>{
     let params = {
         taskCount: taskCount.toString(),
-        taskWordCount: '5',
+        taskWordCount: '6',
         bookCode: 'VB_25'
     }
     const res = await myhttp.post('/plan/putPlan',params)
     const tasks = res.data.data.tasks
     //任务存入realm
-    vts.saveVocaTasks(tasks, 5)
+    vts.saveVocaTasks(tasks, 6)
 }, 60000)
 
 

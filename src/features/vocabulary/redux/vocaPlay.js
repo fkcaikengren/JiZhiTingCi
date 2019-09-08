@@ -31,9 +31,7 @@ const defaultState ={
     //主题数组
     themes:Themes,
     //当前主题id
-    themeId: 2,
-    //任务列表面板是否打开
-    tasksModalOpened:false,
+    themeId: 1,
      //加载状态
     isLoadPending:false,
     //刷新
@@ -53,7 +51,6 @@ export const vocaPlay =  handleActions({
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     //更新当前单词
     [vpAction.CHANGE_CUR_INDEX] : (state, action) => {
-        const isStudyMode = action.payload.isStudyMode
         const beforeCount = state.task.wordCount
         const index = state.curIndex
         let leftTimes = state.task.leftTimes
@@ -62,12 +59,8 @@ export const vocaPlay =  handleActions({
         if(index+1 === beforeCount){
             leftTimes--
         }
-        
-        if(isStudyMode){//1.学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
-            newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes}
-        }
-        //2.普通模式轮播
-        //do nothing
+        // 学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
+        newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes}
         return { ...state, task:newTask, curIndex:action.payload.curIndex, }
         
     },
@@ -78,7 +71,7 @@ export const vocaPlay =  handleActions({
         if(action.payload.showWord === null){
             return { ...state, showWord:!state.showWord }
         }else{
-            return { ...state, showTran:action.payload.showWord }
+            return { ...state, showWord:action.payload.showWord }
         }
         
     },

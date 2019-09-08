@@ -4,11 +4,12 @@ import {Platform, StatusBar, StyleSheet,View, Text, TouchableNativeFeedback, Tou
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {WhiteSpace} from '@ant-design/react-native'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
+import {PropTypes} from 'prop-types';
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
-// import styles from '../VocaPlayStyle'
 import * as VocaConfig from '../common/vocaConfig'
 import gstyles from '../../../style';
+import * as Constant from '../common/constant'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -64,7 +65,7 @@ export default class StudyPlayController extends React.Component {
 
     //播放暂停切换
     _togglePlay = ()=>{
-        const {autoPlayTimer, task } = this.props.vocaPlay;
+        const {autoPlayTimer, task } = this.props.playState;
         const {curIndex} = task
         const {changePlayTimer} = this.props;
         if(autoPlayTimer){
@@ -77,19 +78,35 @@ export default class StudyPlayController extends React.Component {
         }
     }
 
+    _toggleWord = () =>{
+        this.props.toggleWord()
+        if(this.props.mode === Constant.REVIEW_PLAY){
+            if(this.props.finishedTimes <= 0 && this.props.playState.showWord===false){
+                //提示前1遍不看释义
+                this.props.toastRef.show('建议前1遍不看单词哦', 1000);
+            }
+        }
+    }
     //控制翻译
     _toggleTran = ()=>{
         this.props.toggleTran()
-        if(this.props.finishedTimes === 0 && this.props.vocaPlay.showTran===false){
-            //提示第一遍不看释义
-            this.props.toastRef.show('建议第一遍不看释义哦', 1000);
+        if(this.props.mode === Constant.LEARN_PLAY){
+            if(this.props.finishedTimes === 0 && this.props.playState.showTran===false){
+                //提示第一遍不看释义
+                this.props.toastRef.show('建议第1遍不看释义哦', 1000);
+            }
+        }else{
+            if(this.props.finishedTimes <= 1 && this.props.playState.showTran===false){
+                this.props.toastRef.show('建议前2遍不看释义哦', 1000);
+            }
         }
+        
     }
 
     render(){
-        const {task, themes, themeId, autoPlayTimer,showWord, showTran, interval, } = this.props.vocaPlay;
+        const { task, autoPlayTimer,showWord, showTran, interval} = this.props.playState
+        const { themes, themeId } = this.props.vocaPlay;
         const {words,wordCount, curIndex} = task
-        const {toggleWord, toggleTran, } = this.props;
         //主题
         const Theme = themes[themeId]
         const selected = {
@@ -111,7 +128,7 @@ export default class StudyPlayController extends React.Component {
                 }}>
                  {/* 英文单词按钮 */}
              
-                    <TouchableWithoutFeedback onPress={this.props.toggleWord}>
+                    <TouchableWithoutFeedback onPress={this._toggleWord}>
                         <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>
                             en
                         </Text>
@@ -206,3 +223,18 @@ export default class StudyPlayController extends React.Component {
     }
 }
 
+
+StudyPlayController.propTypes = {
+    playState: PropTypes.object.isRequired,
+    mode : PropTypes.string.isRequired,
+    autoplay : PropTypes.func.isRequired,
+    finishedTimes : PropTypes.number.isRequired,
+    changePlayTimer: PropTypes.func.isRequired,
+    toggleWord: PropTypes.func.isRequired,
+    toggleTran: PropTypes.func.isRequired,
+}
+
+StudyPlayController.defaultProps = {
+
+
+}
