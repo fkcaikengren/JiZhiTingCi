@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
         color:'#303030',
         fontSize:18,
         textAlign:'center'
+    },
+    wrongText:{
+        position:'absolute',
+        bottom:10,
+        right:10,
+        color:'#EC6760',
+        fontSize:16,
     }
 });
 
@@ -31,8 +38,10 @@ class TestTranVocaPage extends Component {
         console.disableYellowBox=true
     }
 
-    _renderContent = (showWordInfos, curIndex)=>{
+    _renderContent = (showWordInfos, curIndex, task)=>{
         const trans = showWordInfos[curIndex]?JSON.parse(showWordInfos[curIndex].trans):null
+        const words = vocaUtil.getNotPassedWords(task.words)
+        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
         let property = ''
         let translation = ''
         if(trans){
@@ -47,10 +56,12 @@ class TestTranVocaPage extends Component {
                <Text style={{fontSize:16}}>{`${property}. `}</Text>
                 {translation}
            </Text>
+           <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
  
     render() {
+
         return (
             <TestPage 
                 {...this.props}

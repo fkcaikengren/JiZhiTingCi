@@ -79,7 +79,16 @@ export default class TestPage extends Component {
             selectedStatus:0,       //选择的状态 [0:待选择，1:正确，2:错误]
 
             //倒计时
-            leftTime:7,
+            leftTime:this.props.testTime,
+
+            //第n轮测试
+            isRetest:this.props.navigation.getParam('isRetest', false),
+            //[true, ture, false, ...] 测试数组，用来实现二轮测试
+            testArr:[],
+            //当前测试个数
+            leftCount:100,  
+            //当前测试个数
+            curCount:1,
         }
         this.options=[]             //选项数组（存放单词下标）
         this.answerIndex=-1         //答案下标
@@ -95,15 +104,42 @@ export default class TestPage extends Component {
             const taskOrder = getParam('taskOrder')
             task = this.taskDao.getTaskByOrder(taskOrder)
         }
+        const showWords = vocaUtil.getNotPassedWords(task.words)
         let showWordInfos = getParam('showWordInfos')
         if(!showWordInfos){
-            showWordInfos = vocaUtil.getShowWordInfos(task.words)
+            showWordInfos = vocaUtil.getShowWordInfos(showWords)
         }
+
+        //初始化 测试数组
+        let wordCount = task.wordCount
+        let curCount = this.state.curCount
+        const testArr = []
+        if(this.state.isRetest){ //重测
+            wordCount = 0
+            for(let w of showWords){
+                if(w.testWrongNum > 0){
+                    testArr.push(true)
+                    wordCount++
+                }else{
+                    testArr.push(false)
+                }
+            }
+            alert(wordCount)
+        }else{ //1测
+            for(let w of showWords){
+                testArr.push(true)
+            }
+            curCount = task.curIndex+1
+        }
+
+        
         
         this._genOptions(task.curIndex, task.wordCount)  //第一次生成选项
-        this.setState({task, showWordInfos,curIndex:task.curIndex})
+        this.setState({task, showWordInfos, curIndex:task.curIndex, 
+            testArr, leftCount:wordCount, curCount:curCount})
         this._countDown()
     }
+    
 
      //开始倒计时
      _countDown = ()=>{
@@ -133,7 +169,7 @@ export default class TestPage extends Component {
         if(this.countTimer){
             clearInterval(this.countTimer)
         }
-        this.setState({leftTime:7})
+        this.setState({leftTime:this.props.testTime})
         this._countDown()
     }
 
@@ -141,8 +177,10 @@ export default class TestPage extends Component {
      //产生选项和答案
      _genOptions = (curIndex, length)=>{
         //判断错误
-        if((typeof curIndex !== "number") || (typeof length !== "number")){
-            throw new Error('参数类型错误，curIndex, length 应该是number')
+        const r1 = typeof curIndex
+        const r2 = typeof length
+        if((r1 !== "number") || (r2 !== "number")){
+            throw new Error(`参数类型错误，curIndex:${r1}; length:${r2}. curIndex, length 应该是number`)
         }
         //生成选项
         this.answerIndex = vocaUtil.randomNum(0,3)                 //产生一个随机下标
@@ -157,27 +195,150 @@ export default class TestPage extends Component {
         if(index == 4){                         //查看提示
             this.setState({selectedIndex:index, selectedStatus:0})
         }else if(index == this.answerIndex){    //选择正确
-            this.setState({selectedIndex:index, selectedStatus:1})
+            this._doRight(index)
         }else{                                  //选择错误
-            this.setState({selectedIndex:index, selectedStatus:2})
+            //修改realm数据库
+            this._doWrong(index)
             isWrong = true
         }
         return isWrong
     }
+    _doRight = (index)=>{
+        const curIndex = this.state.curIndex
+        const words = vocaUtil.getNotPassedWords(this.state.task.words)
+        if(words[curIndex].testWrongNum > 0){
+            words[curIndex].testWrongNum = words[curIndex].testWrongNum - 1
+        }
+        const testArr = [...this.state.testArr]
+        testArr[this.state.curIndex] = false
+        this.setState({selectedIndex:index, selectedStatus:1, testArr:testArr})
+    }
+    _doWrong = (index)=>{
+        const curIndex = this.state.curIndex
+        const words = vocaUtil.getNotPassedWords(this.state.task.words)
+        words[curIndex].wrongNum = words[curIndex].wrongNum + 1
+        words[curIndex].testWrongNum = words[curIndex].testWrongNum + 1
+        const testArr = [...this.state.testArr]
+        testArr[curIndex] = true
+        this.setState({selectedIndex:index, selectedStatus:2, testArr:testArr})
+    }
 
     // 测试下一个单词
     _nextWord = ()=>{
-        let {task} = this.state
-        if(this.state.curIndex >= task.wordCount-1){   //返回
-            // 根据是否存在错误词汇=>继续测试or跳转
-        }else{                                       //跳到下一个单词      
-            this._genOptions(this.state.curIndex+1, task.words.length)   
-              //当前词下标+1
-            this.setState({curIndex:this.state.curIndex+1, selectedStatus:0})
+        const {wordCount} = this.state.task
+        let {curIndex, isRetest, leftCount, curCount} = this.state
+        let nextIndex = curIndex+1
+        curCount++
+        let isQuit = false
+        let  newTask = null
+
+        if(!isRetest){   
+            const routeName = this.props.navigation.getParam('nextRouteName')
+
+            let process = null
+            if(this.state.task.process.startsWith('IN_LEARN')){
+                process = Constant.IN_LEARN_RETEST_1
+                if(routeName === 'Home'){
+                    process = Constant.IN_LEARN_RETEST_2
+                }
+            }else if(this.state.task.process.startsWith('IN_REVIEW')){
+                if(routeName === 'Home'){
+                    process = Constant.IN_REVIEW_RETEST
+                }
+            }
+            // 是否进行二轮测试
+            if(curIndex >= wordCount-1){
+                if(this.state.testArr.includes(true)){
+                    //继续测试
+                    newTask = {...this.state.task,curIndex:0, process}
+                    isRetest = true
+                    nextIndex = 0
+                    curCount = 1
+                    while(!this.state.testArr[nextIndex]){
+                        nextIndex++
+                        if(nextIndex > wordCount-1){
+                            //跳转
+                            isQuit = true
+                            break;
+                        }
+                    }
+                    leftCount = vocaUtil.getLeftCount(this.state.testArr)
+                }else{//结束
+                    isQuit = true
+                }
+            }
+
+        }else{          //循环    
+            while(!this.state.testArr[nextIndex]){
+                nextIndex++
+                if(nextIndex > wordCount-1){
+                    const firstIndex = this._getFirstIndex(this.state.testArr)
+                    if(firstIndex !== null){ //还存在测试的单词
+                        nextIndex = firstIndex
+                        curCount = 1
+                        leftCount = vocaUtil.getLeftCount(this.state.testArr)
+                    }else{
+                        //跳转
+                        isQuit = true
+                    }
+                    break;
+                }
+            }
+            
+        }
+
+        if(isQuit){ //完成测试，退出页面
+            const routeName = this.props.navigation.getParam('nextRouteName')
+            
+            //拷贝task
+            let process = null
+            if(this.state.task.process.startsWith('IN_LEARN')){
+                process = Constant.IN_LEARN_TEST_2
+                if(routeName === 'Home'){
+                    process = Constant.IN_LEARN_FINISH
+                }
+            }else if(this.state.task.process.startsWith('IN_REVIEW')){
+                if(routeName === 'Home'){
+                    process = Constant.IN_REVIEW_FINISH
+                }
+            }
+            const task = {...this.state.task, curIndex:0, process}
+            //testWrongNum置零
+            for(let w of task.words){
+                w.testWrongNum = 0
+            }
+            this.props.updateTask(task)
+            //跳转
+            const params = routeName==='Home'?{}:{
+                task:task, 
+                showWordInfos:this.state.showWordInfos,
+                nextRouteName:'Home'
+            }
+            vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
+        }else{     //测试下一词
+            this._genOptions(nextIndex, wordCount)   
+            const nextState = {
+                curIndex:nextIndex, selectedStatus:0, isRetest:isRetest, leftCount:leftCount, curCount:curCount
+            }
+            if(newTask){
+                nextState.task = newTask
+            }
+            this.setState(nextState)
+
         }
     }
 
 
+    _getFirstIndex = (testArr)=>{
+        let count = 0
+        for(let v of testArr){
+            if(v === true){
+                return count
+            }
+            count++
+        }
+        return null
+    }
      //创建单词详情modal, 
      _createDetailModal = (isAnswered) =>{
         let bgColor = '#EC6760'
@@ -247,9 +408,7 @@ export default class TestPage extends Component {
 
 
     render() {
-        let {selectedStatus,selectedIndex,task,showWordInfos,curIndex} = this.state
-        const {words,wordCount } = task
-        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:''
+        const {selectedStatus,selectedIndex,task,showWordInfos,curIndex, leftCount, curCount} = this.state
         //已选择
         let selected = (selectedStatus != 0);
         //选择失败
@@ -271,8 +430,8 @@ export default class TestPage extends Component {
                     
                     centerComponent={
                         <View style={gstyles.r_center}>
-                            <Progress.Bar progress={wordCount?(curIndex+1)/wordCount:0} height={10} width={width-120} color='#FFE957' unfilledColor='#EFEFEF' borderWidth={0} >
-                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>{`${curIndex+1}/${wordCount}`}</Text> 
+                            <Progress.Bar progress={curCount===undefined?1/100:curCount/leftCount} height={10} width={width-120} color='#FFE957' unfilledColor='#EFEFEF' borderWidth={0} >
+                                <Text style={{fontSize:10, position:'absolute', left:(width-120)/2, top:-2,}}>{`${curCount}/${leftCount}`}</Text> 
                             </Progress.Bar>
                         </View>
                     }
@@ -284,7 +443,7 @@ export default class TestPage extends Component {
 
                 {/* 内容 */}
                 {
-                    this.props.renderContent(showWordInfos, curIndex)
+                    this.props.renderContent(showWordInfos, curIndex, task)
                 }
 
                 <Grid style={{padding:10}}>
@@ -365,9 +524,11 @@ export default class TestPage extends Component {
 
 TestPage.propTypes = {
     mode:PropTypes.string.isRequired,
-    type:PropTypes.string.isRequired
+    type:PropTypes.string.isRequired,
+    testTime:PropTypes.number
 }
 
 TestPage.defaultProps = {
     mode:'study',
+    testTime:7
 }

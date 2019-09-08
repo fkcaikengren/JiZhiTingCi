@@ -26,20 +26,32 @@ export default class TaskItem extends Component {
       const {index, item } = this.props
       switch(item.process){
         case Constant.IN_LEARN_PLAY:
-          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY})
+          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY, nextRouteName:'LearnCard'})
         break;
         case Constant.IN_LEARN_CARD:
-          this.props.navigation.navigate('LearnCard',{task:item})
+          this.props.navigation.navigate('LearnCard',{task:item, nextRouteName:'TestVocaTran'})
         break;
         case Constant.IN_LEARN_TEST_1:
-          this.props.navigation.navigate('TestPronTran',{task:item})
+          this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'TestSenVoca'})
+        break;
+        case Constant.IN_LEARN_RETEST_1:
+          this.props.navigation.navigate('TestVocaTran',{task:item,  isRetest:true, nextRouteName:'TestSenVoca'})
+        break;
+        case Constant.IN_LEARN_TEST_2:
+          this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:false, nextRouteName:'Home'})
+        break;
+        case Constant.IN_LEARN_RETEST_2:
+          this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:true, nextRouteName:'Home'})
         break;
         //复习
         case Constant.IN_REVIEW_PLAY:
-          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY})
+          this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY,  nextRouteName:'TestVocaTran'})
         break;
         case Constant.IN_REVIEW_TEST:
-          this.props.navigation.navigate('TestVocaTran',{task:item})
+          this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'Home'})
+        break;
+        case Constant.IN_REVIEW_RETEST:
+          this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'Home'})
         break;
         
       }

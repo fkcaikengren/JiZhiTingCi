@@ -124,17 +124,17 @@ class VocaPlayPage extends React.Component {
 
         //完成播放，退出
         if(this.isStudyMode && task.leftTimes <= 0){
-            alert('go')
-            let routeName = null
+            const routeName = this.props.navigation.getParam('nextRouteName')
+            let nextRouteName = null
             //改变任务进度
-            const finalTask = {...task}
+            const finalTask = {...task, curIndex:0}
             if(task.status === Constant.STATUS_0){
                 //跳转到卡片学习页面
-                routeName = 'LearnCard'
+                nextRouteName='TestVocaTran'
                 finalTask.process='IN_LEARN_CARD'
             }else{
                 //跳转到测试页面
-                routeName = 'TestVocaTran'
+                nextRouteName='Home'
                 finalTask.process='IN_REVIEW_TEST'
             }
             // 拷贝给home
@@ -142,7 +142,8 @@ class VocaPlayPage extends React.Component {
             // 抹掉stack，跳转
             VocaUtil.goPageWithoutStack(this.props.navigation,routeName, {
                 task:finalTask,
-                showWordInfos:showWordInfos
+                showWordInfos:showWordInfos,
+                nextRouteName:nextRouteName
             })
            //结束
            return;

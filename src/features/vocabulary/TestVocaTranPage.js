@@ -6,7 +6,8 @@ import * as homeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
-
+import vocaUtil from './common/vocaUtil'
+import AudioFetch from './service/AudioFetch'
 
 const styles = StyleSheet.create({
     
@@ -27,6 +28,13 @@ const styles = StyleSheet.create({
         color:'#202020',
         fontWeight:'600'
     },
+    wrongText:{
+        position:'absolute',
+        bottom:10,
+        right:10,
+        color:'#EC6760',
+        fontSize:16,
+    }
 });
 
 class TestVocaTranPage extends Component {
@@ -36,18 +44,23 @@ class TestVocaTranPage extends Component {
         console.disableYellowBox=true
     }
 
-    _renderContent = (showWordInfos, curIndex)=>{
+    _renderContent = (showWordInfos, curIndex, task)=>{
+        const words = vocaUtil.getNotPassedWords(task.words)
         const word = showWordInfos[curIndex]?showWordInfos[curIndex].word:''
+        const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''
         const phonetic = showWordInfos[curIndex]?showWordInfos[curIndex].am_phonetic:''
+        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
         return <View  style={styles.content}>
             <View style={{}}>
                 <Text style={styles.wordFont}>{word}</Text>
             </View>
             <View style={styles.phoneticView}>
                 <Text>{'[美]'+phonetic}</Text>
-                <AliIcon name='shengyin' size={26} color='#555' style={{marginLeft:5}}/>
-                {/* <Text style={{color:'#EC6760',fontSize:16,}}>{`答错${testWrongNum}次`}</Text> */}
+                <AliIcon name='shengyin' size={26} color='#555' style={{marginLeft:5}} onPress={()=>{
+                    AudioFetch.getInstance().playSound(amPronUrl)
+                }}/>
             </View>
+            <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
  

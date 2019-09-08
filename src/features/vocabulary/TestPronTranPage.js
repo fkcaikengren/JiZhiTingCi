@@ -20,6 +20,13 @@ const styles = StyleSheet.create({
     img:{
         width:60,
         height:60
+    },
+    wrongText:{
+        position:'absolute',
+        bottom:10,
+        right:10,
+        color:'#EC6760',
+        fontSize:16,
     }
 });
 
@@ -49,8 +56,10 @@ class TestPronTranPage extends Component {
         this.setState({isPlaying:false})
     }
 
-    _renderContent = (showWordInfos, curIndex)=>{
+    _renderContent = (showWordInfos, curIndex,task)=>{
         const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''
+        const words = vocaUtil.getNotPassedWords(task.words)
+        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
         return <View  style={styles.content}>
             {!this.state.isPlaying &&
                 <AliIcon name='shengyin' size={60} color='#F29F3F' 
@@ -67,6 +76,7 @@ class TestPronTranPage extends Component {
                    <Image source={require('../../image/audio.gif')} style={styles.img}/>
                </TouchableWithoutFeedback>
             }
+            <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
  

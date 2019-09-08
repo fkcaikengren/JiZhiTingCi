@@ -56,22 +56,17 @@ class LearnCardPage extends Component {
         //跳到下一个单词
         let task = this.state.task
         if(task.curIndex < task.wordCount-1){
-            //fn:nextWord
-            this.taskDao.modify(()=>{
-                task.curIndex = task.curIndex+1
-            })
-            this.setState({
-                refresh:!this.state.refresh
-            })
+            this.setState({task:{...task, curIndex:task.curIndex+1}})
         }else{
             const finalTask = {...task, curIndex:0, process:Constant.IN_LEARN_TEST_1}
-            this.taskDao.modifyTask(finalTask)
+            const routeName = this.props.navigation.getParam('nextRouteName')
             //更新任务
             this.props.updateTask(finalTask)
             //完成卡片学习
-            vocaUtil.goPageWithoutStack(this.props.navigation,'TestVocaTran',{
+            vocaUtil.goPageWithoutStack(this.props.navigation, routeName ,{
                 task:finalTask,
-                showWordInfos:this.state.showWordInfos
+                showWordInfos:this.state.showWordInfos,
+                nextRouteName:'TestSenVoca'
             })
         }
     }
@@ -84,7 +79,7 @@ class LearnCardPage extends Component {
         const {showWordInfos,task} = this.state
         let {wordCount, curIndex } = task
         if(!wordCount){
-            wordCount = 1
+            wordCount = 100
         }
         console.log(curIndex)
         console.log(showWordInfos[curIndex])
@@ -95,8 +90,10 @@ class LearnCardPage extends Component {
                 <Header
                     statusBarProps={{ barStyle: 'light-content' }}
                     barStyle="light-content" // or directly
-                    leftComponent={
+                    leftComponent={//返回
                         <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
+                            //更新task
+                            this.props.updateTask({...this.state.task})
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
                         }}></AliIcon> }
                     

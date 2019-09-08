@@ -157,7 +157,7 @@ export default class StudyPlayController extends React.Component {
                     alignItems:'center',
                     paddingHorizontal:30,
                 }}>
-                    {/* 退出 */}
+                    {/* 返回 */}
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={()=>{
                         this.props.updateTask(task)
                         this.props.navigation.goBack()

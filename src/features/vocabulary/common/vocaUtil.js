@@ -120,8 +120,14 @@ export default class VocaUtil{
                 case Constant.IN_LEARN_TEST_1:      //1测 30 point
                     num = Math.floor((task.curIndex/task.wordCount)*30) + 40
                     break
+                case Constant.IN_LEARN_RETEST_1:      
+                    num = 70
+                    break
                 case Constant.IN_LEARN_TEST_2:      //2测 25 point
                     num = Math.floor((task.curIndex/task.wordCount)*25) + 70
+                    break
+                case Constant.IN_LEARN_RETEST_2:     
+                    num = 95
                     break
                 case Constant.IN_LEARN_FINISH:    //完成
                     num = 100
@@ -142,6 +148,9 @@ export default class VocaUtil{
                     break
                 case Constant.IN_REVIEW_TEST:       //复习测试 25point
                     num = Math.floor((task.curIndex/task.wordCount)*25) + 70
+                    break
+                case Constant.IN_REVIEW_RETEST:       //复习测试 25point
+                    num = 95
                     break
                 case Constant.IN_REVIEW_FINISH:    //复习完成
                     num = 100
@@ -257,6 +266,29 @@ export default class VocaUtil{
         });
         navigation.dispatch(resetAction);
     }
+
+    static getNotPassedWords = (words)=>{
+
+        return words.filter((item,i)=>{
+            if(item.passed === true){
+                return false
+            }else{
+                return true
+            }
+        })
+    }
+
+    /** 计算剩余次数 */
+    static getLeftCount = (testArr)=>{
+        let count = 0
+        for(let value of testArr){
+            if(value === true){
+                count++
+            }
+        }
+        return count
+    }
+    
 }
 
 

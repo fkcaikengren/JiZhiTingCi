@@ -57,7 +57,7 @@ export default class VocaTaskService {
             let reviewTasks = []
             //2. 浅拷贝
             for(let task of tasks){
-                let copyTask = VocaUtil.copyTask(task)
+                let copyTask = VocaUtil.copyTaskDeep(task)
                 copyTasks.push(copyTask)
                 //生成1复任务
                 if(copyTask.status === Constant.STATUS_0){

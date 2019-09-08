@@ -64,13 +64,6 @@ export const vocaPlay =  handleActions({
         }
         
         if(isStudyMode){//1.学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
-            if(state.task.leftTimes !== leftTimes){
-                //剩余遍数写入数据库
-                VocaTaskDao.getInstance().modifyTask({
-                    taskOrder:state.task.taskOrder,
-                    leftTimes:leftTimes
-                })
-            }
             newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes}
         }
         //2.普通模式轮播

@@ -14,7 +14,7 @@ import LearnCardPage from '../features/vocabulary/LearnCardPage';
 
 import TestVocaTranPage from '../features/vocabulary/TestVocaTranPage';
 import TestTranVocaPage from '../features/vocabulary/TestTranVocaPage'
-import TestSentencePage from '../features/vocabulary/TestSentencePage';
+import TestSenVocaPage from '../features/vocabulary/TestSenVocaPage';
 import TestPronTranPage from '../features/vocabulary/TestPronTranPage'
 
 
@@ -78,8 +78,8 @@ const VocaHomeStackNav = createStackNavigator(
         screen: TestTranVocaPage
       },
       // 例句选词测试
-      TestSentence: {
-        screen: TestSentencePage,
+      TestSenVoca: {
+        screen: TestSenVocaPage,
       },
         
 

@@ -124,7 +124,17 @@ export default class VocaCard extends Component{
 
     render(){
         const wordInfo = this.props.wordInfo
-
+        let sen = ''
+        if(wordInfo.sentence && wordInfo.sentence!==''){
+            const s = wordInfo.sentence.split(/<em>|<\/em>/)
+            sen = s.map((text, index)=>{
+                if(index%2 === 0){
+                    return text
+                }else{
+                    return <Text style={{color:'#F2753F',fontSize:16, fontWeight:'500' }}>{text}</Text>
+                }
+            })
+        }
         return (
         <ScrollView style={{ flex: 1 }}
             pagingEnabled={false}
@@ -175,7 +185,7 @@ export default class VocaCard extends Component{
                         </Row>
                         {/* 例句 */}
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
-                            <Text style={[styles.darkFont, {flex:10}]}>{wordInfo.sentence}</Text>
+                            <Text style={[styles.darkFont, {flex:10}]}>{sen}</Text>
                             <AliIcon name='shengyin' size={26} color='#F29F3F' style={{flex:1,marginLeft:10}} onPress={()=>{
                                 this.audioFetch.playSound(wordInfo.sen_pron_url)
                             }}/>
