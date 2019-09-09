@@ -29,6 +29,7 @@ class LearnCardPage extends Component {
             refresh:false
         }
 
+        this.audioFetch = AudioFetch.getInstance()
         this.taskDao = VocaTaskDao.getInstance()
     }
 
@@ -54,7 +55,7 @@ class LearnCardPage extends Component {
 
     _nextWord = ()=>{
         //停止播放音频
-        AudioFetch.getInstance().releaseSound()
+        this.audioFetch.releaseSound()
         //跳到下一个单词
         let task = this.state.task
         if(task.curIndex < task.wordCount-1){
@@ -70,6 +71,7 @@ class LearnCardPage extends Component {
                 showWordInfos:this.state.showWordInfos,
                 nextRouteName:'TestSenVoca'
             })
+            this.audioFetch.releaseSound()
         }
     }
 
@@ -78,13 +80,12 @@ class LearnCardPage extends Component {
 
 
     render() {
+        const {getParam} = this.props.navigation
         const {showWordInfos,task} = this.state
         let {wordCount, curIndex } = task
         if(!wordCount){
             wordCount = 100
         }
-        console.log(curIndex)
-        console.log(showWordInfos[curIndex])
         return (
             <View style={{flex:1}}>
                 <StatusBar translucent={true} />
@@ -97,6 +98,7 @@ class LearnCardPage extends Component {
                             //更新task
                             this.props.updateTask({...this.state.task})
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
+                            this.audioFetch.releaseSound()
                         }}></AliIcon> }
                     
                     centerComponent={
@@ -113,7 +115,12 @@ class LearnCardPage extends Component {
                     />
 
                 {showWordInfos.length>0 && curIndex<task.wordCount &&
-                    <VocaCard wordInfo={showWordInfos[curIndex]}/>
+                    <VocaCard 
+                        wordInfo={showWordInfos[curIndex]} 
+                        showAll={getParam('showAll',true)}
+                        playWord={getParam('playWord',true)}
+                        playSentence={getParam('playSentence',true)}
+                    />
                 }
                 <View style={styles.nextBtn}
                 onStartShouldSetResponder={e=>true}

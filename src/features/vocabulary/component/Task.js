@@ -66,11 +66,11 @@ export default class Task extends Component {
         }
         //计算进度
         const processNum = VocaUtil.calculateProcess(item)
-        if(item.status === Constant.STATUS_0 && processNum !== 100){
-          isAllLearned = false
-        }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
-          disable = true
-        }
+        // if(item.status === Constant.STATUS_0 && processNum !== 100){
+        //   isAllLearned = false
+        // }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
+        //   disable = true
+        // }
 
         return (
           <TaskItem {...this.props} 

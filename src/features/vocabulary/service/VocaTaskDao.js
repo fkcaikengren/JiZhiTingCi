@@ -140,7 +140,19 @@ export default class VocaTaskDao {
                 this.realm.create('VocaTask', task, true);
             })
         }catch (e) {
-            console.log('VocaTaskDao : 修改数据失败')
+            console.log('VocaTaskDao : 修改Task失败')
+            console.log(e)
+        }
+    }
+
+    /** 修改任务的单词 */
+    modifyWord = (taskWord)=>{
+        try{
+            this.realm.write(()=>{
+                this.realm.create('TaskWord', taskWord, true);
+            })
+        }catch (e) {
+            console.log('VocaTaskDao : 修改TaskWord失败')
             console.log(e)
         }
     }

@@ -3,6 +3,7 @@ import * as vpAction from './action/vocaPlayAction';
 import {Themes} from '../common/vocaConfig'
 import VocaTaskDao from '../service/VocaTaskDao'
 import * as Constant from '../common/constant'
+import VocaUtil from '../common/vocaUtil';
 
 /**
  *  总结：
@@ -34,8 +35,6 @@ const defaultState ={
     themeId: 1,
      //加载状态
     isLoadPending:false,
-    //刷新
-    refresh:false
 }
 
 
@@ -57,6 +56,7 @@ export const vocaPlay =  handleActions({
         let newTask = state.task
         //播放到最后一个单词
         if(index+1 === beforeCount){
+            
             leftTimes--
         }
         // 学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
@@ -88,48 +88,24 @@ export const vocaPlay =  handleActions({
     [vpAction.TOGGLE_TASK_MODAL]: (state, action) => ({ ...state, tasksModalOpened:action.payload.tasksModalOpened }),
     //Pass单词
     [vpAction.PASS_WORD]: (state, action) => {
-        const taskDao = VocaTaskDao.getInstance()
         let beforeCount = state.task.wordCount
         let index = state.curIndex
-        let newTask = state.task
+        let task = state.task
+        const showWordInfos = state.showWordInfos
         const word = action.payload.word
 
-        //修改realm数据库的 pass
-        for(let w of state.task.words){ 
-            if(w.word === word){ //pass
-                taskDao.modify(()=>{     
-                    w.passed = true
-                })
-            }
-        }
+        //修改passed, wordCount, 保存到realm数据库
+        const newShowWordInfos = VocaUtil.passWordInTask(task.words,word,task.taskOrder, beforeCount, showWordInfos)
         
         //pass最后一个单词，修改下标
         if(index+1 === beforeCount){
             index = 0
         }
 
-        //保存至realm数据库
-        taskDao.modifyTask({
-            taskOrder:state.task.taskOrder,
-            wordCount:beforeCount-1,
-        })
-
-
-         //删除showWordInfos的指定元素
-         const infos = state.showWordInfos.filter((item, i)=>{
-            if(item){
-                if(item.word === word){
-                    return false
-                }else{
-                    return true
-                }
-            }
-        })
-
         return { ...state, 
-            task:{...newTask,wordCount:beforeCount-1,curIndex:index,}, 
+            task:{...task,wordCount:beforeCount-1,curIndex:index,}, 
             curIndex:index,
-            showWordInfos:infos
+            showWordInfos:newShowWordInfos
         }
     },
 }, defaultState);

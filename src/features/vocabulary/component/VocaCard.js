@@ -94,10 +94,51 @@ export default class VocaCard extends Component{
     }
 
     componentDidMount(){
+        const {wordInfo, playWord, playSentence} = this.props
         const wordRoot = VocaDao.getInstance().getWordRoot(this.props.wordInfo.root_id)
         if(wordRoot){
             const relativeRoots = VocaDao.getInstance().getWordRoots(wordRoot.relatives,3,true)
             this.setState({wordRoot, relativeRoots})
+        }
+        //自动发音
+        if(playWord){
+            this.audioFetch.playSound(wordInfo.am_pron_url,null,()=>{
+                if(playSentence){
+                    this.audioFetch.playSound(wordInfo.sen_pron_url)
+                }
+            },null,false)
+        }else if(playSentence){
+            this.audioFetch.playSound(wordInfo.sen_pron_url)
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        const {wordInfo, playWord, playSentence} = this.props
+        //自动发音
+        if(wordInfo === nextProps.wordInfo ){
+            if(this.state.showAll === nextState.showAll){
+                return false
+            }else{
+                return true
+            }
+                
+          
+        }else{
+            if(this.props.showAll === false){
+                this.setState({showAll:false})
+            }
+
+            if(playWord){
+                this.audioFetch.playSound(nextProps.wordInfo.am_pron_url,null,()=>{
+                    if(playSentence){
+                        this.audioFetch.playSound(nextProps.wordInfo.sen_pron_url)
+                    }
+                },null,false)
+            }else if(playSentence){
+                this.audioFetch.playSound(nextProps.wordInfo.sen_pron_url)
+            }
+            
+            return true
         }
     }
 
@@ -121,6 +162,8 @@ export default class VocaCard extends Component{
     _showAll = ()=>{
         this.setState({showAll:true})
     }
+
+  
 
     render(){
         const wordInfo = this.props.wordInfo
@@ -233,10 +276,16 @@ export default class VocaCard extends Component{
 
 
 VocaCard.propTypes = {
-    wordInfo:PropTypes.object.isRequired,
-    showAll:PropTypes.boolean
+    wordInfo : PropTypes.object.isRequired,
+    showAll : PropTypes.bool,
+    playWord : PropTypes.bool,
+    playSentence : PropTypes.bool,
+   
 }
   
 VocaCard.defaultProps = {
-    showAll:true
+    showAll : true,
+    playWord : false,
+    playSentence : false,
+
 }

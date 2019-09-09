@@ -230,6 +230,7 @@ StudyPlayController.propTypes = {
     autoplay : PropTypes.func.isRequired,
     finishedTimes : PropTypes.number.isRequired,
     changePlayTimer: PropTypes.func.isRequired,
+    changeInterval: PropTypes.func.isRequired,
     toggleWord: PropTypes.func.isRequired,
     toggleTran: PropTypes.func.isRequired,
 }

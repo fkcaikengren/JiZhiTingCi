@@ -58,8 +58,8 @@ export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, cha
     },
     
     //pass单词
-    [PASS_WORD] : (word,status)=>{
-      return {word,status}
+    [PASS_WORD] : (word)=>{
+      return {word}
     },
    
   });

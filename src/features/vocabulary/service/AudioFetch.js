@@ -34,32 +34,38 @@ export default class AudioFetch{
     return this.instance;
   }
 
-  fn = ()=>null
+
   
   //播放音频
-  playSound = (url,startPlay=this.fn, finishPlay=this.fn,failPlay=this.fn)=>{
-    startPlay() //开始播放
+  playSound = (url,startPlay=null, finishPlay=null,failPlay=null,releaseAfterFinish=true)=>{
+    if(startPlay){
+      startPlay() //开始播放
+    }
     const baseUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
     console.log(baseUrl+url)
-    //先暂停
-    if(this.sound){
-      this.sound.pause();
-      this.sound.release();
-    }
+    //先暂停并释放资源
+    this.releaseSound();
+
     this.sound = new Sound(baseUrl+url,null, err => {
-      console.log('play')
+      //播放失败
       if (err) {        //获取失败
         console.log(err)
-        failPlay() //播放失败
-        this.sound.release();
-        this.sound = null
+        if(failPlay){
+          failPlay() //播放失败
+        }
+        if(releaseAfterFinish){
+          this.releaseSound()
+        }
         return;
       }
+      //播放成功
       this.sound.play(() => {  
-        finishPlay()  //完成播放
-        console.log('success play')
-        this.sound.release();
-        this.sound = null
+        if(finishPlay){
+          finishPlay()  //完成播放
+        }
+        if(releaseAfterFinish){
+          this.releaseSound()
+        }
       });
     })
     

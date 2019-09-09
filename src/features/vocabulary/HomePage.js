@@ -15,13 +15,16 @@ class HomePage extends Component {
     constructor(props) {
         super(props);
         this.taskService = new VocaTaskService()
+
+        this.state = {
+            toastRef:null
+        }
         console.disableYellowBox = true
     }
 
     componentDidMount(){
         setTimeout(()=>{
             const {tasks} = this.props.home
-            console.log(this.props.home)
             //加载task
             const today = _util.getDayTime(0)
             if(tasks.length <= 0){
@@ -31,12 +34,16 @@ class HomePage extends Component {
                 console.log(today)
                 console.log(tasks[0].vocaTaskDate)
                 if(today !== tasks[0].vocaTaskDate){  //任务过期
-                    this.taskService.calculateTasks(tasks, 1)
+                    this.taskService.calculateTasks(tasks, 2)
                     const todayTasks = this.taskService.getTodayTasks(tasks)
                     this.props.loadTasks(todayTasks)
                 }
             }
         }, 2000)
+
+        //toastRef 引起刷新
+        this.setState({toastRef:this.refs.toastRef})
+
     }
 
 
@@ -45,7 +52,7 @@ class HomePage extends Component {
             <View style={styles.container}>
                 {/*顶部背景和任务列表 */}
                 <HomeHeader {...this.props}  >
-                    <Task {...this.props} tasks={this.props.home.tasks} toastRef={this.refs.toastRef}/>
+                    <Task {...this.props} tasks={this.props.home.tasks} toastRef={this.state.toastRef}/>
                 </HomeHeader>
 
                 {/* 底部播放控制 */}

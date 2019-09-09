@@ -1,6 +1,7 @@
 
 import * as Constant from './constant'
 import VocaDao from '../service/VocaDao'
+import VocaTaskDao from '../service/VocaTaskDao'
 import {NavigationActions, StackActions} from 'react-navigation'
 
 
@@ -241,13 +242,15 @@ export default class VocaUtil{
      * 获取没有pass的单词信息
      * @param {*} words  task的words
      */
-    static getShowWordInfos(words){
+    static getShowWordInfos(words, wordInfos=null){
         if(!words){
             return []
         }
         showWordInfos = []
+        if(wordInfos === null){
+            wordInfos = VocaDao.getInstance().getWordInfos(words.map((item, i)=>item.word))
+        }
         for(let i in words){
-            const wordInfos = VocaDao.getInstance().getWordInfos(words.map((item, i)=>item.word))
             //过滤
             if(words[i].passed===false){
                 showWordInfos.push(wordInfos[i])
@@ -287,6 +290,55 @@ export default class VocaUtil{
             }
         }
         return count
+    }
+
+
+    /** 
+     * 在任务中pass单词，返回pass后的新的words和showInfos
+     * 如果shouldFilter=false, 不进行过滤的话，则返回pass的单词
+     */
+    static passWordInTask = (words,word,taskOrder,beforeCount,showWordInfos, shouldFilter=true)=>{
+        // 修改realm数据库的 pass
+        const  taskDao = VocaTaskDao.getInstance()
+        
+        taskDao.modifyTask({
+            taskOrder:taskOrder,
+            wordCount:beforeCount-1,
+        })
+
+        if(shouldFilter){
+            const newWords = words.map((w,i)=>{
+                if(w.word === word){ //pass
+                    taskDao.modifyWord({word:word,passed:true})
+                    return {...w,passed:true}
+                }else{
+                    return w
+                }
+            })
+
+            const newShowWordInfos = showWordInfos.filter((item, i)=>{
+                if(item){
+                    if(item.word === word){
+                        return false
+                    }else{
+                        return true
+                    }
+                }
+            })
+
+            return {words:newWords, showWordInfos:newShowWordInfos}
+        }else{
+            for(let w of words){
+                if(w.word === word){ //pass
+                    taskDao.modifyWord({word:word,passed:true})
+                    return word
+                }
+            }
+            return null
+        }
+
+        
+
     }
     
 }

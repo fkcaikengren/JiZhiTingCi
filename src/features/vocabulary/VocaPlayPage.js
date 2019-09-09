@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, Text,FlatList, TouchableOpacity,
+import {Platform, StatusBar, View, Text, FlatList, TouchableOpacity,
     Easing } from 'react-native';
 import {WhiteSpace} from '@ant-design/react-native'
 import {Header, Button} from 'react-native-elements'
@@ -130,7 +130,7 @@ class VocaPlayPage extends React.Component {
     }
 
 
-    //改变下标，更新单词
+    //state, 改变下标，更新单词
     _changeCurIndex = (curIndex)=>{
         const wordCount = this.state.task.wordCount
         let leftTimes = this.state.task.leftTimes
@@ -143,7 +143,7 @@ class VocaPlayPage extends React.Component {
             curIndex:curIndex
         })
     }
-
+    //state, 控制翻译显示
     _toggleTran = (showTran=null)=>{
         if(showTran === null){
             this.setState({showTran:!this.state.showTran})
@@ -152,6 +152,7 @@ class VocaPlayPage extends React.Component {
         }
     }
 
+    //state, 控制单词显示
     _toggleWord = (showWord=null)=>{
 
         if(showWord === null){
@@ -161,9 +162,37 @@ class VocaPlayPage extends React.Component {
         }
     }
 
-    //暂停、播放
+    //state, 暂停、播放
     _changePlayTimer = (autoPlayTimer)=>{
         this.setState({autoPlayTimer})
+    }
+
+    //state, 控制时间间隔
+    _changeInterval = (interval)=>{
+        this.setState({interval})
+    }
+
+    //state, pass单词
+    _passWord = (word)=>{
+        const beforeCount = this.state.task.wordCount
+        let index = this.state.curIndex
+        const task = this.state.task
+        const showWordInfos = this.state.showWordInfos
+
+        //修改passed, wordCount, 保存到realm数据库
+        const res = VocaUtil.passWordInTask(task.words,word,task.taskOrder, beforeCount, showWordInfos)
+        
+        //pass最后一个单词，修改下标
+        if(index+1 === beforeCount){
+            index = 0
+        }
+
+        this.setState({ 
+            task:{...task, words:res.words, wordCount:beforeCount-1,curIndex:index,}, 
+            curIndex:index,
+            showWordInfos:res.showWordInfos
+        })
+        
     }
 
     //退出页面（学习模式下）
@@ -190,15 +219,23 @@ class VocaPlayPage extends React.Component {
         const {changePlayTimer} = this.props;
 
         //完成播放，退出
+        console.log(task.leftTimes)
         if(this.isStudyMode && task.leftTimes <= 0){
+            console.log('goPage')
             const routeName = this.props.navigation.getParam('nextRouteName')
             let nextRouteName = null
             //改变任务进度
             const finalTask = {...task, curIndex:0}
+            let otherParams = null
             if(task.status === Constant.STATUS_0){
                 //跳转到卡片学习页面
                 nextRouteName='TestVocaTran'
                 finalTask.process='IN_LEARN_CARD'
+                otherParams = {
+                    showAll:false, 
+                    playWord: true,      //用于LearCard,自动播放单词
+                    playSentence: true  //用于LearCard,自动播放例句
+                }
             }else{
                 //跳转到测试页面
                 nextRouteName='Home'
@@ -206,11 +243,13 @@ class VocaPlayPage extends React.Component {
             }
             // 拷贝给home
             this.props.updateTask(finalTask)
+            console.log(routeName)
             // 抹掉stack，跳转
             VocaUtil.goPageWithoutStack(this.props.navigation,routeName, {
                 task:finalTask,
                 showWordInfos:showWordInfos,
-                nextRouteName:nextRouteName
+                nextRouteName:nextRouteName,
+                ...otherParams
             })
            //结束
            return;
@@ -319,7 +358,7 @@ class VocaPlayPage extends React.Component {
                             </TouchableOpacity>
                         </View>
                     <View style={{flex:1}}>
-                        {VocaPlayFlatList && VocaPlayFlatList.getOpenedRowKey() === index &&
+                        {this.mode !== Constant.LEARN_PLAY && VocaPlayFlatList && VocaPlayFlatList.getOpenedRowKey() === index &&
                             <Button
                                 title='Pass'
                                 titleStyle={{color:'#FFF',fontSize:14,fontWeight:'400'}}
@@ -330,7 +369,11 @@ class VocaPlayPage extends React.Component {
                                     if(task.wordCount <= 5){
                                         this.toastRef.show('只剩5个了，不能再pass了哦')
                                     }else{
-                                        this.props.passWord(item.word,task.status)
+                                        if(this.isStudyMode){
+                                            this._passWord(item.word)
+                                        }else{
+                                            this.props.passWord(item.word)
+                                        }
                                     }
                                 }}
                             />
@@ -495,6 +538,7 @@ class VocaPlayPage extends React.Component {
                 autoplay={this._autoplay} 
                 finishedTimes={this.finishedTimes}
                 changePlayTimer={this._changePlayTimer}
+                changeInterval={this._changeInterval}
                 toggleWord={this._toggleWord}
                 toggleTran={this._toggleTran}
                 />
@@ -526,7 +570,7 @@ class VocaPlayPage extends React.Component {
             showsHorizontalScrollIndicator: false,
             showsVerticalScrollIndicator: false,
             pagingEnabled: false,
-            extraData: this.props.vocaPlay,      //促使FlatList刷新  
+            extraData: this.isStudyMode?this.state:this.props.vocaPlay,      //促使FlatList刷新  
             keyExtractor: this._keyExtractor,
             data:showWordInfos,
             renderItem: this._renderItem,
@@ -562,13 +606,19 @@ class VocaPlayPage extends React.Component {
             {/* 内容列表区 */}
             <WhiteSpace size='lg'/>
             <View style={ [styles.content, {height:contentHeight}]}>
-                <SwipeableFlatList 
-                    {...flatListProps}
-                    bounceFirstRowOnMount={false}
-                    onOpen={this._onOpen}
-                    renderQuickActions={(data)=>true}
-                    maxSwipeDistance={50}
-                />
+                {this.mode === Constant.LEARN_PLAY &&
+                    <FlatList   {...flatListProps} />
+                }
+                {this.mode !== Constant.LEARN_PLAY &&
+                    <SwipeableFlatList 
+                        {...flatListProps}
+                        bounceFirstRowOnMount={false}
+                        onOpen={this._onOpen}
+                        renderQuickActions={(data)=>true}
+                        maxSwipeDistance={50}
+                    />
+                }
+                
             </View>
             <Toast
                 ref="toastRef"

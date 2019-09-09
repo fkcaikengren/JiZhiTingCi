@@ -19,8 +19,6 @@ export const home =  handleActions({
     },
     //更新任务
     [ha.UPDATE_TASK] : (state, action) => {
-        console.log('-----------')
-        console.log(action.payload.task)
         const task = action.payload.task
         const tasks = state.tasks.map((item, i)=>{
             if(item.taskOrder === task.taskOrder && item.status === task.status){

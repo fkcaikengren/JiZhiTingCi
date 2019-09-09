@@ -35,7 +35,11 @@ export default class TaskItem extends Component {
             this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY, nextRouteName:'LearnCard'})
           break;
           case Constant.IN_LEARN_CARD:
-            this.props.navigation.navigate('LearnCard',{task:item, nextRouteName:'TestVocaTran'})
+            this.props.navigation.navigate('LearnCard',{task:item,
+              showAll:false, 
+              playWord:true,      //自动播放单词
+              playSentence:true,  //自动播放例句
+              nextRouteName:'TestVocaTran'})
           break;
           case Constant.IN_LEARN_TEST_1:
             this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'TestSenVoca'})
@@ -92,9 +96,15 @@ export default class TaskItem extends Component {
     const disableView = this.props.disable?{
       backgroundColor:'#F4F4F4'
     }:null
+
+    //点击透明度
+    let activeOpacity = this.props.disable?0.8:0.5
+    if(processNum === 100){
+      activeOpacity = 1
+    }
     return (
       <TouchableOpacity 
-      activeOpacity={this.props.disable?0.7:0.5}
+      activeOpacity={activeOpacity}
       onPress={this._startStudy}>
         <View style={[{paddingHorizontal:12}, disableView]}>
             <View style={[this.props.separator,styles.container]}>
