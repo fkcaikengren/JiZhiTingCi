@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/smallview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:alpha="0.7"
+    >
+    <!--android:background="#65cb65"  -->
+    <LinearLayout
+        android:id="@+id/small_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <ImageView
+            android:id="@+id/small_playTag"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="2"
+            android:src="@mipmap/h_icon" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5">
+            <TextView
+                android:id="@+id/small_name"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:text="爱听词"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="#303030"
+                android:textSize="16dp" />
+            <TextView
+                android:id="@+id/small_word"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:text="limit"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="#303030"
+                android:textSize="16dp"
+                android:layout_below="@id/small_name"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/small_bottomBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_below="@id/small_topBar">
+
+            <ImageButton
+                android:id="@+id/small_playBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:src="@drawable/ic_play" />
+            <ImageButton
+                android:id="@+id/small_closeBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:src="@drawable/ic_close" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -2,6 +2,7 @@
   package="com.jizhitingci">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
       android:name=".MainApplication"
@@ -9,7 +10,9 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:hardwareAccelerated="true" 
+      >
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -21,6 +24,10 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <!-- 集成友盟 -->
+      <meta-data android:value="5d7e273c3fc195984a0008f4" android:name="UMENG_APPKEY"/>
+      <!-- <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/> -->
+      <meta-data android:value="umengtongji" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

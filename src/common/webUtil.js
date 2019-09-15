@@ -69,14 +69,31 @@ export default class WebUtil {
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
             }
             
+        },true);true;`;
+
+    static PROGRESS_LISTEN_JAVASCRIPT = 
+        `document.addEventListener('message', function (e) {
+            //回显
+            window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
+            //处理
+            var data = JSON.parse(e.data)
+            try{
+                if(data.command === 'update'){                            //更新页面
+                    updatePage(data.payload.data,data.payload.formatter, data.payload.themeIndex )
+                }else if(data.command === 'changeColor'){
+                    changeColor(data.payload.themeIndex)
+                }
+            }catch(err){
+                window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
+            }
+            
         },true);true;`
-
-
-
 
 
     
 }
 
 {
+    
+
 }

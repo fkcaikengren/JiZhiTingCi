@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Constant from '../common/constant'
 import VocaUtil from '../../vocabulary/common/vocaUtil'
 import AliIcon from '../../../component/AliIcon'
+import gstyles from '../../../style'
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -108,9 +109,9 @@ export default class TaskItem extends Component {
       onPress={this._startStudy}>
         <View style={[{paddingHorizontal:12}, disableView]}>
             <View style={[this.props.separator,styles.container]}>
-              <View style={styles.leftView}>
-                <View style={styles.serialView}>
-                  <Text style={styles.serialText}>{index<10?'0'+index:index}</Text>
+              <View style={gstyles.r_start_top}>
+                <View style={[gstyles.c_center, {marginRight:10}]}>
+                  <Text style={gstyles.serialText}>{index<10?'0'+index:index}</Text>
                 </View>
                 <View stye={styles.nameView}>
                   <Text style={styles.nameText}>{`List-${name}`}</Text>
@@ -143,21 +144,7 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingBottom: 12,
   },
-
-  leftView: {
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'flex-start',
-  },  
-  serialView: {
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'center',
-    paddingRight:10
-  },
-  serialText: {
-    fontSize: 16
-  },  
+ 
   nameView: {
     flex: 1
   },

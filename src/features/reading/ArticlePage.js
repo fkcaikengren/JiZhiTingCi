@@ -10,7 +10,7 @@ import styles from './ArticleStyle'
 import FileService from './service/FileService'
 import gstyles from '../../style'
 import ReadUtil from './util/readUtil'
-import WebUtil from './util/webUtil'
+import WebUtil from '../../common/webUtil'
 import AliIcon from '../../component/AliIcon'
 import * as Constant from './common/constant'
 

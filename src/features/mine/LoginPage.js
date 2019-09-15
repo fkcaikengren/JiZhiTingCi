@@ -2,47 +2,13 @@ import React, { Component } from "react";
 import { StyleSheet, TextInput, View, Text} from 'react-native'
 import {Container,Content, Button} from "native-base";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
+import styles from './LoginStyle'
 
 import UserDao from './dao/UserDao'
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
 
-const styles = StyleSheet.create({
-  container:{
-    flexDirection:'column',
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor: "#FDFDFD"
-  },
-  row:{
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'center',
-  },
-  phoneLogin:{
-    marginTop:100,
-    flexDirection:'column',
-    justifyContent:'center',
-    alignItems:'center',
-    width:width-100,
-  },
-  logo:{
-    width:'100%',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
-    paddingBottom:50,
-  },
-  phone:{
-    width:'100%',
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'center',
-    borderBottomWidth:1,
-  }
-})
 class LoginPage extends Component {
     constructor(props){
       super(props)

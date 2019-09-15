@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<style type="text/css">
+      html,body,#main{
+        height: 100%;
+		    width: 100%;
+        background-color: #FFe957;
+        margin: 0px;
+      }
+      #main{
+        margin-top: 5%;
+        height: 80%;
+      }
+      div {
+        -webkit-tap-highlight-color:rgba(255,255,255,0);
+      }
+    </style>
+    <title>ECharts</title>
+    <script src='./js/echarts.js'></script>
+    <script src='./js/echarts-liquidfill.js'></script>
+    <script src="./js/zepto.min.js" ></script>
+</head>
+<body>
+    <div id="main" ></div>
+</body>
+<script src="./js/progress.js" type="text/javascript"></script>
+<script>
+    //页面加载完毕
+    Zepto(function($){
+        window.ReactNativeWebView.postMessage(JSON.stringify({command:'initStart', payload:null }));
+
+        //测试
+        // var data = [0.6, 0.4, 0.2, ];
+        // var formatter = '30%';
+        // updatePage(data, formatter,0)
+    })
+</script>
+</html>

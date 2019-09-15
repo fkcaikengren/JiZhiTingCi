@@ -3,33 +3,35 @@ package com.jizhitingci;
 import android.app.Application;
 import android.webkit.WebView;
 
-import com.facebook.react.ReactApplication;
-import com.reactnativecommunity.webview.RNCWebViewPackage;
-import com.horcrux.svg.SvgPackage;
-import io.realm.react.RealmReactPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.zmxv.RNSound.RNSoundPackage;
 import com.beefe.picker.PickerViewPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.BV.LinearGradient.LinearGradientPackage; 
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import com.react.rnspinkit.RNSpinkitPackage; 
-
 import com.facebook.stetho.Stetho;
+import com.horcrux.svg.SvgPackage;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.umeng.UmengReactPackage;
+import com.umeng.commonsdk.UMConfigure;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-
+import com.zmxv.RNSound.RNSoundPackage;
 
 import java.util.Arrays;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.react.RealmReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -42,7 +44,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+
+            new UmengReactPackage(),
+            new NotificationPackage(),
+            new MainReactPackage(),
+            new BackgroundTaskPackage(),
             new RNCWebViewPackage(),
             new SvgPackage(),
             new RealmReactPackage(),
@@ -54,7 +60,8 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNCardViewPackage(),
-            new RNSpinkitPackage()   
+            new RNSpinkitPackage(),
+            new BackgroundTimerPackage()
       );
     }
 
@@ -69,13 +76,16 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
+
+
+  
   @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-
-
     super.onCreate();
+
+    //Realm初始化
     Realm.init(this);
     RealmConfiguration configuration = new RealmConfiguration.Builder()
             .name(Realm.DEFAULT_REALM_NAME)
@@ -97,5 +107,12 @@ public class MainApplication extends Application implements ReactApplication {
 
     //运行调试WebView
     WebView.setWebContentsDebuggingEnabled(true);
+
+
+    //后台任务服务初始化
+    BackgroundTaskPackage.useContext(this);
+
+    //友盟初始化
+    UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE,"");
   }
 }

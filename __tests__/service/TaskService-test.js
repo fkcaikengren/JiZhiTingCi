@@ -17,7 +17,7 @@ const fs = require("fs");
 let myhttp = createHttp()
 VocaTaskDao.getInstance().open()
 let vts = new VocaTaskService()
-let taskCount = 15
+let taskCount = 2
 let oldTasks = [{
     taskOrder: 1,
     status: 0,
@@ -178,13 +178,13 @@ it('偷懒学习1, 第x天开始不完成新学，从第y天开始全部完成',
     //获取任务--------------------------------
     let params = {
         taskCount: taskCount.toString(),
-        taskWordCount: '15',
-        bookCode: 'VB_76'
+        taskWordCount: '6',
+        bookCode: 'VB_114'
     }
     const res = await myhttp.post('/plan/putPlan',params)
     const tasks = res.data.data.tasks
     //任务存入realm
-    vts.saveVocaTasks(tasks)
+    vts.saveVocaTasks(tasks, 6)
     //开始测试--------------------------------
     let n = 30; //表示无穷大
     let todayTasks = []
@@ -237,7 +237,7 @@ it('偷懒学习1, 第x天开始不完成新学，从第y天开始全部完成',
         }
     }
 
-})
+}, 60000)
 
 
 /**

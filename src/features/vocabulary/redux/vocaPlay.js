@@ -1,8 +1,7 @@
 import {  handleActions } from 'redux-actions';
+
 import * as vpAction from './action/vocaPlayAction';
 import {Themes} from '../common/vocaConfig'
-import VocaTaskDao from '../service/VocaTaskDao'
-import * as Constant from '../common/constant'
 import VocaUtil from '../common/vocaUtil';
 
 /**
@@ -24,7 +23,7 @@ const defaultState ={
     //是否播放, <=0表示暂停，>0表示播放
     autoPlayTimer:0,
     //时间间隔
-    interval:1.0,
+    interval:2.0,
     //是否显示英文单词
     showWord:true,
     //是否显示中文释义
@@ -53,14 +52,15 @@ export const vocaPlay =  handleActions({
         const beforeCount = state.task.wordCount
         const index = state.curIndex
         let leftTimes = state.task.leftTimes
+        let listenTimes = state.task.listenTimes
         let newTask = state.task
         //播放到最后一个单词
         if(index+1 === beforeCount){
-            
             leftTimes--
+            listenTimes++
         }
         // 学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
-        newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes}
+        newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes,listenTimes}
         return { ...state, task:newTask, curIndex:action.payload.curIndex, }
         
     },
@@ -95,7 +95,7 @@ export const vocaPlay =  handleActions({
         const word = action.payload.word
 
         //修改passed, wordCount, 保存到realm数据库
-        const newShowWordInfos = VocaUtil.passWordInTask(task.words,word,task.taskOrder, beforeCount, showWordInfos)
+        const res = VocaUtil.passWordInTask(task.words,word,task.taskOrder, beforeCount, showWordInfos)
         
         //pass最后一个单词，修改下标
         if(index+1 === beforeCount){
@@ -103,9 +103,9 @@ export const vocaPlay =  handleActions({
         }
 
         return { ...state, 
-            task:{...task,wordCount:beforeCount-1,curIndex:index,}, 
+            task:{...task,words:res.words, wordCount:beforeCount-1,curIndex:index,}, 
             curIndex:index,
-            showWordInfos:newShowWordInfos
+            showWordInfos:res.showWordInfos
         }
     },
 }, defaultState);

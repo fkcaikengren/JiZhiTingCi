@@ -11,7 +11,7 @@ import FileService from './service/FileService'
 import * as Constant from './common/constant'
 import gstyles from '../../style'
 import styles from './AnalysisStyle'
-import WebUtil from './util/webUtil'
+import WebUtil from '../../common/webUtil'
 import ReadUtil from './util/readUtil';
 
 class AnalysisPage extends React.Component {

@@ -39,7 +39,7 @@ class SwipeableFlatList extends React.Component {
   }
 
   //关闭滑块
-  close = ()=>{
+  closePassBtn = ()=>{
     if(this.state.openRowKey !== null){
       this.setState({
         openRowKey: null,

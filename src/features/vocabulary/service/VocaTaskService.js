@@ -1,5 +1,6 @@
 
 
+
 import * as Constant from '../common/constant'
 import _util from '../../../common/util'
 import VocaUtil from '../common/vocaUtil'
@@ -54,9 +55,12 @@ export default class VocaTaskService {
             let copyTasks = []
             let reviewTask = null
             let reviewTasks = []
-            //2. 浅拷贝
+            //2. 深拷贝
             for(let task of tasks){
                 let copyTask = VocaUtil.copyTaskDeep(task)
+                for(let copyWord of copyTask.words){
+                    copyWord.testWrongNum = 0
+                }
                 copyTasks.push(copyTask)
                 //生成1复任务
                 if(copyTask.status === Constant.STATUS_0){
@@ -92,6 +96,7 @@ export default class VocaTaskService {
     filterTasks = (rawTasks)=>{
         let isFirst = false
         let oldTasks = rawTasks.filter((task, index)=>{
+            task.curIndex = 0                           //curIndex 置零
             if(task.status === Constant.STATUS_0 ){     //新学任务
                 if(task.process !== Constant.IN_LEARN_FINISH){
                     isFirst = true

@@ -492,6 +492,27 @@ yarn add react-native-easy-toast
 
 
 
+
+
+### 实现后台任务react-native-background-task
+
+```
+yarn add react-native-background-task
+react-native link react-native-background-task
+手动添加 BackgroundTaskPackage.useContext(this);
+```
+
+
+
+### 实现后台定时调用react-native-background-timer
+
+```
+yarn add react-native-background-timer
+手动link
+```
+
+
+
 # 调试
 
 1. ### 调试本地数据库

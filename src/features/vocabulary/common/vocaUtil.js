@@ -170,15 +170,20 @@ export default class VocaUtil{
      * @returns {string}
      */
     static genTaskName = (taskOrder)=>{
-        let name = ''
-        if(taskOrder < 10){
-            name = '00'+taskOrder
-        }else if(taskOrder < 100){
-            name = '0'+taskOrder
+        if(taskOrder){
+            let name = ''
+            if(taskOrder < 10){
+                name = '00'+taskOrder
+            }else if(taskOrder < 100){
+                name = '0'+taskOrder
+            }else{
+                name = ''+taskOrder
+            }
+            return name
         }else{
-            name = ''+taskOrder
+            return ''
         }
-        return name
+        
     }
 
 
@@ -197,16 +202,16 @@ export default class VocaUtil{
      * @description 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
      * @memberof VocaUtil
      */
-    static randomArr = (minNum, maxNum, num) => {
+    static randomArr = (minNum, maxNum, numArr) => {
         //判断错误
-        if((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof num !== "number")){
-            throw new Error('参数类型错误，minNum, maxNum, num 应该是number')
+        if((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof numArr !== "object")){
+            throw new Error('参数类型错误，minNum, maxNum must be number, numArr must be object ')
         }
         let options = []
 
         for(let i of [1,2,3]){ //产生3个选项
             let option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
-            while(options.includes(option) || option == num){
+            while(options.includes(option) || numArr.includes(option)){
                 option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
             }
             options.push(option)
@@ -294,7 +299,7 @@ export default class VocaUtil{
 
 
     /** 
-     * 在任务中pass单词，返回pass后的新的words和showInfos
+     * 在任务中pass单词，返回pass后的新的{words,showInfos}
      * 如果shouldFilter=false, 不进行过滤的话，则返回pass的单词
      */
     static passWordInTask = (words,word,taskOrder,beforeCount,showWordInfos, shouldFilter=true)=>{
@@ -336,9 +341,28 @@ export default class VocaUtil{
             }
             return null
         }
+    }
 
-        
+    //获取单词在wordInfos中的下标
+    static getIndexInWordInfos = (curWord, wordInfos)=>{
+        for(let i in wordInfos){
+            if(wordInfos[i].word === curWord){
+                return i
+            }
+        }
+    }
 
+    //统计单词（未passed）的错误平均数
+    static calculateWrongAvg = (words,)=>{
+        let count = 0
+        let sum = 0
+        for(let w of words){
+            if(w.passed !== true){ 
+                sum += w.wrongNum
+                count++
+            }
+        }
+        return (sum/count).toFixed(1)
     }
     
 }

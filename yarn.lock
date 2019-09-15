@@ -9506,6 +9506,16 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.npm.taobao.org/react-lifecycles-compat/download/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha1-TxonOv38jzSIqMUWv9p4+HI1I2I=
 
+react-native-background-task@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npm.taobao.org/react-native-background-task/download/react-native-background-task-0.2.1.tgz#9d110ed14b245e0d8b9ec8114ce24b33ddda65de"
+  integrity sha1-nREO0UskXg2LnsgRTOJLM93aZd4=
+
+react-native-background-timer@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npm.taobao.org/react-native-background-timer/download/react-native-background-timer-2.1.1.tgz#9a2489681ab2f8033c213c73272e9d4c47572cd5"
+  integrity sha1-miSJaBqy+AM8ITxzJy6dTEdXLNU=
+
 react-native-calendars@^1.141.0:
   version "1.141.0"
   resolved "https://registry.npm.taobao.org/react-native-calendars/download/react-native-calendars-1.141.0.tgz#b15824fbe6799f8af8942cc422456f9a3f9ece00"

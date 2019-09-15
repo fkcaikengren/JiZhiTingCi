@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bigview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:alpha="0.7">
+    <!--android:background="#65cb65"  -->
+    <LinearLayout
+        android:id="@+id/big_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:src="@mipmap/h_icon"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3">
+            <TextView
+                android:id="@+id/big_name"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:text="爱听词"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="#303030"
+                android:textSize="16dp" />
+            <TextView
+                android:id="@+id/big_word"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:text="limit"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="#303030"
+                android:textSize="16dp"
+                android:layout_below="@id/big_name"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/big_bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_below="@id/big_topBar">
+
+        <TextView
+            android:id="@+id/big_listen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="听"
+            android:lineHeight="30dp"
+            android:textSize="26dp"
+            android:textColor="#404040"
+            android:paddingBottom="2dp"
+            android:gravity="center"
+            />
+
+        <ImageButton
+            android:id="@+id/big_preBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:src="@drawable/ic_pre" />
+
+        <ImageButton
+            android:id="@+id/big_playBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/big_nextBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:src="@drawable/ic_next" />
+        <ImageButton
+            android:id="@+id/big_closeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:src="@drawable/ic_close" />
+
+    </LinearLayout>
+</RelativeLayout>

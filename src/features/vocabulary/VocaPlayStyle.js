@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'flex-start',
         alignItems:'center',
-        width:width,
+        width:'100%',
         height:360,
         backgroundColor: "#FDFDFD"
     },
@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'flex-start',
-        
     },  
     nameText: {
         fontSize: 16,
@@ -166,7 +165,11 @@ const styles = StyleSheet.create({
         fontSize:12,
         lineHeight: 16,
     },
-   
+    WrongAvgDot: {
+        width:4,
+        height:4,
+        borderRadius:20
+    }
 
   
     

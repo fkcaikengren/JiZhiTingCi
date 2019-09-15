@@ -1,6 +1,7 @@
 
 const Realm = require('realm');
 const uuidv4 = require('uuid/v4');
+import AsyncStorage from '@react-native-community/async-storage';
 
 //总结： realm 1对多
 // 1. 建表

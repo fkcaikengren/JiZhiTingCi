@@ -27,11 +27,15 @@ VocaDao.getInstance().open()
 VocaTaskDao.getInstance().open()
 VocaGroupDao.getInstance().open()
 
+
+
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor:'#FDFDFD',
   }
 });
+
 
 /**
  *Created by Jacy on 19/05/11.
@@ -39,8 +43,6 @@ const styles = StyleSheet.create({
 export default class App extends React.Component {
   render(){
     return(
-
-      
       <Provider store={store}>
         <MenuProvider>
           <Root>

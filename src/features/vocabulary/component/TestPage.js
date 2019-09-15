@@ -147,7 +147,7 @@ export default class TestPage extends Component {
 
         
         
-        this._genOptions(task.curIndex, this.wordInfos.length)  //第一次生成选项
+        this._genOptions(task.curIndex,showWordInfos[task.curIndex], this.wordInfos)  //第一次生成选项
         this.setState({task, showWordInfos, curIndex:task.curIndex, 
             testArr, leftCount:wordCount, curCount:curCount})
         this._countDown()
@@ -189,16 +189,11 @@ export default class TestPage extends Component {
 
 
      //产生选项和答案
-     _genOptions = (curIndex, length)=>{
-        //判断错误
-        const r1 = typeof curIndex
-        const r2 = typeof length
-        if((r1 !== "number") || (r2 !== "number")){
-            throw new Error(`参数类型错误，curIndex:${r1}; length:${r2}. curIndex, length 应该是number`)
-        }
+     _genOptions = (curIndex, curWord, wordInfos)=>{
         //生成选项
+        const rightIndex = vocaUtil.getIndexInWordInfos(curWord, wordInfos)
         this.answerIndex = vocaUtil.randomNum(0,3)                  //产生一个随机下标
-        this.options = vocaUtil.randomArr(0, length-1, curIndex)     //3个选项
+        this.options = vocaUtil.randomArr(0, wordInfos.length-1, [curIndex,rightIndex])     //3个选项
         this.options.splice(this.answerIndex, 0, curIndex)          //插入正确答案      
     }
 
@@ -289,7 +284,7 @@ export default class TestPage extends Component {
             }
         }
 
-        return {task, showWordInfos, testArr, curIndex:this.setState.curIndex} 
+        return {task, showWordInfos, testArr, curIndex:this.state.curIndex} 
     }
 
     // 测试下一个单词
@@ -397,7 +392,7 @@ export default class TestPage extends Component {
             this.audioFetch.releaseSound()
         }else{     //测试下一词
 
-            this._genOptions(nextIndex, this.wordInfos.length)   
+            this._genOptions(nextIndex, this.state.showWordInfos[nextIndex], this.wordInfos)   
             const newState = {
                 ...nextState,
                 curIndex:nextIndex, 
@@ -536,8 +531,10 @@ export default class TestPage extends Component {
                     barStyle="light-content" // or directly
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
-                            this._calculateNextStateByPassed() //计算pass的单词
-                            this.props.updateTask({...task,curIndex:curIndex})
+                            const nextState = this._calculateNextStateByPassed() //计算pass的单词
+                            console.log('--返回--')
+                            console.log(nextState)
+                            this.props.updateTask({...nextState.task,curIndex:nextState.curIndex})
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
                             this.audioFetch.releaseSound()
                         }}></AliIcon> }

@@ -2,14 +2,15 @@
 
 'use strict';
 import React, { Component } from 'react';
-import {
-  StyleSheet,Text,View,Image,Animated,RefreshControl, Button, TouchableOpacity
+import {StatusBar,StyleSheet,Text,View,Image,Animated,RefreshControl, Button, TouchableOpacity
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import * as Progress from '../../../component/react-native-progress';
+import { WebView } from 'react-native-webview';
+
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
+import WebUtil from '../../../common/webUtil';
 
 
 const Dimensions = require('Dimensions');
@@ -45,9 +46,9 @@ export default class HomeHeader extends Component {
         parallaxHeaderHeight={HEADER_HEIGHT}
         stickyHeaderHeight={TITLE_HEIGHT}
         showsVerticalScrollIndicator={false}
-        renderStickyHeader={this.renderTitle}
+        renderStickyHeader={this.renderStickyHeader}
         renderForeground={this.renderHeader}
-        renderBackground={this.renderBackground}
+        renderFixedHeader={this.renderFixedHeader}
         scrollEvent={this.onScroll}
         >
         <Animated.View style={[{transform}, styles.childrenView]}>
@@ -58,26 +59,22 @@ export default class HomeHeader extends Component {
     );
   }
 
+  renderFixedHeader = ()=>{
+    return   <View style={styles.fixedSection}>
+      <Image source={require('../../../image/h_icon.png')} style={styles.headerIcon}/>
+      <AliIcon name='chazhao' size={22} color='#FFF'  onPress={this._navVocaSearch} />
+    </View>
+  }
+
   onScroll = (e)=>{
     this.state.shift.setValue(e.nativeEvent.contentOffset.y);
   }
-  
-  //头部背景
-  renderBackground = ()=> {
-    return (
-      <Image source={require('../../../image/h2.jpg')}/>
-    );
-  }
 
   /**吸顶标题栏 */
-  renderTitle = ()=> {
+  renderStickyHeader = ()=> {
     return (
       <View style={styles.stickyHeaderView}>
-        <View style={{flexDirection:'row',paddingLeft:5}}>
-          <Image source={require('../../../image/h_icon.png')} style={{width:30,height:30,borderRadius:30}}/>
-          <Text style={{color:'#FFF', fontSize:20, paddingLeft:5}}>四级词汇书</Text>
-        </View>
-        <AliIcon name='chazhao' size={22} color='#FFF' onPress={this._navVocaSearch} />
+        <Text style={{color:'#FFF', fontSize:20, paddingLeft:5}}>四级词汇书</Text>
     </View>
     )
   }
@@ -105,40 +102,34 @@ export default class HomeHeader extends Component {
   //头部
   renderHeader = ()=> {
     return (
-        <View style={styles.headerView}>
-          {/* 头部的顶部栏 */}
-          <View style={{
-            width:SCREEN_WIDTH-20,
-            height:TITLE_HEIGHT,
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center',
-          }}>
-            <Image source={require('../../../image/h_icon.png')} style={styles.headerIcon}/>
-            <AliIcon name='chazhao' size={22} color='#FFF' onPress={()=>alert('gg')} />
-          </View>
-          {/* 环形进度条 */}
-          <Progress.Circle 
-            size={140} 
-            progress={0.20}
-            animated={false}
-            color='#1890FF'         //环形填充色
-            unfilledColor="#F29F3F"    //环形未填充色
-            fill="#EFEFEF"             //内部填充色
-            thickness={5}
-        
-          showsText={true}
-          formatText = {progress => <View style={styles.c_center}>
-            <Text style={{color:'#1890FF', fontSize:40}}>{`${Math.round(progress * 100)}%`}</Text>
-            <Text style={{color:'#1890FF', fontSize:10}}>已持续5天</Text>
-          </View>}
-          />
-          {/* 头部的底部栏 */}
+      <View style={[styles.webContainer]}>
+          <WebView
+              nativeConfig={{props: {webContentsDebuggingEnabled: true}}} 
+              ref={r => (this.webref = r)}
+              originWhiteList={['*']} // 访问本地html时，需设置源的白名单为所有
+              javaScriptEnabled={true}
+              // 接受web的数据
+              onMessage={this._onMessage}
+              onError={(error) => {
+                  console.log("error", error);
+              }}
+              // 发送给web的初始化脚本
+              injectedJavaScript={WebUtil.PROGRESS_LISTEN_JAVASCRIPT}
+              source={{
+                  uri:'file:///android_asset/web/progress.html',
+                  // <script src='./js/zepto.min.js'/>会以这个为根目录查找资源，否则引入的zepto.js等无效
+                  baseUrl:'file:///android_asset/web/',  
+              }}
+              style={{
+                borderWidth:1,
+                backgroundColor:'#FFe957',
+
+              }}
+          /> 
+          {/* 功能按钮 */}
           <View style={styles.headerBottom}>
-            <View style={gstyles.r_start}>
-              <Text style={styles.bottom_font}>四级词汇书</Text>
-              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaLib}>
-                <Text style={styles.changeBtn}>更换</Text>
+              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaList}>
+                <AliIcon name='icon-test' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaList}>
                 <AliIcon name='ai-list' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
@@ -146,11 +137,43 @@ export default class HomeHeader extends Component {
               <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaGroup}>
                 <AliIcon name='yuedu' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
               </TouchableOpacity>
-              
-            </View>
-            <Text style={styles.bottom_font}>任务 1/6</Text>
+              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaGroup}>
+                <AliIcon name='yingyong-beidanci-yingyongjianjie' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
+              </TouchableOpacity>
           </View>
-        </View>
+      </View>
+      
+    );
+  }
+
+  _onMessage = (e) =>{
+      let data = JSON.parse(e.nativeEvent.data);
+      console.log(data)
+      switch(data.command){
+          case 'initStart':
+              console.log('-------------------initStart------------------------------');
+              this._sendInitMessage()
+          break;
+          case "themeChanged":
+              console.log(data.payload.themeIndex);
+          break;
+          
+          
+      }
+  }
+  _sendInitMessage = ()=>{
+    // const themes
+    //创建option
+    const data = [0.6, 0.4, 0.2, ];
+    const formatter = '30%';
+    const themeIndex = 4
+    //发送option给Web
+    this.webref.postMessage(
+        JSON.stringify({command:'update', payload:{
+          data:data,
+          formatter:formatter,
+          themeIndex:themeIndex
+        }})
     );
   }
 
@@ -163,17 +186,35 @@ const styles = StyleSheet.create({
     height: 100
   },
   
-  headerView: {
-    flexDirection:'column',
-    justifyContent:'flex-start',
-    alignItems:'center',
-    height:HEADER_HEIGHT,
-  },
   headerIcon:{
     width:36,
     height:36,
     borderRadius:30
   },
+  stickyHeaderView: {
+    height:TITLE_HEIGHT,
+    marginLeft: 10+TITLE_HEIGHT,
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+  },
+  fixedSection:{
+    width:width,
+    height:TITLE_HEIGHT,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    paddingHorizontal:10,
+    position: 'absolute',
+    top:0,
+  },
+
+  webContainer:{
+    width:width,
+    height: 290,
+    backgroundColor:'#FFe957'
+  },
+
   headerBottom: {
     width:SCREEN_WIDTH,
     flexDirection:'row',
@@ -181,22 +222,9 @@ const styles = StyleSheet.create({
     alignItems:'center',
     position:'absolute',
     bottom:40,
-    paddingHorizontal:10,
+    paddingHorizontal:40,
   },
-  forecast: {
-    fontSize: 14,
-    textAlign: 'center',
-    paddingTop: 3,
-    color: '#fff'
-  },
-  stickyHeaderView: {
-    height:TITLE_HEIGHT,
-    width:SCREEN_WIDTH-10,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
-  },
-
+ 
   bottomView: {
     flexDirection: 'row',
     justifyContent: 'center',

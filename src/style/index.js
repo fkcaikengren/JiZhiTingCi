@@ -39,6 +39,11 @@ const gstyles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
+    c_center_start:{
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'flex-start',
+    },
     c_start:{
         flexDirection:'column',
         justifyContent:'flex-start',
@@ -81,6 +86,10 @@ const gstyles = StyleSheet.create({
         backgroundColor: '#FDFDFD',
        
     },
+    serialText: {
+        fontSize: 16,
+        color:'#404040'
+    },  
 });
 
 export default gstyles

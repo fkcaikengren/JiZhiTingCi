@@ -9,6 +9,7 @@ import Task from './component/Task';
 import HomeFooter from './component/HomeFooter';
 import VocaTaskService from './service/VocaTaskService'
 import * as HomeAction from './redux/action/homeAction'
+import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 
 class HomePage extends Component {
@@ -41,6 +42,7 @@ class HomePage extends Component {
             }
         }, 2000)
 
+
         //toastRef 引起刷新
         this.setState({toastRef:this.refs.toastRef})
 
@@ -48,15 +50,17 @@ class HomePage extends Component {
 
 
     render() {
+        const {task} = this.props.vocaPlay
         return (
             <View style={styles.container}>
+                <View style={styles.statusBar} />
                 {/*顶部背景和任务列表 */}
                 <HomeHeader {...this.props}  >
                     <Task {...this.props} tasks={this.props.home.tasks} toastRef={this.state.toastRef}/>
                 </HomeHeader>
 
                 {/* 底部播放控制 */}
-                {/* <HomeFooter {...this.props} task={task}/> */}
+                <HomeFooter {...this.props} task={task}/>
                 <Toast
                     ref="toastRef" 
                     position='top'
@@ -78,7 +82,8 @@ const mapStateToProps = state =>({
   
   
 const mapDispatchToProps = {
-    loadTasks: HomeAction.loadTasks
+    loadTasks: HomeAction.loadTasks,
+    changePlayTimer : VocaPlayAction.changePlayTimer,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 

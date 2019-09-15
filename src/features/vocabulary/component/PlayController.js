@@ -3,6 +3,9 @@ import {Platform, StatusBar, FlatList,View, Text, TouchableNativeFeedback, Touch
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {WhiteSpace} from '@ant-design/react-native'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
+import BackgroundTimer from 'react-native-background-timer';
+import NotificationManage from '../../../modules/NotificationManage'
+
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import styles from '../VocaPlayStyle'
@@ -63,9 +66,16 @@ export default class PlayController extends React.Component {
             //暂停
             clearTimeout(autoPlayTimer);
             changePlayTimer(0);
+            NotificationManage.pause((e)=>{
+                console.log(e)
+            },()=>null);
+
         }else {
             //播放
             this.props.autoplay(curIndex);
+            NotificationManage.play((e)=>{
+                console.log(e)
+            },()=>null);
         }
     }
 
@@ -95,12 +105,12 @@ export default class PlayController extends React.Component {
                     alignItems:'center',
                 }}>
                  {/* 英文单词按钮 */}
-             
-                    <TouchableWithoutFeedback onPress={this.props.toggleWord}>
-                        <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>
-                            en
-                        </Text>
-                    </TouchableWithoutFeedback>
+                    <View 
+                        onStartShouldSetResponder={(e)=>true}
+                        onResponderGrant={(e)=>toggleWord()}
+                        >
+                        <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>en</Text>
+                    </View>
                     {/* 主题按钮 */}
                     <Menu onSelect={this._chooseTheme} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
                         <MenuTrigger  text={Theme.themeName} customStyles={{triggerText: styles.triggerText,}}/>
@@ -136,11 +146,12 @@ export default class PlayController extends React.Component {
                         </MenuOptions>
                     </Menu>
                     {/* 中文按钮 */}
-                    <TouchableWithoutFeedback onPress={this.props.toggleTran}>
-                        <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>
-                            zh
-                        </Text>
-                    </TouchableWithoutFeedback>
+                    <View 
+                        onStartShouldSetResponder={(e)=>true}
+                        onResponderGrant={(e)=>toggleTran()}
+                        >
+                        <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>zh</Text>
+                    </View>
                 </Row>
             
                 <WhiteSpace size='md'/>
@@ -155,7 +166,7 @@ export default class PlayController extends React.Component {
                         justifyContent:'center',
                         alignItems:'center',
                     }}>
-                        <Text style={{color:'#fff' , marginRight:5}}>{wordCount==0?0:curIndex+1}</Text>
+                        <Text style={{color:'#fff' , marginRight:5}}>{(wordCount==0 || wordCount==undefined)?0:curIndex+1}</Text>
                         <Progress.Bar 
                             progress={wordCount==0?0:progressNum}  //
                             height={2} 
