@@ -65,8 +65,8 @@ export default class Task extends Component {
           };
         }
         //计算进度
-        const processNum = VocaUtil.calculateProcess(item)
-        // if(item.status === Constant.STATUS_0 && processNum !== 100){
+        const progressNum = VocaUtil.calculateProcess(item)
+        // if(item.status === Constant.STATUS_0 && progressNum !== 100){
         //   isAllLearned = false
         // }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
         //   disable = true
@@ -76,7 +76,7 @@ export default class Task extends Component {
           <TaskItem {...this.props} 
           index={index+1} 
           item={item} 
-          processNum={processNum}
+          progressNum={progressNum}
           separator={separator} 
           disable={disable}
           />

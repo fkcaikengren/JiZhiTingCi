@@ -1,37 +1,24 @@
 import {StyleSheet} from 'react-native'
+import gstyles from '../../style';
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#FDFDFD',
+        backgroundColor: gstyles.bgGray,
         flex: 1
     },
     content:{
         flex:1,
         paddingHorizontal:10,
     },
-    center:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    row:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'center',
-    },
-    col:{
-        flexDirection:'column',
-        justifyContent:'flex-start',
-        alignItems:'center',
-    },
+   
     groupItem:{
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        backgroundColor:'#F0F0F0',
-        borderRadius:4,
+        backgroundColor:'#FFF',
+        borderRadius:12,
         marginTop:16, 
         paddingVertical:10
     },
@@ -39,7 +26,7 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'#1890FF',
+        backgroundColor:'#FFE957',
         width:40,
         height:40,
         borderRadius:100,
@@ -48,7 +35,8 @@ const styles = StyleSheet.create({
     modal: {
         width:width-100,
         height: 230,
-        backgroundColor: "#EFEFEF"
+        backgroundColor: "#FFF",
+        borderRadius:12,
     },
     buttongGroup:{
         width:width-100,

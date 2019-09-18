@@ -13,6 +13,7 @@ import {createHttp} from './src/common/http'
 import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
+import gstyles from './src/style';
 
 
 
@@ -28,11 +29,10 @@ VocaTaskDao.getInstance().open()
 VocaGroupDao.getInstance().open()
 
 
-
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:'#FDFDFD',
+    flex:1,
+    backgroundColor:gstyles.bgLightGrey,
   }
 });
 

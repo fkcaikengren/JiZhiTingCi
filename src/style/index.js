@@ -4,6 +4,7 @@ const {width, height} = Dimensions.get('window');
 const StatusBarHeight = StatusBar.currentHeight;
 
 const gstyles = StyleSheet.create({
+    //布局
     r_center:{
         flexDirection:'row',
         justifyContent:'center',
@@ -58,12 +59,7 @@ const gstyles = StyleSheet.create({
         borderColor: '#F4F4F4',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
-    pageTitle:{
-        color:'#FFF', 
-        fontSize:18
-    },
-
-
+    //Modal
     modal: {
         width:width,
         height: height-StatusBarHeight-80,
@@ -90,6 +86,137 @@ const gstyles = StyleSheet.create({
         fontSize: 16,
         color:'#404040'
     },  
+
+    //文字
+    pageTitle:{
+        color:'#FFF', 
+        fontSize:18
+    },
+    //灰色
+    xs_lightGray:{
+        color: '#AAA',
+        fontSize: 12
+    },
+    sm_lightGray:{
+        color: '#AAA',
+        fontSize: 14
+    },
+    md_lightGray:{
+        color: '#AAA',
+        fontSize: 16
+    },
+    lg_lightGray:{
+        color: '#AAA',
+        fontSize: 18
+    },
+    xl_lightGray:{
+        color: '#AAA',
+        fontSize: 20
+    },
+
+    //浅灰色
+    xs_gray:{
+        color: '#909090',
+        fontSize: 12
+    },
+    sm_gray:{
+        color: '#909090',
+        fontSize: 14
+    },
+    md_gray:{
+        color: '#909090',
+        fontSize: 16
+    },
+    lg_gray:{
+        color: '#909090',
+        fontSize: 18
+    },
+    xl_gray:{
+        color: '#909090',
+        fontSize: 20
+    },
+
+
+    //浅黑色
+    xs_lightBlack:{
+        color: '#303030',
+        fontSize: 12
+    },
+    sm_lightBlack:{
+        color: '#303030',
+        fontSize: 14
+    },
+    md_lightBlack:{
+        color: '#303030',
+        fontSize: 16
+    },
+    lg_lightBlack:{
+        color: '#303030',
+        fontSize: 18
+    },
+    xl_lightBlack:{
+        color: '#303030',
+        fontSize: 20
+    },
+
+    //黑色
+    xs_black:{
+        color: '#202020',
+        fontSize: 12
+    },
+    sm_black:{
+        color: '#202020',
+        fontSize: 14
+    },
+    md_black:{
+        color: '#202020',
+        fontSize: 16
+    },
+    lg_black:{
+        color: '#202020',
+        fontSize: 18
+    },
+    xl_black:{
+        color: '#202020',
+        fontSize: 20
+    },
+
+    //白色
+    xs_white:{
+        color: '#FFF',
+        fontSize: 12
+    },
+    sm_white:{
+        color: '#FFF',
+        fontSize: 14
+    },
+    md_white:{
+        color: '#FFF',
+        fontSize: 16
+    },
+    lg_white:{
+        color: '#FFF',
+        fontSize: 18
+    },
+    xl_white:{
+        color: '#FFF',
+        fontSize: 20
+    },
+
+
 });
+
+
+//** 颜色  */
+gstyles.mainColor = '#FFE957'
+gstyles.secColor = '#F29F3F'
+gstyles.emColor = '#F2753F'
+gstyles.infoColor = '#1890FF'
+gstyles.bgLightGray = '#FDFDFD'
+gstyles.bgGray = '#EFEFEF'
+gstyles.lightBlack = '#303030'
+gstyles.black = '#202020'
+gstyles.gray = '#909090'
+gstyles.lightGray = '#AAA'
 
 export default gstyles

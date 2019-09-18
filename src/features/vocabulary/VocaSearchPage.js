@@ -7,6 +7,8 @@ import DetailDictPage from './component/DetailDictPage';
 import styles from './VocaSearchStyle'
 import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
+import VocaUtil from './common/vocaUtil';
+import VocaCard from './component/VocaCard';
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -23,40 +25,37 @@ export default class VocaSearchPage extends Component {
       searchText: '',
       data:[],
       searchWord: '',
-      tran:'',
+      selectedIndex:null,
       showClearBtn:false,
     }
-    this.vocaDao = new VocaDao();
-    this.vocaGroupDao = new VocaGroupDao()
+    this.vocaDao = VocaDao.getInstance()
+    this.vocaGroupDao = VocaGroupDao.getInstance()
 
     console.disableYellowBox = true;
   }
 
   componentDidMount(){
-    this.vocaDao.open()
-    this.vocaGroupDao.open()
   }
 
 
   componentWillUnmount(){
-    this.vocaDao.close()
-    this.vocaGroupDao.close()
   }
 
 
-  _keyExtractor = (item, index) => item.word;
+  _keyExtractor = (item, index) => item.word+index;
   
   
-  _renderItem = ({item})=>{
+  _renderItem = ({item,index})=>{
+    const translation = VocaUtil.transToText(item.trans)
     return <TouchableOpacity  onPress={()=>{
-      this.setState({searchWord:item.word, tran:item.trans})
+      this.setState({searchWord:item.word, selectedIndex:index})
     }}>
       <View  style={styles.item}>
           <View style={gstyles.r_start}>
               <Text style={[styles.contentText,{fontSize:16,color:'#404040'}]}>{item.word}</Text>
               <Text style={[styles.contentText,{fontSize:12,color:'#999999'}]}>{item.enPhonetic}</Text>
           </View>
-          <Text numberOfLines={1} style={[styles.contentText,{fontSize:12,color:'#606060'}]}>{item.trans}</Text>
+          <Text numberOfLines={1} style={[styles.contentText,{fontSize:12,color:'#606060'}]}>{translation}</Text>
       </View>
     </TouchableOpacity>
     
@@ -131,15 +130,12 @@ export default class VocaSearchPage extends Component {
                 data={this.state.data}
                 renderItem={this._renderItem}
                 keyExtractor={this._keyExtractor}
+                extraData={this.state}
             />
           }
 
           {this.state.searchWord !== ''&&
-            <DetailDictPage 
-            vocaDao={this.vocaDao}
-            vocaGroupDao={this.vocaGroupDao}
-            word={this.state.searchWord} 
-            tran={this.state.tran}/>
+            <VocaCard wordInfo={this.state.data[this.state.selectedIndex]}/>
           }
        
       </View>

@@ -100,15 +100,20 @@ export default class VocaTaskDao {
      * 保存任务数据
      * @param tasks
      */
-    saveVocaTasks = (tasks)=>{
+    saveVocaTasks = (tasks, wordCount)=>{
         try{
+            for(let t of tasks){
+                t.wordCount = wordCount
+            }
             this.realm.write(()=>{
                 for(let task of tasks){
+                    console.log(task.taskOrder)
                     this.realm.create('VocaTask', task);
                 }
             })
+            console.log('VocaTasks 保存成功，结束！')
         }catch(e){
-            console.log('VocaTasks 保存失败')
+            console.log('VocaTasks 保存失败！')
             console.log(e)
         }
     }

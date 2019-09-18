@@ -71,6 +71,7 @@
 		0DB3AF615A704339A45291F4 /* antfill.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7B7EBEDED044C85B8DB657A /* antfill.ttf */; };
 		883874EED8034550BC641FF3 /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F124C89E58140C1AEE9A8B5 /* antoutline.ttf */; };
 		5CA441CE540D44BCAB44B484 /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18BDFD26809E47388386A494 /* libRNCWebView.a */; };
+		D035F506DB1E44E8AA84698C /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 245877931B0743E1BD042CF6 /* libCodePush.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -418,6 +419,8 @@
 		1F124C89E58140C1AEE9A8B5 /* antoutline.ttf */ = {isa = PBXFileReference; name = "antoutline.ttf"; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		8425874EC6DF40A18081B49D /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; name = "RNCWebView.xcodeproj"; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		18BDFD26809E47388386A494 /* libRNCWebView.a */ = {isa = PBXFileReference; name = "libRNCWebView.a"; path = "libRNCWebView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		CE4164A0294548AF8E21B2DB /* CodePush.xcodeproj */ = {isa = PBXFileReference; name = "CodePush.xcodeproj"; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		245877931B0743E1BD042CF6 /* libCodePush.a */ = {isa = PBXFileReference; name = "libCodePush.a"; path = "libCodePush.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,6 +459,7 @@
 				53F80553EA5C4AD2874F4EB1 /* libc++.tbd in Frameworks */,
 				E17C0D157CB844E5975EED1A /* libz.tbd in Frameworks */,
 				5CA441CE540D44BCAB44B484 /* libRNCWebView.a in Frameworks */,
+				D035F506DB1E44E8AA84698C /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +661,7 @@
 				BDD3189256EC4DE3B711993F /* RNCAsyncStorage.xcodeproj */,
 				4DE73E25F73B4FC797962552 /* RealmReact.xcodeproj */,
 				8425874EC6DF40A18081B49D /* RNCWebView.xcodeproj */,
+				CE4164A0294548AF8E21B2DB /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1334,6 +1339,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1345,6 +1351,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Debug;
@@ -1367,6 +1374,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1378,6 +1386,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Release;
@@ -1408,6 +1417,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Debug;
@@ -1437,6 +1447,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Release;
@@ -1467,6 +1478,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1478,6 +1490,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Debug;
@@ -1508,6 +1521,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1519,6 +1533,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Release;
@@ -1548,6 +1563,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1559,6 +1575,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Debug;
@@ -1588,6 +1605,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1599,6 +1617,7 @@
 					"$(SRCROOT)\..\node_modules\@react-native-community\async-storage\ios",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
+					"$(SRCROOT)\..\node_modules\react-native-code-push\ios\CodePush/**",
 				);
 			};
 			name = Release;

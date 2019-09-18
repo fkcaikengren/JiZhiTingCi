@@ -103,31 +103,6 @@ export default class DetailDictPage extends Component {
     }
   }
 
-  _addWord = ()=>{
-    const {word, properties} = this.state.wordDict         
-    let groupWord = {
-      word: word,
-      enPhonetic: properties?properties[0].enPhonetic:'',
-      enPronUrl: properties?properties[0].enPronUrl:'',
-      amPhonetic: properties?properties[0].amPhonetic:'',
-      amPronUrl: properties?properties[0].amPronUrl:'',
-      tran: this.props.tran?this.props.tran: null //如果没有外界传入，则需要查一遍
-    }
-    const vocaGroupDao = this.props.vocaGroupDao?this.props.vocaGroupDao:this.vocaGroupDao
-    if(vocaGroupDao.addWordToDefault(groupWord)){
-      this.setState({added:true})
-    }
-  }
-
-  _removeWord = ()=>{
-    const {word} = this.state.wordDict   
-    const vocaGroupDao = this.props.vocaGroupDao?this.props.vocaGroupDao:this.vocaGroupDao
-    if(vocaGroupDao.removeWordFromDefault(word)){
-      this.setState({added:false})
-    }
-    
-    
-  }
 
 
   render() {
@@ -143,12 +118,12 @@ export default class DetailDictPage extends Component {
               {this.state.added && //从生词本移除
                 <AliIcon name='pingfen' size={22} color='#F29F3F' 
                 style={{marginRight:16}} 
-                onPress={this._removeWord}/>
+                />
               }
               {!this.state.added && //添加到生词本
                 <AliIcon name='malingshuxiangmuicon-' size={22} color='#888' 
                   style={{marginRight:16}} 
-                  onPress={this._addWord}/>
+                  />
               }
             </View>
 

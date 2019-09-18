@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import Toast from 'react-native-easy-toast'
 import {connect} from 'react-redux'
 
@@ -7,6 +7,7 @@ import styles from './HomeStyle'
 import HomeHeader from './component/HomeHeader';
 import Task from './component/Task';
 import HomeFooter from './component/HomeFooter';
+import AliIcon from '../../component/AliIcon'
 import VocaTaskService from './service/VocaTaskService'
 import * as HomeAction from './redux/action/homeAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
@@ -24,24 +25,21 @@ class HomePage extends Component {
     }
 
     componentDidMount(){
-        setTimeout(()=>{
-            const {tasks} = this.props.home
-            //加载task
-            const today = _util.getDayTime(0)
-            if(tasks.length <= 0){
+        const {tasks} = this.props.home
+        //加载task
+        const today = _util.getDayTime(0)
+        if(tasks.length <= 0){
+            const todayTasks = this.taskService.getTodayTasks(tasks)
+            this.props.loadTasks(todayTasks)
+        }else{
+            console.log(today)
+            console.log(tasks[0].vocaTaskDate)
+            if(today !== tasks[0].vocaTaskDate){  //任务过期
+                this.taskService.calculateTasks(tasks, 2)
                 const todayTasks = this.taskService.getTodayTasks(tasks)
                 this.props.loadTasks(todayTasks)
-            }else{
-                console.log(today)
-                console.log(tasks[0].vocaTaskDate)
-                if(today !== tasks[0].vocaTaskDate){  //任务过期
-                    this.taskService.calculateTasks(tasks, 2)
-                    const todayTasks = this.taskService.getTodayTasks(tasks)
-                    this.props.loadTasks(todayTasks)
-                }
             }
-        }, 2000)
-
+        }
 
         //toastRef 引起刷新
         this.setState({toastRef:this.refs.toastRef})
@@ -53,6 +51,7 @@ class HomePage extends Component {
         const {task} = this.props.vocaPlay
         return (
             <View style={styles.container}>
+               <StatusBar translucent={false} backgroundColor="#FFF"  barStyle="dark-content" />
                 <View style={styles.statusBar} />
                 {/*顶部背景和任务列表 */}
                 <HomeHeader {...this.props}  >
@@ -69,6 +68,15 @@ class HomePage extends Component {
                     fadeOutDuration={1000}
                     opacity={0.8}
                 />  
+                {this.props.home.isUploading &&
+                    <View style={{
+                        position:'absolute', 
+                        top:40,
+                        right:60,
+                    }}>
+                        <AliIcon name='tongbu' size={26} color='red'></AliIcon>
+                    </View>
+                }
             </View>
         );
     }
@@ -77,12 +85,14 @@ class HomePage extends Component {
 
 const mapStateToProps = state =>({
     home: state.home,
-    vocaPlay: state.vocaPlay
+    vocaLib: state.vocaLib,
+    vocaPlay: state.vocaPlay,
 })
   
   
 const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
+    uploadTasks : HomeAction.uploadTasks,
     changePlayTimer : VocaPlayAction.changePlayTimer,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

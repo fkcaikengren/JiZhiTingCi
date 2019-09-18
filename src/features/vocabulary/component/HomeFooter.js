@@ -17,7 +17,9 @@ const styles = StyleSheet.create({
         backgroundColor:'#FFF',
         position:'absolute',
         left:0,
-        bottom:0
+        bottom:0,
+        borderTopColor:'#EFEFEF',
+        borderTopWidth:1,
     },
 })
 

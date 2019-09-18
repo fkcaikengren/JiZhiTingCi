@@ -9,6 +9,7 @@ import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
 import RootCard from './RootCard'
 import VocaDao from '../service/VocaDao'
+import VocaGroupDao from '../service/VocaGroupDao'
 import AudioFetch from '../service/AudioFetch';
 
 const Dimensions = require('Dimensions');
@@ -77,19 +78,17 @@ export default class VocaCard extends Component{
 
     constructor(props){
         super(props)
-        this.state = {
-            added:false
-        }
-        console.disableYellowBox=true
-        
        
         this.state = {
+            added : false,
             showAll : this.props.showAll,
             wordRoot : null,
             relativeRoots : []
         }
         
         this.audioFetch = AudioFetch.getInstance()
+        this.vocaGroupDao = VocaGroupDao.getInstance()
+        console.disableYellowBox=true
         
     }
 
@@ -116,7 +115,9 @@ export default class VocaCard extends Component{
         const {wordInfo, playWord, playSentence} = this.props
         //自动发音
         if(wordInfo === nextProps.wordInfo ){
-            if(this.state.showAll === nextState.showAll){
+            if(this.state.added !== nextState.added){
+                return true
+            }else if(this.state.showAll === nextState.showAll){
                 return false
             }else{
                 return true
@@ -152,11 +153,26 @@ export default class VocaCard extends Component{
         return comps
     }
 
-    _removeWord = ()=>{
-
-    }
     _addWord = ()=>{
-
+        const {wordInfo} = this.props
+        const groupWord = {
+          word:  wordInfo.word,
+          enPhonetic:  wordInfo.en_phonetic,
+          enPronUrl:  wordInfo.en_pron_url,
+          amPhonetic:  wordInfo.am_phonetic,
+          amPronUrl:  wordInfo.am_pron_url,
+          trans:  wordInfo.trans
+        }
+        if(this.vocaGroupDao.addWordToDefault(groupWord)){
+          this.setState({added:true})
+        }
+    }
+    
+    _removeWord = ()=>{
+        const word = this.props.wordInfo.word
+        if(this.vocaGroupDao.removeWordFromDefault(word)){
+            this.setState({added:false})
+        }
     }
     // 点击显示
     _showAll = ()=>{
@@ -174,7 +190,7 @@ export default class VocaCard extends Component{
                 if(index%2 === 0){
                     return text
                 }else{
-                    return <Text style={{color:'#F2753F',fontSize:16, fontWeight:'500' }}>{text}</Text>
+                    return <Text style={{color:gstyles.emColor,fontSize:16, fontWeight:'500' }}>{text}</Text>
                 }
             })
         }
@@ -197,7 +213,7 @@ export default class VocaCard extends Component{
                             <View style={gstyles.r_end}>
                                 <Text style={styles.errBtn}>报错</Text>
                                 {this.state.added && //从生词本移除
-                                    <AliIcon name='pingfen' size={22} color='#F29F3F' 
+                                    <AliIcon name='pingfen' size={22} color={gstyles.secColor}
                                     style={{marginRight:10}} 
                                     onPress={this._removeWord}/>
                                 }
@@ -206,19 +222,12 @@ export default class VocaCard extends Component{
                                     style={{marginRight:10}} 
                                     onPress={this._addWord}/>
                                 }
-                                 <Button
-                                    type="outline"
-                                    title="词典"
-                                    buttonStyle={{height:22,borderColor:'#F29F3F',borderWidth:StyleSheet.hairlineWidth}}
-                                    titleStyle={{color:'#F29F3F', fontSize:12, lineHeight:22, paddingBottom:4}}
-                                    icon={<AliIcon name='chazhao' size={12} color='#F29F3F' />}
-                                />
                             </View>
                         </Row>
                         {/* 音标 */}
                         <Row style={[gstyles.r_start, ]}>
                             <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
-                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{marginLeft:10}} onPress={()=>{
+                            <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{marginLeft:10}} onPress={()=>{
                                 this.audioFetch.playSound(wordInfo.am_pron_url)
                             }}/>
                         </Row>
@@ -229,7 +238,7 @@ export default class VocaCard extends Component{
                         {/* 例句 */}
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
                             <Text style={[styles.darkFont, {flex:10}]}>{sen}</Text>
-                            <AliIcon name='shengyin' size={26} color='#F29F3F' style={{flex:1,marginLeft:10}} onPress={()=>{
+                            <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{flex:1,marginLeft:10}} onPress={()=>{
                                 this.audioFetch.playSound(wordInfo.sen_pron_url)
                             }}/>
                         </Row>
@@ -243,7 +252,6 @@ export default class VocaCard extends Component{
                                 </Col>
                             </Row>
                         }
-                        {/* 详细词典 */}
                     </Col>
                     {/* 场景例句 */}
                     {this.state.showAll && wordInfo.examples.length>0 &&

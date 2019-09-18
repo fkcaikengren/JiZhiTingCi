@@ -14,7 +14,7 @@ export default class TaskItem extends Component {
     index: PropTypes.number,
     item: PropTypes.object,
     separator: PropTypes.any,
-    processNum: PropTypes.number,
+    progressNum: PropTypes.number,
     disable: PropTypes.bool
   };
 
@@ -70,15 +70,19 @@ export default class TaskItem extends Component {
       
   }
 
-  _renderRight = (processNum)=>{
-      
-    if(processNum === 100){
+  _renderRight = ()=>{
+    const { item, progressNum } = this.props
+    if(progressNum === 100){
+      //上传同步数据
+      if(item.isUploaded === false && this.props.shouldUpload === true){
+        console.log('---------- start upload ---')
+        this.props.uploadTasks([item]);
+      }
+
       return <View style={styles.playView}>
-              <AliIcon name='pass' size={20} color='#1890FF'></AliIcon>
-              <Text style={[styles.statusText,{color:'#1890FF'}]}>已完成</Text>
+              <AliIcon name='pass' size={20} color={gstyles.infoColor}></AliIcon>
+              <Text style={[styles.statusText,{color:gstyles.infoColor}]}>已完成</Text>
           </View>
-       
-      
     }else{
       return <View style={styles.playView}>
               <FontAwesome name="play-circle" size={24} color="#999"/>
@@ -89,18 +93,16 @@ export default class TaskItem extends Component {
   }
 
   render() {
-    const {index, item } = this.props
+    const {index, item, progressNum, disable } = this.props
     //任务名
     const name = VocaUtil.genTaskName(item.taskOrder)
-    //任务进度
-    const processNum = this.props.processNum
-    const disableView = this.props.disable?{
+    const disableView = disable?{
       backgroundColor:'#F4F4F4'
     }:null
 
     //点击透明度
     let activeOpacity = this.props.disable?0.8:0.5
-    if(processNum === 100){
+    if(progressNum === 100){
       activeOpacity = 1
     }
     return (
@@ -117,12 +119,12 @@ export default class TaskItem extends Component {
                   <Text style={styles.nameText}>{`List-${name}`}</Text>
                   <View style={styles.noteView}>
                     <Text style={styles.labelText}>{item.status===Constant.STATUS_0?'新学':'复习'}</Text>
-                    <Text style={styles.noteText}>{`共${item.wordCount}词，已完成${processNum}%`}</Text>
+                    <Text style={styles.noteText}>{`共${item.wordCount}词，已完成${progressNum}%`}</Text>
                   </View>
                 </View>
               </View>
               {
-                this._renderRight(processNum)
+                this._renderRight()
               }
             </View>
         </View>
@@ -168,9 +170,8 @@ const styles = StyleSheet.create({
     lineHeight: 8,
     paddingHorizontal: 2,
     fontSize:8,
-    color:'#1890FF',
-    borderColor: '#1890FF',
-    borderWidth: StyleSheet.hairlineWidth,
+    color:gstyles.black,
+    backgroundColor: gstyles.mainColor,
     borderRadius: 3,
   },
   playView:{

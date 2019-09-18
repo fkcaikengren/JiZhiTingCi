@@ -25,16 +25,6 @@ export default class VocaTaskService {
         this.vtd.close()
     }
 
-    /**
-     * 保存任务数据
-     * @param tasks
-     */
-    saveVocaTasks(tasks, wordCount){
-        for(let t of tasks){
-            t.wordCount = wordCount
-        }
-        this.vtd.saveVocaTasks(tasks)
-    }
 
 
     /**
@@ -58,6 +48,8 @@ export default class VocaTaskService {
             //2. 深拷贝
             for(let task of tasks){
                 let copyTask = VocaUtil.copyTaskDeep(task)
+                copyTask.isUploaded = false         //是否上传到服务器
+                copyTask.isSyncLocal = false           //是否同步到本地数据库
                 for(let copyWord of copyTask.words){
                     copyWord.testWrongNum = 0
                 }
@@ -248,18 +240,22 @@ export default class VocaTaskService {
         try{
             for(let i=6; i>=1; i--){
                 //查询
-                let words = i===6?this.vtd.getWordsGEWrongNum(i) :this.vtd.getWordsEqWrongNum(i)
-                wrongArr.push({
-                    isHeader: true,
-                    checked:false,
-                    title: i===6?`答错超过5次, 共${words.length}词`:`答错${i}次, 共${words.length}词`
-                })
+                const words = i===6?this.vtd.getWordsGEWrongNum(i) :this.vtd.getWordsEqWrongNum(i)
+                const arr = []
                 for(let w of words){
-                    wrongArr.push({
+                    arr.push({
                         isHeader: false,
                         checked:false,
                         content: w,
                     })
+                }
+                if(arr.length > 0){
+                    wrongArr.push({
+                        isHeader: true,
+                        checked:false,
+                        title: i===6?`答错超过5次, 共${words.length}词`:`答错${i}次, 共${words.length}词`
+                    })
+                    wrongArr = wrongArr.concat(arr)
                 }
             }
 

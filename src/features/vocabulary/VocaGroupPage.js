@@ -22,8 +22,6 @@ const {width, height} = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
-VocaGroupDao.getInstance().open()
-
 export default class VocaGroupPage extends Component {
 
     constructor(props){
@@ -44,20 +42,16 @@ export default class VocaGroupPage extends Component {
     }
 
     componentDidMount(){
-        let vocaGroups = this.vgDao.getAllGroups();
-        console.log('all groups:')
-        console.log(vocaGroups.length)
-        if(vocaGroups.length == 0){
-            this.vgDao.addGroup('默认生词本')
-            this.vgDao.updateToDefault('默认生词本')
-        }
-        this.setState({vocaGroups})
-       
+       //每次聚焦到页面，更新vocaGroups
+       this._refreshGroup()
+        //监听
+        this.props.navigation.addListener('didFocus',
+        payload => {
+            console.log(payload)
+        })
     }
 
     componentWillUnmount(){
-        // alert('vocaGroup out, close realm')
-        this.vgDao.close()
     }
 
     
@@ -95,9 +89,11 @@ export default class VocaGroupPage extends Component {
                     ?this._addModalRef = ref
                     :this._updateModalRef =ref
                 }}>
-            <Text style={{fontSize:18,fontWeight:'500', color:'#F29F3F', marginBottom:10}}>{isAdd?'新建生词本':'修改生词本'}</Text>
+            <Text style={[gstyles.lg_black,{marginBottom:10}]}>
+            {isAdd?'新建生词本':'修改生词本'}
+            </Text>
             <Input
-                leftIcon={<AliIcon name='yingyong-beidanci-yingyongjianjie' size={26} color='#F29F3F'></AliIcon>}   
+                leftIcon={<AliIcon name='yingyong-beidanci-yingyongjianjie' size={26} color={gstyles.secColor}></AliIcon>}   
                 placeholder='请输入生词本名称' 
                 onChangeText={(name)=>{
                     isAdd
@@ -108,11 +104,11 @@ export default class VocaGroupPage extends Component {
                 
                 <Button type='clear' onPress={isAdd?this._closeAddModal:this._closeUpdateModal}
                 title='取消'
-                titleStyle={{fontSize:16, color:'#555'}}>
+                titleStyle={gstyles.md_gray}>
                 </Button>
                 <Button type='clear' onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}
                 title='确定'
-                titleStyle={{fontSize:16, color:'#F29F3F'}}
+                titleStyle={{fontSize:16, color:gstyles.secColor}}
                 >
                 </Button>
             </View>
@@ -181,9 +177,19 @@ export default class VocaGroupPage extends Component {
             this.refs.toast.show('删除成功', 500);
             this.setState({refresh:!this.state.refresh})
         }
-        
     }
 
+    // 刷新
+    _refreshGroup = ()=>{
+        const vocaGroups = this.vgDao.getAllGroups();
+        console.log('all groups:')
+        console.log(vocaGroups.length)
+        if(vocaGroups.length == 0){
+            this.vgDao.addGroup('默认生词本')
+            this.vgDao.updateToDefault('默认生词本')
+        }
+        this.setState({vocaGroups})
+    }
 
 
     render() {
@@ -192,18 +198,18 @@ export default class VocaGroupPage extends Component {
             <View style={styles.container}>
                 <StatusBar translucent={true} />
                 <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
+                statusBarProps={{ barStyle: 'dark-content' }}
+                barStyle='dark-content' // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
                 rightComponent={
-                    <Text style={{color:'#303030', fontSize:16, fontWeight:'normal'}}>同步</Text>
+                    <AliIcon name='tongbu' size={24} color={gstyles.black} />
                 }
                 centerComponent={{ text: '生词本', style: { color: '#303030', fontSize:18 } }}
                 containerStyle={{
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: gstyles.mainColor,
                     justifyContent: 'space-around',
                 }}
                 />
@@ -221,17 +227,18 @@ export default class VocaGroupPage extends Component {
                                 <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={()=>{
                                     //加载生词
                                     this.props.navigation.navigate('GroupVoca',{
-                                        groupName:item.groupName
+                                        groupName:item.groupName,
+                                        refreshGroup:this._refreshGroup
                                     });
                                         
                                 }}>
                                     <View style={styles.groupItem}>
-                                        <View style={[styles.row, {flex:1,}]}>
-                                            <LinearGradient colors={['#FFE957', '#F29F3F',]} style={styles.iconBg}>
-                                                <Text style={{color:'#FFF', fontSize:16, fontWeight:'500'}}>
+                                        <View style={[gstyles.r_start, {flex:1,}]}>
+                                            <View style={styles.iconBg}>
+                                                <Text style={{color:'#202020', fontSize:16, fontWeight:'500'}}>
                                                     {item.groupName[0]}
                                                 </Text>
-                                            </LinearGradient>
+                                            </View>
                                           
                                             <View>
                                                 <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10,}}>{item.groupName}</Text>
@@ -239,11 +246,11 @@ export default class VocaGroupPage extends Component {
                                             </View>
                                         </View>
                                         {!this.state.inEdit &&  item.isDefault &&
-                                            <AliIcon name='pingfen' size={26} color='#F29F3F'  style={{marginRight:10}}/>
+                                            <AliIcon name='pingfen' size={26} color={gstyles.secColor}  style={{marginRight:10}}/>
                                         }
                                         {this.state.inEdit &&
-                                            <View style={[styles.row, {flex:1}]}>
-                                                <View style={[styles.row, {flex:1, justifyContent:'flex-end'}]}>
+                                            <View style={[gstyles.r_center, {flex:1}]}>
+                                                <View style={[gstyles.r_center, {flex:1, justifyContent:'flex-end'}]}>
                                                     {/* 设置为默认生词本 */}
                                                     <AliIcon name={item.isDefault?'pingfen':'malingshuxiangmuicon-'} color={item.isDefault?'#F29F3F':'#888'} size={26} onPress={()=>{
                                                         if(!item.isDefault){ //不是默认
@@ -302,7 +309,7 @@ export default class VocaGroupPage extends Component {
                             <Button 
                             type="clear"
                             icon={ <Icon name="edit"  size={16} color="#303030" />}
-                            title={this.state.inEdit?'取消':'编辑'}
+                            title={this.state.inEdit?'完成':'编辑'}
                             titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
                             onPress={this._toggleEdit}>
                             </Button>

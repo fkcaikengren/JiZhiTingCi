@@ -52,7 +52,7 @@ const GroupWordSchema = {
     enPronUrl: 'string?',
     amPhonetic: 'string?',
     amPronUrl: 'string?',
-    tran: 'string?'
+    trans: 'string?'
   }
 };
 
@@ -348,6 +348,7 @@ export default class VocaGroupDao{
                             let w = section.words[key]
                             if(w && w.word === word ){
                                 this.realm.delete(w);
+                                defaultGroup.count = defaultGroup.count - 1
                             }
                         }
                     }else{
@@ -378,6 +379,7 @@ export default class VocaGroupDao{
         if(group){
             try{
                 this.realm.write(()=>{
+                    let delCount = 0
                     for(let word of words){ //遍历所有单词
                         let sectionName = word[0].toUpperCase()
                         let section = group.sections.filtered('section = "'+sectionName+'"')[0];
@@ -387,9 +389,9 @@ export default class VocaGroupDao{
                                 if(w && w.word === word ){
                                     result.deletedWords.push(word)
                                     this.realm.delete(w);
+                                    delCount++
                                 }
                             }
-                            console.log(section.words.length)
                             //如果section下没有单词
                             if(section.words.length <= 0){
                                 result.deletedSections.push(section.section)
@@ -397,6 +399,7 @@ export default class VocaGroupDao{
                             }
                         }
                     }
+                    group.count = group.count - delCount
                 })
             }catch (e) {
                 result.success = false

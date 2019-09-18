@@ -57,9 +57,9 @@ export default class StudyPlayController extends React.Component {
     
     //选择播放时间间隔
     _chooseInterval = (interval)=>{
+        console.log(interval)
         const {changeInterval } = this.props;
-        VocaPlayInterval = interval;
-        changeInterval(VocaPlayInterval);
+        changeInterval(interval);
         
     }
 

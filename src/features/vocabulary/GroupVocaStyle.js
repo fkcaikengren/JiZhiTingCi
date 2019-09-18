@@ -1,5 +1,6 @@
 
 import {StyleSheet, StatusBar, } from 'react-native';
+import gstyles from '../../style';
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -11,7 +12,7 @@ const SEPARATOR_HEIGHT = 1;  //分割线的高度
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:'#EFEFEF'
+        backgroundColor:gstyles.bgLightGray
     },
     iconText:{
         width:32,
@@ -32,17 +33,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#303030'
     },
-    editBtn:{
-        fontSize:14,
-        color:'#303030',
-        borderWidth:StyleSheet.hairlineWidth,
-        padding:2,
-        borderRadius:2,
-        borderColor:'#555'
-    },
+   
     itemView: {
         height: ITEM_HEIGHT,
-        backgroundColor:'#FFF',
+        backgroundColor:gstyles.bgLightGray,
         borderBottomWidth:StyleSheet.hairlineWidth,
         borderColor:'#EFEFEF',
     },

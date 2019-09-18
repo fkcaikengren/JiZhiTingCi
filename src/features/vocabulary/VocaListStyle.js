@@ -1,6 +1,8 @@
 
 import {StyleSheet} from 'react-native'
 
+import gstyles from '../../style'
+
 const styles = StyleSheet.create({
     container:{
         backgroundColor:'#FDFDFD',
@@ -19,6 +21,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         alignItems:'center',
         height:40,
+        backgroundColor:gstyles.mainColor
     },
     tabBtn:{
         flex:1,
@@ -27,9 +30,9 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     tabText:{
-        color:'#303030',
+        color: '#555',
         paddingHorizontal:4,
-        paddingBottom:5,
+        paddingBottom:4,
     },
     headerView:{
         flexDirection:'row',

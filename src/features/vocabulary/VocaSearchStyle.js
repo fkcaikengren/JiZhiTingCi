@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     searchBar:{
       height: 55, 
       width:width,
-      backgroundColor:'#EFEFEF'
+      backgroundColor:'#FFF'
     },
     searchIcon:{
       marginHorizontal:6,
@@ -19,13 +19,11 @@ const styles = StyleSheet.create({
     inputWrapper:{
       height: 36, 
       width:'80%',
-      borderColor: '#DDD', 
-      borderWidth: 1,
       borderRadius:5,
-      backgroundColor:'#FFF'
+      backgroundColor:'#EFEFEF'
     },  
     cancelBtn:{
-      color:'#1890FF',
+      color:'#202020',
       fontSize:16,
       paddingRight:5,
     },

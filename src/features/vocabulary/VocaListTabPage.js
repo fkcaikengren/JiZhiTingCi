@@ -10,6 +10,7 @@ import VocaTaskDao from "./service/VocaTaskDao";
 import VocaListPage from "./VocaListPage";
 import styles from './VocaListStyle'
 import * as Constant from './common/constant'
+import gstyles from "../../style";
 
 //暂时
 // VocaTaskDao.getInstance().open()
@@ -25,65 +26,74 @@ class VocaListTabPage extends Component {
          console.disableYellowBox=true;
     }
 
+    _movePage = (clickIndex)=>{
+        console.log(clickIndex - this.state.pageIndex)
+        this.swiperRef.scrollBy(clickIndex - this.state.pageIndex,true)
+    }
+
     render() {
-        const showCheckStyle = this.props.vocaList.onEdit?{
-            backgroundColor:'#FFE957',
-            borderColor:'#FFE957',
-        }:null
-        const selectPageStyle = {
+        const editBtn = this.props.vocaList.onEdit?<Text style={gstyles.md_black}>取消</Text>
+        :<AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
+        const selectTextStyle = {
             borderBottomWidth:2,
-            borderBottomColor:'#F29F3F'
+            color: gstyles.black,
+            borderBottomColor: gstyles.black
         }
         const index = this.state.pageIndex
 
         return (
+           
             <View style={{flex:1}}>
                 <StatusBar translucent={true} />
                 <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
+                statusBarProps={{ barStyle:'dark-content' }}
+                barStyle='dark-content' // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
-                        // this.props.navigation.goBack();
+                        this.props.navigation.goBack();
                     }} /> }
                 rightComponent={
                     <TouchableWithoutFeedback onPress={()=>{this.props.toggleEdit()}}>
-                         <Text style={[styles.editBtn,showCheckStyle]}>编辑</Text>
+                    {
+                        editBtn
+                    }
                     </TouchableWithoutFeedback>
                 }
                 centerComponent={{ text: '单词列表', style: { color: '#303030', fontSize:18 } }}
                 containerStyle={{
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: gstyles.mainColor,
+                    borderBottomColor: gstyles.mainColor,
                     justifyContent: 'space-around',
                 }}
                 />
                 <View style={styles.tabBar}>
                     <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:0})}}
+                        onStartShouldSetResponder={() => true}
+                        onResponderStart={(e)=>{this._movePage(0)}}
                     >
-                        <Text style={[styles.tabText, index===0?selectPageStyle:null]}>错词</Text>
+                        <Text style={[styles.tabText, index===0?selectTextStyle:null]}>错词</Text>
                     </View>
                     <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:1})}}
+                        onStartShouldSetResponder={() => true}
+                        onResponderStart={(e)=>{this._movePage(1)}}
                     >
-                        <Text style={[styles.tabText, index===1?selectPageStyle:null]}>PASS</Text>
+                        <Text style={[styles.tabText, index===1?selectTextStyle:null]}>PASS</Text>
                     </View>
                     <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:2})}}
+                        onStartShouldSetResponder={() => true}
+                        onResponderStart={(e)=>{this._movePage(2)}}
                     >
-                        <Text style={[styles.tabText, index===2?selectPageStyle:null]}>已学</Text>
+                        <Text style={[styles.tabText, index===2?selectTextStyle:null]}>已学</Text>
                     </View>
                     <View style={styles.tabBtn}
-                        // onStartShouldSetResponder={() => true}
-                        // onResponderStart={(e)=>{this.setState({pageIndex:3})}}
+                        onStartShouldSetResponder={() => true}
+                        onResponderStart={(e)=>{this._movePage(3)}}
                     >
-                        <Text style={[styles.tabText, index===3?selectPageStyle:null]}>未学</Text>
+                        <Text style={[styles.tabText, index===3?selectTextStyle:null]}>未学</Text>
                     </View>
                 </View>
                <Swiper 
+                    ref={ref=>this.swiperRef = ref}
                     showsPagination={false}
                     loop={false}
                     onIndexChanged={(index)=>{this.setState({pageIndex:index})}}

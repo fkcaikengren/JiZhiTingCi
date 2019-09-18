@@ -38,9 +38,11 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    bookCard: {
-        width:75,
-        height:100,
+    bookView: {
+        width:'50%',
+        paddingVertical:10,
+    },
+    imgCard:{
         marginBottom:10,
     },
     img: {

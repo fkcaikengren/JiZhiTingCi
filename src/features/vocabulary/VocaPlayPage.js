@@ -96,6 +96,7 @@ class VocaPlayPage extends React.Component {
             clickIndex : null,
         }
 
+        this.vocaPlayService.stateRef = this.isStudyMode?this.state:null
         console.disableYellowBox = true
         
     }
@@ -119,11 +120,6 @@ class VocaPlayPage extends React.Component {
             this.totalTimes = this.mode===Constant.LEARN_PLAY?Constant.LEARN_PLAY_TIMES:Constant.REVIEW_PLAY_TIMES
             this.finishedTimes = task.leftTimes?this.totalTimes-task.leftTimes:0
 
-            // 1s后自动播放
-            const timeoutId = BackgroundTimer.setTimeout(()=>{
-                this.vocaPlayService.autoplay(this.props.vocaPlay.curIndex)
-            },1000);
-
             if(this.mode === Constant.LEARN_PLAY){
                 if(this.finishedTimes <= 0 ){
                     this._toggleTran(false)
@@ -140,6 +136,13 @@ class VocaPlayPage extends React.Component {
 
             //改变状态
             this.changeState({task,showWordInfos, curIndex:task.curIndex})
+            console.log('---chagne state------')
+            console.log(this.vocaPlayService.stateRef)
+
+            // 1s后自动播放
+            const timeoutId = BackgroundTimer.setTimeout(()=>{
+                this.vocaPlayService.autoplay(task.curIndex)
+            },1000);
         }
 
     }
@@ -156,8 +159,6 @@ class VocaPlayPage extends React.Component {
     componentWillUnmount(){ //退出界面
         if(this.isStudyMode){  
             this._quitLearn();
-        }else{
-            
         }
     }
 
@@ -206,6 +207,7 @@ class VocaPlayPage extends React.Component {
     // 暂停、播放
     _changePlayTimer = (autoPlayTimer)=>{
         if(this.isStudyMode){
+            console.log('-------change autoPlayTimer--------'+autoPlayTimer)
             this.changeState({autoPlayTimer})
         }else{
             this.props.changePlayTimer(autoPlayTimer)
@@ -254,16 +256,24 @@ class VocaPlayPage extends React.Component {
         const { autoPlayTimer} = this.state
         //停止播放
         if(this.isStudyMode && autoPlayTimer){
-            BackgroundTimer.clearTimeout(autoPlayTimer);
-            this._changePlayTimer(0);
+            console.log('---清理--'+autoPlayTimer)
+            clearTimeout(autoPlayTimer);
+            this.vocaPlayService.setStateRef({autoPlayTimer:0})
         }
     }
 
     /** 完成学习，退出页面 */
     _finishQuit = ()=>{
+
         //学习模式下：完成播放，退出
-        const {task} = this.state
+        const {task, autoPlayTimer} = this.state
         if(this.isStudyMode && task.leftTimes <= 0){
+
+            // console.log('---清理--'+autoPlayTimer)
+            // clearTimeout(autoPlayTimer);
+            // this.vocaPlayService.setStateRef({autoPlayTimer:0})
+
+
             const routeName = this.props.navigation.getParam('nextRouteName')
             let nextRouteName = null
             //改变任务进度
@@ -428,9 +438,9 @@ class VocaPlayPage extends React.Component {
             loadTask(task, showWordInfos)
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             this.vocaPlayService.autoplay(0)
-            NotificationManage.play((e)=>{
-                console.log(e)
-            },()=>null);
+            // NotificationManage.play((e)=>{
+            //     console.log(e)
+            // },()=>null);
         }}>
             <View style={styles.taskItem}>
                 <View style={gstyles.r_start}>

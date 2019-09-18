@@ -10,10 +10,15 @@ const defaultState ={
     isLoadPending:false,
     //当前计划
     plan: {
-        bookCode: "VB_1",
-        bookName: "四级词汇书",
-        taskCount: 1,
-        taskWordCount: 15
+        bookCode: "",
+        bookName: "",
+        taskCount: 0,
+        taskWordCount: 0,
+        //
+        totalWCount : 0,
+        learnedWCount : 0,
+        totalDays : 0,
+        learnedDays : 0,
     },
 }
 

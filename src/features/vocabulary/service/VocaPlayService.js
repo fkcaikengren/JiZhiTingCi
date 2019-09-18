@@ -45,6 +45,9 @@ export default class VocaPlayService{
             const {curIndex} = source
             this.autoplay(curIndex)
         })
+
+        console.log("stateRef")
+        console.log(stateRef)
     }
     //单例模式
     static getInstance(){
@@ -57,7 +60,9 @@ export default class VocaPlayService{
 
     
     setStateRef = (state)=>{
+        console.log(state)
         this.stateRef = {...this.stateRef, ...state}
+        
     }
 
     
@@ -71,14 +76,9 @@ export default class VocaPlayService{
             source = this.stateRef
         }
 
-        const {task, showWordInfos,curIndex, interval} = source
+        const {task, showWordInfos,curIndex, interval,autoPlayTimer} = source
         const { wordCount} = task 
 
-
-        //完成学习后，退出
-        if(this.finishQuit){
-            this.finishQuit()
-        }
 
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated:true, index, viewPosition:0.5 };
@@ -88,26 +88,36 @@ export default class VocaPlayService{
                 this.listRef.scrollToIndex(params);
             }
             //2.更新通知栏的单词
-            NotificationManage.updateWord(showWordInfos[curIndex].word, (e)=>{
-                if(e){
-                    console.log(e)
-                }else{
-                    console.log('--更新通知栏单词成功--')
-                }
-            })
+            if(this.stateRef === null){
+                NotificationManage.updateWord(showWordInfos[curIndex].word, (e)=>{console.log(e)}, 
+                ()=>{console.log('--更新通知栏单词成功--')})
+            }
 
             //3.播放单词音频
             this.audioFetch.playSound(showWordInfos[curIndex].am_pron_url)
 
-            
-
             //4.循环回调
-            const timer = BackgroundTimer.setTimeout(() => {
-                const nextIndex = (index + 1) % wordCount;
-                this.replay(  nextIndex);
-            }, interval * 1000);
+            let timer = 0
+            if(this.stateRef === null){
+                timer = BackgroundTimer.setTimeout(() => {
+                    const nextIndex = (index + 1) % wordCount;
+                    this.replay(  nextIndex);
+                }, interval * 1000);
+            }else{
+                timer = setTimeout(() => {
+                    const nextIndex = (index + 1) % wordCount;
+                    this.replay(  nextIndex);
+                }, interval * 1000);
+            }
 
+            console.log('------'+timer)
             this.changePlayTimer(timer);     //改变
+
+
+            //完成学习后，退出
+            if(this.finishQuit){
+                this.finishQuit()
+            }
         }
         
     };
@@ -126,10 +136,10 @@ export default class VocaPlayService{
 
         // 回调自动播放
         if (autoPlayTimer) {
+            console.log('播放 调度：'+autoPlayTimer)
             this.autoplay(index);  
         }
     }
-
 
 
 }

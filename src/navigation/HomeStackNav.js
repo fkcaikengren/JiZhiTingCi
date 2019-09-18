@@ -22,7 +22,10 @@ import TestPronTranPage from '../features/vocabulary/TestPronTranPage'
 import AnalysisPage from '../features/reading/AnalysisPage'
 import ArticleTabPage from '../features/reading/ArticleTabPage'
 
-// 单词模块
+
+//我的模块
+
+
 const VocaHomeStackNav = createStackNavigator(
     {
       // 首页
@@ -89,11 +92,12 @@ const VocaHomeStackNav = createStackNavigator(
       Analysis:{
         screen:AnalysisPage
       },
-    
       //文章tab页
       ArticleTab:{
         screen:ArticleTabPage
-      }
+      },
+
+
 
     },
     {

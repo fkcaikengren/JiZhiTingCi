@@ -9,6 +9,7 @@ import VocaGroupDao from './service/VocaGroupDao'
 import {playSound} from './service/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
+import VocaUtil from './common/vocaUtil'
 
 import styles from './GroupVocaStyle'
 import gstyles from '../../style'
@@ -41,6 +42,8 @@ export default class GroupVocaPage extends Component {
             stickyHeaderIndices:[]
         }
         console.disableYellowBox=true
+
+        console.log(this.props.navigation.state.params.refreshGroup)
     }
 
     componentDidMount(){
@@ -60,9 +63,9 @@ export default class GroupVocaPage extends Component {
     }
     
     _formatData = () => {          //数据预处理
-        // const {getParam} = this.props.navigation
-        // const groupName = getParam('groupName')
-        const group = this.vgDao.getGroup('Mou');
+        const {getParam} = this.props.navigation
+        const groupName = getParam('groupName')
+        const group = this.vgDao.getGroup(groupName);
         let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
@@ -93,9 +96,9 @@ export default class GroupVocaPage extends Component {
                     word:w.word,
                     checked:false,
                     isHidden:w.isHidden,
-                    tran:w.tran,
-                    enPhonetic:w.enPhonetic, 
-                    enPronUrl:w.enPronUrl
+                    trans:w.trans,
+                    amPhonetic:w.amPhonetic, 
+                    amPronUrl:w.amPronUrl,
                 });
                 totalSize ++;
             }                                           
@@ -142,8 +145,7 @@ export default class GroupVocaPage extends Component {
     //批量删除单词
     _deleteWords = ()=>{
         //删除
-        // const groupName = this.props.navigation.getParam('groupName')
-        const groupName = 'Mou'
+        const groupName = this.props.navigation.getParam('groupName')
         const words = this.state.checkedIndex.map((itemIndex, i)=>{
             return this.state.flatData[itemIndex].word
         })
@@ -168,6 +170,9 @@ export default class GroupVocaPage extends Component {
                 return !result.deletedSections.includes(item)
             })
             this.setState({flatData, sectionIndex, sideSections, onEdit:false})
+
+            //刷新生词本页面数据
+            this.props.navigation.state.params.refreshGroup();
         }else{
             this.refs.toast.show('删除失败', 1000);
             //不刷新
@@ -176,31 +181,31 @@ export default class GroupVocaPage extends Component {
     }
 
     render() {
-        const groupName = 'Mou' //this.props.getParam('groupName')
-        const showCheckStyle = this.state.onEdit?{
-            backgroundColor:'#FFE957',
-            borderColor:'#FFE957',
-        }:null
+        const groupName = this.props.navigation.getParam('groupName')
         const delIconColor = this.state.checked?'#F2753F':'#999'
-        const playIconColor= this.state.checked?'#FFE957':'#999'
+        const playIconColor= this.state.checked?gstyles.mainColor:'#999'
+        const editBtn = this.state.onEdit?<Text style={gstyles.md_black}>取消</Text>
+            :<AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
         return (
             <View style={styles.container}>
                 <StatusBar translucent={true} />
                 <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
+                statusBarProps={{ barStyle: 'dark-content' }}
+                barStyle='dark-content' // or directly
                 leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                    <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={{ text: groupName, style: { color: '#303030', fontSize:18 } }}
+                centerComponent={{ text: groupName, style: { color:gstyles.black, fontSize:18 } }}
                 rightComponent={
                     <TouchableWithoutFeedback onPress={this._toggleEdit}>
-                         <Text style={[styles.editBtn,showCheckStyle]}>编辑</Text>
+                    {
+                        editBtn
+                    }
                     </TouchableWithoutFeedback>
                 }
                 containerStyle={{
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: gstyles.mainColor,
                     justifyContent: 'space-around',
                 }}
                 />
@@ -298,6 +303,8 @@ export default class GroupVocaPage extends Component {
         const bodyWidth = this.state.onEdit?width-60:width-40
         const itemChecked = this.state.checkedIndex.includes(index)
         console.log(itemChecked)
+
+        const translation = VocaUtil.transToText(item.trans)
         return (
                 flag
                 ?<View key={'h'+index} style={styles.headerView}>
@@ -319,14 +326,14 @@ export default class GroupVocaPage extends Component {
                         <View style={[gstyles.r_between, {width:'100%'}]}>
                             <View style={[gstyles.r_start]}>
                                     <Text style={{fontSize:16, color:'#303030'}}>{item.word}</Text>
-                                    <Text style={{fontSize:12, color:'#AAA', fontWeight:'300', marginLeft:10}}>{`英 ${item.enPhonetic}`}</Text>
+                                    <Text style={{fontSize:12, color:'#AAA', fontWeight:'300', marginLeft:10}}>{`美 ${item.amPhonetic}`}</Text>
                             </View>
                             <AliIcon name='shengyin' size={24}  color='#666' onPress={()=>{
-                                playSound(item.enPronUrl)
+                                playSound(item.amPronUrl)
                             }} />
                         </View>
                         <View style={[gstyles.r_start,{width:'100%'}]}>
-                            <Text numberOfLines={1} style={{fontSize:14, color:'#666', }}>{item.tran}</Text>
+                            <Text numberOfLines={1} style={{fontSize:14, color:'#666', }}>{translation}</Text>
                         </View>
                     </View>
                 </View>

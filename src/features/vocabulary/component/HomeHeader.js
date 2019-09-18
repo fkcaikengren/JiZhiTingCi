@@ -6,7 +6,7 @@ import {StatusBar,StyleSheet,Text,View,Image,Animated,RefreshControl, Button, To
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { WebView } from 'react-native-webview';
+import {Grid, Col, Row} from 'react-native-easy-grid'
 
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
@@ -59,10 +59,14 @@ export default class HomeHeader extends Component {
     );
   }
 
+  renderStickyHeader = ()=>{
+    return   <View style={{width:width,height:TITLE_HEIGHT, backgroundColor:'#FFE957'}}></View>
+  }
   renderFixedHeader = ()=>{
     return   <View style={styles.fixedSection}>
-      <Image source={require('../../../image/h_icon.png')} style={styles.headerIcon}/>
-      <AliIcon name='chazhao' size={22} color='#FFF'  onPress={this._navVocaSearch} />
+      <AliIcon name='wode' size={26} color='#202020'  onPress={this._navVocaSearch} />
+      <Text style={{color:'#202020',fontSize:14}}>四级核心必考词汇</Text>
+      <AliIcon name='chazhao' size={24} color='#202020'  onPress={this._navVocaSearch} />
     </View>
   }
 
@@ -70,14 +74,6 @@ export default class HomeHeader extends Component {
     this.state.shift.setValue(e.nativeEvent.contentOffset.y);
   }
 
-  /**吸顶标题栏 */
-  renderStickyHeader = ()=> {
-    return (
-      <View style={styles.stickyHeaderView}>
-        <Text style={{color:'#FFF', fontSize:20, paddingLeft:5}}>四级词汇书</Text>
-    </View>
-    )
-  }
 
   /**导航到词库页面 */
   _navVocaLib = ()=>{
@@ -86,7 +82,7 @@ export default class HomeHeader extends Component {
 
   /**导航到单词列表页 */
   _navVocaList = ()=>{
-    this.props.navigation.navigate('VocaList');
+    this.props.navigation.navigate('VocaListTab');
   }
 
   /**导航到生词本页面 */
@@ -102,80 +98,51 @@ export default class HomeHeader extends Component {
   //头部
   renderHeader = ()=> {
     return (
-      <View style={[styles.webContainer]}>
-          <WebView
-              nativeConfig={{props: {webContentsDebuggingEnabled: true}}} 
-              ref={r => (this.webref = r)}
-              originWhiteList={['*']} // 访问本地html时，需设置源的白名单为所有
-              javaScriptEnabled={true}
-              // 接受web的数据
-              onMessage={this._onMessage}
-              onError={(error) => {
-                  console.log("error", error);
-              }}
-              // 发送给web的初始化脚本
-              injectedJavaScript={WebUtil.PROGRESS_LISTEN_JAVASCRIPT}
-              source={{
-                  uri:'file:///android_asset/web/progress.html',
-                  // <script src='./js/zepto.min.js'/>会以这个为根目录查找资源，否则引入的zepto.js等无效
-                  baseUrl:'file:///android_asset/web/',  
-              }}
-              style={{
-                borderWidth:1,
-                backgroundColor:'#FFe957',
-
-              }}
-          /> 
-          {/* 功能按钮 */}
-          <View style={styles.headerBottom}>
-              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaList}>
-                <AliIcon name='icon-test' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaList}>
-                <AliIcon name='ai-list' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaGroup}>
-                <AliIcon name='yuedu' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} onPress={this._navVocaGroup}>
-                <AliIcon name='yingyong-beidanci-yingyongjianjie' size={24} color='#FFF' style={{marginLeft:10}}></AliIcon>
-              </TouchableOpacity>
-          </View>
+      <View style={[styles.headerView]}>
+          
+          <Grid >
+            {/* 内容展示 */}
+            <Row style={styles.headerCenter}>
+              <Col style={gstyles.c_center}>
+                <Text style={styles.smdDarkFont}>掌握单词</Text>
+                <Text style={styles.smDarkFont}>
+                  <Text style={styles.lgDarkFont}>29</Text>
+                  /2300</Text>
+              </Col>
+              <Col style={gstyles.c_center}>
+                <Text style={styles.smdDarkFont}>已学天数</Text>
+                <Text style={styles.smDarkFont}>
+                  <Text style={styles.lgDarkFont}>59</Text>
+                  /140</Text>
+              </Col>
+            </Row>
+            {/* 底部功能按钮 */}
+            <Row style={styles.headerBottom}>
+              <Col style={gstyles.c_center} onPress={this._navVocaLib}>
+                <AliIcon name='ciyun' size={26} color='#202020'  />
+                  <Text style={styles.smDarkFont}>词库</Text>
+              </Col>
+              <Col style={gstyles.c_center} onPress={this._navVocaList}>
+                  <AliIcon name='liebiao1' size={26} color='#202020' />
+                  <Text style={styles.smDarkFont}>单词列表</Text>
+              </Col>
+              <Col style={gstyles.c_center} onPress={this._navVocaGroup} >
+                  <AliIcon name='wenzhang' size={26} color='#202020' />
+                  <Text style={styles.smDarkFont}>生词本</Text>
+              </Col>
+              <Col style={gstyles.c_center}>
+                  <AliIcon name='yuedu1' size={26} color='#202020' />
+                  <Text style={styles.smDarkFont}>阅读</Text>
+              </Col>
+            </Row>
+          </Grid>
+            
       </View>
       
     );
   }
 
-  _onMessage = (e) =>{
-      let data = JSON.parse(e.nativeEvent.data);
-      console.log(data)
-      switch(data.command){
-          case 'initStart':
-              console.log('-------------------initStart------------------------------');
-              this._sendInitMessage()
-          break;
-          case "themeChanged":
-              console.log(data.payload.themeIndex);
-          break;
-          
-          
-      }
-  }
-  _sendInitMessage = ()=>{
-    // const themes
-    //创建option
-    const data = [0.6, 0.4, 0.2, ];
-    const formatter = '30%';
-    const themeIndex = 4
-    //发送option给Web
-    this.webref.postMessage(
-        JSON.stringify({command:'update', payload:{
-          data:data,
-          formatter:formatter,
-          themeIndex:themeIndex
-        }})
-    );
-  }
+
 
 
 }
@@ -209,20 +176,20 @@ const styles = StyleSheet.create({
     top:0,
   },
 
-  webContainer:{
+  headerView:{
     width:width,
     height: 290,
     backgroundColor:'#FFe957'
   },
-
-  headerBottom: {
-    width:SCREEN_WIDTH,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
+  headerCenter:{
     position:'absolute',
-    bottom:40,
-    paddingHorizontal:40,
+    bottom:'50%',
+    paddingHorizontal:20,
+  },  
+  headerBottom: {
+    position:'absolute',
+    bottom:'16%',
+    paddingHorizontal:20,
   },
  
   bottomView: {
@@ -248,6 +215,23 @@ const styles = StyleSheet.create({
   bottom_font: {
     color: '#FFF',
     fontSize: 16,
+  },
+  smDarkFont:{
+    fontSize:12,
+    color:'#202020',
+  },
+  smdDarkFont:{
+    fontSize:14,
+    color:'#202020',
+  },
+  mdDarkFont:{
+    fontSize:16,
+    color:'#202020'
+  },
+  lgDarkFont:{
+    fontSize:30,
+    color:'#202020',
+    fontWeight:'600'
   }
 });
 

@@ -78,6 +78,7 @@ project.ext.react = [
     entryFile: "index.js"
 ]
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 //加载vector-icons的自带的图标库
 project.ext.vectoricons = [
@@ -109,13 +110,29 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.jizhitingci"
+        applicationId "com.aitingci"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         flavorDimensions "versionCode"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(sign_storeFile);
+            keyAlias sign_keyAlias
+            keyPassword sign_keyPassword
+            storePassword sign_storePassword
+        }
+        debug {
+            storeFile file(sign_storeFile);
+            keyAlias sign_keyAlias
+            keyPassword sign_keyPassword
+            storePassword sign_storePassword
+        }
+    }
+
     splits {
         abi {
             reset()
@@ -125,9 +142,11 @@ android {
         }
     }
     buildTypes {
+        // 对应Production环境
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -152,6 +171,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-code-push')
     implementation project(':react-native-background-timer')
     implementation project(':react-native-background-task')
     implementation project(':react-native-spinkit')

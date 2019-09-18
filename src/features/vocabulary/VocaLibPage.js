@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StatusBar, View, Text, Image, ScrollView} from 'react-native';
+import {StatusBar, View, Text, Image, FlatList} from 'react-native';
 import { WhiteSpace, Carousel, Grid, Flex, } from '@ant-design/react-native';
 import {Header, Button} from 'react-native-elements'
 import Picker from 'react-native-picker';
@@ -10,36 +10,39 @@ import * as VocaLibAction from './redux/action/vocaLibAction'
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
 
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const StatusBarHeight = StatusBar.currentHeight;
 
 class VocaLibPage extends Component {
 
     constructor(props){
         super(props)
-        this.state = {
-            data: [{imgPath:'/pic/1.jpg', name:'初中词汇书'},{imgPath:'/pic/2.jpg', name:'高中词汇书'},
-            {imgPath:'/pic/3.jpg', name:'考研词汇书'},{imgPath:'/pic/1.jpg', name:'四级词汇书'},{imgPath:'/pic/2.jpg', name:'六级词汇书'},
-            {imgPath:'/pic/3.jpg', name:'雅思词汇书'},{imgPath:'/pic/3.jpg', name:'托福词汇书'}]
-        }
     }
 
     componentDidMount(){
          //加载书籍
         this.props.loadVocaBooks()
+    }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.home.isLoadPending === true && nextProps.home.isLoadPending === false){
+            this.props.navigation.goBack()
+            return false
+        }else{
+            return true
+        }
     }
 
     /**显示选择器 */
     _show = (el, index)=>{
-        // const {changeVocaBook} = this.props
         let data = [
-            [15,30,45,60],    //新学列表数
+            ['新学10/复习50',      
+            '新学14/复习70',         
+            '新学20/复习100',   
+            '新学26/复习130',  
+            '新学36/复习180', ] 
         ];
         let selectedValue = [15];
-        Picker.init({
+        Picker.init({ 
+            pickerTextEllipsisLen:10,
             pickerData: data,
             selectedValue: selectedValue,
             pickerCancelBtnText: '取消',
@@ -49,46 +52,67 @@ class VocaLibPage extends Component {
             pickerTitleColor: [30,30,30,1],
             pickerConfirmBtnColor: [30,30,30,1],
             pickerToolBarBg: [255,233,87, 1],
-            // pickerBg: [255,233,87, 0.8],
             onPickerConfirm: data => {
+                console.log(data)
+                const sum = parseInt(data[0].replace(/新学(\d+).+/,'$1'))
+                console.log(sum)
+                let taskCount = null
+                let taskWordCount = null
+                if(sum <= 19){
+                    taskCount = 2 //1
+                    taskWordCount = sum/2
+                }else if(sum <= 34){
+                    taskCount = 4 //2
+                    taskWordCount = sum/4
+                }else if(sum <= 54){
+                    taskCount = 6 //3
+                    taskWordCount = sum/6
+                }
+                console.log('制定计划，单词书编号为：'+el.id)
+                console.log(taskCount, taskWordCount);
                 //提交计划
-                console.log(el.bookCode, data)
-                this.props.changeVocaBook(el.bookCode, data);
+                if(taskCount!==null && taskWordCount!==null){
+                    this.props.changeVocaBook(`VB_${el.id}`, taskCount,taskWordCount)
+                }else{
+                    console.error('VocaLibPage: 设置计划时，数据错误！')
+                }
             },
             onPickerCancel: data => {
                 console.log(data);
             },
             onPickerSelect: data => {
-                console.log(data);
             }
         });
         Picker.show();
     }
 
-    _renderBooks = (el,index)=>{
-        return  <View style={styles.c_center}>
+    _renderBooks = ({item, index})=>{
+        return <View style={[styles.c_center, styles.bookView]}
+        onStartShouldSetResponder={(e)=>true}
+        onResponderGrant={(e)=>this._show(item,index)}
+        >
             <CardView
-                cardElevation={10}
-                cardMaxElevation={10}
-                cornerRadius={2}
-                style={styles.bookCard}>
-                    <Image source={{uri:el.coverUrl}} style={styles.img} />
+                cardElevation={5}
+                cardMaxElevation={5}
+                style={styles.imgCard}
+                >
+                    <Image source={{uri:item.coverUrl}} style={styles.img}  />
             </CardView>
-            <Text style={styles.bookname}>{el.name}</Text>
-            <Text style={styles.noteText}>共<Text style={[styles.noteText,{color:'#F29F3F'}]}>{el.count}</Text>个单词</Text>
+            <Text style={styles.bookname}>{item.name}</Text>
+            <Text style={styles.noteText}>共<Text style={[styles.noteText,{color:'#F29F3F'}]}>{item.count}</Text>个单词</Text>
         </View>
     }
     
     render() {
-        const {books, isLoadPending} = this.props
+        const {books, plan, isLoadPending} = this.props.vocaLib
         //数据
         return (
             
             <View style={{flex: 1}}>
-                <StatusBar translucent={true} />
+                <StatusBar translucent={false}  barStyle="dark-content" />
                 <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
+                statusBarProps={{ barStyle: 'dark-content' }}
+                barStyle="dark-content" // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
                         this.props.navigation.goBack();
@@ -96,7 +120,7 @@ class VocaLibPage extends Component {
                 rightComponent={
                     <AliIcon name='xiazai' size={24} color='#303030'></AliIcon>
                 }
-                centerComponent={{ text: '四级词汇', style: { color: '#303030', fontSize:18 } }}
+                centerComponent={{ text: plan.bookName, style: { color: '#303030', fontSize:18 } }}
                 containerStyle={{
                     backgroundColor: '#FCFCFC',
                     justifyContent: 'space-around',
@@ -114,20 +138,14 @@ class VocaLibPage extends Component {
                 }
                 
                 {!isLoadPending &&
-                    <ScrollView style={{ flex: 1 }}
-                        pagingEnabled={false}
-                        automaticallyAdjustContentInsets={false}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <Grid
-                            data={books}
-                            columnNum={2}
-                            renderItem={this._renderBooks}
-                            itemStyle={styles.grid}
-                            onPress={this._show}
-                        />
-                    </ScrollView>
+                    <FlatList
+                        data={books}
+                        renderItem={this._renderBooks}
+                        ItemSeparatorComponent={()=><View style={{borderBottomWidth:1,borderBottomColor:'#A8A8A8'}}></View>}
+                        // 水平布局的列的数量
+                        numColumns = {2}  
+                        
+                    />
                 }
             </View>
             
@@ -136,14 +154,14 @@ class VocaLibPage extends Component {
     }
 }
 const mapStateToProps = state =>({
-    books: state.vocaLib.books,
-    isLoadPending: state.vocaLib.isLoadPending,
+    vocaLib: state.vocaLib,
+    home: state.home
 });
 
-const mapDispatchToProps = dispatch=> ({
-    loadVocaBooks: ()=>{dispatch(VocaLibAction.loadVocaBooks())},
-    changeVocaBook: (bookCode, taskCount)=>{dispatch(VocaLibAction.changeVocaBook())}
-});
+const mapDispatchToProps = {
+    loadVocaBooks: VocaLibAction.loadVocaBooks,
+    changeVocaBook: VocaLibAction.changeVocaBook
+}
 
 
 export default connect(mapStateToProps,mapDispatchToProps )(VocaLibPage);

@@ -26,6 +26,7 @@ export default class VocaUtil{
             isSync: task.isSync,
             words: [],
             wordCount: task.wordCount,
+            listenTimes: task.listenTimes,
         }
         let ws = task.words
         for(let i in ws){
@@ -52,6 +53,7 @@ export default class VocaUtil{
             isSync: task.isSync,
             words: [],
             wordCount: task.wordCount,
+            listenTimes: task.listenTimes,
         }
         let ws = task.words
         for(let i in ws){

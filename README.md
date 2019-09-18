@@ -513,6 +513,8 @@ yarn add react-native-background-timer
 
 
 
+
+
 # 调试
 
 1. ### 调试本地数据库
@@ -654,3 +656,63 @@ yarn add react-native-mock --dev
    解决办法：<https://www.rumoss.cn/archives/226/>
 
    运行sdkmanager 同意安装所有包的证书即可。
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 集成统计、第三方登录、社会化分享
+
+### 集成Umeng
+
+
+
+
+
+
+
+
+
+
+
+## 部署、打包发布、热更新
+
+### 安装react-native-code-push
+
+```
+yarn add react-native-code-push
+react-native link react-native-code-push
+```
+
+
+
+### 部署发布
+
+```
+//查看部署
+code-push deployment ls aitingci -k
+
+//开发环境热更新
+code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
+
+//生产环境热更新
+code-push release-react aitingci android --dev false --d Production --des "生产环境热更新" --m true
+```
+
+
+
+### 打包命令
+
+```
+//查看签名
+keytool -list -v -keystore aitingci.jks
+```
+

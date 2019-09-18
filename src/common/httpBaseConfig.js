@@ -9,7 +9,7 @@ export default httpBaseConfig = {
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'token': 'b45be288e5af4445a938149601fa92c1',
+        'token': null,
     }
   }
 //   http://129.211.71.111:9002/vocaBook/getVocaBooks

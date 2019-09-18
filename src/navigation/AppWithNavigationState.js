@@ -5,45 +5,42 @@ import { Col, Row, Grid, } from 'react-native-easy-grid';
 import { createNavigationReducer,createReactNavigationReduxMiddleware,createReduxContainer} from 'react-navigation-redux-helpers';
 import { connect} from 'react-redux'
 import HomeStackNav from './HomeStackNav';
-import LoginPage from '../features/mine/LoginPage';
-import UserDao from '../features/mine/dao/UserDao'
+import LoginStackNav from '../features/mine/navigation/LoginStackNav';
 
 class AuthLoadingPage extends Component {
 
     constructor(props) {
         super(props);
-        this.userDao = new UserDao()
     }
 
     componentDidMount(){
-        this.userDao.open()
-        .then(()=>{
-            this._bootstrap();
-        })
-        
-    }
-
-    componentWillUnmount(){
-        // alert('AuthLoading out, close realm')
-        this.userDao.close();
+        this._bootstrap();
     }
 
     // token验证登录状态
     _bootstrap = () => {
         //登录进入前，无token
-        Http.setGetHeader('token', null)
-        Http.setPostHeader('token', null)
-
-        const token = this.userDao.getToken()
-        console.log('token : '+token)
-        if(token && token.length>8){
-            //设置网络请求头，带上token参数
-            Http.setGetHeader('token', token)
-            Http.setPostHeader('token', token)
-            this.props.navigation.navigate('Main')
-        }else{
-            this.props.navigation.navigate('Login',)
-        }
+        // Http.setHeader('token', null)
+        Storage.load({
+          key: 'token',
+        })
+        .then(token => {
+            if(token && token !== ''){
+                //设置网络请求头，带上token参数
+                Http.defaults.headers['token'] = token
+                console.log('--------------登录-------------')
+                console.log(Http.defaults.headers)
+                this.props.navigation.navigate('Home')
+            }else{
+                this.props.navigation.navigate('LoginStack')
+            }
+        })
+        .catch(e=>{
+            console.log('Storage获取token 失败，错误信息如下：')
+            console.log(e)
+            this.props.navigation.navigate('LoginStack')
+        })
+        
     };
     render() {
         return (
@@ -60,12 +57,9 @@ class AuthLoadingPage extends Component {
 const AppNavigator = createAppContainer(createSwitchNavigator(
     {
       AuthLoading: AuthLoadingPage,
-      Home: HomeStackNav,
-      Login: LoginPage,
+      HomeStack: HomeStackNav,
+      LoginStack: LoginStackNav,
     },
-    {
-      initialRouteName: 'Home',
-    }
 ));
 
 //1. 创建reducer

@@ -11,6 +11,7 @@ import gstyles from '../../style'
 import styles from './VocaListStyle'
 import * as VocaListAction from './redux/action/vocaListAction'
 import VocaTaskService from './service/VocaTaskService'
+import VocaUtil from "./common/vocaUtil";
 
 
 export default class VocaListPage extends React.Component {
@@ -49,6 +50,7 @@ export default class VocaListPage extends React.Component {
       if (item.isHeader) {
         headers.push(data.indexOf(item));
       }
+      return item
     });
     headers.push(0);
     this.setState({
@@ -132,7 +134,7 @@ export default class VocaListPage extends React.Component {
             </Text>
           </View>
           <View style={styles.itemCenter}>
-            <TogglePane content='v.这是一个单词，喜欢，吃喝'/>
+            <TogglePane word={item.content.word}/>
           </View>
           <View style={[styles.itemRight]}>
             <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>

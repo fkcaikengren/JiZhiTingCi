@@ -18,7 +18,8 @@ const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware,saga
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['home']
+    // whitelist: ['home'],
+    blacklist: ['nav', 'home', 'vocaLib', 'vocaList']
   }
 
 export const persistedReducer = persistReducer(persistConfig, reducers)

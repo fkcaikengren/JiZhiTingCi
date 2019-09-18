@@ -10,7 +10,7 @@ export const createStorage = ()=>  new Storage({
     storageBackend: AsyncStorage,
 
     // 数据过期时间，默认一整天（1000 * 3600 * 24 毫秒），设为null则永不过期
-    defaultExpires: 1000 * 3600 * 10,//一个小时
+    defaultExpires: null,//一个小时
 
     // 读写时在内存中缓存数据。默认启用。
     enableCache: true,
@@ -24,4 +24,3 @@ export const createStorage = ()=>  new Storage({
     // sync: require('./sync')
 })
 
-// console.log(configureStorage.sync)
