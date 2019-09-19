@@ -93,8 +93,8 @@ export default class TestPage extends Component {
         this.answerIndex=-1         //答案下标
         this.hasSeenDetail = false  //已经查看单词详情
         
-        this.passedWords = []     //某一轮测试中pass的单词
-        this.wordInfos = []     //task所有单词信息（包括passed）
+        this.passedWords = []       //某一轮测试中pass的单词
+        this.wordInfos = []         //task所有单词信息（包括passed）
     }
 
     componentDidMount(){
@@ -293,7 +293,7 @@ export default class TestPage extends Component {
         const {curIndex} = this.state
         let { isRetest, leftCount, curCount} = this.state
         let nextIndex = curIndex+1
-        let process = null
+        let progress = null
         curCount++
         let isQuit = false //退出
         let nextState = null
@@ -307,14 +307,14 @@ export default class TestPage extends Component {
                 nextState = this._calculateNextStateByPassed() //统计passed单词，计算下一个状态
 
                 const routeName = this.props.navigation.getParam('nextRouteName')
-                if(this.state.task.process.startsWith('IN_LEARN')){
-                    process = Constant.IN_LEARN_RETEST_1
+                if(this.state.task.progress.startsWith('IN_LEARN')){
+                    progress = Constant.IN_LEARN_RETEST_1
                     if(routeName === 'Home'){
-                        process = Constant.IN_LEARN_RETEST_2
+                        progress = Constant.IN_LEARN_RETEST_2
                     }
-                }else if(this.state.task.process.startsWith('IN_REVIEW')){
+                }else if(this.state.task.progress.startsWith('IN_REVIEW')){
                     if(routeName === 'Home'){
-                        process = Constant.IN_REVIEW_RETEST
+                        progress = Constant.IN_REVIEW_RETEST
                     }
                 }
                 if(nextState.testArr.includes(true)){
@@ -361,34 +361,41 @@ export default class TestPage extends Component {
             if(!nextState){
                 nextState = this._calculateNextStateByPassed() //统计passed单词，计算下一个状态
             }
-
-            const routeName = this.props.navigation.getParam('nextRouteName')
-            //拷贝task
-            if(this.state.task.process.startsWith('IN_LEARN')){
-                process = Constant.IN_LEARN_TEST_2
-                if(routeName === 'Home'){
-                    process = Constant.IN_LEARN_FINISH
-                }
-            }else if(this.state.task.process.startsWith('IN_REVIEW')){
-                if(routeName === 'Home'){
-                    process = Constant.IN_REVIEW_FINISH
-                }
-            }
-            const task = {...nextState.task, curIndex:0, process}
             //testWrongNum置零
-            for(let w of task.words){
+            for(let w of nextState.task.words){
                 w.testWrongNum = 0
             }
-            console.log('-------测试完成退出----拷贝task到home-------')
-            console.log(task)
-            this.props.updateTask(task)
-            //跳转
-            const params = routeName==='Home'?{}:{
-                task:task, 
-                showWordInfos:this.state.showWordInfos,
-                nextRouteName:'Home'
+
+            const routeName = this.props.navigation.getParam('nextRouteName')
+
+            if(this.props.mode === 'study'){    //学习模式下测试
+                 //拷贝task
+                if(routeName === 'Home'){ //返回到Home
+                    if(nextState.task.progress.startsWith('IN_LEARN')){
+                        progress = Constant.IN_LEARN_FINISH
+                    }else if(nextState.task.progress.startsWith('IN_REVIEW')){
+                        progress = Constant.IN_REVIEW_FINISH
+                        //回到Home页，立刻上传数据
+                        this.props.setShouldUpload(true)
+                    }
+                }else if(routeName.startsWith('Test')){ //进入第二轮测试
+                    progress = Constant.IN_LEARN_TEST_2
+                }      
+                const task = {...nextState.task, curIndex:0, progress, testTimes:nextState.task.testTimes+1}
+                console.log('-------测试完成退出----拷贝task到home----同时测试次数+1-------')
+                console.log(task)
+                this.props.updateTask(task)
+                //跳转
+                const params = routeName==='Home'?{}:{
+                    task:task, 
+                    showWordInfos:this.state.showWordInfos,
+                    nextRouteName:'Home'
+                }
+                vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
+                
+            }else{                  //普通模式下测试
+                this._normalPlayEnd(nextState)
             }
-            vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
             this.audioFetch.releaseSound()
         }else{     //测试下一词
 
@@ -402,14 +409,21 @@ export default class TestPage extends Component {
                 curCount:curCount, 
                 showAnswer:false
             }
-            if(process){
-                newState.task.process = process
+            if(progress){
+                newState.task.progress = progress
             }
             this.setState(newState)
 
         }
     }
 
+    _normalPlayEnd = (nextState)=>{
+        const testTimes = nextState.task.testTimes+1
+        this.props.updatePlayTask({...nextState.task, curIndex:0, testTimes}, nextState.showWordInfos)
+        //保存到realm数据库
+        this.taskDao.modifyTask({taskOrder:nextState.task.taskOrder, testTimes})
+        this.props.navigation.goBack()
+    }
 
     //查询testArr的第一个true下标
     _getFirstIndex = (testArr)=>{
@@ -534,8 +548,13 @@ export default class TestPage extends Component {
                             const nextState = this._calculateNextStateByPassed() //计算pass的单词
                             console.log('--返回--')
                             console.log(nextState)
-                            this.props.updateTask({...nextState.task,curIndex:nextState.curIndex})
-                            vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
+                            if(this.props.mode === 'study'){
+                                this.props.updateTask({...nextState.task,curIndex:nextState.curIndex})
+                                vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
+                            }else {
+                                this._normalPlayEnd(nextState)
+                            }
+                            
                             this.audioFetch.releaseSound()
                         }}></AliIcon> }
                     

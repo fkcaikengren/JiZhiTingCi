@@ -27,17 +27,20 @@ export default class PlayController extends React.Component {
 
      //选择测试
      _chooseTest = (value) =>{
+        const {navigate} = this.props.navigation
+        const {task} = this.props.vocaPlay
         switch(value){
-            case 0:
+            case 0: //中义选词测试
                 // this.props.navigation.navigate('TestEnTran');
                 break;
-            case 1:
+            case 1: //例句选词测试
                 // this.props.navigation.navigate('TestSentence');
                 break;
-            case 2:
-                alert(value);
+            case 2: //词选中义测试 
+                const testTask = {...task, curIndex:0}
+                navigate('TestVocaTran',{task:testTask, mode:'normal', isRetest:false})
                 break;
-            case 3:
+            case 3: //听音选词测试
                 alert(value);
                 break;
         }
@@ -132,16 +135,16 @@ export default class PlayController extends React.Component {
                         <MenuTrigger text='测试' customStyles={{triggerText: styles.triggerText,}}/>
                         <MenuOptions>
                             <MenuOption style={gstyles.haireBottom}  value={0}  >
-                                <Text style={{color: Theme.themeColor}}>英英释义选词</Text>
+                                <Text style={{color: Theme.themeColor}}>中义选词测试</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom}  value={1}>
-                                <Text style={{color: Theme.themeColor}}>例句选词</Text>
+                                <Text style={{color: Theme.themeColor}}>例句选词测试</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom}  value={2}>
-                                <Text  style={{color: Theme.themeColor}}>看词选中义</Text>
+                                <Text  style={{color: Theme.themeColor}}>词选中义测试</Text>
                             </MenuOption>
                             <MenuOption value={3}>
-                                <Text style={{color: Theme.themeColor}}>听音选词</Text>
+                                <Text style={{color: Theme.themeColor}}>听音选词测试</Text>
                             </MenuOption>
                         </MenuOptions>
                     </Menu>

@@ -57,6 +57,8 @@ export default class HomeFooter extends React.Component{
     }
     render(){
         const {task, curIndex, autoPlayTimer, showWordInfos} = this.props.vocaPlay
+        console.log(curIndex)
+        console.log(showWordInfos)
         const {wordCount} = task
         const progressNum = wordCount==undefined?0:(curIndex+1)/wordCount
         //任务名

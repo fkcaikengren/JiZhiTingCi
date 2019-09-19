@@ -15,7 +15,7 @@ const VocaTaskSchema = {
             //任务执行日期
         vocaTaskDate: 'int?',                                            
             //任务进度
-        process: {type: 'string',optional:true, default: 'IN_LEARN_PLAY'}, 
+        progress: {type: 'string',optional:true, default: 'IN_LEARN_PLAY'}, 
             //进行中的当前单词下标
         curIndex:{type: 'int',optional:true, default: 0},
             //剩下的遍数
@@ -32,6 +32,8 @@ const VocaTaskSchema = {
         wordCount: {type: 'int',optional:true, default: 0},
         //听的遍数
         listenTimes: {type: 'int',optional:true, default: 0},
+        //测试遍数
+        testTimes : {type: 'int',optional:true, default: 0},
     }
   };
  
@@ -127,6 +129,7 @@ export default class VocaTaskDao {
         try{
             this.realm.write(()=>{
                 for(let task of tasks){
+                    console.log('----- 批量修改task -------')
                     this.realm.create('VocaTask', task, true);
                 }
             })
@@ -143,6 +146,7 @@ export default class VocaTaskDao {
     modifyTask = (task)=>{
         try{
             this.realm.write(()=>{
+                console.log('----- 修改task -------')
                 this.realm.create('VocaTask', task, true);
             })
         }catch (e) {
@@ -165,6 +169,7 @@ export default class VocaTaskDao {
 
     /**自定义修改 */
     modify =  (fn)=>{
+        console.log('--------自定义修改task-------')
         this.realm.write(fn)
     }
 

@@ -8,6 +8,7 @@ import * as Constant from '../common/constant'
 import VocaUtil from '../../vocabulary/common/vocaUtil'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
+import VocaTaskDao from '../service/VocaTaskDao';
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -30,8 +31,22 @@ export default class TaskItem extends Component {
         this.props.toastRef.show('需要您先完成新学任务哦')
       }else{
         //根据进度进行不同的跳转
-        const {index, item } = this.props
-        switch(item.process){
+        let {index, item } = this.props
+        //如果是1复任务 且未点击
+        if(item.status === Constant.STATUS_1 ){
+          let task = null
+          for(let t of this.props.home.tasks){
+            if(t.taskOrder === item.taskOrder && t.status === Constant.STATUS_0){
+              task = t
+              break
+            }
+          }
+          if(task && item.listenTimes < task.listenTimes){
+            item = {...item, listenTimes:task.listenTimes, testTimes:task.testTimes}
+            this.props.updateTask(item)
+          }
+        }
+        switch(item.progress){
           case Constant.IN_LEARN_PLAY:
             this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY, nextRouteName:'LearnCard'})
           break;
@@ -74,7 +89,7 @@ export default class TaskItem extends Component {
     const { item, progressNum } = this.props
     if(progressNum === 100){
       //上传同步数据
-      if(item.isUploaded === false && this.props.shouldUpload === true){
+      if(item.isUploaded === false && this.props.home.shouldUpload === true){
         console.log('---------- start upload ---')
         this.props.uploadTasks([item]);
       }

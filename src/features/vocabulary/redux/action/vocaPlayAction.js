@@ -4,6 +4,7 @@ import { createActions } from 'redux-actions';
 
 
 export const LOAD_TASK = 'LOAD_TASK';                     //加载任务           
+export const UPDATE_PLAY_TASK = 'UPDATE_PLAY_TASK'        //修改播放任务
 export const CHANGE_SHOW_WORD_INFOS = 'CHANGE_SHOW_WORD_INFOS'  //改变要显示的单词信息数组         
 
 export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';             //暂停播放
@@ -16,16 +17,20 @@ export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
 export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 
+export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模式的类型
 
 
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, 
-  changeTheme,passWord } = createActions({
+export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, 
+  changeTheme,passWord , changeNormalType} = createActions({
 
     //加载任务  
     [LOAD_TASK] : (task,showWordInfos)=>{
+      return {task,showWordInfos};
+    },
+    [UPDATE_PLAY_TASK] : (task,showWordInfos)=>{
       return {task,showWordInfos};
     },
     //改变需要显示的单词信息数组
@@ -61,6 +66,9 @@ export const {loadTask,changeShowWordInfos, changePlayTimer, changeCurIndex, cha
     [PASS_WORD] : (word)=>{
       return {word}
     },
+    [CHANGE_NORMAL_TYPE] : (normalType)=>{
+      return {normalType}
+    }
    
   });
 

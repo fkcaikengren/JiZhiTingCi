@@ -3,6 +3,8 @@ import {  handleActions } from 'redux-actions';
 import * as vpAction from './action/vocaPlayAction';
 import {Themes} from '../common/vocaConfig'
 import VocaUtil from '../common/vocaUtil';
+import VocaTaskDao from '../service/VocaTaskDao';
+import * as Constant from '../common/constant'
 
 /**
  *  总结：
@@ -34,6 +36,9 @@ const defaultState ={
     themeId: 1,
      //加载状态
     isLoadPending:false,
+
+    //normal播放模式的类型
+    normalType: Constant.BY_REAL_TASK  //默认是真实task 构建播放内容
 }
 
 
@@ -44,23 +49,31 @@ export const vocaPlay =  handleActions({
         task:action.payload.task, 
         curIndex:action.payload.task.curIndex,
         showWordInfos:action.payload.showWordInfos,
-        }),         
+    }),         
+    [vpAction.UPDATE_PLAY_TASK]:  (state, action) => {
+        console.log('-------UPDATE_PLAY_TASK-----')
+        console.log(action.payload.showWordInfos)
+        return { ...state, 
+            task:action.payload.task, 
+            curIndex:action.payload.task.curIndex,
+            showWordInfos:action.payload.showWordInfos,
+        }
+    },         
     //暂停、播放
     [vpAction.CHANGE_PLAY_TIMER] : (state, action) => ({ ...state, autoPlayTimer:action.payload.autoPlayTimer }),
     //更新当前单词
     [vpAction.CHANGE_CUR_INDEX] : (state, action) => {
         const beforeCount = state.task.wordCount
         const index = state.curIndex
-        let leftTimes = state.task.leftTimes
         let listenTimes = state.task.listenTimes
         let newTask = state.task
         //播放到最后一个单词
         if(index+1 === beforeCount){
-            leftTimes--
             listenTimes++
+            VocaTaskDao.getInstance().modifyTask({taskOrder:state.task.taskOrder,listenTimes:listenTimes})
         }
         // 学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
-        newTask = {...state.task, curIndex:action.payload.curIndex, leftTimes,listenTimes}
+        newTask = {...state.task, curIndex:action.payload.curIndex,listenTimes}
         return { ...state, task:newTask, curIndex:action.payload.curIndex, }
         
     },
@@ -108,4 +121,6 @@ export const vocaPlay =  handleActions({
             showWordInfos:res.showWordInfos
         }
     },
+
+    [vpAction.CHANGE_NORMAL_TYPE]: (state, action) => ({ ...state, normalType:action.payload.normalType }),
 }, defaultState);

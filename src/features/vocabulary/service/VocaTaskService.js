@@ -58,7 +58,7 @@ export default class VocaTaskService {
                 if(copyTask.status === Constant.STATUS_0){
                     reviewTask = _.cloneDeep(copyTask);
                     reviewTask.status = Constant.STATUS_1
-                    reviewTask.process = Constant.IN_REVIEW_PLAY
+                    reviewTask.progress = Constant.IN_REVIEW_PLAY
                     reviewTask.leftTimes = Constant.REVIEW_PLAY_TIMES
                     reviewTasks.push(reviewTask)
                 }
@@ -90,7 +90,7 @@ export default class VocaTaskService {
         let oldTasks = rawTasks.filter((task, index)=>{
             task.curIndex = 0                           //curIndex 置零
             if(task.status === Constant.STATUS_0 ){     //新学任务
-                if(task.process !== Constant.IN_LEARN_FINISH){
+                if(task.progress !== Constant.IN_LEARN_FINISH){
                     isFirst = true
                     return true
                 }else{
@@ -123,10 +123,10 @@ export default class VocaTaskService {
         let oldTasks = this.filterTasks(rawTasks)
         let leftCount = 0
         for(let oldTask of oldTasks){
-            if(oldTask.process.startsWith('IN_LEARN') && oldTask.process !== Constant.IN_LEARN_FINISH){      //新学未完成
+            if(oldTask.progress.startsWith('IN_LEARN') && oldTask.progress !== Constant.IN_LEARN_FINISH){      //新学未完成
                 oldTask.status = Constant.STATUS_0
                 // console.log('未完成新学')
-            }else if(oldTask.process === Constant.IN_REVIEW_FINISH ){    //完成复习
+            }else if(oldTask.progress === Constant.IN_REVIEW_FINISH ){    //完成复习
                 switch(oldTask.status){
                     case Constant.STATUS_1:
                         oldTask.vocaTaskDate += _util.getDaysMS(1)
@@ -146,7 +146,7 @@ export default class VocaTaskService {
                 oldTask.status = VocaUtil.getNextStatus(oldTask.status)
                 oldTask.delayDays = 0
                 // console.log('完成复习')
-            } else if(oldTask.process.startsWith('IN_REVIEW')){         //未完成复习
+            } else if(oldTask.progress.startsWith('IN_REVIEW')){         //未完成复习
                 oldTask.vocaTaskDate += _util.getDaysMS(1)
                 switch(oldTask.status){
                     case Constant.STATUS_1:
@@ -199,14 +199,14 @@ export default class VocaTaskService {
             if(oldTask.status == Constant.STATUS_0){ //重学 or 新学
                 oldTask.delayDays = 0
                 oldTask.vocaTaskDate = 0
-                oldTask.process = Constant.IN_LEARN_PLAY
+                oldTask.progress = Constant.IN_LEARN_PLAY
                 oldTask.leftTimes = Constant.LEARN_PLAY_TIMES
 
             }else if(oldTask.status == Constant.STATUS_200){ //完成
-                oldTask.process = Constant.IN_REVIEW_FINISH
+                oldTask.progress = Constant.IN_REVIEW_FINISH
                 oldTask.leftTimes = 0
             }else{
-                oldTask.process = Constant.IN_REVIEW_PLAY
+                oldTask.progress = Constant.IN_REVIEW_PLAY
                 oldTask.leftTimes = Constant.REVIEW_PLAY_TIMES
             }
 
@@ -236,7 +236,7 @@ export default class VocaTaskService {
      * @returns {Array}
      */
     getWrongList = ()=>{
-        const wrongArr = []
+        let wrongArr = []
         try{
             for(let i=6; i>=1; i--){
                 //查询

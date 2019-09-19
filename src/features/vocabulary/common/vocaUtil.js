@@ -18,7 +18,7 @@ export default class VocaUtil{
             taskOrder: task.taskOrder,              //任务序号
             status: task.status,
             vocaTaskDate: task.vocaTaskDate,
-            process: task.process,
+            progress: task.progress,
             curIndex:task.curIndex,
             leftTimes:task.leftTimes,
             delayDays:task.delayDays,
@@ -27,6 +27,7 @@ export default class VocaUtil{
             words: [],
             wordCount: task.wordCount,
             listenTimes: task.listenTimes,
+            testTimes: task.testTimes
         }
         let ws = task.words
         for(let i in ws){
@@ -40,12 +41,12 @@ export default class VocaUtil{
      * @param task Realm数据库中的task
      * @returns  新的task
      * */
-    static copyTaskDeep(task){
+    static copyTaskDeep(task, testWrongNumIsZero=false){
         let copyTask = {
             taskOrder: task.taskOrder,
             status: task.status,
             vocaTaskDate: task.vocaTaskDate,
-            process: task.process,
+            progress: task.progress,
             curIndex:task.curIndex,
             leftTimes:task.leftTimes,
             delayDays:task.delayDays,
@@ -54,6 +55,7 @@ export default class VocaUtil{
             words: [],
             wordCount: task.wordCount,
             listenTimes: task.listenTimes,
+            testTimes: task.testTimes
         }
         let ws = task.words
         for(let i in ws){
@@ -61,7 +63,7 @@ export default class VocaUtil{
                 word: ws[i].word,
                 passed: ws[i].passed,
                 wrongNum: ws[i].wrongNum,
-                testWrongNum: ws[i].testWrongNum,
+                testWrongNum: testWrongNumIsZero?0:ws[i].testWrongNum,
             })
         }
         return copyTask
@@ -107,7 +109,7 @@ export default class VocaUtil{
     static calculateProcess = (task)=>{
         let num = 0
         if(task.status === Constant.STATUS_0){  //新学任务
-            switch (task.process) {
+            switch (task.progress) {
                 case Constant.IN_LEARN_PLAY:        //轮播10 point:
                     let p = Math.floor(10/Constant.LEARN_PLAY_TIMES)
                     for(let i=Constant.LEARN_PLAY_TIMES; i>=0; i--){
@@ -139,7 +141,7 @@ export default class VocaUtil{
                     break;
             }
         }else{                                       //复习任务
-            switch (task.process) {
+            switch (task.progress) {
                 case Constant.IN_REVIEW_PLAY:        //轮播70 point:
                     let p = Math.floor(70/Constant.REVIEW_PLAY_TIMES)
                     for(let i=Constant.REVIEW_PLAY_TIMES; i>=0; i--){
@@ -172,6 +174,9 @@ export default class VocaUtil{
      * @returns {string}
      */
     static genTaskName = (taskOrder)=>{
+        if(taskOrder === Constant.VIRTUAL_TASK_ORDER){
+            return '听词'
+        }
         if(taskOrder){
             let name = ''
             if(taskOrder < 10){
@@ -255,7 +260,7 @@ export default class VocaUtil{
         }
         showWordInfos = []
         if(wordInfos === null){
-            wordInfos = VocaDao.getInstance().getWordInfos(words.map((item, i)=>item.word))
+            wordInfos = VocaDao.getInstance().getWordInfos(words.map((item,index)=>item.word))
         }
         for(let i in words){
             //过滤
@@ -314,14 +319,15 @@ export default class VocaUtil{
         })
 
         if(shouldFilter){
-            const newWords = words.map((w,i)=>{
-                if(w.word === word){ //pass
+            const newWords = []
+            for(let i in words){
+                if(words[i].word === word){ //pass
                     taskDao.modifyWord({word:word,passed:true})
-                    return {...w,passed:true}
+                    newWords.push({...words[i],passed:true}) 
                 }else{
-                    return w
+                    newWords.push(words[i]) 
                 }
-            })
+            }
 
             const newShowWordInfos = showWordInfos.filter((item, i)=>{
                 if(item){
@@ -365,6 +371,38 @@ export default class VocaUtil{
             }
         }
         return (sum/count).toFixed(1)
+    }
+
+
+    /** 
+     * 构建一个虚拟Task 
+     * words 是task的words
+    */
+    static genVirtualTask = (words)=>{
+        let copyTask = {
+            taskOrder: Constant.VIRTUAL_TASK_ORDER,
+            // status: null,
+            // vocaTaskDate: task.vocaTaskDate,
+            // progress: task.progress,
+            curIndex:0,
+            // leftTimes:task.leftTimes,
+            // delayDays:task.delayDays,
+            // createTime:task.createTime,
+            // isSync: task.isSync,
+            words: [],
+            wordCount: words.length,
+            listenTimes: 0,
+            testTimes: 0
+        }
+        for(let i in words){
+            copyTask.words.push({
+                word: words[i].word,
+                passed: false,
+                wrongNum: words[i].wrongNum,
+                testWrongNum: 0,
+            })
+        }
+        return copyTask
     }
     
 }

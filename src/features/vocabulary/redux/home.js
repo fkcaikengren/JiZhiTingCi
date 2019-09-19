@@ -43,7 +43,9 @@ export const home =  (state=defaultState, action) => {
             return { ...state, isUploading:false, shouldUpload:false}
         case ha.UPLOAD_TASKS_FAIL : 
             return { ...state, isUploading:false, shouldUpload:false}
-
+        //是否上传同步
+        case ha.SET_SHOULD_UPLOAD:
+                return { ...state, shouldUpload:action.payload.shouldUpload}
         default:
             return state
     }

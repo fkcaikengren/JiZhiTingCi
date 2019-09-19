@@ -40,7 +40,12 @@ export const IN_REVIEW_TEST = 'IN_REVIEW_TEST'
 export const IN_REVIEW_RETEST = 'IN_REVIEW_RETEST'
 export const IN_REVIEW_FINISH = 'IN_REVIEW_FINISH'
 
-
+//
+export const IN_CASUAL_PLAY = 'IN_CASUAL_PLAY' 
+// normalType 的两种取值
+export const BY_REAL_TASK = 'BY_REAL_TASK'
+export const BY_VIRTUAL_TASK ='BY_VIRTUAL_TASK'
+export const VIRTUAL_TASK_ORDER = 'VIRTUAL_TASK_ORDER'
 
 
 //单词列表

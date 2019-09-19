@@ -27,8 +27,10 @@ class VocaListTabPage extends Component {
     }
 
     _movePage = (clickIndex)=>{
-        console.log(clickIndex - this.state.pageIndex)
-        this.swiperRef.scrollBy(clickIndex - this.state.pageIndex,true)
+        if(!this.props.vocaList.onEdit){
+            console.log(clickIndex - this.state.pageIndex)
+            this.swiperRef.scrollBy(clickIndex - this.state.pageIndex,true)
+        }
     }
 
     render() {
@@ -100,10 +102,18 @@ class VocaListTabPage extends Component {
                     index={this.state.pageIndex}
                     scrollEnabled={!this.props.vocaList.onEdit}
                     >
-                    <VocaListPage {...this.props} type={Constant.WRONG_LIST}/>
-                    <VocaListPage {...this.props} type={Constant.PASS_LIST}/>
-                    <VocaListPage {...this.props} type={Constant.LEARNED_LIST}/>
-                    <VocaListPage {...this.props} type={Constant.NEW_LIST}/>
+                    <VocaListPage {...this.props} type={Constant.WRONG_LIST} 
+                        index={0}
+                        pageIndex={this.state.pageIndex}/>
+                    <VocaListPage {...this.props} type={Constant.PASS_LIST} 
+                        index={1}
+                        pageIndex={this.state.pageIndex}/>
+                    <VocaListPage {...this.props} type={Constant.LEARNED_LIST} 
+                        index={2}
+                        pageIndex={this.state.pageIndex}/>
+                    <VocaListPage {...this.props} type={Constant.NEW_LIST} 
+                        index={3}
+                        pageIndex={this.state.pageIndex}/>
                 </Swiper>
             </View>
         );

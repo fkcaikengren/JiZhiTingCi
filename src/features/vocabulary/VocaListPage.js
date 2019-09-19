@@ -66,6 +66,11 @@ export default class VocaListPage extends React.Component {
       this._cancleCheck()
       return false
     }
+
+    if(this.props.index !== this.props.pageIndex){
+      return false
+    }
+
     return true
   }
 
@@ -106,7 +111,7 @@ export default class VocaListPage extends React.Component {
   }
 
   renderItem = ({ item, index }) => {
-    const {onEdit} = this.props.vocaList
+    
     if (item.isHeader) {
       return (
         <View style={styles.headerView}
@@ -115,10 +120,11 @@ export default class VocaListPage extends React.Component {
         </View>
       );
     } else {
+      const onEdit = (this.props.vocaList.onEdit )
       return (
         <View style={[gstyles.r_start, styles.item]}>
           <View style={[styles.itemLeft]}>
-            {this.props.vocaList.onEdit &&
+            {onEdit &&
               <CheckBox
                 containerStyle={styles.checkBox}
                 onPress={()=>{this._selectItem(index)}}
@@ -145,6 +151,30 @@ export default class VocaListPage extends React.Component {
     }
   };
   
+
+  _playBtn = ()=>{
+    if(this.props === Constant.PASS_LIST){
+
+    }else{
+      const data = this.state.data.filter((item,index)=>{
+        if(item.checked === true){
+          return true
+        }else{
+          return false
+        }
+      })
+      const words = data.map((item, index)=>item.content)
+      const virtualTask = VocaUtil.genVirtualTask(words)
+      console.log(virtualTask)
+      this.props.navigation.navigate('VocaPlay',{
+        task:virtualTask, 
+        mode:Constant.NORMAL_PLAY,
+        normalType: Constant.BY_VIRTUAL_TASK
+      });
+    }
+  }
+  
+
   render() {
     let title = ''
     
@@ -174,13 +204,16 @@ export default class VocaListPage extends React.Component {
           extraData={this.props.vocaList} 
              
         />
-        {this.props.vocaList.onEdit &&
+        {/* 按钮 */}
+        {this.props.vocaList.onEdit && this.props.index === this.props.pageIndex &&
           <Button
-            containerStyle={styles.bottomBtn}
-            buttonStyle={{ backgroundColor:'#FFE957',}}
-            disabled={!this.state.checked}
-            title={title}
             type="solid"
+            disabled={!this.state.checked}
+            buttonStyle={{ backgroundColor:'#FFE957',}}
+            title={title}
+            titleStyle={gstyles.md_black}
+            containerStyle={styles.bottomBtn}
+            onPress={this._playBtn}
           />
         } 
       </View>

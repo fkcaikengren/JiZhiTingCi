@@ -61,7 +61,7 @@ class LearnCardPage extends Component {
         if(task.curIndex < task.wordCount-1){
             this.setState({task:{...task, curIndex:task.curIndex+1}})
         }else{
-            const finalTask = {...task, curIndex:0, process:Constant.IN_LEARN_TEST_1}
+            const finalTask = {...task, curIndex:0, progress:Constant.IN_LEARN_TEST_1}
             const routeName = this.props.navigation.getParam('nextRouteName')
             //更新任务
             this.props.updateTask(finalTask)

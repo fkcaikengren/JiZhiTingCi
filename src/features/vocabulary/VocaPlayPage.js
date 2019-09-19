@@ -30,6 +30,7 @@ import AudioFetch from './service/AudioFetch'
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import {PlaySoundJob} from './service/BackgroundJobService'
+import CardView from 'react-native-cardview';
 
 
 const ITEM_H = 55;
@@ -64,7 +65,7 @@ class VocaPlayPage extends React.Component {
         //当前模式
         this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
         this.isStudyMode = false
-        if(this.mode !== Constant.NORMAL_PLAY){  //新学和复习统称学习模式
+        if(this.mode === Constant.LEARN_PLAY || this.mode === Constant.REVIEW_PLAY){  //新学和复习统称学习模式
             this.isStudyMode = true
         }
         this.finishedTimes = 0
@@ -97,6 +98,8 @@ class VocaPlayPage extends React.Component {
         }
 
         this.vocaPlayService.stateRef = this.isStudyMode?this.state:null
+        //修改当前normalType
+        this.props.changeNormalType(this.props.navigation.getParam('normalType', Constant.BY_REAL_TASK))
         console.disableYellowBox = true
         
     }
@@ -143,6 +146,20 @@ class VocaPlayPage extends React.Component {
             const timeoutId = BackgroundTimer.setTimeout(()=>{
                 this.vocaPlayService.autoplay(task.curIndex)
             },1000);
+        }else {
+            if(this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK){
+                const task = this.props.navigation.getParam('task')
+                const showWordInfos = VocaUtil.getShowWordInfos(task.words)
+                this.props.loadTask(task, showWordInfos)
+                console.log('---chagne state------')
+                console.log(this.vocaPlayService.stateRef)
+
+                // 1s后自动播放
+                const timeoutId = BackgroundTimer.setTimeout(()=>{
+                    this.vocaPlayService.autoplay(task.curIndex)
+                },1000);
+            }
+           
         }
 
     }
@@ -282,7 +299,7 @@ class VocaPlayPage extends React.Component {
             if(task.status === Constant.STATUS_0){
                 //跳转到卡片学习页面
                 nextRouteName='TestVocaTran'
-                finalTask.process='IN_LEARN_CARD'
+                finalTask.progress='IN_LEARN_CARD'
                 otherParams = {
                     showAll:false, 
                     playWord: true,      //用于LearCard,自动播放单词
@@ -291,7 +308,7 @@ class VocaPlayPage extends React.Component {
             }else{
                 //跳转到测试页面
                 nextRouteName='Home'
-                finalTask.process='IN_REVIEW_TEST'
+                finalTask.progress='IN_REVIEW_TEST'
             }
             // 拷贝给home
             this.props.updateTask(finalTask)
@@ -419,9 +436,9 @@ class VocaPlayPage extends React.Component {
         const listenTimes = item.listenTimes
         const wrongAvg = VocaUtil.calculateWrongAvg(item.words)
         let dotColor = ''
-        if(wrongAvg < 1){ 
+        if(wrongAvg < 0.4){ 
             dotColor = '#1890FF'
-        }else if(wrongAvg > 2){
+        }else if(wrongAvg > 1.5){
             dotColor = '#F2753F'
         }else{
             dotColor = '#FFE957'
@@ -435,7 +452,7 @@ class VocaPlayPage extends React.Component {
             //数据库加载任务
             const task = this.taskDao.getTaskByOrder(item.taskOrder)
             const showWordInfos = VocaUtil.getShowWordInfos(task.words)
-            loadTask(task, showWordInfos)
+            loadTask(VocaUtil.copyTaskDeep(task,testWrongNumIsZero=true), showWordInfos)
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             this.vocaPlayService.autoplay(0)
             // NotificationManage.play((e)=>{
@@ -490,7 +507,13 @@ class VocaPlayPage extends React.Component {
                 <FlatList
                     style={{width:'100%'}}
                     //数据源
-                    data={this.taskDao.getLearnedTasks()}
+                    data={this.taskDao.getLearnedTasks().filter((task,index)=>{
+                        if(task.progress === Constant.IN_REVIEW_FINISH){
+                            return true
+                        }else{
+                            return false
+                        }
+                    })}
                     //渲染列表数据
                     renderItem={this._renderTaskItem}
                     keyExtractor={(item, index) => index}
@@ -539,11 +562,14 @@ class VocaPlayPage extends React.Component {
                     <VocaCard wordInfo={showWordInfos[this.state.clickIndex]}/>
                 }
                 {/* 底部 */}
-                <View style={[gstyles.modalBottom ,gstyles.r_end]}>
-                    <AliIcon name='guanbi' size={40} color='#FFE957' onPress={()=>{
-                        this._closeVocaModal()
-                    }}/>
-                </View>
+                <CardView 
+                     cardElevation={5}
+                     cardMaxElevation={5}
+                     style={styles.closeBtn}>
+                        <AliIcon name='cha' size={20} color={gstyles.black} onPress={()=>{
+                            this._closeVocaModal()
+                        }}/>
+                    </CardView>
         </Modal>
     }
 
@@ -679,13 +705,14 @@ const mapStateToProps = state =>({
 });
 
 const mapDispatchToProps = {
-    
+    updatePlayTask : vocaPlayAction.updatePlayTask,
     changePlayTimer : vocaPlayAction.changePlayTimer,
     changeCurIndex : vocaPlayAction.changeCurIndex,
     toggleWord : vocaPlayAction.toggleWord,
     toggleTran : vocaPlayAction.toggleTran,
     changeInterval : vocaPlayAction.changeInterval,
     passWord : vocaPlayAction.passWord,
+    changeNormalType : vocaPlayAction.changeNormalType,
 
     loadTask : vocaPlayAction.loadTask,
     loadTheme : vocaPlayAction.loadThemes,

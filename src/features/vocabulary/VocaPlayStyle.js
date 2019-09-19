@@ -169,6 +169,15 @@ const styles = StyleSheet.create({
         width:4,
         height:4,
         borderRadius:20
+    },
+    closeBtn:{
+        position:'absolute',
+        bottom: 14,
+        right:14,
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+        padding:10,
     }
 
   

@@ -1,6 +1,6 @@
 import {take, put, call} from 'redux-saga/effects'
 import VocaTaskDao from '../../service/VocaTaskDao';
-
+import * as Constant from '../../common/constant'
 
 /**提交单词计划 */
 export function * uploadTasks(tasks){
@@ -10,9 +10,11 @@ export function * uploadTasks(tasks){
         // res 判断是否同步成功
         // 数据更新到本地realm数据库
         const notSyncTasks = tasks.filter((task,index)=>{
+           
             if(task.isSyncLocal){
                 return false
             }else{
+                task.isSyncLocal = true
                 return true
             }
         })

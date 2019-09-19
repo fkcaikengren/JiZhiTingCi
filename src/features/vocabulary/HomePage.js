@@ -93,6 +93,7 @@ const mapStateToProps = state =>({
 const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
     uploadTasks : HomeAction.uploadTasks,
+    updateTask : HomeAction.updateTask,
     changePlayTimer : VocaPlayAction.changePlayTimer,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

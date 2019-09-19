@@ -3,6 +3,7 @@ import {StyleSheet, Text, View,TouchableNativeFeedback} from 'react-native';
 import {connect} from 'react-redux'
 
 import * as homeAction from './redux/action/homeAction'
+import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
@@ -73,7 +74,7 @@ class TestSenVocaPage extends Component {
         return (
             <TestPage 
                 {...this.props}
-                mode='study'
+                mode={this.props.navigation.getParam('mode')}
                 type={Constant.TRAN_WORD}
                 playType='sentence'
                 testTime={16}
@@ -90,7 +91,10 @@ const mapStateToProps = state=>({
 })
 
 const mapDispatchToProps = {
-    updateTask: homeAction.updateTask
+    updateTask: homeAction.updateTask,
+    setShouldUpload: homeAction.setShouldUpload,
+
+    updatePlayTask: vocaPlayAction.updatePlayTask
 }
 
 

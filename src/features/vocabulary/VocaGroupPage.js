@@ -42,13 +42,7 @@ export default class VocaGroupPage extends Component {
     }
 
     componentDidMount(){
-       //每次聚焦到页面，更新vocaGroups
-       this._refreshGroup()
-        //监听
-        this.props.navigation.addListener('didFocus',
-        payload => {
-            console.log(payload)
-        })
+        this._refreshGroup()
     }
 
     componentWillUnmount(){
