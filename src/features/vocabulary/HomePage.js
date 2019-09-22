@@ -12,6 +12,7 @@ import VocaTaskService from './service/VocaTaskService'
 import * as HomeAction from './redux/action/homeAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
+import LookWordBoard from './component/LookWordBoard'
 
 class HomePage extends Component {
     constructor(props) {

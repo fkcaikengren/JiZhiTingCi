@@ -236,6 +236,11 @@ export default class VocaTaskDao {
         return words;
     }
 
+    /** 查询出某个单词 */
+    getWord = (word)=>{
+        return this.realm.objects('TaskWord').filtered('word = "'+word+'"')
+    }
+
 
     /**
      *  清空所有任务，清空数据库

@@ -1,8 +1,9 @@
 import React from "react";
 import { FlatList , View, Text,} from "react-native";
 import { CheckBox , Button} from 'react-native-elements'
-import {connect} from 'react-redux'
+import BackgroundTimer from 'react-native-background-timer';
 import PropTypes from 'prop-types'
+import CardView from 'react-native-cardview'
 
 import TogglePane from './component/TogglePane'
 import * as Constant from './common/constant'
@@ -164,65 +165,107 @@ export default class VocaListPage extends React.Component {
         }
       })
       const words = data.map((item, index)=>item.content)
-      const virtualTask = VocaUtil.genVirtualTask(words)
-      console.log(virtualTask)
-      this.props.navigation.navigate('VocaPlay',{
-        task:virtualTask, 
-        mode:Constant.NORMAL_PLAY,
-        normalType: Constant.BY_VIRTUAL_TASK
-      });
+      if(words.length < Constant.MIN_PLAY_NUMBER){
+        this.props.toastRef.show('当前选择不足5个，不可以播放哦')
+      }else{
+        const virtualTask = VocaUtil.genVirtualTask(words)
+        console.log(virtualTask)
+
+        //暂停
+        const {autoPlayTimer, } = this.props.vocaPlay
+        if(autoPlayTimer){
+          BackgroundTimer.clearTimeout(autoPlayTimer);
+          this.props.changePlayTimer(0);
+        }
+
+        this.props.navigation.navigate('VocaPlay',{
+          task:virtualTask, 
+          mode:Constant.NORMAL_PLAY,
+          normalType: Constant.BY_VIRTUAL_TASK
+        });
+      }
+
     }
   }
   
 
   render() {
     let title = ''
-    
+    let iconName = 'Home_tv_x'
+    let noData = '暂无数据'
     switch(this.props.type){
       case Constant.WRONG_LIST:
           title='播放'
+          noData = '你还没有错词哦'
       break;
       case Constant.PASS_LIST:
           title='还原'
+          iconName = 'huanyuan'
+          noData = '你还没有pass过单词哦'
       break;
       case Constant.LEARNED_LIST:
           title='播放'
+          noData = '你还没有学过的单词哦'
       break;
       case Constant.NEW_LIST:
           title='播放'
+          noData = '没有新学的单词哦'
       break;
-
     }
+
+    const playIconColor= this.state.checked?gstyles.mainColor:'#999'
 
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.state.data}
-          renderItem={this.renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          stickyHeaderIndices={this.state.stickyHeaderIndices}
-          extraData={this.props.vocaList} 
-             
-        />
-        {/* 按钮 */}
-        {this.props.vocaList.onEdit && this.props.index === this.props.pageIndex &&
-          <Button
-            type="solid"
-            disabled={!this.state.checked}
-            buttonStyle={{ backgroundColor:'#FFE957',}}
-            title={title}
-            titleStyle={gstyles.md_black}
-            containerStyle={styles.bottomBtn}
-            onPress={this._playBtn}
+
+        {this.state.data.length > 0 &&
+          <FlatList
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              stickyHeaderIndices={this.state.stickyHeaderIndices}
+              extraData={this.props.vocaList}
+
           />
-        } 
+        }
+        {this.state.data.length <= 0 &&
+          <View style={[gstyles.c_center,{flex:1}]}>
+            <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+            <Text style={gstyles.md_black}>{noData}</Text>
+          </View>
+        }
+        {/* 按钮 */}
+        {this.props.vocaList.onEdit &&
+        <CardView
+            cardElevation={5}
+            cardMaxElevation={5}
+            cornerRadius={20}
+            style={gstyles.footer}>
+            <Button
+                disabled={!this.state.checked}
+                type="clear"
+                icon={ <AliIcon name={iconName} size={26} color={playIconColor} style={{marginRight:10}}/>}
+                title={title}
+                titleStyle={[gstyles.md_black ,{ fontWeight:'500',lineHeight:24}]}
+                onPress={this._playBtn}
+                containerStyle={{width:'100%'}}
+            >
+            </Button>
+          </CardView>
+        }
       </View>
     );
   }
 }
 
+
+
+
 VocaListPage.propTypes = {
-  type: PropTypes.string.isRequired,
+  type : PropTypes.string.isRequired,
+  index : PropTypes.number.isRequired,
+  pageIndex : PropTypes.number.isRequired,
+  toastRef : PropTypes.object
 };
 
 

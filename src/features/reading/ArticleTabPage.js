@@ -143,15 +143,15 @@ class ArticleTabPage extends React.Component {
                     </View>
             case Constant.MULTI_SELECT_READ: //选词填空
             return <View style={gstyles.r_center}>
-                        <Text style={[{color:'#303030', fontSize:18}]}>选词填空</Text>
+                        <Text style={gstyles.lg_black_bold}>选词填空</Text>
                     </View>
             case Constant.FOUR_SELECT_READ: //四选一
             return <View style={gstyles.r_center}>
-                        <Text style={[{color:'#303030', fontSize:18}]}>选词填空</Text>
+                        <Text style={gstyles.lg_black_bold}>选词填空</Text>
                     </View>
             case Constant.EXTENSIVE_READ: //泛读
             return <View style={gstyles.r_center}>
-                        <Text style={[{color:'#303030', fontSize:18}]}>泛读</Text>
+                        <Text style={gstyles.lg_black_bold}>泛读</Text>
                     </View>
                 
         }

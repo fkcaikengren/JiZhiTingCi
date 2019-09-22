@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, StatusBar, View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import * as Progress from 'react-native-progress'
 import {Header,Button} from 'react-native-elements'
 import {connect} from 'react-redux'
@@ -13,8 +13,10 @@ import VocaTaskDao from './service/VocaTaskDao'
 import vocaUtil from './common/vocaUtil'
 import * as Constant from './common/constant'
 import AudioFetch from './service/AudioFetch'
+import LookWordBoard from "./component/LookWordBoard";
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
+
 
 class LearnCardPage extends Component {
 
@@ -26,6 +28,7 @@ class LearnCardPage extends Component {
                 words:[]
             }, 
             showWordInfos:[],
+            showNext: true,
             refresh:false
         }
 
@@ -91,8 +94,8 @@ class LearnCardPage extends Component {
                 <StatusBar translucent={true} />
                 {/* 头部 */}
                 <Header
-                    statusBarProps={{ barStyle: 'light-content' }}
-                    barStyle="light-content" // or directly
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle="dark-content" // or directly
                     leftComponent={//返回
                         <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
                             //更新task
@@ -120,15 +123,22 @@ class LearnCardPage extends Component {
                         showAll={getParam('showAll',true)}
                         playWord={getParam('playWord',true)}
                         playSentence={getParam('playSentence',true)}
+                        lookWord={this.wordBoard.lookWord}
                     />
                 }
-                <View style={styles.nextBtn}
-                onStartShouldSetResponder={e=>true}
-                onResponderGrant={e=>this._nextWord()}
-                >
-                    <Text style={{color:'#303030',fontSize:16}}>Next</Text>
-                </View>
-                        
+                {this.state.showNext &&
+                    <View style={styles.nextBtn}
+                        onStartShouldSetResponder={e=>true}
+                        onResponderGrant={e=>this._nextWord()}
+                        >
+                        <Text style={gstyles.md_black}>Next</Text>
+                    </View>
+                }
+
+                <LookWordBoard
+                    ref={ref=>this.wordBoard = ref}
+                    onStateChange={(isOpen)=>this.setState({showNext:!isOpen})}
+                />
             </View>
         );
     }

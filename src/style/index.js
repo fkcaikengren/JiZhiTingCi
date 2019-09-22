@@ -45,6 +45,11 @@ const gstyles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'flex-start',
     },
+    c_center_between:{
+        flexDirection:'column',
+        justifyContent:'space-between',
+        alignItems:'center',
+    },
     c_start:{
         flexDirection:'column',
         justifyContent:'flex-start',
@@ -85,12 +90,17 @@ const gstyles = StyleSheet.create({
     serialText: {
         fontSize: 16,
         color:'#404040'
-    },  
+    },
 
-    //文字
-    pageTitle:{
-        color:'#FFF', 
-        fontSize:18
+    errBtn:{
+        borderWidth:StyleSheet.hairlineWidth,
+        borderColor:'#888',
+        borderRadius:3,
+        fontSize:12,
+        color:'#888',
+        paddingHorizontal:2,
+        textAlign:'center',
+        marginRight:16,
     },
     //灰色
     xs_lightGray:{
@@ -180,6 +190,32 @@ const gstyles = StyleSheet.create({
         color: '#202020',
         fontSize: 20
     },
+    // 黑色加粗
+    xs_black_bold:{
+        color: '#202020',
+        fontSize: 12,
+        fontWeight:'500'
+    },
+    sm_black_bold:{
+        color: '#202020',
+        fontSize: 14,
+        fontWeight:'500'
+    },
+    md_black_bold:{
+        color: '#202020',
+        fontSize: 16,
+        fontWeight:'500'
+    },
+    lg_black_bold:{
+        color: '#202020',
+        fontSize: 18,
+        fontWeight:'500'
+    },
+    xl_black_bold:{
+        color: '#202020',
+        fontSize: 20,
+        fontWeight:'500'
+    },
 
     //白色
     xs_white:{
@@ -202,7 +238,32 @@ const gstyles = StyleSheet.create({
         color: '#FFF',
         fontSize: 20
     },
-
+    //白色加粗
+    xs_white_bold:{
+        color: '#FFF',
+        fontSize: 12,
+        fontWeight:'500'
+    },
+    sm_white_bold:{
+        color: '#FFF',
+        fontSize: 14,
+        fontWeight:'500'
+    },
+    md_white_bold:{
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight:'500'
+    },
+    lg_white_bold:{
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight:'500'
+    },
+    xl_white_bold:{
+        color: '#FFF',
+        fontSize: 20,
+        fontWeight:'500'
+    },
 
 });
 

@@ -17,4 +17,6 @@ export default class _util{
     static getDaysMS(dayCount){
         return dayCount*CConstant.DAY_MS
     }
+
+
 }

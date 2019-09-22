@@ -6,7 +6,7 @@ const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     searchBar:{
-      height: 55, 
+      height: 55,
       width:width,
       backgroundColor:'#FFF'
     },
@@ -22,11 +22,6 @@ const styles = StyleSheet.create({
       borderRadius:5,
       backgroundColor:'#EFEFEF'
     },  
-    cancelBtn:{
-      color:'#202020',
-      fontSize:16,
-      paddingRight:5,
-    },
     item:{
       width:width,
       flexDirection:'column',

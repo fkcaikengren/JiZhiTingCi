@@ -56,6 +56,7 @@ const VocaHomeStackNav = createStackNavigator(
       // 单词轮播
       VocaPlay: {
         screen: VocaPlayPage,
+        gesturesEnabled: true,
       },
       // 卡片学习
       LearnCard: {

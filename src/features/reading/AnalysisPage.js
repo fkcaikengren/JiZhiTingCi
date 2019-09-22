@@ -108,7 +108,7 @@ class AnalysisPage extends React.Component {
                     <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={{ text: handin?'练习结果':'答案解析', style: { color: '#303030', fontSize:18 } }}
+                centerComponent={{ text: handin?'练习结果':'答案解析', style: gstyles.lg_black_bold}}
                 rightComponent={handin?null:
                     <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
                         <Text style={styles.showAnswerBtn}>答案</Text>

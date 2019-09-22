@@ -4,7 +4,6 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
-import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
 import {store} from '../../redux/store'
@@ -236,11 +235,7 @@ vocaDao.open()
     .add('VocaPlay', () =>
       <Provider store={store}>
           <MenuProvider>
-              <Root>
-                  <Container style={styles.container}>
-                    <VocaPlayPage mode={mode} task={task}/>
-                  </Container>
-              </Root>
+            <VocaPlayPage mode={mode} task={task}/>
           </MenuProvider>
       </Provider>
     )

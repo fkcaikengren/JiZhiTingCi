@@ -33,26 +33,29 @@ const styles = StyleSheet.create({
         marginLeft:10,
     },
     modal: {
-        width:width-100,
-        height: 230,
+        flex:1,
+        width:'75%',
+        height: 200,
+        position: 'absolute',
+        bottom: 0,
         backgroundColor: "#FFF",
         borderRadius:12,
     },
-    buttongGroup:{
-        width:width-100,
-        flexDirection:'row',
-        justifyContent:'space-around',
-        alignItems:'center',
-        marginTop:10
+    inputStyle:{
+        height:40,
+        width:'70%',
+        fontSize:16,
+        color:'#888',
+        borderWidth:1,
+        borderRadius:5,
+        marginTop:16,
     },
-
-    
-    bottomBtnGroup:{
-         flexDirection:'row',
-        justifyContent:'space-around',
-        alignItems:'center',
+    modalBtnGroup:{
+        flex:1,
+        width:'80%',
+        height:'24%'
     }
-   
+
 });
 
 export default styles

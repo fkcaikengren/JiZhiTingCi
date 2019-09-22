@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, View, StyleSheet, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
-import { Container, Content, Grid, Row, Col, Header, Button, Body, Switch} from 'native-base';
-import {NavigationActions, StackActions} from 'react-navigation'
+import {Header} from 'react-native-elements'
+import {Grid, Col,} from 'react-native-easy-grid'
 
 import {turnLogoImg} from '../../image';
 import AliIcon from '../../component/AliIcon';
 import IconListItem from '../../component/IconListItem';
 import UserDao from '../../dao/mine/UserDao'
+import vocaUtil from "../vocabulary/common/vocaUtil";
+import gstyles from "../../style";
+
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -75,7 +78,7 @@ export default class AccountPage extends React.Component {
     render(){
         let {user} = this.state
         return(
-            <Container style={styles.container}>
+            <View style={styles.container}>
                 <StatusBar
                     translucent={true}
                     // hidden
@@ -83,22 +86,20 @@ export default class AccountPage extends React.Component {
 
                 <View style={{width:width, height:StatusBarHeight, backgroundColor:'#1890FF'}}></View>
                 {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#1890FF', elevation:0,}}>
-                    <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
-                            this.props.navigation.goBack();
-                        }}></AliIcon>
-                    </Button>
-                    <Body style={{flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',}}>
-                        <View style={[styles.center,]}>
-                            <Text style={{fontSize:16, color:'#FFF', fontWeight:'500'}}>个人中心</Text>
-                        </View>
-                    </Body>
-                </Header> 
+                <Header
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle="dark-content" // or directly
+                    leftComponent={//返回
+                        <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
+                        }}/> }
+                    centerComponent={{ text: '个人中心', style: gstyles.lg_black_bold }}
+                    containerStyle={{
+                        backgroundColor: '#FCFCFC00',
+                        borderBottomColor: '#FCFCFC00',
+                    }}
+                />
 
-                <Content>
+                <View>
                     <Grid>
                         <Col style={{marginTop:20}}>
                             <IconListItem 
@@ -155,8 +156,8 @@ export default class AccountPage extends React.Component {
                             
                         </Col>
                     </Grid>
-                </Content>
-            </Container>
+                </View>
+            </View>
         );
     }
 }

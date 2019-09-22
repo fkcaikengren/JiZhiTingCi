@@ -46,6 +46,8 @@ export const IN_CASUAL_PLAY = 'IN_CASUAL_PLAY'
 export const BY_REAL_TASK = 'BY_REAL_TASK'
 export const BY_VIRTUAL_TASK ='BY_VIRTUAL_TASK'
 export const VIRTUAL_TASK_ORDER = 'VIRTUAL_TASK_ORDER'
+export const MIN_PLAY_NUMBER = 5                    //最小播放数量
+
 
 
 //单词列表

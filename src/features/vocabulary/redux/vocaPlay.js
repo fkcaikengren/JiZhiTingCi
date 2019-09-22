@@ -108,7 +108,7 @@ export const vocaPlay =  handleActions({
         const word = action.payload.word
 
         //修改passed, wordCount, 保存到realm数据库
-        const res = VocaUtil.passWordInTask(task.words,word,task.taskOrder, beforeCount, showWordInfos)
+        const res = VocaUtil.passWordInTask(task.words,word,task.taskOrder, showWordInfos)
         
         //pass最后一个单词，修改下标
         if(index+1 === beforeCount){

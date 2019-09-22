@@ -4,8 +4,10 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Col, Row, Grid, } from 'react-native-easy-grid';
 import { createNavigationReducer,createReactNavigationReduxMiddleware,createReduxContainer} from 'react-navigation-redux-helpers';
 import { connect} from 'react-redux'
+import SplashScreen from 'react-native-splash-screen'
 import HomeStackNav from './HomeStackNav';
 import LoginStackNav from '../features/mine/navigation/LoginStackNav';
+
 
 class AuthLoadingPage extends Component {
 
@@ -15,16 +17,18 @@ class AuthLoadingPage extends Component {
 
     componentDidMount(){
         this._bootstrap();
+         //隐藏启动页
+        SplashScreen.hide();
     }
 
     // token验证登录状态
-    _bootstrap = () => {
+     _bootstrap = async () => {
         //登录进入前，无token
-        // Http.setHeader('token', null)
-        Storage.load({
-          key: 'token',
-        })
-        .then(token => {
+        try{
+            // Http.setHeader('token', null)
+            const token = await Storage.load({
+                key: 'token',
+            })
             if(token && token !== ''){
                 //设置网络请求头，带上token参数
                 Http.defaults.headers['token'] = token
@@ -34,14 +38,13 @@ class AuthLoadingPage extends Component {
             }else{
                 this.props.navigation.navigate('LoginStack')
             }
-        })
-        .catch(e=>{
-            console.log('Storage获取token 失败，错误信息如下：')
+        }catch(e){
             console.log(e)
             this.props.navigation.navigate('LoginStack')
-        })
+        }
         
     };
+
     render() {
         return (
             <View>
@@ -60,6 +63,9 @@ const AppNavigator = createAppContainer(createSwitchNavigator(
       HomeStack: HomeStackNav,
       LoginStack: LoginStackNav,
     },
+    {
+        initialRouteName: 'AuthLoading',
+    }
 ));
 
 //1. 创建reducer

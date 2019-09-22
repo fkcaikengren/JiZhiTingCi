@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
-import { Container, Content, Grid, Row, Col, ListItem, Icon, Left, Body, Right, Button, Switch} from 'native-base';
+import {Grid, Row, Col} from 'react-native-easy-grid'
 
 import {turnLogoImg} from '../../image';
 import AliIcon from '../../component/AliIcon';
 import IconListItem from '../../component/IconListItem';
-import UserDao from '../../dao/mine/UserDao'
+import {Header} from "react-native-elements";
+import gstyles from "../../style";
 
 
 const Dimensions = require('Dimensions');
@@ -56,22 +57,13 @@ export default class MinePage extends React.Component {
     constructor(props){
         super(props);
         this.state={}
-        this.dao = new UserDao()
         this.state = {user:{}}
     }
 
     componentDidMount(){
-        this.dao.open()
-        .then(()=>{
-            let user = this.dao.getUser();
-            this.setState({user:{...user}})
-            //拷贝完数据，关闭接口（因为这个页面不会卸载）
-            this.dao.close();
-        })
     }
 
     componentWillUnmount(){
-        alert('MinePage out, close realm  ')
     }
 
     _setVocaLevel = (num)=>{
@@ -102,88 +94,92 @@ export default class MinePage extends React.Component {
         const {user} = this.state
         console.log(user)
         return(
-            <Container>
-                <StatusBar
-                    translucent={true}
-                    // hidden
-                />
-                <View style={{width:width, height:STATUSBAR_HEIGHT, backgroundColor:'#FDFDFD'}}></View>
+            <View>
                 {/* 头部 */}
-                <Content>
-                    <Grid>
-                        {/* 头像 */}
-                        <Row style={{height:160, backgroundColor:'#1890FF'}}>
-                            <Col style={[styles.c_center, ]}>
-                                <Text style={styles.userNameFont}>{user.nickname}</Text>
-                                <View style={styles.member}>
-                                    <AliIcon name='huiyuan' size={26} color='red' style={{fontWeight:'600'}}></AliIcon>
-                                    <Text style={styles.memberFont}>查看会员</Text>
-                                </View>
-                            </Col>
-                            <Col style={styles.c_center}>
-                                <TouchableOpacity onPress={()=>{
-                                    this.props.navigation.navigate('Account');
-                                }}>
-                                    <Image source={turnLogoImg} style={[styles.headerIcon]} ></Image>
-                                </TouchableOpacity>
-                                
-                            </Col>
-                        </Row>
+                <Header
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle="dark-content" // or directly
+                    leftComponent={//返回
+                        <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
+                        }}/> }
+                    centerComponent={{ text: '个人', style: gstyles.lg_black_bold }}
+                    containerStyle={{
+                        backgroundColor: '#FCFCFC00',
+                        borderBottomColor: '#FCFCFC00',
+                    }}
+                />
+                <Grid>
+                    {/* 头像 */}
+                    <Row style={{height:160, backgroundColor:'#1890FF'}}>
+                        <Col style={[styles.c_center, ]}>
+                            <Text style={styles.userNameFont}>{user.nickname}</Text>
+                            <View style={styles.member}>
+                                <AliIcon name='huiyuan' size={26} color='red' style={{fontWeight:'600'}}></AliIcon>
+                                <Text style={styles.memberFont}>查看会员</Text>
+                            </View>
+                        </Col>
+                        <Col style={styles.c_center}>
+                            <TouchableOpacity onPress={()=>{
+                                this.props.navigation.navigate('Account');
+                            }}>
+                                <Image source={turnLogoImg} style={[styles.headerIcon]} ></Image>
+                            </TouchableOpacity>
 
-                        {/* 等级和极币 */}
-                        <Row style={{marginTop:30,}}>
-                            <Col style={[styles.c_center,{borderRightWidth:1, borderRightColor:'#cfcfcf'}]}>
-                                <Text style={styles.keyFont}>{this._setVocaLevel(user.level)}</Text>
-                                <Text>等级</Text>
-                            </Col>
-                            <Col style={[styles.c_center,]}>
-                                <Text style={styles.keyFont}>{user.balance}</Text>
-                                <Text>极币</Text>
-                            </Col>
-                        </Row>
-                        {/* 功能列表 */}
-                        <Row style={{marginTop:30,}}>
-                            <Col>
-                                <IconListItem 
-                                    leftIcon={<AliIcon name='tequan' size={26} color='#F79131' ></AliIcon>}
-                                    title='我的特权'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('特权');
-                                    }}
-                                />
-                                <IconListItem 
-                                    leftIcon={<AliIcon name='wenda1' size={26} color='#F79131' ></AliIcon>}
-                                    title='我的读后感'
-                                    subtitle='读后感、评论'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('读后感');
-                                    }}
-                                />
-                                <IconListItem 
-                                    leftIcon={<AliIcon name='xiazai' size={26} color='#F79131' ></AliIcon>}
-                                    title='我的下载'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('下载');
-                                    }}
-                                />
-                                <IconListItem 
-                                    leftIcon={<AliIcon name='shezhi' size={26} color='#F79131' ></AliIcon>}
-                                    title='设置'
-                                    arrow={true} 
-                                    onPress={()=>{
-                                        alert('定时');
-                                    }}
-                                />
-                                
-                                
-                            </Col>
-                        </Row>
-                    </Grid>
-                </Content>
-            </Container>
+                        </Col>
+                    </Row>
+                    {/* 等级和极币 */}
+                    <Row style={{marginTop:30,}}>
+                        <Col style={[styles.c_center,{borderRightWidth:1, borderRightColor:'#cfcfcf'}]}>
+                            <Text style={styles.keyFont}>{this._setVocaLevel(user.level)}</Text>
+                            <Text>等级</Text>
+                        </Col>
+                        <Col style={[styles.c_center,]}>
+                            <Text style={styles.keyFont}>{user.balance}</Text>
+                            <Text>极币</Text>
+                        </Col>
+                    </Row>
+                    {/* 功能列表 */}
+                    <Row style={{marginTop:30,}}>
+                        <Col>
+                            <IconListItem
+                                leftIcon={<AliIcon name='tequan' size={26} color='#F79131' ></AliIcon>}
+                                title='我的特权'
+                                arrow={true}
+                                onPress={()=>{
+                                    alert('特权');
+                                }}
+                            />
+                            <IconListItem
+                                leftIcon={<AliIcon name='wenda1' size={26} color='#F79131' ></AliIcon>}
+                                title='我的读后感'
+                                subtitle='读后感、评论'
+                                arrow={true}
+                                onPress={()=>{
+                                    alert('读后感');
+                                }}
+                            />
+                            <IconListItem
+                                leftIcon={<AliIcon name='xiazai' size={26} color='#F79131' ></AliIcon>}
+                                title='我的下载'
+                                arrow={true}
+                                onPress={()=>{
+                                    alert('下载');
+                                }}
+                            />
+                            <IconListItem
+                                leftIcon={<AliIcon name='shezhi' size={26} color='#F79131' ></AliIcon>}
+                                title='设置'
+                                arrow={true}
+                                onPress={()=>{
+                                    alert('定时');
+                                }}
+                            />
+
+
+                        </Col>
+                    </Row>
+                </Grid>
+            </View>
         );
     }
 }

@@ -65,7 +65,7 @@ export default class HomeHeader extends Component {
   renderFixedHeader = ()=>{
     return   <View style={styles.fixedSection}>
       <AliIcon name='wode' size={26} color='#202020'  onPress={this._navVocaSearch} />
-      <Text style={{color:'#202020',fontSize:14}}>四级核心必考词汇</Text>
+      <Text style={[gstyles.md_black,{fontWeight:'700'}]}>四级核心必考词汇</Text>
       <AliIcon name='chazhao' size={24} color='#202020'  onPress={this._navVocaSearch} />
     </View>
   }
@@ -104,15 +104,15 @@ export default class HomeHeader extends Component {
             {/* 内容展示 */}
             <Row style={styles.headerCenter}>
               <Col style={gstyles.c_center}>
-                <Text style={styles.smdDarkFont}>掌握单词</Text>
-                <Text style={styles.smDarkFont}>
-                  <Text style={styles.lgDarkFont}>29</Text>
+                <Text style={gstyles.md_black}>掌握单词</Text>
+                <Text style={gstyles.md_black}>
+                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>29</Text>
                   /2300</Text>
               </Col>
               <Col style={gstyles.c_center}>
-                <Text style={styles.smdDarkFont}>已学天数</Text>
-                <Text style={styles.smDarkFont}>
-                  <Text style={styles.lgDarkFont}>59</Text>
+                <Text style={gstyles.md_black}>已学天数</Text>
+                <Text style={gstyles.md_black}>
+                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>59</Text>
                   /140</Text>
               </Col>
             </Row>
@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
   },
   headerCenter:{
     position:'absolute',
-    bottom:'50%',
-    paddingHorizontal:20,
+    bottom:'45%',
+    paddingHorizontal:40,
   },  
   headerBottom: {
     position:'absolute',

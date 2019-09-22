@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, FlatList,View, Text, TouchableNativeFeedback, TouchableWithoutFeedback} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
-import {WhiteSpace} from '@ant-design/react-native'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import BackgroundTimer from 'react-native-background-timer';
 import NotificationManage from '../../../modules/NotificationManage'
@@ -9,12 +8,10 @@ import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import styles from '../VocaPlayStyle'
-import * as VocaConfig from '../common/vocaConfig'
 import gstyles from '../../../style';
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-global.VocaPlayInterval = 1.0;
 
 export default class PlayController extends React.Component {
     constructor(props){
@@ -29,6 +26,8 @@ export default class PlayController extends React.Component {
      _chooseTest = (value) =>{
         const {navigate} = this.props.navigation
         const {task} = this.props.vocaPlay
+        const testTask = {...task, curIndex:0}
+        this._pause()
         switch(value){
             case 0: //中义选词测试
                 // this.props.navigation.navigate('TestEnTran');
@@ -37,7 +36,6 @@ export default class PlayController extends React.Component {
                 // this.props.navigation.navigate('TestSentence');
                 break;
             case 2: //词选中义测试 
-                const testTask = {...task, curIndex:0}
                 navigate('TestVocaTran',{task:testTask, mode:'normal', isRetest:false})
                 break;
             case 3: //听音选词测试
@@ -56,9 +54,22 @@ export default class PlayController extends React.Component {
     //选择播放时间间隔
     _chooseInterval = (interval)=>{
         const {changeInterval } = this.props;
-        VocaPlayInterval = interval;
-        changeInterval(VocaPlayInterval);
+        changeInterval(interval);
         
+    }
+
+    _pause = ()=>{
+        const {autoPlayTimer, task, curIndex } = this.props.vocaPlay;
+        const {changePlayTimer} = this.props;
+        if(autoPlayTimer){
+            //暂停
+            clearTimeout(autoPlayTimer);
+            changePlayTimer(0);
+            NotificationManage.pause((e)=>{
+                console.log(e)
+            },()=>null);
+
+        }
     }
 
     //播放暂停切换
@@ -97,7 +108,7 @@ export default class PlayController extends React.Component {
             backgroundColor:Theme.themeColor,
         }
         const progressNum = wordCount==undefined?0:(curIndex+1)/wordCount
-
+        const popStyle = {fontSize:16, padding:6, color: Theme.themeColor}
         return(
             //  底部控制
              <Grid style={{width:width, position:'absolute', bottom:0}}>
@@ -106,6 +117,8 @@ export default class PlayController extends React.Component {
                     flexDirection:'row',
                     justifyContent:'space-around',
                     alignItems:'center',
+                    marginHorizontal:10,
+                    marginBottom:10,
                 }}>
                  {/* 英文单词按钮 */}
                     <View 
@@ -122,7 +135,7 @@ export default class PlayController extends React.Component {
                                 themes.map((item, index)=>{
                                     return (
                                         <MenuOption key={item.id} value={item.themeId} style={index+1===themes.length?{}:gstyles.haireBottom} >
-                                            <Text style={{color: Theme.themeColor}}>{item.themeName}</Text>
+                                            <Text style={popStyle}>{item.themeName}</Text>
                                         </MenuOption>
                                     );
                                 })
@@ -135,16 +148,16 @@ export default class PlayController extends React.Component {
                         <MenuTrigger text='测试' customStyles={{triggerText: styles.triggerText,}}/>
                         <MenuOptions>
                             <MenuOption style={gstyles.haireBottom}  value={0}  >
-                                <Text style={{color: Theme.themeColor}}>中义选词测试</Text>
+                                <Text style={popStyle}>中义选词测试</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom}  value={1}>
-                                <Text style={{color: Theme.themeColor}}>例句选词测试</Text>
+                                <Text style={popStyle}>例句选词测试</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom}  value={2}>
-                                <Text  style={{color: Theme.themeColor}}>词选中义测试</Text>
+                                <Text  style={popStyle}>词选中义测试</Text>
                             </MenuOption>
                             <MenuOption value={3}>
-                                <Text style={{color: Theme.themeColor}}>听音选词测试</Text>
+                                <Text style={popStyle}>听音选词测试</Text>
                             </MenuOption>
                         </MenuOptions>
                     </Menu>
@@ -157,12 +170,12 @@ export default class PlayController extends React.Component {
                     </View>
                 </Row>
             
-                <WhiteSpace size='md'/>
                  {/* 进度条 */}
                 <Row style={{
                     flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',
+                    marginBottom: 5,
                 }}>
                     <View style={{
                         flexDirection:'row',
@@ -181,36 +194,34 @@ export default class PlayController extends React.Component {
                     </View>
                 </Row>
              
-                <WhiteSpace size='sm'/>
                 {/* 播放按钮 */}
                 <Row style={{
                     flexDirection:'row',
                     justifyContent:'space-around',
                     alignItems:'center',
+                    paddingHorizontal:14,
+                    marginBottom:10,
                 }}>
                     <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                        <MenuTrigger text={interval+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
+                        <MenuTrigger text={Math.floor(interval)+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
                         <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={5.0}>
-                                <Text style={{color: Theme.themeColor}}>5.0s</Text>
-                            </MenuOption>
                             <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                <Text style={{color: Theme.themeColor}}>4.0s</Text>
+                                <Text style={popStyle}>4.0s</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom} value={3.0}>
-                                <Text style={{color: Theme.themeColor}}>3.0s</Text>
+                                <Text style={popStyle}>3.0s</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom} value={2.0}>
-                                <Text style={{color: Theme.themeColor}}>2.0s</Text>
+                                <Text style={popStyle}>2.0s</Text>
                             </MenuOption>
-                            <MenuOption value={1.0}>
-                                <Text style={{color: Theme.themeColor}}>1.0s</Text>
+                            <MenuOption value={1.4}>
+                                <Text style={popStyle}>1.0s</Text>
                             </MenuOption>
                             
                         </MenuOptions>
                     </Menu>
                     <View style={{
-                        width:width*(1/2),
+                        width:width*(1/2)+30,
                         flexDirection:'row',
                         justifyContent:'space-around',
                         alignItems:'center',
@@ -238,7 +249,7 @@ export default class PlayController extends React.Component {
                         <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
                     </TouchableNativeFeedback>
                 </Row>
-                <WhiteSpace size='lg'/>
+
             </Grid>
          
         );

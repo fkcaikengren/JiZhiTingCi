@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar} from 'react-native';
-import { Container, Header, Text, View, Body,Title,Button} from "native-base";
+import {StyleSheet, StatusBar, Text, View,} from 'react-native';
+import {Header} from "react-native-elements";
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
 import AliIcon from '../../component/AliIcon';
+import gstyles from "../../style";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -24,30 +25,20 @@ export default class StatisticsPage extends Component {
 
     render() {
         return (
-            <Container>
-                <StatusBar
-                    translucent={true}
-                    // hidden
-                />
-
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#77A3F0'}}></View>
+            <View>
                 {/* 头部 */}
-                <Header translucent noLeft noShadow style={{backgroundColor:'#FDFDFD', elevation:0,}}>
-                    <Button transparent style={{position:'absolute', left:10}}>
-                        <AliIcon name='fanhui' size={26} color='#1890FF' onPress={()=>{
-                            this.props.navigation.goBack();
-                        }}></AliIcon>
-                    </Button>
-                    <Body style={{flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',}}>
-                        <Text style={{fontSize:16, color:'#1890FF', fontWeight:'500'}}>打卡日历</Text>
-                    </Body>
-                    <Button transparent style={{position:'absolute', right:10}}>
-                        <AliIcon name='fenxiang' size={26} color='#1890FF'></AliIcon>
-                    </Button>
-                </Header> 
-                
+                <Header
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle="dark-content" // or directly
+                    leftComponent={//返回
+                        <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
+                        }}/> }
+                    centerComponent={{ text: '打卡日历', style: gstyles.lg_black_bold}}
+                    containerStyle={{
+                        backgroundColor: '#FCFCFC00',
+                        borderBottomColor: '#FCFCFC00',
+                    }}
+                />
                 {/* 日历 */}
 
                 <Calendar
@@ -111,7 +102,7 @@ export default class StatisticsPage extends Component {
                 }}
                 />
 
-            </Container>
+            </View>
         );
     }
 }

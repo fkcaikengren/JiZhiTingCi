@@ -4,7 +4,6 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
-import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
 import {store} from '../../redux/store'
@@ -37,11 +36,7 @@ vocaDao.open()
     .add('LearnCard', () =>
       <Provider store={store}>
           <MenuProvider>
-              <Root>
-                  <Container style={styles.container}>
-                    <LearnCardPage />
-                  </Container>
-              </Root>
+              <LearnCardPage />
           </MenuProvider>
       </Provider>
     )

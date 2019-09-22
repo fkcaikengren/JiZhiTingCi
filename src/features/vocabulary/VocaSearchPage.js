@@ -3,12 +3,12 @@ import {StatusBar ,FlatList, View, Text, TextInput, TouchableOpacity, TouchableW
 
 import VocaDao from './service/VocaDao'
 import VocaGroupDao from './service/VocaGroupDao'
-import DetailDictPage from './component/DetailDictPage';
 import styles from './VocaSearchStyle'
 import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
 import VocaUtil from './common/vocaUtil';
 import VocaCard from './component/VocaCard';
+import LookWordBoard from "./component/LookWordBoard";
 
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
@@ -29,8 +29,6 @@ export default class VocaSearchPage extends Component {
       showClearBtn:false,
     }
     this.vocaDao = VocaDao.getInstance()
-    this.vocaGroupDao = VocaGroupDao.getInstance()
-
     console.disableYellowBox = true;
   }
 
@@ -103,7 +101,7 @@ export default class VocaSearchPage extends Component {
                 {/* 搜索框 */}
                 <TextInput
                   ref={ref=>this._inputRef = ref}
-                  style={{height:40,width:'80%'}}
+                  style={[{height:45,width:'80%'},gstyles.md_black]}
                   value={this.state.searchText}
                   placeholder="请输入英文单词"
                   onChangeText={this._changeText}
@@ -119,7 +117,7 @@ export default class VocaSearchPage extends Component {
               }
             </View>
             <TouchableWithoutFeedback onPress={()=>{this.props.navigation.goBack()}}>
-              <Text style={styles.cancelBtn}>取消</Text>
+              <Text style={[gstyles.md_black,{paddingRight:5}]}>取消</Text>
             </TouchableWithoutFeedback>
           
           </View>
@@ -135,9 +133,11 @@ export default class VocaSearchPage extends Component {
           }
 
           {this.state.searchWord !== ''&&
-            <VocaCard wordInfo={this.state.data[this.state.selectedIndex]}/>
+            <VocaCard lookWord={this.wordBoard.lookWord} wordInfo={this.state.data[this.state.selectedIndex]}/>
           }
-       
+          <LookWordBoard
+              ref={ref=>this.wordBoard = ref}
+          />
       </View>
     );
   }

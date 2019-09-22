@@ -2,11 +2,9 @@
 
 'use strict';
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, TouchableNativeFeedback, Alert,
-    ScrollView
-} from 'react-native';
-import {Header, Button,Icon, Input} from 'react-native-elements'
-import LinearGradient from 'react-native-linear-gradient';
+import {StatusBar, View, Text, TouchableNativeFeedback, Alert, ScrollView,
+    TextInput,Keyboard} from 'react-native';
+import {Header, Button,Icon} from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 import CardView from 'react-native-cardview'
 import Toast, {DURATION} from 'react-native-easy-toast'
@@ -15,6 +13,7 @@ import AliIcon from '../../component/AliIcon';
 import VocaGroupDao from './service/VocaGroupDao'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
+import DashSecondLine from '../../component/DashSecondLine'
 
 
 const Dimensions = require('Dimensions');
@@ -35,9 +34,17 @@ export default class VocaGroupPage extends Component {
             updateName: '',
             selectedName: '',
             refresh: true,          //用来刷新
+            keyboardSpace:0
           };
         this.vgDao = VocaGroupDao.getInstance();
 
+        Keyboard.addListener('keyboardDidShow',(frames)=>{
+            if (!frames.endCoordinates) return;
+            this.setState({keyboardSpace: frames.endCoordinates.height});
+        });
+        Keyboard.addListener('keyboardDidHide',(frames)=>{
+            this.setState({keyboardSpace:0});
+        });
         console.disableYellowBox=true;
     }
 
@@ -71,38 +78,47 @@ export default class VocaGroupPage extends Component {
 
     //创建弹框
     _createModal = (isAdd) =>{
-        return <Modal style={[gstyles.c_center, styles.modal]}
+        return <Modal style={[styles.modal,gstyles.c_start,{
+            //根据键盘调整位置
+            top:this.state.keyboardSpace?-10-this.state.keyboardSpace: -(height/2)+100,
+        }]}
                 isOpen={isAdd?this.state.isAddModalOpen:this.state.isUpdateModalOpen} 
                 onOpened={isAdd?this._openAddModal:this._openUpdateModal}
                 onClosed={isAdd?this._closeAddModal:this._closeUpdateModal}
-                backdrop={true} 
+                backdrop={true}
                 backdropPressToClose={true}
-                position={"center"} 
+                position={'bottom'}
                 ref={ref => {
                     isAdd
                     ?this._addModalRef = ref
                     :this._updateModalRef =ref
                 }}>
-            <Text style={[gstyles.lg_black,{marginBottom:10}]}>
-            {isAdd?'新建生词本':'修改生词本'}
-            </Text>
-            <Input
-                leftIcon={<AliIcon name='yingyong-beidanci-yingyongjianjie' size={26} color={gstyles.secColor}></AliIcon>}   
-                placeholder='请输入生词本名称' 
-                onChangeText={(name)=>{
-                    isAdd
-                    ?this.setState({addName:name})
-                    :this.setState({updateName:name})
-                }}/>
-            <View style={styles.buttongGroup}>
-                
+            <View style={[gstyles.c_center,{height:'75%'}]}>
+                <Text style={[gstyles.lg_black_bold]}>
+                    {isAdd?'新建生词本':'修改生词本'}
+                </Text>
+                <TextInput
+                    style={styles.inputStyle}
+                    value={this.state.searchText}
+                    placeholder="请输入生词本名称"
+                    onChangeText={(name)=>{
+                        isAdd
+                            ?this.setState({addName:name})
+                            :this.setState({updateName:name})
+                    }}
+                    autoFocus
+                />
+            </View>
+            <DashSecondLine backgroundColor='#AAA' len={20} width={'100%'}/>
+            <View style={[styles.modalBtnGroup,gstyles.r_around]}>
                 <Button type='clear' onPress={isAdd?this._closeAddModal:this._closeUpdateModal}
                 title='取消'
-                titleStyle={gstyles.md_gray}>
+                titleStyle={gstyles.lg_gray}>
                 </Button>
+                <View style={{width:1,height:30,backgroundColor:'#303030'}}/>
                 <Button type='clear' onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}
                 title='确定'
-                titleStyle={{fontSize:16, color:gstyles.secColor}}
+                titleStyle={gstyles.lg_black}
                 >
                 </Button>
             </View>
@@ -195,13 +211,11 @@ export default class VocaGroupPage extends Component {
                 statusBarProps={{ barStyle: 'dark-content' }}
                 barStyle='dark-content' // or directly
                 leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                    <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                rightComponent={
-                    <AliIcon name='tongbu' size={24} color={gstyles.black} />
-                }
-                centerComponent={{ text: '生词本', style: { color: '#303030', fontSize:18 } }}
+                rightComponent={ <AliIcon name='tongbu' size={24} color={gstyles.black} />}
+                centerComponent={{ text: '生词本', style: gstyles.lg_black_bold }}
                 containerStyle={{
                     backgroundColor: gstyles.mainColor,
                     justifyContent: 'space-around',
@@ -229,14 +243,13 @@ export default class VocaGroupPage extends Component {
                                     <View style={styles.groupItem}>
                                         <View style={[gstyles.r_start, {flex:1,}]}>
                                             <View style={styles.iconBg}>
-                                                <Text style={{color:'#202020', fontSize:16, fontWeight:'500'}}>
+                                                <Text style={gstyles.md_black_bold}>
                                                     {item.groupName[0]}
                                                 </Text>
                                             </View>
-                                          
                                             <View>
-                                                <Text numberOfLines={1} style={{fontSize:16, color:'#303030', marginLeft:10,}}>{item.groupName}</Text>
-                                                <Text style={{fontSize:14, marginLeft:10}}>共{item.count}词</Text>
+                                                <Text numberOfLines={1} style={[{marginLeft:10},gstyles.lg_black]}>{item.groupName}</Text>
+                                                <Text style={[{marginLeft:10},gstyles.sm_gray]}>共{item.count}词</Text>
                                             </View>
                                         </View>
                                         {!this.state.inEdit &&  item.isDefault &&
@@ -291,20 +304,20 @@ export default class VocaGroupPage extends Component {
                     cardMaxElevation={5}
                     cornerRadius={20}
                     style={gstyles.footer}>
-                        <View style={styles.bottomBtnGroup}>
+                        <View style={gstyles.r_around}>
                             <Button 
                             type="clear"
-                            icon={ <Icon name="add"  size={16} color="#303030" />}
+                            icon={ <Icon name="add"  size={24} color="#303030" />}
                             title='添加'
-                            titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                            titleStyle={gstyles.md_black_bold}
                             onPress={this._openAddModal}>
                             </Button>
                             <View style={{width:1,height:20,backgroundColor:'#555'}}></View>
                             <Button 
                             type="clear"
-                            icon={ <Icon name="edit"  size={16} color="#303030" />}
+                            icon={ <Icon name="edit"  size={20} color="#303030" />}
                             title={this.state.inEdit?'完成':'编辑'}
-                            titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
+                            titleStyle={gstyles.md_black_bold}
                             onPress={this._toggleEdit}>
                             </Button>
                         </View>

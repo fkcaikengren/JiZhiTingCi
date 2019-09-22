@@ -1,4 +1,4 @@
-package com.umeng;
+package com.um;
 
 import org.junit.Test;
 

@@ -23,8 +23,12 @@ export function * postPlan(params){
     yield put({type:'LOAD_TASKS_START'})
     try{
         const res = yield Http.post("/plan/putPlan",params)
-        const {tasks, plan } = res.data.data
+        // console.log( res.data)
+        const {tasks, plan, articles } = res.data.data
         //清空先前数据，存储新数据到realm
+        // console.log(tasks)
+        // console.log(plan)
+        console.log(articles)
         const vtd = VocaTaskDao.getInstance()
         vtd.deleteAllTasks()
         vtd.saveVocaTasks(tasks, params.taskWordCount)

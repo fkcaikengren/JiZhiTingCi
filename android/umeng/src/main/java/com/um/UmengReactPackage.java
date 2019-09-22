@@ -1,4 +1,4 @@
-package com.umeng;
+package com.um;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -30,8 +30,8 @@ public class UmengReactPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-//        modules.add(new ShareModule(reactContext));
-//        modules.add(new PushModule(reactContext));
+        modules.add(new ShareModule(reactContext));
+        modules.add(new PushModule(reactContext));
         modules.add(new AnalyticsModule(reactContext));
         return modules;
     }

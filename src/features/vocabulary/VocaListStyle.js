@@ -6,7 +6,7 @@ import gstyles from '../../style'
 const styles = StyleSheet.create({
     container:{
         backgroundColor:'#FDFDFD',
-        flex: 1
+        flex: 1,
     },
     editBtn:{
         fontSize:14,
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     tabText:{
-        color: '#555',
         paddingHorizontal:4,
         paddingBottom:4,
     },

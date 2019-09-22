@@ -7,6 +7,7 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -14,7 +15,6 @@ import com.facebook.soloader.SoLoader;
 import com.facebook.stetho.Stetho;
 import com.horcrux.svg.SvgPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
-import com.aitingci.BuildConfig;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -23,8 +23,8 @@ import com.react.rnspinkit.RNSpinkitPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.umeng.UmengReactPackage;
-import com.umeng.commonsdk.UMConfigure;
+import com.um.UmengConfig;
+import com.um.UmengReactPackage;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import com.zmxv.RNSound.RNSoundPackage;
 
@@ -55,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
             new UmengReactPackage(),
             new NotificationPackage(),
             new MainReactPackage(),
+            new SplashScreenReactPackage(),
              new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
             new BackgroundTaskPackage(),
             new RNCWebViewPackage(),
@@ -91,7 +92,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    super.onCreate();
+
 
     //Realm初始化
     Realm.init(this);
@@ -121,6 +122,6 @@ public class MainApplication extends Application implements ReactApplication {
     BackgroundTaskPackage.useContext(this);
 
     //友盟初始化
-    UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE,"");
+    UmengConfig.init(this);
   }
 }

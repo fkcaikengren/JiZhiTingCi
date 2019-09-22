@@ -95,13 +95,15 @@ export default class TaskItem extends Component {
       }
 
       return <View style={styles.playView}>
-              <AliIcon name='pass' size={20} color={gstyles.infoColor}></AliIcon>
-              <Text style={[styles.statusText,{color:gstyles.infoColor}]}>已完成</Text>
+              <View style={[gstyles.r_center,styles.finishIcon]}>
+                <AliIcon name='wancheng' size={16} color={gstyles.black} />
+              </View>
+              <Text style={[{marginLeft:12,},gstyles.md_black]}>已完成</Text>
           </View>
     }else{
       return <View style={styles.playView}>
               <FontAwesome name="play-circle" size={24} color="#999"/>
-              <Text style={styles.statusText}>待完成</Text>
+              <Text style={[{marginLeft:12,}, gstyles.md_gray]}>待完成</Text>
           </View>
       
     }
@@ -126,12 +128,12 @@ export default class TaskItem extends Component {
       onPress={this._startStudy}>
         <View style={[{paddingHorizontal:12}, disableView]}>
             <View style={[this.props.separator,styles.container]}>
-              <View style={gstyles.r_start_top}>
+              <View style={gstyles.r_start}>
                 <View style={[gstyles.c_center, {marginRight:10}]}>
                   <Text style={gstyles.serialText}>{index<10?'0'+index:index}</Text>
                 </View>
                 <View stye={styles.nameView}>
-                  <Text style={styles.nameText}>{`List-${name}`}</Text>
+                  <Text style={[gstyles.md_black,{fontWeight:'500'}]}>{name}</Text>
                   <View style={styles.noteView}>
                     <Text style={styles.labelText}>{item.status===Constant.STATUS_0?'新学':'复习'}</Text>
                     <Text style={styles.noteText}>{`共${item.wordCount}词，已完成${progressNum}%`}</Text>
@@ -165,10 +167,7 @@ const styles = StyleSheet.create({
   nameView: {
     flex: 1
   },
-  nameText: {
-    fontSize: 16,
-    color:'#303030'
-  },
+
   noteView:{
     flexDirection:'row',
     justifyContent:'flex-start',
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     textAlign:'center',
-    paddingTop:3,
+    paddingTop:2,
     lineHeight: 8,
     paddingHorizontal: 2,
     fontSize:8,
@@ -194,8 +193,12 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignItems:'center',
   },
-  statusText: {
-    marginLeft:10,
+
+  finishIcon:{
+    width:22,
+    height:22,
+    backgroundColor:gstyles.mainColor,
+    borderRadius:50,
   }
 });
 

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
-import {Container,Root,} from "native-base";
 import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store'
@@ -45,11 +44,9 @@ export default class App extends React.Component {
     return(
       <Provider store={store}>
         <MenuProvider>
-          <Root>
-            <Container style={styles.container}>
-              <AppWithNavigationState/>
-            </Container>
-          </Root>
+          <View style={styles.container}>
+            <AppWithNavigationState/>
+          </View>
         </MenuProvider>
       </Provider>
       

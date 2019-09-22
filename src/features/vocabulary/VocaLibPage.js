@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {StatusBar, View, Text, Image, FlatList} from 'react-native';
-import { WhiteSpace, Carousel, Grid, Flex, } from '@ant-design/react-native';
 import {Header, Button} from 'react-native-elements'
 import Picker from 'react-native-picker';
 import {connect} from 'react-redux';
@@ -9,6 +8,7 @@ import * as VocaLibAction from './redux/action/vocaLibAction'
 
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
+import gstyles from "../../style";
 
 
 class VocaLibPage extends Component {
@@ -59,15 +59,13 @@ class VocaLibPage extends Component {
                 let taskCount = null
                 let taskWordCount = null
                 if(sum <= 19){
-                    taskCount = 2 //1
-                    taskWordCount = sum/2
+                    taskCount = 1 //1
                 }else if(sum <= 34){
-                    taskCount = 4 //2
-                    taskWordCount = sum/4
+                    taskCount = 2 //2
                 }else if(sum <= 54){
-                    taskCount = 6 //3
-                    taskWordCount = sum/6
+                    taskCount = 3 //3
                 }
+                taskWordCount = sum/taskCount
                 console.log('制定计划，单词书编号为：'+el.id)
                 console.log(taskCount, taskWordCount);
                 //提交计划
@@ -120,13 +118,13 @@ class VocaLibPage extends Component {
                 rightComponent={
                     <AliIcon name='xiazai' size={24} color='#303030'></AliIcon>
                 }
-                centerComponent={{ text: plan.bookName, style: { color: '#303030', fontSize:18 } }}
+                centerComponent={{ text: plan.bookName, style: gstyles.lg_black_bold}}
                 containerStyle={{
                     backgroundColor: '#FCFCFC',
                     justifyContent: 'space-around',
                 }}
                 />
-                <WhiteSpace size="lg" />
+
                 {isLoadPending &&
                     <View style={{
                         flex:1,

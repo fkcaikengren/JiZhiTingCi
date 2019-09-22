@@ -1,4 +1,4 @@
-package com.umeng;
+package com.um;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

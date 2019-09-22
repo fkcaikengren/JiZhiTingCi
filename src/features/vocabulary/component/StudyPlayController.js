@@ -2,53 +2,16 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, StyleSheet,View, Text, TouchableNativeFeedback, TouchableWithoutFeedback} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
-import {WhiteSpace} from '@ant-design/react-native'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import {PropTypes} from 'prop-types';
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
-import * as VocaConfig from '../common/vocaConfig'
 import gstyles from '../../../style';
 import * as Constant from '../common/constant'
+import styles from '../VocaPlayStyle'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-
-
-const styles = StyleSheet.create({
-    textIcon:{
-        height:22,
-        width:22,
-        textAlign:'center',
-        borderWidth:1,
-        borderRadius:2,
-    },
-    unSelected:{
-        color:'#FFF',
-        borderColor:'#FFF',
-        
-    },
-    bigRoundBtn:{
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        width:55,
-        height:55,
-        borderRadius:60,
-    },
-    intervalButton: {
-        width:26,
-        color:'#FFF',  
-        paddingHorizontal:3,
-        fontSize:14,
-        textAlign:'center', 
-        lineHeight:20, 
-        borderWidth:1,
-        borderColor:'#FFF',
-        borderRadius:5
-    },
-   
-})
 
 export default class StudyPlayController extends React.Component {
     constructor(props){
@@ -114,6 +77,7 @@ export default class StudyPlayController extends React.Component {
             borderColor:Theme.themeColor,
             backgroundColor:Theme.themeColor,
         }
+        const popStyle = {fontSize:16, padding:6, color: Theme.themeColor}
         const progressNum = wordCount==undefined?0:(curIndex+1)/wordCount
 
         return(
@@ -124,7 +88,8 @@ export default class StudyPlayController extends React.Component {
                     flexDirection:'row',
                     justifyContent:'space-between',
                     alignItems:'center',
-                    paddingHorizontal:20,
+                    paddingHorizontal:22,
+                    marginBottom:16,
                 }}>
                  {/* 英文单词按钮 */}
              
@@ -142,12 +107,12 @@ export default class StudyPlayController extends React.Component {
                     </TouchableWithoutFeedback>
                 </Row>
             
-                <WhiteSpace size='xl'/>
                  {/* 进度条 */}
                 <Row style={{
                     flexDirection:'row',
                     justifyContent:'center',
                     alignItems:'center',
+                    marginBottom: 5,
                 }}>
                     <View style={{
                         flexDirection:'row',
@@ -166,13 +131,13 @@ export default class StudyPlayController extends React.Component {
                     </View>
                 </Row>
              
-                <WhiteSpace size='sm'/>
                 {/*  */}
                 <Row style={{
                     flexDirection:'row',
                     justifyContent:'space-around',
                     alignItems:'center',
                     paddingHorizontal:30,
+                    marginBottom:10,
                 }}>
                     {/* 返回 */}
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={()=>{
@@ -195,28 +160,25 @@ export default class StudyPlayController extends React.Component {
                     </View>
                     {/* 控制间隔 */}
                     <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                        <MenuTrigger text={interval+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
+                        <MenuTrigger text={Math.floor(interval)+'s'} customStyles={{triggerText: styles.intervalButton,}}/>
                         <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={5.0}>
-                                <Text style={{color: Theme.themeColor}}>5.0s</Text>
-                            </MenuOption>
+
                             <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                <Text style={{color: Theme.themeColor}}>4.0s</Text>
+                                <Text style={popStyle}>4.0s</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom} value={3.0}>
-                                <Text style={{color: Theme.themeColor}}>3.0s</Text>
+                                <Text style={popStyle}>3.0s</Text>
                             </MenuOption>
                             <MenuOption style={gstyles.haireBottom} value={2.0}>
-                                <Text style={{color: Theme.themeColor}}>2.0s</Text>
+                                <Text style={popStyle}>2.0s</Text>
                             </MenuOption>
-                            <MenuOption value={1.0}>
-                                <Text style={{color: Theme.themeColor}}>1.0s</Text>
+                            <MenuOption value={1.4}>
+                                <Text style={popStyle}>1.0s</Text>
                             </MenuOption>
                             
                         </MenuOptions>
                     </Menu>
                 </Row>
-                <WhiteSpace size='lg'/>
             </Grid>
          
         );

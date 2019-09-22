@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import {Platform, StatusBar,StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback} from 'react-native';
 import {PropTypes} from 'prop-types';
 import {Grid, Row, Col} from 'react-native-easy-grid'
-import { Button } from 'react-native-elements';
 
 import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
-import RootCard from './RootCard'
+// import RootCard from './RootCard'
 import VocaDao from '../service/VocaDao'
 import VocaGroupDao from '../service/VocaGroupDao'
 import AudioFetch from '../service/AudioFetch';
+
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -40,20 +40,8 @@ const styles = StyleSheet.create({
         borderRadius:5,
         marginBottom:16
     },
-    errBtn:{
-        borderWidth:StyleSheet.hairlineWidth,
-        borderColor:'#888',
-        borderRadius:3,
-        fontSize:12,
-        color:'#888',
-        paddingHorizontal:2,
-        textAlign:'center',
-        marginRight:10,
-    },  
-    darkFont:{
-        color:'#303030',
-        fontSize:16,
-    },
+
+
     grayFont:{
         color:'#505050',
         fontSize:16,
@@ -78,12 +66,12 @@ export default class VocaCard extends Component{
 
     constructor(props){
         super(props)
-       
+
         this.state = {
             added : false,
             showAll : this.props.showAll,
             wordRoot : null,
-            relativeRoots : []
+            relativeRoots : [],
         }
         
         this.audioFetch = AudioFetch.getInstance()
@@ -109,6 +97,8 @@ export default class VocaCard extends Component{
         }else if(playSentence){
             this.audioFetch.playSound(wordInfo.sen_pron_url)
         }
+
+
     }
 
     shouldComponentUpdate(nextProps, nextState){
@@ -148,7 +138,10 @@ export default class VocaCard extends Component{
         const comps = []
         if(trans){
             for(let k in trans)
-            comps.push(<Text style={styles.darkFont}>{`${k}. ${trans[k]}`}</Text>)
+                comps.push(<View style={[gstyles.r_start,{width:width-80}]}>
+                    <Text numberOfLines={1} style={[{width:40},gstyles.md_black]}>{k+'.'}</Text>
+                    <Text numberOfLines={1} style={gstyles.md_black}>{trans[k]}</Text>
+                </View>)
         }
         return comps
     }
@@ -179,21 +172,25 @@ export default class VocaCard extends Component{
         this.setState({showAll:true})
     }
 
-  
 
     render(){
-        const wordInfo = this.props.wordInfo
+        const {wordInfo} = this.props
         let sen = ''
         if(wordInfo.sentence && wordInfo.sentence!==''){
             const s = wordInfo.sentence.split(/<em>|<\/em>/)
             sen = s.map((text, index)=>{
                 if(index%2 === 0){
-                    return text
+                    const words = text.split(' ')
+                    return words.map((word,i)=><Text
+                        onStartShouldSetResponder={e=>true}
+                        onResponderStart={e=>this.props.lookWord(word)}
+                    >{word} </Text>)
                 }else{
                     return <Text style={{color:gstyles.emColor,fontSize:16, fontWeight:'500' }}>{text}</Text>
                 }
             })
         }
+
         return (
         <ScrollView style={{ flex: 1 }}
             pagingEnabled={false}
@@ -209,17 +206,17 @@ export default class VocaCard extends Component{
                     <Col style={styles.basic}>
                         {/* 单词 */}
                         <Row style={gstyles.r_between}>
-                            <Text style={{fontSize:20, fontWeight:'500', color:'#303030'}}>{wordInfo.word}</Text>
+                            <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
                             <View style={gstyles.r_end}>
-                                <Text style={styles.errBtn}>报错</Text>
+                                <Text style={gstyles.errBtn}>报错</Text>
                                 {this.state.added && //从生词本移除
                                     <AliIcon name='pingfen' size={22} color={gstyles.secColor}
-                                    style={{marginRight:10}} 
+                                    style={{marginRight:5}}
                                     onPress={this._removeWord}/>
                                 }
                                 {!this.state.added && //添加到生词本
                                     <AliIcon name='malingshuxiangmuicon-' size={22} color='#888' 
-                                    style={{marginRight:10}} 
+                                    style={{marginRight:5}}
                                     onPress={this._addWord}/>
                                 }
                             </View>
@@ -237,7 +234,7 @@ export default class VocaCard extends Component{
                         </Row>
                         {/* 例句 */}
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
-                            <Text style={[styles.darkFont, {flex:10}]}>{sen}</Text>
+                            <Text style={[gstyles.lg_black, {flex:10}]}>{sen}</Text>
                             <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{flex:1,marginLeft:10}} onPress={()=>{
                                 this.audioFetch.playSound(wordInfo.sen_pron_url)
                             }}/>
@@ -256,17 +253,16 @@ export default class VocaCard extends Component{
                     {/* 场景例句 */}
                     {this.state.showAll && wordInfo.examples.length>0 &&
                         <Col style={styles.carousel}>
-                            <ExampleCarousel examples={wordInfo.examples}/>
+                            <ExampleCarousel {...this.props} examples={wordInfo.examples}/>
                         </Col>
                     }
                     {/* 词根 */}
-                    {this.state.showAll && this.state.wordRoot &&
+                    {/* {this.state.showAll && this.state.wordRoot &&
                         <Col style={styles.root}>
                             <RootCard wordRoot={this.state.wordRoot} relativeRoots={this.state.relativeRoots}/>
                         </Col>
-                    }
-                    
-                    
+                    } */}
+
                 </Col>
             </Grid>
              {!this.state.showAll &&
@@ -285,13 +281,15 @@ export default class VocaCard extends Component{
 
 VocaCard.propTypes = {
     wordInfo : PropTypes.object.isRequired,
+    lookWord : PropTypes.func,
     showAll : PropTypes.bool,
     playWord : PropTypes.bool,
     playSentence : PropTypes.bool,
-   
+
 }
   
 VocaCard.defaultProps = {
+    lookWord : (word)=>null,
     showAll : true,
     playWord : false,
     playSentence : false,

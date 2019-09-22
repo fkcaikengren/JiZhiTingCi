@@ -78,7 +78,8 @@ class TestTranVocaPage extends Component {
 
 
 const mapStateToProps = state=>({
-    home:state.home
+    home:state.home,
+    vocaPlay: state.vocaPlay
 })
 
 const mapDispatchToProps = {

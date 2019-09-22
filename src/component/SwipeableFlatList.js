@@ -70,48 +70,50 @@ class SwipeableFlatList extends React.Component {
   };
 
   _renderItem = (info)=> {
-    const slideoutView = this.props.renderQuickActions(info);
-    const key = this.props.keyExtractor(info.item, info.index);
+      const slideoutView = this.props.renderQuickActions(info);
+      const key = this.props.keyExtractor(info.item, info.index);
 
-    // If renderQuickActions is unspecified or returns falsey, don't allow swipe
-    if (!slideoutView) {
-      return this.props.renderItem(info);
-    }
+      // If renderQuickActions is unspecified or returns falsey, don't allow swipe
+      if (!slideoutView) {
+        return this.props.renderItem(info);
+      }
 
-    let shouldBounceOnMount = false;
-    if (this._shouldBounceFirstRowOnMount) {
-      this._shouldBounceFirstRowOnMount = false;
-      shouldBounceOnMount = true;
-    }
+      let shouldBounceOnMount = false;
+      if (this._shouldBounceFirstRowOnMount) {
+        this._shouldBounceFirstRowOnMount = false;
+        shouldBounceOnMount = true;
+      }
 
-    return (
-      <SwipeableRow
-        slideoutView={slideoutView}
-        isOpen={key === this.state.openRowKey}
-        maxSwipeDistance={this._getMaxSwipeDistance(info)}
-        onOpen={() => { 
-          this.props.onOpen(key)
-          this.setState({
-            openRowKey: key,
-          });
-        }}
-        onClose={() => {
-          this.props.onClose()
-          this.setState({
-            openRowKey: null,
-          });
-        }}
-        shouldBounceOnMount={shouldBounceOnMount}
-        onSwipeEnd={()=>{
-          
-          this._setListViewScrollableTo(true);
-        }}
-        onSwipeStart={()=>{
-            this._setListViewScrollableTo(false);
-        }}>
-        {this.props.renderItem(info)}
-      </SwipeableRow>
-    );
+      return (
+        <SwipeableRow
+          preventSwipeRight={true}
+          slideoutView={slideoutView}
+          isOpen={key === this.state.openRowKey}
+          maxSwipeDistance={this._getMaxSwipeDistance(info)}
+          onOpen={() => { 
+            this.props.onOpen(key)
+            this.setState({
+              openRowKey: key,
+            });
+          }}
+          onClose={() => {
+            this.props.onClose()
+            this.setState({
+              openRowKey: null,
+            });
+          }}
+          shouldBounceOnMount={shouldBounceOnMount}
+          onSwipeEnd={()=>{
+            
+            this._setListViewScrollableTo(true);
+          }}
+          onSwipeStart={()=>{
+              this._setListViewScrollableTo(false);
+          }}>
+          {this.props.renderItem(info)}
+        </SwipeableRow>
+      );
+    
   };
 
   // This enables rows having variable width slideoutView.

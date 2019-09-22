@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     content:{
+        marginTop:12,
         width:'100%'
-        // width:width-120,
     },
     backgroundVideo: {
         position: 'absolute',
@@ -62,32 +62,33 @@ const styles = StyleSheet.create({
     },
 
     itemEnText:{
-        fontSize:16,
-        color:'#FFFFFFAA',
+        fontSize:18,
+        color:'#FFFFFF99',
     },
     itemZhText:{
-        fontSize:12,
-        color:'#FFFFFFAA',
+        fontSize:14,
+        color:'#FFFFFF99',
     },
 
     triggerText:{
         color:'#FFF',  
-        paddingHorizontal:3,
+        paddingHorizontal:4,
         fontSize:14,
         textAlign:'center', 
-        lineHeight:20, 
+        lineHeight:24,
         borderWidth:1,
         borderColor:'#FFF',
-        borderRadius:1
+        borderRadius:4
     },
     
     //底部控制栏
     textIcon:{
-        height:22,
-        width:22,
+        height:26,
+        width:26,
+        lineHeight:24,
         textAlign:'center',
         borderWidth:1,
-        borderRadius:2,
+        borderRadius:4,
         
     },
     unSelected:{
@@ -99,17 +100,17 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        width:34,
-        height:34,
+        width:40,
+        height:40,
         borderRadius:60,
     },
     bigRoundBtn:{
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        width:55,
-        height:55,
-        borderRadius:60,
+        width:65,
+        height:65,
+        borderRadius:70,
     },
     intervalButton: {
         width:26,
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
         alignItems:'flex-start',
     },  
     nameText: {
-        fontSize: 16,
+        fontSize: 18,
         color:'#303030'
     },
     noteText: {
@@ -171,13 +172,18 @@ const styles = StyleSheet.create({
         borderRadius:20
     },
     closeBtn:{
-        position:'absolute',
-        bottom: 14,
-        right:14,
-        flexDirection:'row',
+
+        width:60,
+        height:60,
+        backgroundColor: '#FFF',//'#FFE957',
+        borderRadius:50,
+        elevation:5,
+        flexDirection:'column',
         justifyContent:'center',
         alignItems:'center',
-        padding:10,
+        position:'absolute',
+        bottom:10,
+        alignSelf:'center'
     }
 
   

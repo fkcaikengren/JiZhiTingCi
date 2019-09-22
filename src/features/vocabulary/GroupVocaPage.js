@@ -4,12 +4,16 @@ import {Header, CheckBox , Button, Icon, } from 'react-native-elements'
 import _ from 'lodash'
 import CardView from 'react-native-cardview'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import {connect} from 'react-redux';
+import BackgroundTimer from 'react-native-background-timer';
 
 import VocaGroupDao from './service/VocaGroupDao'
 import {playSound} from './service/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 import VocaUtil from './common/vocaUtil'
+import * as VocaPlayAction from './redux/action/vocaPlayAction'
+import * as Constant from './common/constant'
 
 import styles from './GroupVocaStyle'
 import gstyles from '../../style'
@@ -27,7 +31,7 @@ const SEPARATOR_HEIGHT = 1;     //分割线的高度
 */
 
 
-export default class GroupVocaPage extends Component {
+class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
         this.vgDao = VocaGroupDao.getInstance();
@@ -151,7 +155,7 @@ export default class GroupVocaPage extends Component {
         })
         const result = this.vgDao.deleteWords(groupName, words)
         if(result.success){
-            this.refs.toast.show(`成功删除${result.deletedWords.length}个生词`, 1000);
+            this.toastRef.show(`成功删除${result.deletedWords.length}个生词`, 1000);
             //刷新
             const flatData = this.state.flatData.filter((item, index)=>{
                 let deleted = false
@@ -174,11 +178,38 @@ export default class GroupVocaPage extends Component {
             //刷新生词本页面数据
             this.props.navigation.state.params.refreshGroup();
         }else{
-            this.refs.toast.show('删除失败', 1000);
+            this.toastRef.show('删除失败', 1000);
             //不刷新
         }
-        
     }
+
+
+    _playBtn = ()=>{
+        const words = this.state.checkedIndex.map((itemIndex, i)=>{
+            return this.state.flatData[itemIndex].word
+        })
+        
+        if(words.length < Constant.MIN_PLAY_NUMBER){
+            this.toastRef.show('当前选择不足5个，不可以播放哦')
+        }else{
+            const virtualTask = VocaUtil.genVirtualTask(words)
+            console.log(virtualTask)
+
+            //暂停
+            const {autoPlayTimer, } = this.props.vocaPlay
+            if(autoPlayTimer){
+                BackgroundTimer.clearTimeout(autoPlayTimer);
+                this.props.changePlayTimer(0);
+            }
+
+            this.props.navigation.navigate('VocaPlay',{
+                task:virtualTask, 
+                mode:Constant.NORMAL_PLAY,
+                normalType: Constant.BY_VIRTUAL_TASK
+            });
+        }
+    }
+
 
     render() {
         const groupName = this.props.navigation.getParam('groupName')
@@ -196,7 +227,7 @@ export default class GroupVocaPage extends Component {
                     <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
                     }}></AliIcon> }
-                centerComponent={{ text: groupName, style: { color:gstyles.black, fontSize:18 } }}
+                centerComponent={{ text: groupName, style:gstyles.lg_black_bold }}
                 rightComponent={
                     <TouchableWithoutFeedback onPress={this._toggleEdit}>
                     {
@@ -210,7 +241,7 @@ export default class GroupVocaPage extends Component {
                 }}
                 />
                 <Toast
-                    ref="toast"
+                    ref={ref=>this.toastRef = ref}
                     position='top'
                     positionValue={200}
                     fadeInDuration={750}
@@ -232,34 +263,38 @@ export default class GroupVocaPage extends Component {
                         onSectionSelect={this._onSectionselect}/> 
                     </View>
                 }
-
-                {//this.state.onEdit &&
-                    <CardView
-                        cardElevation={5}
-                        cardMaxElevation={5}
-                        cornerRadius={20}
-                        style={gstyles.footer}>
-                            <View style={gstyles.r_around}>
-                                <Button 
-                                    disabled={!this.state.checked}
-                                    type="clear"
-                                    icon={ <AliIcon name='shanchu' size={26} color={delIconColor} />}
-                                    title='删除'
-                                    titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
-                                    onPress={this._deleteWords}>
-                                </Button>
-                                <View style={{width:1,height:20,backgroundColor:'#999'}}></View>
-                                <Button 
-                                    disabled={!this.state.checked}
-                                    type="clear"
-                                    icon={ <AliIcon name='Home_tv_x' size={26} color={playIconColor} />}
-                                    title='播放'
-                                    titleStyle={{fontSize:14,color:'#303030', fontWeight:'500'}}
-                                    onPress={this._toggleEdit}>
-                                </Button>
-                            </View>
-                    </CardView>
+                {this.state.flatData.length <= 0 &&
+                    <View style={[gstyles.c_center,{flex:1}]}>
+                        <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+                        <Text style={gstyles.md_black}>还没来得及添加生词哦</Text>
+                    </View>
                 }
+
+                <CardView
+                    cardElevation={5}
+                    cardMaxElevation={5}
+                    cornerRadius={20}
+                    style={gstyles.footer}>
+                        <View style={gstyles.r_around}>
+                            <Button 
+                                disabled={!this.state.checked}
+                                type="clear"
+                                icon={ <AliIcon name='shanchu' size={26} color={delIconColor} />}
+                                title='删除'
+                                titleStyle={[gstyles.md_black_bold,{ paddingBottom:2,lineHeight:20}]}
+                                onPress={this._deleteWords}>
+                            </Button>
+                            <View style={{width:1,height:20,backgroundColor:'#999'}}></View>
+                            <Button 
+                                disabled={!this.state.checked}
+                                type="clear"
+                                icon={ <AliIcon name='Home_tv_x' size={26} color={playIconColor} />}
+                                title='播放'
+                                titleStyle={[gstyles.md_black_bold,{ paddingBottom:2, lineHeight:20}]}
+                                onPress={this._playBtn}>
+                            </Button>
+                        </View>
+                </CardView>
               
             </View>
         );
@@ -333,7 +368,7 @@ export default class GroupVocaPage extends Component {
                             }} />
                         </View>
                         <View style={[gstyles.r_start,{width:'100%'}]}>
-                            <Text numberOfLines={1} style={{fontSize:14, color:'#666', }}>{translation}</Text>
+                            <Text numberOfLines={1} style={{fontSize:14, color:'#666',}}>{translation}</Text>
                         </View>
                     </View>
                 </View>
@@ -344,3 +379,13 @@ export default class GroupVocaPage extends Component {
 }
 
 
+
+const mapStateToProps = state =>({
+    vocaPlay : state.vocaPlay,
+});
+
+const mapDispatchToProps = {
+    changePlayTimer : VocaPlayAction.changePlayTimer,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupVocaPage);

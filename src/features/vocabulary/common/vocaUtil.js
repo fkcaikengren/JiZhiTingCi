@@ -186,7 +186,7 @@ export default class VocaUtil{
             }else{
                 name = ''+taskOrder
             }
-            return name
+            return 'List-'+name
         }else{
             return ''
         }
@@ -258,7 +258,7 @@ export default class VocaUtil{
         if(!words){
             return []
         }
-        showWordInfos = []
+        const showWordInfos = []
         if(wordInfos === null){
             wordInfos = VocaDao.getInstance().getWordInfos(words.map((item,index)=>item.word))
         }
@@ -309,20 +309,19 @@ export default class VocaUtil{
      * 在任务中pass单词，返回pass后的新的{words,showInfos}
      * 如果shouldFilter=false, 不进行过滤的话，则返回pass的单词
      */
-    static passWordInTask = (words,word,taskOrder,beforeCount,showWordInfos, shouldFilter=true)=>{
+    static passWordInTask = (words,word,taskOrder,showWordInfos, shouldFilter=true)=>{
         // 修改realm数据库的 pass
+        let res = null
         const  taskDao = VocaTaskDao.getInstance()
-        
-        taskDao.modifyTask({
-            taskOrder:taskOrder,
-            wordCount:beforeCount-1,
-        })
-
         if(shouldFilter){
             const newWords = []
             for(let i in words){
                 if(words[i].word === word){ //pass
                     taskDao.modifyWord({word:word,passed:true})
+                    taskDao.modify(()=>{
+                        const task = taskDao.getTaskByOrder(taskOrder)
+                        task.wordCount = task.wordCount - 1
+                    })
                     newWords.push({...words[i],passed:true}) 
                 }else{
                     newWords.push(words[i]) 
@@ -339,16 +338,22 @@ export default class VocaUtil{
                 }
             })
 
-            return {words:newWords, showWordInfos:newShowWordInfos}
+            res = {words:newWords, showWordInfos:newShowWordInfos}
         }else{
             for(let w of words){
                 if(w.word === word){ //pass
                     taskDao.modifyWord({word:word,passed:true})
-                    return word
+                    taskDao.modify(()=>{
+                        const task = taskDao.getTaskByOrder(taskOrder)
+                        task.wordCount = task.wordCount - 1
+                    })
+                    res = word
+                    break
                 }
             }
-            return null
         }
+
+        return res
     }
 
     //获取单词在wordInfos中的下标
@@ -394,17 +399,30 @@ export default class VocaUtil{
             listenTimes: 0,
             testTimes: 0
         }
-        for(let i in words){
-            copyTask.words.push({
-                word: words[i].word,
-                passed: false,
-                wrongNum: words[i].wrongNum,
-                testWrongNum: 0,
-            })
+        if(typeof words[0] === 'object'){
+            for(let i in words){
+                copyTask.words.push({
+                    word: words[i].word,
+                    passed: false,
+                    wrongNum: words[i].wrongNum,
+                    testWrongNum: 0,
+                })
+            }
+        }else if(typeof words[0] === 'string'){
+            for(let i in words){
+                copyTask.words.push({
+                    word: words[i],
+                    passed: false,
+                    wrongNum: 0,
+                    testWrongNum: 0,
+                })
+            }
         }
+        
         return copyTask
     }
-    
+
+
 }
 
 

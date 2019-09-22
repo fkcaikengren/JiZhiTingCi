@@ -89,7 +89,11 @@ export default class ExampleCarousel extends Component {
         {
           s.map((text, index)=>{
               if(index%2 === 0){
-                return text
+                  const words = text.split(' ')
+                  return words.map((word,i)=><Text
+                      onStartShouldSetResponder={e=>true}
+                      onResponderStart={e=>this.props.lookWord(word)}
+                  >{word} </Text>)
               }else{
                 return <Text style={{color:'#F2753F',fontSize:14, fontWeight:'500' }}>{text}</Text>
               }
