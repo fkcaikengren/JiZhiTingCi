@@ -21,6 +21,8 @@ export default class WebUtil {
                     // 当前问题节点
                     window.SelectedQuestionNode.text(data.payload.word)
                     window.SelectedQuestionNode.css({color:'#F29F3F'})
+                }else if(data.command === 'cancelSearchWord'){
+                    cancelSearchWord()
                 }else if(data.command === 'toggleKeyWords'){        //显示隐藏关键词
     
                     var isShow =  !window.KeyWordNodes[0].hasClass('keyWord')
@@ -71,23 +73,7 @@ export default class WebUtil {
             
         },true);true;`;
 
-    static PROGRESS_LISTEN_JAVASCRIPT = 
-        `document.addEventListener('message', function (e) {
-            //回显
-            window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
-            //处理
-            var data = JSON.parse(e.data)
-            try{
-                if(data.command === 'update'){                            //更新页面
-                    updatePage(data.payload.data,data.payload.formatter, data.payload.themeIndex )
-                }else if(data.command === 'changeColor'){
-                    changeColor(data.payload.themeIndex)
-                }
-            }catch(err){
-                window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
-            }
-            
-        },true);true;`
+   
 
 
     

@@ -8,6 +8,7 @@ import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
+import * as VocaLibAction from "./redux/action/vocaLibAction";
 
 const styles = StyleSheet.create({
     content:{
@@ -84,8 +85,7 @@ const mapStateToProps = state=>({
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
-    setShouldUpload: homeAction.setShouldUpload,
-
+    changeLearnedWordCount : VocaLibAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

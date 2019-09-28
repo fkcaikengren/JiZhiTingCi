@@ -56,10 +56,7 @@ const styles = StyleSheet.create({
         height:60,
     },
 
-    tabTitle:{
-        color:'#AAA',
-        fontSize:16,
-    },
+
 
     floatBtn:{
         position:'absolute',

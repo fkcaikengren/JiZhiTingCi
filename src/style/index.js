@@ -20,6 +20,11 @@ const gstyles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'flex-start',
     },
+    r_start_bottom:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        alignItems:'flex-end',
+    },
     r_end:{
         flexDirection:'row',
         justifyContent:'flex-end',
@@ -29,6 +34,11 @@ const gstyles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
+    },
+    r_between_bottom:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'flex-end',
     },
     r_around:{
         flexDirection:'row',
@@ -54,6 +64,16 @@ const gstyles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'flex-start',
         alignItems:'center',
+    },
+    c_start_left:{
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+    },
+    c_start_right:{
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-end',
     },
     c_end:{
         flexDirection:'column',
@@ -101,6 +121,10 @@ const gstyles = StyleSheet.create({
         paddingHorizontal:2,
         textAlign:'center',
         marginRight:16,
+    },
+    separator:{
+        borderColor: '#F4F4F4',
+        borderBottomWidth: StyleSheet.hairlineWidth,
     },
     //灰色
     xs_lightGray:{
@@ -268,7 +292,7 @@ const gstyles = StyleSheet.create({
 });
 
 
-//** 颜色  */
+/** 颜色  */
 gstyles.mainColor = '#FFE957'
 gstyles.secColor = '#F29F3F'
 gstyles.emColor = '#F2753F'
@@ -279,5 +303,10 @@ gstyles.lightBlack = '#303030'
 gstyles.black = '#202020'
 gstyles.gray = '#909090'
 gstyles.lightGray = '#AAA'
+
+/** 高度*/
+gstyles.smHeight = 45
+gstyles.mdHeight = 50
+gstyles.lgHeight = 55
 
 export default gstyles

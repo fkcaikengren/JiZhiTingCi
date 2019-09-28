@@ -71,7 +71,7 @@ class SwipeableFlatList extends React.Component {
 
   _renderItem = (info)=> {
       const slideoutView = this.props.renderQuickActions(info);
-      const key = this.props.keyExtractor(info.item, info.index);
+      const key = this.props.keyExtractor(info.item, info.constant);
 
       // If renderQuickActions is unspecified or returns falsey, don't allow swipe
       if (!slideoutView) {

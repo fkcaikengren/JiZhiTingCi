@@ -18,6 +18,7 @@ export default class Task extends Component {
   };
   constructor(props) {
     super(props);
+
   }
 
   render() {
@@ -34,14 +35,13 @@ export default class Task extends Component {
                   titleStyle={{
                     fontSize:18,
                     color:'#303030',
-                    fontWeight:'500'
-                  }}
-                  containerStyle={{
-                    width:'80%'
-                  }}
+                    fontWeight:'500' }}
+                  containerStyle={{ width:'80%'}}
                   buttonStyle={{
                     backgroundColor:'#FFE957',
-                    borderRadius:50,
+                    borderRadius:50, }}
+                  onPress={()=>{
+                      this.props.navigation.navigate('VocaLib')
                   }}
                 />
             </View>
@@ -56,27 +56,30 @@ export default class Task extends Component {
     let isAllLearned = true
     return (
       this.props.tasks.map((item, index) => {
+        //判断是否是单词任务
+        const isVocaTask = (item.taskType === Constant.TASK_VOCA_TYPE)
+
         let disable = false
         let separator = null
+        let progressNum = null
         if (index < this.props.tasks.length - 1) {
-          separator = {
-            borderColor: '#F4F4F4',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          };
+          separator = gstyles.separator
         }
         //计算进度
-        const progressNum = VocaUtil.calculateProcess(item)
-        // if(item.status === Constant.STATUS_0 && progressNum !== 100){
-        //   isAllLearned = false
-        // }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
-        //   disable = true
-        // }
+        if(isVocaTask){
+          progressNum = VocaUtil.calculateProcess(item)
+          // if(item.status === Constant.STATUS_0 && progressNum !== 100){
+          //   isAllLearned = false
+          // }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
+          //   disable = true
+          // }
+        }
 
         return (
           <TaskItem {...this.props} 
           index={index+1} 
           item={item} 
-          progressNum={progressNum}
+          progressNum={progressNum }
           separator={separator} 
           disable={disable}
           />

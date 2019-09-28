@@ -1,4 +1,5 @@
 
+export const LEFT_PLUS_DAYS = 14
 
 export const NORMAL_PLAY = 'NORMAL_PLAY'         //普通模式的轮播
 export const LEARN_PLAY = 'LEARN_PLAY'          //学习模式的轮播
@@ -48,6 +49,9 @@ export const BY_VIRTUAL_TASK ='BY_VIRTUAL_TASK'
 export const VIRTUAL_TASK_ORDER = 'VIRTUAL_TASK_ORDER'
 export const MIN_PLAY_NUMBER = 5                    //最小播放数量
 
+//task 的两种类型
+export const TASK_VOCA_TYPE = 'TASK_VOCA_TYPE'
+export const TASK_ARTICLE_TYPE = 'TASK_ARTICLE_TYPE'
 
 
 //单词列表

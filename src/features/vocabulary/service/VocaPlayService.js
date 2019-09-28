@@ -1,7 +1,7 @@
 
 import {BackHandler} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer';
-import AudioFetch from './AudioFetch'
+import AudioFetch from '../../../common/AudioFetch'
 import {store} from '../../../redux/store' 
 import NotificationManage from '../../../modules/NotificationManage'
 

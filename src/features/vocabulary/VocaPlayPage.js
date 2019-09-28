@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing } from 'react-native';
+import {Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, ImageBackground } from 'react-native';
 import {Header, Button} from 'react-native-elements'
 import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,7 +8,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import {PropTypes} from 'prop-types'
 import Modal from 'react-native-modalbox';
-import BackgroundTask from 'react-native-background-task'
 import BackgroundTimer from 'react-native-background-timer';
 
 import VocaCard from './component/VocaCard'
@@ -24,7 +23,7 @@ import VocaUtil from './common/vocaUtil'
 import gstyles from '../../style'
 import VocaTaskDao from './service/VocaTaskDao';
 import VocaDao from './service/VocaDao';
-import AudioFetch from './service/AudioFetch'
+import AudioFetch from '../../common/AudioFetch'
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import {PlaySoundJob} from './service/BackgroundJobService'
@@ -35,15 +34,6 @@ const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-
-BackgroundTask.define(() => {
-    //测试： 设置一个定时器，判断后台是否继续运行
-    console.log('....................后台任务......................')
-    setInterval(()=>{
-        console.log('-----定时器调用....-------')
-    },2000)
-    BackgroundTask.finish()
-  })
 
 
 
@@ -292,13 +282,12 @@ class VocaPlayPage extends React.Component {
     _finishQuit = ()=>{
 
         //学习模式下：完成播放，退出
-        const {task, autoPlayTimer} = this.state
+        const {task,showWordInfos, autoPlayTimer} = this.state
         if(this.isStudyMode && task.leftTimes <= 0){
 
             // console.log('---清理--'+autoPlayTimer)
             // clearTimeout(autoPlayTimer);
             // this.vocaPlayService.setStateRef({autoPlayTimer:0})
-
 
             const routeName = this.props.navigation.getParam('nextRouteName')
             let nextRouteName = null
@@ -731,7 +720,7 @@ const mapDispatchToProps = {
     loadTask : vocaPlayAction.loadTask,
     loadTheme : vocaPlayAction.loadThemes,
     changeTheme : vocaPlayAction.changeTheme,
-    updateTask: homeAction.updateTask
+    updateTask: homeAction.updateTask,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

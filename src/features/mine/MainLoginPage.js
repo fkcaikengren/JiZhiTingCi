@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, Image, View, Text} from 'react-native'
+import {StyleSheet, Image, View, Text, StatusBar} from 'react-native'
+import SplashScreen from 'react-native-splash-screen'
 
 
 import AliIcon from '../../component/AliIcon'
@@ -13,11 +14,14 @@ class MainLoginPage extends Component {
     }
 
     componentDidMount(){
+        //隐藏启动页
+       SplashScreen.hide();
     }
 
     render(){
         return(
             <View style={styles.container}>
+                <StatusBar translucent={false} barStyle="dark-content" />
                 {/* logo */}
                 <View style={styles.logoView}>
                     <Image 

@@ -6,7 +6,7 @@ import Modal from 'react-native-modalbox'
 import VocaDao from '../service/VocaDao'
 import gstyles from "../../../style";
 import AliIcon from '../../../component/AliIcon'
-import AudioFetch from "../service/AudioFetch";
+import AudioFetch from "../../../common/AudioFetch";
 import VocaGroupDao from "../service/VocaGroupDao";
 import VocaCard from "./VocaCard";
 const Dimensions = require('Dimensions');
@@ -29,14 +29,19 @@ export default class LookWordBoard extends Component{
     lookWord = (text)=>{
         const reg = /[a-z]+[\-’]?[a-z]*/i
         const res = text.match(reg)
-        if(res[0] && res[0]){
-            const wordInfo = this.vocaDao.getWordInfo(res[0])
+        let added = false
+        if(res[0]){
+            const wordInfo = this.vocaDao.lookWordInfo(res[0])
             if(wordInfo){
-                this.setState({isOpen:true, wordInfo})
+                //判断是否存在
+                added = this.vocaGroupDao.isExistInDefault(wordInfo.word)
+                this.setState({isOpen:true, wordInfo, added})
                 this.props.onStateChange(true)
                 return true
             }
         }
+        this.setState({isOpen:true, wordInfo:res[0]?res[0]:'', added})
+        this.props.onStateChange(true)
         return false
     }
 
@@ -85,6 +90,61 @@ export default class LookWordBoard extends Component{
             this.setState({added:false})
         }
     }
+
+    _renderContent = ()=>{
+        const wordInfo = this.state.wordInfo
+        if(typeof wordInfo === 'string'){
+            return <View style={[gstyles.c_start,styles.content]}>
+                <Text style={gstyles.xl_black_bold}>{wordInfo}</Text>
+                <View style={[gstyles.c_center,{marginTop:10}]}>
+                    <AliIcon name={'nodata_icon'} size={60} color={gstyles.black} />
+                    <Text style={gstyles.md_black}>呜呜~没查到...</Text>
+                </View>
+            </View>
+        }else{
+            return <View style={[gstyles.c_start,styles.content]}>
+                {/*单词*/}
+                <View style={[{width:'100%'},gstyles.r_between]}>
+                    <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
+                    <View style={gstyles.r_end}>
+                        <Text style={gstyles.errBtn}>报错</Text>
+                        {this.state.added && //从生词本移除
+                        <AliIcon name='pingfen' size={22} color={gstyles.secColor}
+                                    style={{marginRight:5}}
+                                    onPress={this._removeWord}/>
+                        }
+                        {!this.state.added && //添加到生词本
+                        <AliIcon name='malingshuxiangmuicon-' size={22} color='#888'
+                                    style={{marginRight:5}}
+                                    onPress={this._addWord}/>
+                        }
+                    </View>
+                </View>
+                {/*y音标*/}
+                <View style={[{width:'100%',marginTop:10},gstyles.r_start]}>
+                    <Text style={gstyles.sm_gray}>美</Text>
+                    <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
+                    <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
+                        this.audioFetch.playSound(wordInfo.am_pron_url)
+                    }}/>
+                    <Text style={[gstyles.sm_gray,{marginLeft:10}]}>英</Text>
+                    <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
+                    <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
+                        this.audioFetch.playSound(wordInfo.en_pron_url)
+                    }}/>
+                </View>
+                {/*  释义*/}
+                <View style={{width:'100%', marginTop:10}}>
+                    {
+                        this._genTrans(wordInfo.trans)
+                    }
+                </View>
+            </View>
+              
+        }
+         
+    }
+
     render(){
         const wordInfo = this.state.wordInfo
         return <Modal style={styles.modal}
@@ -105,44 +165,9 @@ export default class LookWordBoard extends Component{
                         <AliIcon name={'cha'} color={'#555'} size={16} style={{position:'absolute',right:20}}
                                  onPress={this._closeWordBoard}/>
                     </View>
-                    <View style={[gstyles.c_start,styles.content]}>
-                        {/*单词*/}
-                        <View style={[{width:'100%'},gstyles.r_between]}>
-                            <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
-                            <View style={gstyles.r_end}>
-                                <Text style={gstyles.errBtn}>报错</Text>
-                                {this.state.added && //从生词本移除
-                                <AliIcon name='pingfen' size={22} color={gstyles.secColor}
-                                         style={{marginRight:5}}
-                                         onPress={this._removeWord}/>
-                                }
-                                {!this.state.added && //添加到生词本
-                                <AliIcon name='malingshuxiangmuicon-' size={22} color='#888'
-                                         style={{marginRight:5}}
-                                         onPress={this._addWord}/>
-                                }
-                            </View>
-                        </View>
-                        {/*y音标*/}
-                        <View style={[{width:'100%',marginTop:10},gstyles.r_start]}>
-                            <Text style={gstyles.sm_gray}>美</Text>
-                            <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
-                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
-                                this.audioFetch.playSound(wordInfo.am_pron_url)
-                            }}/>
-                            <Text style={[gstyles.sm_gray,{marginLeft:10}]}>英</Text>
-                            <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
-                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
-                                this.audioFetch.playSound(wordInfo.en_pron_url)
-                            }}/>
-                        </View>
-                        {/*  释义*/}
-                        <View style={{width:'100%', marginTop:10}}>
-                            {
-                                this._genTrans(wordInfo.trans)
-                            }
-                        </View>
-                    </View>
+                    {
+                        this._renderContent()
+                    }
                 </View>
             }
 

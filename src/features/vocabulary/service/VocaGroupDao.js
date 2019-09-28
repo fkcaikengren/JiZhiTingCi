@@ -312,20 +312,26 @@ export default class VocaGroupDao{
      * @returns {boolean}
      */
     isExistInDefault = (word)=>{
-        console.log(this.realm)
-        let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+        if(!word){
+            return false
+        }
         let isExist = false;
-        if(defaultGroup){
-            for(let s of defaultGroup.sections){
-                for(let w of s.words){
-                    if(w.word ===  word){
-                        //如果存在
-                        isExist = true
-                        break;
+        try{
+            let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+            if(defaultGroup){
+                for(let s of defaultGroup.sections){
+                    for(let w of s.words){
+                        if(w.word ===  word){
+                            //如果存在
+                            isExist = true
+                            break;
+                        }
                     }
-                    
                 }
             }
+        }catch (e) {
+            isExist = false
+            console.log(e)
         }
         return isExist
     }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet,Text, View, Image, Dimensions, TouchableWithoutFeedback} from 'react-native'
 import Swiper from 'react-native-swiper'
 import {PropTypes} from 'prop-types';
-import AudioFetch from '../service/AudioFetch'
+import AudioFetch from '../../../common/AudioFetch'
 
 const { width } = Dimensions.get('window')
 const Location = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'

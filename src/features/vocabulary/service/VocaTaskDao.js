@@ -34,6 +34,8 @@ const VocaTaskSchema = {
         listenTimes: {type: 'int',optional:true, default: 0},
         //测试遍数
         testTimes : {type: 'int',optional:true, default: 0},
+        //文章id
+        articles: 'string?',
     }
   };
  
@@ -104,11 +106,9 @@ export default class VocaTaskDao {
      */
     saveVocaTasks = (tasks, wordCount)=>{
         try{
-            for(let t of tasks){
-                t.wordCount = wordCount
-            }
             this.realm.write(()=>{
                 for(let task of tasks){
+                    task.wordCount = wordCount
                     console.log(task.taskOrder)
                     this.realm.create('VocaTask', task);
                 }
@@ -128,10 +128,11 @@ export default class VocaTaskDao {
     modifyTasks = (tasks)=>{
         try{
             this.realm.write(()=>{
+                console.log('----- 批量修改task -------')
                 for(let task of tasks){
-                    console.log('----- 批量修改task -------')
                     this.realm.create('VocaTask', task, true);
                 }
+                console.log('----- 批量修改task 完毕！！-------')
             })
         }catch (e) {
             console.log('VocaTaskDao : 批量修改数据失败')
@@ -211,6 +212,15 @@ export default class VocaTaskDao {
         return vocaTasks;
     }
 
+    /**
+     *  查询复习状态的任务
+     * @returns {Realm.Results<any>}
+     */
+    getReviewedTasks = ()=>{
+        let vocaTasks = this.realm.objects('VocaTask').filtered('status != 200 AND vocaTaskDate !=0')
+        return vocaTasks;
+    }
+
 
     /**
      * 根据taskOrder获取任务
@@ -235,6 +245,7 @@ export default class VocaTaskDao {
         // console.log(words)
         return words;
     }
+
 
     /** 查询出某个单词 */
     getWord = (word)=>{

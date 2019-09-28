@@ -3,37 +3,19 @@ import * as Constant from './constant'
 import VocaDao from '../service/VocaDao'
 import VocaTaskDao from '../service/VocaTaskDao'
 import {NavigationActions, StackActions} from 'react-navigation'
+import VocaTaskService from "../service/VocaTaskService";
+import ArticleDao from "../../reading/service/ArticleDao";
 
 
 export default class VocaUtil{
 
 
-    /**
-     * 浅拷贝任务
-     * @param task
-     * @returns
-     */
-    static copyTask(task){
-        let copyTask = {
-            taskOrder: task.taskOrder,              //任务序号
-            status: task.status,
-            vocaTaskDate: task.vocaTaskDate,
-            progress: task.progress,
-            curIndex:task.curIndex,
-            leftTimes:task.leftTimes,
-            delayDays:task.delayDays,
-            createTime:task.createTime,
-            isSync: task.isSync,
-            words: [],
-            wordCount: task.wordCount,
-            listenTimes: task.listenTimes,
-            testTimes: task.testTimes
+    static copyTasks(tasks){
+        const copyTasks = []
+        for(let task of tasks){
+            copyTasks.push({...task})
         }
-        let ws = task.words
-        for(let i in ws){
-            copyTask.words.push(ws[i])
-        }
-        return copyTask
+        return copyTasks
     }
 
     /**
@@ -43,31 +25,49 @@ export default class VocaUtil{
      * */
     static copyTaskDeep(task, testWrongNumIsZero=false){
         let copyTask = {
-            taskOrder: task.taskOrder,
-            status: task.status,
-            vocaTaskDate: task.vocaTaskDate,
-            progress: task.progress,
-            curIndex:task.curIndex,
-            leftTimes:task.leftTimes,
-            delayDays:task.delayDays,
-            createTime:task.createTime,
-            isSync: task.isSync,
+            ...task,
             words: [],
-            wordCount: task.wordCount,
-            listenTimes: task.listenTimes,
-            testTimes: task.testTimes
         }
         let ws = task.words
         for(let i in ws){
             copyTask.words.push({
-                word: ws[i].word,
-                passed: ws[i].passed,
-                wrongNum: ws[i].wrongNum,
+                ...ws[i],
                 testWrongNum: testWrongNumIsZero?0:ws[i].testWrongNum,
             })
         }
         return copyTask
     }
+
+
+    /**
+     *  拷贝 article 数组
+     * @param articles
+     * @returns {Array}
+     */
+    static copyArticlesKW(articles){
+        const arr = []
+        for(let article of articles){
+            //查询keyWords的变形词并修改
+            const keyWords = JSON.parse(article.keyWords)
+            let kwords = [...keyWords]
+            for(let word of keyWords){
+                const transformArr = VocaDao.getInstance().getTransforms(word)
+                console.log('-----------'+word+'的transforms-------------')
+                console.log(transformArr)
+                kwords = kwords.concat(transformArr)
+            }
+
+            const copyArticle = {
+                ...article,
+                taskType: Constant.TASK_ARTICLE_TYPE,
+                keyWords:kwords
+            }
+            arr.push(copyArticle)
+        }
+        return arr
+    }
+
+
 
     /**
      *  按顺序获取下一个状态
@@ -273,7 +273,7 @@ export default class VocaUtil{
 
     static goPageWithoutStack = (navigation,routeName, params={})=>{
         // 抹掉stack，跳转到指定路由
-        const  resetAction = StackActions.reset({  
+        const  resetAction = StackActions.reset({
             index: 0,
             actions: [
                 NavigationActions.navigate({routeName,params})
@@ -422,6 +422,98 @@ export default class VocaUtil{
         return copyTask
     }
 
+
+    /**
+     * 传入单词任务，获取任务的文章ids
+     * @param vocaTasks
+     * @returns {string}
+     */
+    static getArticleIds = (vocaTasks)=>{
+        let ids = []
+        for(let task of vocaTasks){
+            for(let a of task.articles){
+                ids.push(a.id)
+            }
+        }
+        console.log(ids)
+        return ids
+    }
+
+    /**
+     *  筛选出需要存储的任务实体
+     *      rawTasks (todayTasks + articleTasks)  => storedTasks
+     * @param rawTasks 全部任务（文章+单词）
+     * @returns {*} 返回实际存储的单词任务
+     */
+    static filterRawTasks = (rawTasks)=>{
+        let isFirst = false
+        let storedTasks = rawTasks.filter((task, index)=>{
+            if(task.taskType === Constant.TASK_ARTICLE_TYPE){
+                return false
+            }else{
+                task.curIndex = 0                           //curIndex 置零
+                if(task.status === Constant.STATUS_0 ){     //新学任务
+                    if(task.progress !== Constant.IN_LEARN_FINISH){
+                        isFirst = true
+                        return true
+                    }else{
+                        return false
+                    }
+                }else{                                      //复习任务
+                    if(isFirst && task.status === Constant.STATUS_1){
+                        return false
+                    }else{
+                        return true
+                    }
+                }
+            }
+        })
+        return storedTasks
+    }
+
+
+    /**
+     * 同步单词任务到本地
+     * @param storedTasks 可保存的单词任务
+     * @param vts
+     */
+    static syncTasksLocal = (storedTasks)=>{
+        //筛选出需要同步的
+        const notSyncTasks = storedTasks.filter((task,index)=>{
+            if(task.isSyncLocal){
+                return false
+            }else{
+                task.isSyncLocal = true
+                return true
+            }
+        })
+        VocaTaskDao.getInstance().modifyTasks(notSyncTasks)
+
+    }
+
+
+    /**
+     *  加载今天的全部任务（单词和文章）
+     * @param storedTask
+     * @param taskCount
+     * @param lastLearnDate
+     * @returns {*[]|*}
+     */
+    static loadTodayRawTasks = (storedTask, taskCount, lastLearnDate)=>{
+        const todayTasks = new VocaTaskService().getTodayTasks(storedTask,taskCount,lastLearnDate)
+        const tasks = todayTasks.filter((task,i)=>{
+            if(task.status === Constant.STATUS_0){
+                return true
+            }else{
+                return false
+            }
+        })
+        const todayArticles = VocaUtil.copyArticlesKW(ArticleDao.getInstance().getArticles(VocaUtil.getArticleIds(tasks)))
+        for(let art of todayArticles){
+            todayTasks.push(art)
+        }
+        return todayTasks
+    }
 
 }
 

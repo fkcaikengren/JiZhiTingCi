@@ -75,7 +75,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "constant.js"
 ]
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
@@ -173,10 +173,10 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-image-picker')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-code-push')
     implementation project(':react-native-background-timer')
-    implementation project(':react-native-background-task')
     implementation project(':react-native-spinkit')
     implementation project(':react-native-webview')
     implementation project(':react-native-cardview')

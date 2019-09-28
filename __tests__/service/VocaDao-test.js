@@ -225,6 +225,10 @@ it('获取单词详情', ()=>{
 })
 
 
+it('查询单词详情', ()=>{
+    let wi = vd.lookWordInfo('Bar')
+    console.log(wi)
+})
 
 it('批量获取单词详情', ()=>{
     expect(vd.isOpen()).toBeTruthy()
@@ -241,3 +245,7 @@ it('查询词根信息', ()=>{
 })
 
 
+it('查询单词的衍生词', ()=>{
+    let rs = vd.getTransforms('accommodate')
+    console.log(rs)
+})

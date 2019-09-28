@@ -5,9 +5,9 @@ import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {home} from '../features/vocabulary/redux/home'
-import {navReducer} from '../navigation/AppWithNavigationState';
+import {vocaLib} from '../features/vocabulary/redux/vocaLib'
+import {navReducer} from '../navigation/AppWithNavigationState'
 const vocaPlay = require('../features/vocabulary/redux/vocaPlay');
-const vocaLib = require('../features/vocabulary/redux/vocaLib');
 const vocaList = require('../features/vocabulary/redux/vocaList')
 
 const article = require("../features/reading/redux/article");
@@ -18,16 +18,21 @@ const homeConfig = {
     storage: AsyncStorage,
     blacklist: ['isLoadPending','shouldUpload','isUploading']
 };
-console.log(home)
 const homeReducer = persistReducer(homeConfig, home)
+
+const vocalibConfig = {
+    key: 'vocaLib',
+    storage: AsyncStorage,
+    blacklist: ['isLoadPending', 'books']
+}
+const vocaLibReducer = persistReducer(vocalibConfig, vocaLib)
 
 const reducers =  combineReducers({
     nav:navReducer,
     home:homeReducer,
+    vocaLib:vocaLibReducer,
     ...vocaPlay,
-    ...vocaLib,
     ...vocaList,
-
     //文章模块
     ...article
 });

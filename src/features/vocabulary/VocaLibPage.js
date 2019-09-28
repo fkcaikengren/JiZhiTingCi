@@ -34,7 +34,7 @@ class VocaLibPage extends Component {
     /**显示选择器 */
     _show = (el, index)=>{
         let data = [
-            ['新学10/复习50',      
+            ['新学5/复习50',      //10
             '新学14/复习70',         
             '新学20/复习100',   
             '新学26/复习130',  
@@ -61,16 +61,16 @@ class VocaLibPage extends Component {
                 if(sum <= 19){
                     taskCount = 1 //1
                 }else if(sum <= 34){
-                    taskCount = 2 //2
+                    taskCount = 4 //2
                 }else if(sum <= 54){
-                    taskCount = 3 //3
+                    taskCount = 4 //3
                 }
                 taskWordCount = sum/taskCount
                 console.log('制定计划，单词书编号为：'+el.id)
                 console.log(taskCount, taskWordCount);
                 //提交计划
                 if(taskCount!==null && taskWordCount!==null){
-                    this.props.changeVocaBook(`VB_${el.id}`, taskCount,taskWordCount)
+                    this.props.changeVocaBook(`VB_${el.id}`,el.count, taskCount,taskWordCount, this.props.home.lastLearnDate)
                 }else{
                     console.error('VocaLibPage: 设置计划时，数据错误！')
                 }
@@ -107,20 +107,18 @@ class VocaLibPage extends Component {
         return (
             
             <View style={{flex: 1}}>
-                <StatusBar translucent={false}  barStyle="dark-content" />
+
                 <Header
                 statusBarProps={{ barStyle: 'dark-content' }}
-                barStyle="dark-content" // or directly
+                barStyle='dark-content' // or directly
                 leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color='#303030' onPress={()=>{
+                    <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
-                    }}></AliIcon> }
-                rightComponent={
-                    <AliIcon name='xiazai' size={24} color='#303030'></AliIcon>
-                }
+                    }} /> }
+             
                 centerComponent={{ text: plan.bookName, style: gstyles.lg_black_bold}}
                 containerStyle={{
-                    backgroundColor: '#FCFCFC',
+                    backgroundColor: gstyles.mainColor,
                     justifyContent: 'space-around',
                 }}
                 />

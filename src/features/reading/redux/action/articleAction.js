@@ -12,25 +12,31 @@ export const LOAD_ANALYSIS_SUCCEED = 'LOAD_ANALYSIS_SUCCEED'                    
 export const LOAD_ANALYSIS_FAIL = 'LOAD_ANALYSIS_FAIL'
 
 export const CHANGE_WEB_LOADING = 'CHANGE_WEB_LOADING'
+export const CHANGE_LOADING_FAIL = 'CHANGE_LOADING_FAIL'
+
 
 export const CHANGE_BGTHEME = 'CHANGE_BGTHEME'                          //改变背景主题
 export const CHANGE_FONT_SIZE = 'CHANGE_FONT_SIZE'                      //改变字号
 export const TOGGLE_KEY_WORDS = 'TOGGLE_KEY_WORDS'                      //控制显示关键词
-export const CHANGE_USER_ANSWER_MAP = 'CHANGE_USER_ANSWER_MAP'                //改变用户答案
+export const CHANGE_USER_ANSWER_MAP = 'CHANGE_USER_ANSWER_MAP'           //改变用户答案
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadArticle , loadAnalysis, changeWebLoading,  changeBgtheme, changeFontSize, toggleKeyWords, changeUserAnswerMap} = createActions({
+export const {loadArticle , loadAnalysis, changeWebLoading,  changeLoadingFail,
+    changeBgtheme, changeFontSize, toggleKeyWords, changeUserAnswerMap,} = createActions({
      //加载文章
-    [LOAD_ARTICLE]:(vocaLibName, articleCode)=>{
-        return { vocaLibName, articleCode}
+    [LOAD_ARTICLE]:(articleInfo)=>{
+        return { articleInfo}
     },
-    [LOAD_ANALYSIS]:(vocaLibName, articleCode)=>{
-        return { vocaLibName, articleCode}
+    [LOAD_ANALYSIS]:(articleInfo)=>{
+        return { articleInfo}
     },
     //改变网页加载状态
     [CHANGE_WEB_LOADING]: (isWebLoading)=>{
         return {isWebLoading}
+    },
+    [CHANGE_LOADING_FAIL]: (isLoadFail)=>{
+        return {isLoadFail}
     },
     //改变主题
     [CHANGE_BGTHEME]: (index)=>{
@@ -45,6 +51,6 @@ export const {loadArticle , loadAnalysis, changeWebLoading,  changeBgtheme, chan
    },
    [CHANGE_USER_ANSWER_MAP]: (userAnswerMap)=>{
         return {userAnswerMap}
-   }
+   },
     
 });

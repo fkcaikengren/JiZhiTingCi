@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-} from 'react-native';
+import { Text, View, StyleSheet,} from 'react-native';
  
 /*水平方向的虚线
  * len 虚线个数

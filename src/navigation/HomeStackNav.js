@@ -1,7 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
 
-import * as Constant from '../features/reading/common/constant'
-
 import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../features/vocabulary/VocaPlayPage';
@@ -11,6 +9,7 @@ import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 import StatisticsPage from '../features/vocabulary/StatisticsPage';
 import LearnCardPage from '../features/vocabulary/LearnCardPage';
+import ArticleManagePage from '../features/vocabulary/ArticleManagePage'
 
 import TestVocaTranPage from '../features/vocabulary/TestVocaTranPage';
 import TestTranVocaPage from '../features/vocabulary/TestTranVocaPage'
@@ -24,7 +23,71 @@ import ArticleTabPage from '../features/reading/ArticleTabPage'
 
 
 //我的模块
+import AccountPage from '../features/mine/AccountPage'
+import PasswordPage from '../features/mine/PasswordPage'
 
+const article1 =  { id: 1,
+  articleUrl: '/cet-6/1995-1-3-article.txt',
+  optionUrl: '/cet-6/1995-1-3-option.json',
+  answerUrl: '/cet-6/1995-1-3-answer.json',
+  analysisUrl: '/cet-6/1995-1-3-analysis.txt',
+  name: '六级阅读1',
+  note: '1995年1月份真题',
+  keyWords: ["reverse","data","opportunity"],
+  type: 'R1' }
+  
+const article2 = {
+  name: "六级阅读37",
+  note: "2015年12月份真题",
+  articleUrl: "/cet-6/2015-12-(三)-1-article.txt",
+  optionUrl: "/cet-6/2015-12-(三)-1-option.json",
+  answerUrl: "/cet-6/2015-12-(三)-1-answer.json",
+  analysisUrl: "/cet-6/2015-12-(三)-1-analysis.txt",
+  keyWords: [
+    "hotly",
+    "presumption",
+    "remedy",
+    "chemical",
+    "adult"
+  ],
+  type: "R2"
+}
+
+const article3 =  {
+  name: "六级阅读8",
+  note: "2005年6月份真题",
+  articleUrl: "/cet-6/2005-6-5-article.txt",
+  optionUrl: "/cet-6/2005-6-5-option.json",
+  answerUrl: "/cet-6/2005-6-5-answer.json",
+  analysisUrl: "/cet-6/2005-6-5-analysis.txt",
+  keyWords: [
+    "handicap",
+    "execution",
+    "enlarge",
+    "disable",
+    "estimate",
+    "company"
+  ],
+  type: "R3"
+}
+
+const article4 = {
+  name: "六级阅读25",
+  note: "2015年12月份真题",
+  articleUrl: "/cet-6/2015-12-(一)-2-article.txt",
+  optionUrl: null,
+  answerUrl: null,
+  analysisUrl: null,
+  keyWords: [
+    "admittance",
+    "apart",
+    "launch",
+    "elite",
+    "campus",
+    "access"
+  ],
+  type: "R4"
+}
 
 const VocaHomeStackNav = createStackNavigator(
     {
@@ -48,7 +111,7 @@ const VocaHomeStackNav = createStackNavigator(
       VocaGroup:{
         screen:VocaGroupPage,
       },
-  
+
       // 学习统计
       Statistics:{
         screen:StatisticsPage,
@@ -62,12 +125,15 @@ const VocaHomeStackNav = createStackNavigator(
       LearnCard: {
         screen: LearnCardPage,
       },
-     
+
       // 生词本的生词页
       GroupVoca: {
         screen: GroupVocaPage,
       },
 
+      ArticleManage:{
+         screen: ArticleManagePage,
+      },
 
       // 单词选中义测试
       TestVocaTran: {
@@ -99,13 +165,22 @@ const VocaHomeStackNav = createStackNavigator(
       },
 
 
+      //我的页面
+      Account:{
+        screen:AccountPage
+      },
+      Password:{
+        screen:PasswordPage
+      }
+
 
     },
     {
       initialRouteName: 'Home',
       headerMode:'none',
-      initialRouteParams:{
-      }
+      // initialRouteParams:{
+      //   articleInfo:article1
+      // }
     }
   );
 

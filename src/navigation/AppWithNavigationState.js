@@ -17,13 +17,13 @@ class AuthLoadingPage extends Component {
 
     componentDidMount(){
         this._bootstrap();
-         //隐藏启动页
-        SplashScreen.hide();
     }
 
     // token验证登录状态
      _bootstrap = async () => {
+        SplashScreen.hide();
         //登录进入前，无token
+
         try{
             // Http.setHeader('token', null)
             const token = await Storage.load({
@@ -34,7 +34,7 @@ class AuthLoadingPage extends Component {
                 Http.defaults.headers['token'] = token
                 console.log('--------------登录-------------')
                 console.log(Http.defaults.headers)
-                this.props.navigation.navigate('Home')
+                this.props.navigation.navigate('HomeStack')
             }else{
                 this.props.navigation.navigate('LoginStack')
             }

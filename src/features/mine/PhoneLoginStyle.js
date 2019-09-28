@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import gstyles from "../../style";
 const Dimensions = require('Dimensions');
 let {width, height} = Dimensions.get('window');
 
@@ -10,35 +11,30 @@ const styles = StyleSheet.create({
       alignItems:'center',
       backgroundColor: "#FDFDFD"
     },
-    row:{
-      flexDirection:'row',
-      justifyContent:'flex-start',
-      alignItems:'center',
-    },
-    phoneLogin:{
-      marginTop:100,
-      flexDirection:'column',
-      justifyContent:'center',
-      alignItems:'center',
-      width:width-100,
+
+    phoneLoginView:{
+        flex:6,
+        marginTop:100,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        width:width-60,
     },
     logo:{
       width:'100%',
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center',
       paddingBottom:50,
     },
-    phone:{
-      width:'100%',
-      flexDirection:'row',
-      justifyContent:'flex-start',
-      alignItems:'center',
-      borderBottomWidth:1,
+    phoneInput:{
+        width: '100%',
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: gstyles.gray,
+        borderRadius: 100,
+        height:50,
+        paddingLeft:20,
     },
     otherLoginView:{
-      position:'absolute',
-      bottom:60,
+        flex:4,
+        width:width-60,
     },
     line:{
       width:70,

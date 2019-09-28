@@ -1,20 +1,25 @@
 import {take, put, call} from 'redux-saga/effects'
-import FileService from '../../service/FileService'
+import FileService from '../../../../common/FileService'
 const fileService = new FileService()
 
 /**加载文章 */
-export function * loadArticle(vocaLibName,articleCode){
+export function * loadArticle(articleInfo){
     yield put({type:'LOAD_ARTICLE_START'})
     try{
-        console.log(`${vocaLibName}/${articleCode}-article.txt`)
-        const articleText = yield fileService.loadText(`${vocaLibName}/${articleCode}-article.txt`)
-        const keywordText = yield fileService.loadText(`${vocaLibName}/${articleCode}-keyword.json`)
-        const keywords = JSON.parse(keywordText)
-        const optionsText = yield fileService.loadText(`${vocaLibName}/${articleCode}-option.json`)
-        console.log(optionsText)
-        const options = JSON.parse(optionsText)
-        console.log(options)
-        yield put({type:'LOAD_ARTICLE_SUCCEED', articleText,keywords,options})
+        console.log(articleInfo.articleUrl)
+        const articleText = yield fileService.loadText(articleInfo.articleUrl)
+        const keywords = articleInfo.keyWords
+        let options = []
+        if(articleInfo.optionUrl !== null){
+            options = yield fileService.loadText(articleInfo.optionUrl, 'json')
+        }
+        
+        if(articleText === null || options === null){
+            yield put({type:'LOAD_ARTICLE_FAIL'})
+        }else{
+            yield put({type:'LOAD_ARTICLE_SUCCEED', articleText,keywords,options})
+        }
+        
     }catch(err){
         console.log(err)
         yield put({type:'LOAD_ARTICLE_FAIL'})
@@ -23,17 +28,19 @@ export function * loadArticle(vocaLibName,articleCode){
 
 /**加载解析  */
 
-export function * loadAnalysis(vocaLibName,articleCode){
+export function * loadAnalysis(articleInfo){
     yield put({type:'LOAD_ANALYSIS_START'})
     try{
-        console.log(`${vocaLibName}/${articleCode}-article.txt`)
-        //解析
-        const analysisText = yield fileService.loadText(`${vocaLibName}/${articleCode}-analysis.txt`)
+        console.log(articleInfo.articleUrl)
+        const analysisText = yield fileService.loadText(articleInfo.analysisUrl)
         //正确答案
-        const rightAnswersText = yield fileService.loadText(`${vocaLibName}/${articleCode}-answer.json`)
-        console.log(rightAnswersText)
-        const rightAnswers = JSON.parse(rightAnswersText)
-        yield put({type:'LOAD_ANALYSIS_SUCCEED', analysisText,rightAnswers})
+        const rightAnswers = yield fileService.loadText(articleInfo.answerUrl, 'json')
+        if(analysisText === null || rightAnswers === null){
+            yield put({type:'LOAD_ANALYSIS_FAIL'})
+        }else{
+            yield put({type:'LOAD_ANALYSIS_SUCCEED', analysisText,rightAnswers})
+        }
+        
     }catch(err){
         console.log(err)
         yield put({type:'LOAD_ANALYSIS_FAIL'})
@@ -48,12 +55,12 @@ function * watchArticle(){
     while (true) {
         {
             const {payload} = yield take('LOAD_ARTICLE')
-            yield call(loadArticle, payload.vocaLibName, payload.articleCode)
+            yield call(loadArticle, payload.articleInfo)
         }
         
         {
             const {payload} = yield take('LOAD_ANALYSIS')
-            yield call(loadAnalysis, payload.vocaLibName, payload.articleCode)
+            yield call(loadAnalysis, payload.articleInfo)
         }
       }
 }

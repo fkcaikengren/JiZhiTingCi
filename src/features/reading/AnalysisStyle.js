@@ -5,7 +5,7 @@ const {width, height} = Dimensions.get('window');
 const WEBVIEW_HEIGHT = Platform.OS === "ios" ? height-55 : height-StatusBar.currentHeight-55 
 
 const styles = StyleSheet.create({
-    constainer:{
+    container:{
         flex:1,
     },  
     contents:{
@@ -59,7 +59,27 @@ const styles = StyleSheet.create({
         position:'absolute',
         bottom:0,
         backgroundColor:'#FDFDFD'
-    }
+    },
+    floatBtn:{
+        position:'absolute',
+        bottom:260,
+        left:1,
+        width:35,
+        height:60,
+        backgroundColor:'#FFE957CC',
+        borderTopRightRadius:5,
+        borderBottomRightRadius:5,
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    floatText:{
+        fontSize:14,
+        fontWeight:'300',
+        color:'#303030',
+        textAlign:'center',
+        textAlignVertical:'center',
+    },
 });
 
 

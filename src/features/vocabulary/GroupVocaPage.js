@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import BackgroundTimer from 'react-native-background-timer';
 
 import VocaGroupDao from './service/VocaGroupDao'
-import {playSound} from './service/AudioFetch'
+import {playSound} from '../../common/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 import VocaUtil from './common/vocaUtil'

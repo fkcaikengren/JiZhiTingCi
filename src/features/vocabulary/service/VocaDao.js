@@ -58,7 +58,62 @@ export default class VocaDao{
         return data;
     }
 
+    /**
+     * @description 
+     * @memberof VocaDao
+     */
+    lookWordInfo = (word,i=1)=>{
+        console.log(word)
+        let wordObj = null
+        try{
+            //查询单词基本信息
+            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'"'); //数组
+            if(wordInfos[0]){
+                if(wordInfos[0].inflection_type === "transform"){       //处理变形词
+                    const res = this.realm.objects('WordInfo').filtered('id='+wordInfos[0].inflections);
+                    if(res[0]){
+                        wordObj=res[0]
+                    }
+                }else{
+                    wordObj=wordInfos[0]
+                }
+            }else{
+                if(i===1){
+                    //首字母小写查询
+                    wordObj = this.lookWordInfo(word.toLowerCase(),2)
+                }
+            }
 
+        }catch (e) {
+            console.log(e)
+            console.log('VocaDao : getWordInfo() Error')
+        }
+        return wordObj
+    }
+
+    /**
+     *  查询单词的变形词
+     * @param word
+     * @returns {Array}
+     */
+    getTransforms = (word)=> {
+        let arr = []
+        const res = this.realm.objects('WordInfo').filtered('word="' + word + '"')
+        if (res.length > 0) {
+            const inflections = res[0].inflections.split(',')
+            //根据inflections 查询衍生词
+            for (let i of inflections) {
+                if (i && i !== '') {
+                    console.log(parseInt(i))
+                    const res2 = this.realm.objects('WordInfo').filtered('id=' + parseInt(i) + ' AND inflection_type="transform"')
+                    if (res2.length > 0) {
+                        arr.push(res2[0].word)
+                    }
+                }
+            }
+        }
+        return arr
+    }
 
     /**
      * @description 获取单词详情
@@ -68,9 +123,9 @@ export default class VocaDao{
         let wordObj = null
         try{
             //查询单词基本信息
-            let wordInfo = this.realm.objects('WordInfo').filtered('word="'+word+'" AND inflection_type != "transform"'   ); //数组
-            if(wordInfo[0]){
-                wordObj=wordInfo[0]
+            let wordInfos = this.realm.objects('WordInfo').filtered('word="'+word+'" AND inflection_type != "transform"'   ); //数组
+            if(wordInfos[0]){
+                wordObj=wordInfos[0]
             }
 
         }catch (e) {
@@ -114,7 +169,7 @@ export default class VocaDao{
 
         }catch (e) {
             console.log(e)
-            console.log('VocaDao : getWordInfo() Error')
+            console.log('VocaDao : getWordInfos() Error')
         }
         return arr
     }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, TextInput, View, Text} from 'react-native'
-import {Button} from 'react-native-elements'
+import { TextInput, View, Text, StatusBar} from 'react-native'
+import {Button, Input} from 'react-native-elements'
+import SplashScreen from 'react-native-splash-screen'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AliIcon from '../../component/AliIcon'
 import styles from './PhoneLoginStyle'
@@ -15,15 +16,15 @@ class PhoneLoginPage extends Component {
         phone:'',
         verifyCode:'',        //验证码
         isPhoneRight:false, 
-        phoneBorderColor:'#D0D0D0',
         codeBorderColor:'#D0D0D0',
         codeMode:false,     //是否是在验证码模式
-        showOthers:true,
       }
       
     }
 
     componentDidMount(){
+       //隐藏启动页
+       SplashScreen.hide();
     }
 
 
@@ -54,19 +55,7 @@ class PhoneLoginPage extends Component {
         })
     };
 
-    _onPhoneFocus = ()=>{
-      this.setState({phoneBorderColor:'#FFE957'})
-    }
-    _onPhoneBlur = ()=>{
-      this.setState({phoneBorderColor:'#D0D0D0'})
-    }
 
-    _onCodeFocus = ()=>{
-      this.setState({codeBorderColor:'#FFE957'})
-    }
-    _onCodeBlur = ()=>{
-      this.setState({codeBorderColor:'#D0D0D0'})
-    }
 
     
 
@@ -74,11 +63,10 @@ class PhoneLoginPage extends Component {
     // 更改手机号码
     _changePhone = (phone)=>{
       let isPhoneRight = /^1[3456789]\d{9}$/.test(phone)
-      let showOthers = !(phone.length > 0);
       if(!isPhoneRight){ 
         console.log("手机号码有误，请重填");  
       }
-      this.setState({phone, isPhoneRight, showOthers})
+      this.setState({phone, isPhoneRight})
     }
 
     //发送验证码
@@ -106,103 +94,106 @@ class PhoneLoginPage extends Component {
     render() {
         return (
         <View style={styles.container}>
+              <StatusBar translucent={false} barStyle="dark-content" />
               {/* 手机登录层 */}
-              <View style={styles.phoneLogin}>
+              <View style={styles.phoneLoginView}>
                 {/* logo */}
-                <View style={styles.logo}>
+                <View style={[gstyles.r_center,styles.logo]}>
                   <Text style={{fontSize:36, color:'#202020'}}>爱听词</Text>
                 </View>
-                {/* 如果是输入手机号模式 */}
-                {!this.state.codeMode && 
-                  <View style={{width:'100%'}}>
-                    <View style={[styles.phone, {borderColor:this.state.phoneBorderColor}]}>
-                      <Ionicons name="ios-phone-portrait" size={30} />
-                      <TextInput placeholder="手机号" maxLength={11}
-                      style={{width:'100%'}}
-                      onFocus={this._onPhoneFocus}
-                      onBlur={this._onPhoneBlur}
-                      onChangeText={this._changePhone}
-                      value={this.state.phone}
-                      keyboardType='numeric'
-                      />
-                    </View>
-                    {/* 登录按钮 */}
-                    <View style={{flexDirection:'column',
-                      justifyContent:'center',
-                      alignItems:'center',
-                      width:'100%',
-                      marginTop:20,
-                      }}>
-                      <Button
-                          disabled={!this.state.isPhoneRight}
-                          disabledStyle={{backgroundColor:'#FFE95788'}}
-                          title="发送验证码"
-                          titleStyle={{fontSize:14, color:'#202020'}}
-                          buttonStyle={{backgroundColor:'#FFE957'}}
-                          containerStyle={{width:'100%',height:40}}
-                          onPress={this._requestVerifyCode}
-                        />
+                {/* 如果是输入手机号模式  */}
+                  {!this.state.codeMode &&
+                      <View style={{width:'100%'}}>
+                          <View style={[gstyles.r_start,styles.phoneInput]}>
+                              <Ionicons name="ios-phone-portrait" size={26} color={gstyles.gray}/>
+                              <TextInput
+                                  placeholder="手机号"
+                                  maxLength={11}
+                                  style={[{height:gstyles.mdHeight,width:'100%',marginLeft:5},gstyles.md_black]}
+                                  value={this.state.searchText}
+                                  onChangeText={this._changePhone}
+                                  value={this.state.phone}
+                                  keyboardType='numeric'
+                              />
+                          </View>
+                          {/* 登录按钮 */}
+                          <View style={{flexDirection:'column',
+                              justifyContent:'center',
+                              alignItems:'center',
+                              width:'100%',
+                              marginTop:20,
+                          }}>
+                              <Button
+                                  disabled={!this.state.isPhoneRight}
+                                  title="发送验证码"
+                                  titleStyle={gstyles.md_black}
+                                  buttonStyle={{height:gstyles.mdHeight,backgroundColor:'#FFE957', borderRadius:100}}
+                                  containerStyle={{width:'100%'}}
+                                  onPress={this._requestVerifyCode}
+                              />
 
-                      <Button
-                          type='clear'
-                          disabled={!this.state.isPhoneRight}
-                          title="密码登录"
-                          titleStyle={{fontSize:14, color:'#202020'}}
-                          containerStyle={{ alignSelf:'flex-end'}}
-                        />
-                    </View>
-                  </View>
-                  
-                }
+                              <Button
+                                  type='clear'
+                                  disabled={!this.state.isPhoneRight}
+                                  title="密码登录"
+                                  titleStyle={{fontSize:14, color:'#202020'}}
+                                  containerStyle={{ alignSelf:'flex-end'}}
+                              />
+                          </View>
+                      </View>
+
+                  }
+
+
                   {/* 验证码模式下 */}
                 {this.state.codeMode &&  
                    <View style={{width:'100%'}}>
-                   <View style={[styles.phone, {borderColor:this.state.codeBorderColor}]}>
-                     <Ionicons name="ios-lock" size={30} />
-                     <TextInput placeholder="验证码" maxLength={6}
-                     style={{width:'100%'}}
-                     onFocus={this._onCodeFocus}
-                     onBlur={this._onCodeBlur}
-                     onChangeText={this._changeVerifyCode}
-                     value={this.state.verifyCode}
-                     keyboardType='numeric'
-                     />
-                   </View>
-                   {/* 登录按钮 */}
-                   <View style={{flexDirection:'column',
-                     justifyContent:'center',
-                     alignItems:'center',
-                     width:'100%',
-                     marginTop:20,
-                     }}>
-                       <Button
-                          disabled={!this.state.isPhoneRight}
-                          disabledStyle={{backgroundColor:'#FFE95799'}}
-                          title="登录"
-                          titleStyle={{fontSize:14, color:'#202020'}}
-                          buttonStyle={{backgroundColor:'#FFE957'}}
-                          containerStyle={{width:'100%',height:40}}
-                          onPress={this._login}
-                        />
+                       <View style={[gstyles.r_start,styles.phoneInput]}>
+                           <AliIcon name="locked" size={24} color={gstyles.gray} style={{marginBottom:5}}/>
+                           <TextInput
+                               ref={ref=>this._inputRef = ref}
+                               placeholder="验证码"
+                               maxLength={6}
+                               style={[{height:gstyles.mdHeight,width:'100%',marginLeft:5},gstyles.md_black]}
+                               onChangeText={this._changeVerifyCode}
+                               value={this.state.verifyCode}
+                               keyboardType='numeric'
+                           />
+                       </View>
+                       {/* 登录按钮 */}
+                       <View style={{flexDirection:'column',
+                         justifyContent:'center',
+                         alignItems:'center',
+                         width:'100%',
+                         marginTop:20,
+                         }}>
+                           <Button
+                              disabled={!this.state.isPhoneRight}
+                              disabledStyle={{backgroundColor:'#FFE95799'}}
+                              title="登录"
+                              titleStyle={gstyles.md_black}
+                              buttonStyle={{height:gstyles.mdHeight,backgroundColor:'#FFE957',borderRadius:100}}
+                              containerStyle={{width:'100%'}}
+                              onPress={this._login}
+                            />
 
-                      <Button
-                          type='clear'
-                          disabled={!this.state.isPhoneRight}
-                          title="取消"
-                          titleStyle={{fontSize:14, color:'#202020'}}
-                          containerStyle={{ alignSelf:'flex-end'}}
-                          onPress={this._cancel}
-                        />
-                   </View>
-                 </View>
-                 
+                          <Button
+                              type='clear'
+                              disabled={!this.state.isPhoneRight}
+                              title="取消"
+                              titleStyle={{fontSize:14, color:'#202020'}}
+                              containerStyle={{ alignSelf:'flex-end'}}
+                              onPress={this._cancel}
+                            />
+                       </View>
+                    </View>
                 }
                 
             
             </View>
 
             {/* 其他登录方式 */}
-            {this.state.showOthers &&
+            {
               <View style={[gstyles.c_center,styles.otherLoginView]}>
                 <View style={gstyles.r_center}>
                   <View style={styles.line} />

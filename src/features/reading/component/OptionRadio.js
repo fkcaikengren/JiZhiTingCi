@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {StyleSheet,View, Text,} from 'react-native';
 import gstyles from '../../../style'
 
-const Dimensions = require('Dimensions');
 
 
 const styles = StyleSheet.create({
@@ -48,8 +47,6 @@ export default  class OptionRadio extends Component{
   
 
     render(){
-        
-
         return(
             <View style={[styles.container, this.props.containerStyle]}>
             {
@@ -64,7 +61,7 @@ export default  class OptionRadio extends Component{
                     return <View style={styles.optionRow}>
                         <View 
                         onStartShouldSetResponder={(e)=>true}
-                        onResponderGrant={(e)=>{this.onChange(index, option)}}
+                        onResponderStart={(e)=>{this.onChange(index, option)}}
                         style={[gstyles.r_center,{
                             width:this.props.size,
                             height:this.props.size,

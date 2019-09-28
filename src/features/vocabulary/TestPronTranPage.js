@@ -7,7 +7,8 @@ import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
-import AudioFetch from './service/AudioFetch'
+import AudioFetch from '../../common/AudioFetch'
+import * as VocaLibAction from "./redux/action/vocaLibAction";
 
 const styles = StyleSheet.create({
     
@@ -103,8 +104,7 @@ const mapStateToProps = state=>({
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
-    setShouldUpload: homeAction.setShouldUpload,
-
+    changeLearnedWordCount : VocaLibAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

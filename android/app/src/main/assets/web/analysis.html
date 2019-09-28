@@ -9,24 +9,34 @@
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <style type="text/css">
             @font-face{
-                font-family: 'MONACO'; 
+                font-family: 'MONACO';
                 src: url('../fonts/MONACO.TTF');
-               
             }
-            @media screen and (min-width:1000px){/* 电脑,当大于1000的时候 */
-                html{font-size:18px;}
+            @media screen and (min-width: 320px) {
+                html {font-size: 14px;}
             }
-            @media screen and (min-width:360px){/* 当大于360的时候 */
-                html{font-size:18px;}
+
+            @media screen and (min-width: 360px) {
+                html {font-size: 16px;}
             }
-            @media screen and (min-width:340px){/* 当大于340的时候 */
-                html{font-size:16px;}
+
+            @media screen and (min-width: 400px) {
+                html {font-size: 18px;}
             }
-           
-            @media screen and (max-width:320px){/* 当小于320的时候 */
-                html{font-size:14px;}
+
+            @media screen and (min-width: 440px) {
+                html {font-size: 20px;}
             }
-           
+
+            @media screen and (min-width: 480px) {
+                html {font-size: 22px;}
+            }
+
+            @media screen and (min-width: 640px) {
+                html {font-size: 28px;}
+            }
+
+
             *,
             ::before,
             ::after{
@@ -45,8 +55,6 @@
                 color: #303030;
                 overflow-x: hidden; 
                 overflow-y: auto;
-
-                font-size: 1rem;
             }
             p{
                 /* 段落前留空格 */
@@ -58,9 +66,9 @@
                 /* 流式布局 */
                 /* 字体 */
                 text-align: justify;
-                line-height: 1.5rem;
+                line-height: 1.8rem;
                 vertical-align:bottom;
-                padding: 10px;
+                padding: 16px;
                 
             }
             .answerCard{

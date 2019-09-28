@@ -1,6 +1,6 @@
 
 import Sound from 'react-native-sound'
-
+import * as CConstant from './constant'
 export default class AudioFetch{
   
   constructor(){
@@ -16,18 +16,16 @@ export default class AudioFetch{
   }
 
 
-  
   //播放音频
   playSound = (url,startPlay=null, finishPlay=null,failPlay=null)=>{
     if(startPlay){
       startPlay() //开始播放
     }
-    const baseUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
-    console.log(baseUrl+url)
+    const where = CConstant.RESOURCE_URL+'voca/'+url
     //先暂停并释放资源
     this.releaseSound()
 
-    this.sound = new Sound(baseUrl+url,null, err => {
+    this.sound = new Sound(where,null, err => {
       //播放失败
       if (err) {        //获取失败
         console.log(err)

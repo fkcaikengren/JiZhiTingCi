@@ -7,12 +7,13 @@ import {connect} from 'react-redux';
 import Loader from '../../component/Loader'
 import * as ArticleAction from './redux/action/articleAction'
 import AliIcon from '../../component/AliIcon'
-import FileService from './service/FileService'
+import FileService from '../../common/FileService'
 import * as Constant from './common/constant'
 import gstyles from '../../style'
 import styles from './AnalysisStyle'
 import WebUtil from '../../common/webUtil'
-import ReadUtil from './util/readUtil';
+import ReadUtil from './common/readUtil';
+import _util from '../../common/util'
 
 class AnalysisPage extends React.Component {
   
@@ -26,7 +27,7 @@ class AnalysisPage extends React.Component {
     _sendInitMessage = ()=>{
         const {bgThemes, themeIndex, fontRem,articleText, options,analysisText, rightAnswers, userAnswerMap} = this.props.article
         const handin = this.props.navigation.getParam('handin')
-        const articleType = this.props.navigation.getParam('articleType')
+        const articleType = this.props.navigation.getParam('articleInfo').type
         const userAnswers = ReadUtil.strMapToObj(userAnswerMap)
         try{
             //答案的格式：文章 or 答案键值对
@@ -65,7 +66,6 @@ class AnalysisPage extends React.Component {
             console.log(e)
         }
     }
-   
  
     _toggleRightAnswers = ()=>{
         //发送给Web
@@ -81,9 +81,11 @@ class AnalysisPage extends React.Component {
         console.log(data)
         switch(data.command){
             case 'initStart':
+                console.log('----initStart-----')
                 this._sendInitMessage()
             break;
             case 'initFinish':
+                    console.log('----initFinish-----')
                 this.props.changeWebLoading(false)
             break;
             case 'exit':
@@ -94,32 +96,16 @@ class AnalysisPage extends React.Component {
         }
     }
 
-    render() {
-        const {bgThemes, themeIndex, isLoadPending ,isWebLoading} = this.props.article
+    _renderContent = ()=>{
+        const {bgThemes, themeIndex,isLoadPending , isLoadFail} = this.props.article
         const handin = this.props.navigation.getParam('handin')
-        return (
-            <View style={[styles.container, {backgroundColor:bgThemes[themeIndex]}]}>
-                {/* 头部 */}
-                <StatusBar translucent={true} />
-                <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
-                leftComponent={ handin?null:
-                    <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
-                        this.props.navigation.goBack();
-                    }}></AliIcon> }
-                centerComponent={{ text: handin?'练习结果':'答案解析', style: gstyles.lg_black_bold}}
-                rightComponent={handin?null:
-                    <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
-                        <Text style={styles.showAnswerBtn}>答案</Text>
-                    </TouchableWithoutFeedback>
-                }
-                containerStyle={{
-                    backgroundColor: bgThemes[themeIndex],
-                    justifyContent: 'space-around',
-                }}
-                />
-                {/* WebView : 用户答案，标准答案，解析*/}
+        if(isLoadFail){
+            return <View style={[gstyles.c_center,{flex:1}]}>
+                    <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+                    <Text style={gstyles.md_black}>出错了...</Text>
+                </View>
+        }else{
+            return <View>
                 {!isLoadPending &&
                     <View style={[styles.webContainer,{backgroundColor:bgThemes[themeIndex]}]}>
                         <WebView
@@ -145,16 +131,64 @@ class AnalysisPage extends React.Component {
                 }
                 {handin &&
                     <View style={styles.bottomBar}>
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={()=>{
+                            _util.goPageWithoutStack(this.props.navigation,'Home',{})
+                        }}>
                             <Text style={styles.barText}>退出</Text>
                         </TouchableWithoutFeedback>
                         <View style={styles.seperator}></View>
                         <TouchableWithoutFeedback onPress={()=>{
+                            this.props.changeUserAnswerMap(new Map())
                             this.props.navigation.goBack()
                         }}>
                             <Text style={styles.barText}>重做</Text>
                         </TouchableWithoutFeedback>
                     </View>
+                }
+            </View>
+        }
+    }
+
+    render() {
+        const {bgThemes, themeIndex,isWebLoading, isLoadFail} = this.props.article
+        const handin = this.props.navigation.getParam('handin')
+        return (
+            <View style={[styles.container, {backgroundColor:bgThemes[themeIndex]}]}>
+                {/* 头部 */}
+                <Header
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle="dark-content" // or directly
+                    centerComponent={{ text: handin?'练习结果':'答案解析', style: gstyles.lg_black_bold}}
+                    rightComponent={isLoadFail || handin?null:
+                    <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
+                        <Text style={styles.showAnswerBtn}>答案</Text>
+                    </TouchableWithoutFeedback>
+                }
+                containerStyle={{
+                    backgroundColor: bgThemes[themeIndex],
+                    justifyContent: 'space-around',
+                }}
+                />
+                {/* WebView : 用户答案，标准答案，解析*/}
+                {
+                    this._renderContent()
+                }
+                {/* 答悬浮按钮 */}
+                {!handin &&
+                    <TouchableWithoutFeedback onPress={()=>{
+                        if(isLoadFail){
+                            this.props.changeLoadingFail(false)
+                        }
+                        this.props.navigation.goBack()
+                        }}>
+                        <View style={[styles.floatBtn]}>
+                            <View>
+                                <Text style={styles.floatText}>返</Text>
+                                <Text style={styles.floatText}>回</Text>
+                            </View>
+                            <AliIcon name='youjiantou' size={16} color='#303030' />
+                        </View>
+                    </TouchableWithoutFeedback>
                 }
                 {isWebLoading &&
                     <View style={[styles.loadingView, {backgroundColor:bgThemes[themeIndex]}]}>
@@ -173,6 +207,8 @@ const mapStateToProps = state =>({
 
 const mapDispatchToProps = {
     loadAnalysis: ArticleAction.loadAnalysis,
-    changeWebLoading: ArticleAction.changeWebLoading
+    changeWebLoading: ArticleAction.changeWebLoading,
+    changeLoadingFail: ArticleAction.changeLoadingFail,
+    changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);

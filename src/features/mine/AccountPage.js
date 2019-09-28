@@ -1,163 +1,128 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, StyleSheet, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
-import {Header} from 'react-native-elements'
-import {Grid, Col,} from 'react-native-easy-grid'
+import {Platform, StatusBar, View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
+import {Header,} from 'react-native-elements'
 
-import {turnLogoImg} from '../../image';
 import AliIcon from '../../component/AliIcon';
-import IconListItem from '../../component/IconListItem';
-import UserDao from '../../dao/mine/UserDao'
-import vocaUtil from "../vocabulary/common/vocaUtil";
 import gstyles from "../../style";
+import styles from './AccountStyle'
 
-
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const StatusBarHeight = StatusBar.currentHeight;
-
-const styles = StyleSheet.create({
-    container:{
-        backgroundColor:'#EFEFEF',
-    },
-    header:{
-        backgroundColor:'#FDFDFD',
-        elevation:0,
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-        
-    },
-    title:{
-        fontSize:18,
-        fontWeight:'500',
-        color:'#1890FF',
-    },
-    c_center:{
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    containerStyle:{
-        paddingVertical:10, 
-        borderBottomWidth:1, 
-        borderColor:'#DFDFDF', 
-        backgroundColor:'#FDFDFD'
-    }
-   
-});
 
 export default class AccountPage extends React.Component {
     constructor(props){
         super(props);
         this.state={user:{}}
-        this.dao = new UserDao()
     }
 
 
     componentDidMount(){
-        this.dao.open()
-        .then(()=>{
-            let user = this.dao.getUser()
-            this.setState({user})
-        })
+        console.log('加载')
+        this._init()
     }
+    
+    _init = async () => {
+        try {
+          const user = await Storage.load({key: 'user'})
+          if(user !== null) {
+            this.setState({user})
+          }
+        } catch(e) {
+          console.log(e)
+        }
+      }
 
     componentWillUnmount(){
-        alert('acountPage out, close realm ')
-        this.dao.close()
     }
 
 
     //退出登录
     _logout = ()=>{
-        //清空用户信息
-        this.dao.clearUserInfo()
         BackHandler.exitApp()
     }
+
+
+    // Item
+    _renderItem = (title, rightPart=null,onPress=()=>null, hasBorderLine=true)=>{
+        const isText = (typeof rightPart === 'string')
+        const borderLine = hasBorderLine?null:{borderBottomWidth:0}
+        return <TouchableOpacity 
+            activeOpacity={0.8}
+            onPress={onPress}
+            >
+                <View style={styles.itemWrapper}>
+                    <View style={[gstyles.r_start, styles.itemView,borderLine]}>
+                        <View style={[{flex:1},gstyles.r_start]}>
+                            <Text numberOfLines={1} style={gstyles.lg_black}>{title}</Text>
+                        </View>
+                        <View style={gstyles.r_start}>
+                            {isText &&
+                                <Text numberOfLines={1} style={gstyles.lg_gray}>{rightPart}</Text>
+                            }
+                            {!isText &&
+                                rightPart
+                            }
+                            <AliIcon name='youjiantou' size={26} color={gstyles.gray} 
+                                style={{marginLeft:10, marginRight:10}}/>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
+    }
+
     render(){
         let {user} = this.state
         return(
             <View style={styles.container}>
-                <StatusBar
-                    translucent={true}
-                    // hidden
-                />
-
-                <View style={{width:width, height:StatusBarHeight, backgroundColor:'#1890FF'}}></View>
                 {/* 头部 */}
                 <Header
-                    statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle="dark-content" // or directly
-                    leftComponent={//返回
-                        <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
-                        }}/> }
-                    centerComponent={{ text: '个人中心', style: gstyles.lg_black_bold }}
-                    containerStyle={{
-                        backgroundColor: '#FCFCFC00',
-                        borderBottomColor: '#FCFCFC00',
-                    }}
+                statusBarProps={{ barStyle: 'dark-content' }}
+                barStyle='dark-content' // or directly
+                leftComponent={ 
+                    <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
+                        this.props.navigation.goBack();
+                    }} /> }
+             
+                centerComponent={{ text: '个人中心', style: gstyles.lg_black_bold}}
+                containerStyle={{
+                    backgroundColor: gstyles.mainColor,
+                    justifyContent: 'space-around',
+                }}
                 />
 
-                <View>
-                    <Grid>
-                        <Col style={{marginTop:20}}>
-                            <IconListItem 
-                                containerStyle={styles.containerStyle}
-                                title='头像'
-                                rightIcon={<Image style={{width:40,height:40, borderRadius:100}} source={turnLogoImg}></Image>}
-                                onPress={()=>{
-                                    alert('特权');
-                                }}
-                            />
-                            <IconListItem 
-                                containerStyle={styles.containerStyle}
-                                title='用户名'
-                                subtitle={user.nickname?user.nickname:''}
-                                onPress={()=>{
-                                    alert('Jacy');
-                                }}
-                            />
-                            <IconListItem 
-                                containerStyle={styles.containerStyle}
-                                title='绑定手机'
-                                subtitle={user.phone}
-                                rightIcon={user.phone?null:<AliIcon name='shouji' size={26} color='#1890FF'></AliIcon>}
-                               
-                            />
-                            <IconListItem 
-                                containerStyle={styles.containerStyle}
-                                title='绑定微信'
-                                rightIcon={<AliIcon name='weixin' size={26} color='#259B24'></AliIcon>}
-                                onPress={()=>{
-                                    alert('weixin');
-                                }}
-                            />
-                            <IconListItem 
-                                containerStyle={styles.containerStyle}
-                                title='绑定QQ'
-                                rightIcon={<AliIcon name='qq' size={26} color='#3F51B5'></AliIcon>}
-                                onPress={()=>{
-                                    alert('QQ');
-                                }}
-                            />
+                <View style={styles.mainView}>
+                    {
+                        this._renderItem('头像', 
+                        <Image style={styles.imgStyle}  source={require('../../image/h_icon.png')}/>)
+                    }
+                    {
+                        this._renderItem('昵称', user.nickname)
+                    }
+                    
+                    {/* {
+                        this._renderItem('绑定微信', <AliIcon name='weixin' size={26} color='#30DE76' />)
+                    }
+                    {
+                        this._renderItem('绑定QQ', <AliIcon name='qq' size={26} color='#3EC6FB' />)
+                    } */}
 
-
-                            <TouchableOpacity onPress={this._logout}>
-                                <View style={[{
-                                    flexDirection:'row',
-                                    justifyContent:'center',
-                                    alignItems:'center',
-                                    marginTop:20,
-                                }, styles.containerStyle]}>
-                                    <Text  style={{fontSize:16, color:'red', }}>退出登录</Text>
-                                </View>
-                            </TouchableOpacity>
-                            
-                        </Col>
-                    </Grid>
+                        {
+                        this._renderItem('绑定手机', user.phone?user.phone:
+                            <AliIcon name='shouji' size={26} color={gstyles.gray} />)
+                    }
+                    {
+                        this._renderItem('修改密码',null, ()=>{
+                            this.props.navigation.navigate('Password')
+                        }, false)
+                    }
+                    <TouchableOpacity activeOpacity={0.8}
+                    // onPress={}
+                    >
+                        <View style={[gstyles.r_center, styles.logout]}>
+                            <Text style={[gstyles.lg_black,{color:'red'}]}>退出登录</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
     }
 }
+

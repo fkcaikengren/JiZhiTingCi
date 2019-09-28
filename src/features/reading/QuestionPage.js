@@ -3,7 +3,7 @@ import { View , Text} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {connect} from 'react-redux';
 
-import FileService from './service/FileService'
+import FileService from '../../common/FileService'
 import OptionRadio from './component/OptionRadio'
 import styles from './QuestionStyle'
 import gstyles from '../../style'
@@ -19,7 +19,7 @@ class QuestionPage extends React.Component {
     
     this.state = {
       activeSections: [0],
-      questionNo:"57",
+      questionNo:"",  //修改
       questions:[]
     };
 
@@ -32,10 +32,11 @@ class QuestionPage extends React.Component {
 
   // 加载问题选项
   _loadOption = async ()=>{
+    const {articleInfo} = this.props
     try{
-      const optionText = await this.fileService.loadText(`${this.props.vocaLibName}/${this.props.articleCode}-option.json`)
-      const questions = JSON.parse(optionText)
-      this.setState({questions})
+      const questions = await this.fileService.loadText(articleInfo.optionUrl, 'json')
+  
+      this.setState({questions, questionNo:questions[0].no})
     }catch(e){
       console.log(e)
     }
@@ -79,6 +80,7 @@ class QuestionPage extends React.Component {
 
   _onChangeOption = (index, option)=>{
     const userAnswerMap = new Map(this.props.article.userAnswerMap)
+    console.log(typeof userAnswerMap)
     userAnswerMap.set(this.state.questionNo, option.identifier)
     this.props.changeUserAnswerMap(userAnswerMap)
 

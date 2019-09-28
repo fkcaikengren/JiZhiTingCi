@@ -1,6 +1,9 @@
 import {take, put, call} from 'redux-saga/effects'
 import VocaTaskDao from '../../service/VocaTaskDao';
 import VocaTaskService from '../../service/VocaTaskService';
+import ArticleDao from "../../../reading/service/ArticleDao";
+import VocaUtil from "../../common/vocaUtil";
+import * as Constant from "../../common/constant";
 
 
 /**获取单词书 */
@@ -23,19 +26,21 @@ export function * postPlan(params){
     yield put({type:'LOAD_TASKS_START'})
     try{
         const res = yield Http.post("/plan/putPlan",params)
-        // console.log( res.data)
         const {tasks, plan, articles } = res.data.data
         //清空先前数据，存储新数据到realm
-        // console.log(tasks)
-        // console.log(plan)
-        console.log(articles)
         const vtd = VocaTaskDao.getInstance()
+        const artDao = ArticleDao.getInstance()
         vtd.deleteAllTasks()
+        artDao.deleteAllArticles()
         vtd.saveVocaTasks(tasks, params.taskWordCount)
+        artDao.saveArticles(articles)
         //加载今日数据
-        const todayTasks = new VocaTaskService().getTodayTasks(null)
-        yield put({type:'LOAD_TASKS_SUCCEED', payload:{tasks:todayTasks}})
-        yield put({type:'CHANGE_VOCA_BOOK_SUCCEED', plan:plan})
+        const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)
+        yield put({type:'LOAD_TASKS_SUCCEED', payload:{tasks:rawTasks}})
+        yield put({type:'CHANGE_VOCA_BOOK_SUCCEED', plan:plan,
+            totalDays:tasks.length+Constant.LEFT_PLUS_DAYS,
+            totalWordCount:params.totalWordCount
+        })
     }catch(err){
         yield put({type:'CHANGE_VOCA_BOOK_FAIL'})
         yield put({type:'LOAD_TASKS_FAIL'})
@@ -55,9 +60,9 @@ function * watchVocaLib(){
         yield take('LOAD_VOCA_BOOKS')
         yield call(getVocaBooks)
 
-        const action_1  = yield take('CHANGE_VOCA_BOOK')
-        console.log(action_1)
-        yield call(postPlan,action_1.payload)
-      }
+        const action  = yield take('CHANGE_VOCA_BOOK')
+        console.log(action)
+        yield call(postPlan,action.payload)
+    }
 }
 export default watchVocaLib

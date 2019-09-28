@@ -73,4 +73,13 @@ export default class FileService{
         return null
         
     }
+
+
+    loadAudio = async ()=>{
+
+    }
+
+    loadPicture = ()=>{
+
+    }
 }

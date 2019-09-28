@@ -2,15 +2,14 @@
 
 'use strict';
 import React, { Component } from 'react';
-import {StatusBar,StyleSheet,Text,View,Image,Animated,RefreshControl, Button, TouchableOpacity
-} from 'react-native';
+import {StyleSheet,Text,View,Image,Animated, TouchableOpacity} from 'react-native';
 import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import {Grid, Col, Row} from 'react-native-easy-grid'
+import {Badge } from 'react-native-elements'
 
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
-import WebUtil from '../../../common/webUtil';
 
 
 const Dimensions = require('Dimensions');
@@ -39,7 +38,6 @@ export default class HomeHeader extends Component {
     const transform = [{translateY}];
 
     return (
-
       <ParallaxScrollView
         backgroundColor= '#FFE957'
         contentBackgroundColor= '#F9F9F9'
@@ -55,19 +53,89 @@ export default class HomeHeader extends Component {
           { this.props.children }
         </Animated.View>
       </ParallaxScrollView>
-
     );
   }
-
   renderStickyHeader = ()=>{
     return   <View style={{width:width,height:TITLE_HEIGHT, backgroundColor:'#FFE957'}}></View>
   }
   renderFixedHeader = ()=>{
-    return   <View style={styles.fixedSection}>
-      <AliIcon name='wode' size={26} color='#202020'  onPress={this._navVocaSearch} />
-      <Text style={[gstyles.md_black,{fontWeight:'700'}]}>四级核心必考词汇</Text>
-      <AliIcon name='chazhao' size={24} color='#202020'  onPress={this._navVocaSearch} />
+    const {bookName} = this.props.vocaLib.plan
+    const flag = this.props.home.isUploading
+    return   <View style={[styles.fixedSection,gstyles.r_start]}>
+      <View style={[{flex:1},gstyles.r_start_bottom]}>
+        <AliIcon name='wode' size={26} color='#202020'  onPress={this.props.openDrawer} />
+        {(this.props.home.isUploading || this.props.home.isUploadFail) &&
+          <View style={{marginLeft:10}}>
+            <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={()=>{
+                if(this.props.home.isUploadFail ){
+                  this.props.toastRef.show('貌似网络出了点问题...')
+                }
+            }} />
+            {this.props.home.isUploadFail &&
+            <Badge value={flag?'同步中...':'!' } status={flag?'primary':'error'}
+              badgeStyle={{minWidth: 12,  height: 12,}}
+              textStyle={{fontSize:10}}
+              containerStyle={{ position: 'absolute', bottom: 0, right: 0 }}/>
+            }
+          </View>
+        }
+      </View>
+
+      <View style={[{flex:2},gstyles.r_center]}>
+        <Text style={[gstyles.md_black,{fontWeight:'700'}]}>{bookName?bookName:'爱听词'}</Text>
+      </View>
+      <View style={[{flex:1},gstyles.r_end]}>
+        <AliIcon name='chazhao' size={24} color='#202020'  onPress={this._navVocaSearch} />
+      </View>
     </View>
+  }
+
+  //头部
+  renderHeader = ()=> {
+    const { totalDays,totalWordCount,learnedWordCount,leftDays} = this.props.vocaLib
+    return (
+      <View style={[styles.headerView]}>
+          
+          <Grid >
+            {/* 内容展示 */}
+            <Row style={styles.headerCenter}>
+              <Col style={gstyles.c_center}>
+                <Text style={gstyles.md_black}>已学单词</Text>
+                <Text style={gstyles.md_black}>
+                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>{learnedWordCount}</Text>
+                  /{totalWordCount}</Text>
+              </Col>
+              <Col style={gstyles.c_center}>
+                <Text style={gstyles.md_black}>剩余天数</Text>
+                <Text style={gstyles.md_black}>
+                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>{leftDays}</Text>
+                  /{totalDays}</Text>
+              </Col>
+            </Row>
+            {/* 底部功能按钮 */}
+            <Row style={styles.headerBottom}>
+              <Col style={gstyles.c_center} onPress={this._navVocaLib}>
+                <AliIcon name='ciyun' size={26} color='#202020'  />
+                  <Text style={styles.smDarkFont}>词库</Text>
+              </Col>
+              <Col style={gstyles.c_center} onPress={this._navVocaList}>
+                  <AliIcon name='liebiao1' size={26} color='#202020' />
+                  <Text style={styles.smDarkFont}>单词列表</Text>
+              </Col>
+              <Col style={gstyles.c_center} onPress={this._navVocaGroup} >
+                  <AliIcon name='wenzhang' size={26} color='#202020' />
+                  <Text style={styles.smDarkFont}>生词本</Text>
+              </Col>
+              <Col style={gstyles.c_center}>
+                  <AliIcon name='yuedu1' size={26} color='#202020' onPress={this._navArticleManage}/>
+                  <Text style={styles.smDarkFont}>真题</Text>
+              </Col>
+            </Row>
+          </Grid>
+            
+      </View>
+      
+    );
   }
 
   onScroll = (e)=>{
@@ -95,52 +163,10 @@ export default class HomeHeader extends Component {
     this.props.navigation.navigate('VocaSearch');
   }
 
-  //头部
-  renderHeader = ()=> {
-    return (
-      <View style={[styles.headerView]}>
-          
-          <Grid >
-            {/* 内容展示 */}
-            <Row style={styles.headerCenter}>
-              <Col style={gstyles.c_center}>
-                <Text style={gstyles.md_black}>掌握单词</Text>
-                <Text style={gstyles.md_black}>
-                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>29</Text>
-                  /2300</Text>
-              </Col>
-              <Col style={gstyles.c_center}>
-                <Text style={gstyles.md_black}>已学天数</Text>
-                <Text style={gstyles.md_black}>
-                  <Text style={{fontSize:42,color:'#202020',fontWeight:'700'}}>59</Text>
-                  /140</Text>
-              </Col>
-            </Row>
-            {/* 底部功能按钮 */}
-            <Row style={styles.headerBottom}>
-              <Col style={gstyles.c_center} onPress={this._navVocaLib}>
-                <AliIcon name='ciyun' size={26} color='#202020'  />
-                  <Text style={styles.smDarkFont}>词库</Text>
-              </Col>
-              <Col style={gstyles.c_center} onPress={this._navVocaList}>
-                  <AliIcon name='liebiao1' size={26} color='#202020' />
-                  <Text style={styles.smDarkFont}>单词列表</Text>
-              </Col>
-              <Col style={gstyles.c_center} onPress={this._navVocaGroup} >
-                  <AliIcon name='wenzhang' size={26} color='#202020' />
-                  <Text style={styles.smDarkFont}>生词本</Text>
-              </Col>
-              <Col style={gstyles.c_center}>
-                  <AliIcon name='yuedu1' size={26} color='#202020' />
-                  <Text style={styles.smDarkFont}>阅读</Text>
-              </Col>
-            </Row>
-          </Grid>
-            
-      </View>
-      
-    );
+  _navArticleManage = ()=>{
+    this.props.navigation.navigate('ArticleManage');
   }
+
 
 
 
@@ -168,9 +194,6 @@ const styles = StyleSheet.create({
   fixedSection:{
     width:width,
     height:TITLE_HEIGHT,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
     paddingHorizontal:10,
     position: 'absolute',
     top:0,

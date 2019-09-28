@@ -206,7 +206,6 @@ export default class VocaGroupPage extends Component {
 
         return (
             <View style={styles.container}>
-                <StatusBar translucent={true} />
                 <Header
                 statusBarProps={{ barStyle: 'dark-content' }}
                 barStyle='dark-content' // or directly

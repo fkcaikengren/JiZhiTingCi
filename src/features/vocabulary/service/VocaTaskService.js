@@ -6,6 +6,7 @@ import _util from '../../../common/util'
 import VocaUtil from '../common/vocaUtil'
 import VocaTaskDao from "./VocaTaskDao";
 import _ from 'lodash'
+import * as CConstant from "../../../common/constant";
 
 /**
  *  Created by Jacy on 19/07/22.
@@ -26,209 +27,226 @@ export default class VocaTaskService {
     }
 
 
-
     /**
      * 获取今日任务：任务顺序，大原则按taskOrder递增，新学产生的1复任务放末尾
-     *      目的：保证任务进度快慢是按照taskOrder递增顺序的
-     *     今日任务：新学任务，1复，其他复习任务
-     * @returns {any[]}
+     *      注：判断是否出现中断学习, 中断>13天（8+5=13），则重学。中断<=13,模拟学习产生数据
+     * @param storedTasks 单词任务数组。如果第一次，rawTasks应为null
+     * @param taskCount 计划单词任务数量
+     * @param lastLearnDate 上一次学习时间（timestap）
+     * @param n 默认是0，表示今天。
+     * @returns {*[]|*}
      */
-    getTodayTasks = (oldTasks, n=0)=>{
-        //判断oldTasks 是否过时
-        let today = _util.getDayTime(0)
-        if(oldTasks && oldTasks[0] && oldTasks[0].vocaTaskDate === today){ //数据未过时
-            return oldTasks
-        }else{                                 //数据过时，从数据库重新加载
-            //1. 查询
-            const tasks = this.vtd.getTodayTasks(n)
-            console.log((tasks))
-            let copyTasks = []
-            let reviewTask = null
-            let reviewTasks = []
-            //2. 深拷贝
-            for(let task of tasks){
-                let copyTask = VocaUtil.copyTaskDeep(task)
-                copyTask.isUploaded = false         //是否上传到服务器
-                copyTask.isSyncLocal = false           //是否同步到本地数据库
-                for(let copyWord of copyTask.words){
-                    copyWord.testWrongNum = 0
+    getTodayTasks = (storedTasks,taskCount,lastLearnDate, n=0)=>{
+        let today = _util.getDayTime(n)
+        if(storedTasks){ //若不是第一次获取今日任务
+            const d = (today - lastLearnDate)/CConstant.DAY_MS
+            console.log('------日期差：-------')
+            console.log(d)
+            if(d < 1){
+                //tasks未过时 (不会调用该函数， 如果调用该函数则应该抛出异常)
+                throw new Error('getTodayTasks 错误: lastLearnDate 大于等于今日零点时间戳！')
+            }else if(d === 1){
+            }else if(d > 1 && d <= 13){
+                //模拟学习: 从-d(即0-d) 到 -1 循环
+                for(let j=(0-d); j<-1; j++){
+                    console.log('循环j: '+j)
+                    //step1. 获取当天任务
+                    const todayTasks = this.getTodayTasks(storedTasks,taskCount, _util.getDayTime(j) ,j+1)
+                    //step2.学习：不产生任何学习数据
+                    //step3.计算、保存任务
+                    storedTasks = VocaUtil.filterRawTasks(todayTasks)
+                    this.storeTasks(storedTasks)
+                    for(let task of storedTasks){
+                        if(!task.isSyncLocal){
+                            task.isSyncLocal = true
+                        }
+                    }
                 }
-                copyTasks.push(copyTask)
-                //生成1复任务
-                if(copyTask.status === Constant.STATUS_0){
-                    reviewTask = _.cloneDeep(copyTask);
-                    reviewTask.status = Constant.STATUS_1
-                    reviewTask.progress = Constant.IN_REVIEW_PLAY
-                    reviewTask.leftTimes = Constant.REVIEW_PLAY_TIMES
-                    reviewTasks.push(reviewTask)
-                }
-
+            }else if(d > 13){
+                //重学
+                this.vtd.modify(()=>{
+                    const rtasks = this.vtd.getReviewedTasks()
+                    for(let rt of rtasks){
+                        rt.status =  Constant.STATUS_0
+                        rt.delayDays = 0
+                        rt.vocaTaskDate = 0
+                        rt.progress = Constant.IN_LEARN_PLAY
+                        rt.leftTimes = Constant.LEARN_PLAY_TIMES
+                        rt.isSync = false
+                        rt.isSyncLocal = true
+                    }
+                })
             }
 
-            //3.顺序调整: 新学放开头，新学生成的1复放末尾
-            let newTasks = [], otherTasks = []
-            for(let t of copyTasks){
-                if(t.status === Constant.STATUS_0){
-                    newTasks.push(t)
-                }else{
-                    otherTasks.push(t)
-                }
+            //0.生成今日新学任务
+            const copyStoredTasks = VocaUtil.copyTasks(storedTasks)
+            const leftCount = this.calculateTasks(copyStoredTasks)
+            this.vtd.modifyTasks(copyStoredTasks)
+            if(leftCount <= 0 || d > 13){           //如果不存在遗留任务,才生成新任务 (若d>13, 则重学)
+                this.vtd.modify(()=>{
+                    let newTasks = this.vtd.getNotLearnedTasks()
+                    if(newTasks.length > 0){                    //如果还存在未学任务
+                        for(let i=0; (i<taskCount && i<newTasks.length); i++){
+                            newTasks[i].vocaTaskDate =  _util.getDayTime(n) //今日零点
+                        }
+                    }
+                })
             }
-            let sortedTasks = newTasks.concat(otherTasks).concat(reviewTasks)
-            return sortedTasks
+
+        }
+
+        //1. 查询
+        const tasks = this.vtd.getTodayTasks(n)
+        console.log('----获取任务 -> 任务长度-----')
+        console.log(tasks.length)
+        let copyTasks = []
+        let reviewTask = null
+        let reviewTasks = []
+        //2. 深拷贝
+        for(let task of tasks){
+            let copyTask = VocaUtil.copyTaskDeep(task)
+            copyTask.isSyncLocal = true                //是否同步到本地数据库
+            copyTask.taskType = Constant.TASK_VOCA_TYPE //任务类：单词任务
+            for(let copyWord of copyTask.words){
+                copyWord.testWrongNum = 0
+            }
+            copyTasks.push(copyTask)
+            //生成1复任务
+            if(copyTask.status === Constant.STATUS_0){
+                reviewTask = _.cloneDeep(copyTask);
+                reviewTask.status = Constant.STATUS_1
+                reviewTask.progress = Constant.IN_REVIEW_PLAY
+                reviewTask.leftTimes = Constant.REVIEW_PLAY_TIMES
+                reviewTasks.push(reviewTask)
+            }
+
+        }
+        //3.顺序调整: 新学放开头，新学生成的1复放末尾
+        let newTasks = [], otherTasks = []
+        for(let t of copyTasks){
+            if(t.status === Constant.STATUS_0){
+                newTasks.push(t)
+            }else{
+                otherTasks.push(t)
+            }
+        }
+        let sortedTasks = newTasks.concat(otherTasks).concat(reviewTasks)
+        return sortedTasks
+
+    }
+
+
+    /**
+     *  计算存储Tasks
+     * @param storedTasks
+     */
+    storeTasks = (storedTasks)=>{
+        const copyStoredTasks = VocaUtil.copyTasks(storedTasks)
+        this.calculateTasks(copyStoredTasks)
+        if(copyStoredTasks.length > 0){
+            this.vtd.modifyTasks(copyStoredTasks)
         }
     }
 
 
     /**
-     *  筛选出需要存储的任务实体
-     * @param rawTasks 原始的任务
-     * @returns {*}
+     *  计算任务（改变任务的学习日期）
+     * @param storedTasks 参与计算的单词任务（不包括1复）
+     * @returns {number} 返回没有完成的任务数量
      */
-    filterTasks = (rawTasks)=>{
-        let isFirst = false
-        let oldTasks = rawTasks.filter((task, index)=>{
-            task.curIndex = 0                           //curIndex 置零
-            if(task.status === Constant.STATUS_0 ){     //新学任务
-                if(task.progress !== Constant.IN_LEARN_FINISH){
-                    isFirst = true
-                    return true
-                }else{
-                    return false
-                }
-            }else{                                      //复习任务
-                if(task.status === Constant.STATUS_1  && isFirst){
-                    return false
-                }else{
-                    return true
-                }
-            }
-
-
-        })
-        return oldTasks
-    }
-
-
-    /**
-     * 存储昨日的任务,计算今日的任务
-     *      场景：新的一天调用这个函数
-     * @param rawTasks 原始任务
-     * @param taskCount 计划中的每日任务数量
-     * @param nth 第nth天，默认为0，表示今天零点的时间戳（方便模拟测试）
-     */
-    calculateTasks = (rawTasks, taskCount, nth=0)=>{
-
-        //1. 筛选出需存储的任务
-        let oldTasks = this.filterTasks(rawTasks)
+    calculateTasks = (storedTasks)=>{
         let leftCount = 0
-        for(let oldTask of oldTasks){
-            if(oldTask.progress.startsWith('IN_LEARN') && oldTask.progress !== Constant.IN_LEARN_FINISH){      //新学未完成
-                oldTask.status = Constant.STATUS_0
-                // console.log('未完成新学')
-            }else if(oldTask.progress === Constant.IN_REVIEW_FINISH ){    //完成复习
-                switch(oldTask.status){
+        for(let storedTask of storedTasks){
+            if(storedTask.progress.startsWith('IN_LEARN') && storedTask.progress !== Constant.IN_LEARN_FINISH){      //新学未完成
+                storedTask.status = Constant.STATUS_0
+                console.log('未完成新学')
+            }else if(storedTask.progress === Constant.IN_REVIEW_FINISH ){    //完成复习
+                switch(storedTask.status){
                     case Constant.STATUS_1:
-                        oldTask.vocaTaskDate += _util.getDaysMS(1)
+                        storedTask.vocaTaskDate += _util.getDaysMS(1)
                         break
                     case Constant.STATUS_2:
-                        oldTask.vocaTaskDate += _util.getDaysMS(2)
+                        storedTask.vocaTaskDate += _util.getDaysMS(2)
                         break
                     case Constant.STATUS_4:
-                        oldTask.vocaTaskDate += _util.getDaysMS(3)
+                        storedTask.vocaTaskDate += _util.getDaysMS(3)
                         break
                     case Constant.STATUS_7:
-                        oldTask.vocaTaskDate += _util.getDaysMS(8)
+                        storedTask.vocaTaskDate += _util.getDaysMS(8)
                         break
                     default:
                         break;
                 }
-                oldTask.status = VocaUtil.getNextStatus(oldTask.status)
-                oldTask.delayDays = 0
-                // console.log('完成复习')
-            } else if(oldTask.progress.startsWith('IN_REVIEW')){         //未完成复习
-                oldTask.vocaTaskDate += _util.getDaysMS(1)
-                switch(oldTask.status){
+                storedTask.status = VocaUtil.getNextStatus(storedTask.status)
+                storedTask.delayDays = 0
+                console.log('完成复习')
+            } else if(storedTask.progress.startsWith('IN_REVIEW')){         //未完成复习
+                storedTask.vocaTaskDate += _util.getDaysMS(1)
+                switch(storedTask.status){
                     case Constant.STATUS_1:
-                        if(oldTask.delayDays < Constant.DELAY_DAYS_1){
-                            oldTask.delayDays += 1
+                        if(storedTask.delayDays < Constant.DELAY_DAYS_1){
+                            storedTask.delayDays += 1
                             leftCount++
                         }else{//重学
-                            oldTask.status = Constant.STATUS_0
+                            storedTask.status = Constant.STATUS_0
                         }
                         break
                     case Constant.STATUS_2:
-                        if(oldTask.delayDays < Constant.DELAY_DAYS_2){
-                            oldTask.delayDays += 1
+                        if(storedTask.delayDays < Constant.DELAY_DAYS_2){
+                            storedTask.delayDays += 1
                             leftCount++
                         }else{//重学
-                            oldTask.status = Constant.STATUS_0
+                            storedTask.status = Constant.STATUS_0
                         }
                         break
                     case Constant.STATUS_4:
-                        if(oldTask.delayDays < Constant.DELAY_DAYS_4){
-                            oldTask.delayDays += 1
+                        if(storedTask.delayDays < Constant.DELAY_DAYS_4){
+                            storedTask.delayDays += 1
                             leftCount++
                         }else{//重学
-                            oldTask.status = Constant.STATUS_0
+                            storedTask.status = Constant.STATUS_0
                         }
                         break
                     case Constant.STATUS_7:
-                        if(oldTask.delayDays < Constant.DELAY_DAYS_7){
-                            oldTask.delayDays += 1
+                        if(storedTask.delayDays < Constant.DELAY_DAYS_7){
+                            storedTask.delayDays += 1
                             leftCount++
                         }else{//重学
-                            oldTask.status = Constant.STATUS_0
+                            storedTask.status = Constant.STATUS_0
                         }
                         break
                     case Constant.STATUS_15:
-                        if(oldTask.delayDays < Constant.DELAY_DAYS_15){
-                            oldTask.delayDays += 1
+                        if(storedTask.delayDays < Constant.DELAY_DAYS_15){
+                            storedTask.delayDays += 1
                             leftCount++
                         }else{//重学
-                            oldTask.status = Constant.STATUS_0
+                            storedTask.status = Constant.STATUS_0
                         }
                         break
                     default:
                         break;
                 }
-                // console.log('未完成复习')
+                console.log('未完成复习')
             }
 
-            oldTask.curIndex = 0
-            if(oldTask.status == Constant.STATUS_0){ //重学 or 新学
-                oldTask.delayDays = 0
-                oldTask.vocaTaskDate = 0
-                oldTask.progress = Constant.IN_LEARN_PLAY
-                oldTask.leftTimes = Constant.LEARN_PLAY_TIMES
-
-            }else if(oldTask.status == Constant.STATUS_200){ //完成
-                oldTask.progress = Constant.IN_REVIEW_FINISH
-                oldTask.leftTimes = 0
+            storedTask.curIndex = 0
+            if(storedTask.status === Constant.STATUS_0){ //重学 or 新学
+                storedTask.delayDays = 0
+                storedTask.vocaTaskDate = 0
+                storedTask.progress = Constant.IN_LEARN_PLAY
+                storedTask.leftTimes = Constant.LEARN_PLAY_TIMES
+            }else if(storedTask.status == Constant.STATUS_200){ //完成
+                storedTask.progress = Constant.IN_REVIEW_FINISH
+                storedTask.leftTimes = 0
             }else{
-                oldTask.progress = Constant.IN_REVIEW_PLAY
-                oldTask.leftTimes = Constant.REVIEW_PLAY_TIMES
+                storedTask.progress = Constant.IN_REVIEW_PLAY
+                storedTask.leftTimes = Constant.REVIEW_PLAY_TIMES
             }
-
         }
-
-
-        //2. 更新旧任务
-        this.vtd.modifyTasks(oldTasks)
-
-        //3. 产生新学任务
-        if(leftCount<=0){     //如果不存在遗留任务,才生成新任务
-            //获取 status==0 的tasks[i]
-            this.vtd.modify(()=>{
-                let newTasks = this.vtd.getNotLearnedTasks()
-                if(newTasks.length > 0){                    //如果还存在未学任务
-                    for(let i=0; (i<taskCount && i<newTasks.length); i++){
-                        newTasks[i].vocaTaskDate =  _util.getDayTime(nth) //今日零点
-                    }
-                }
-            })
-        }
+        return leftCount
     }
+
+
 
 
     /**
@@ -384,4 +402,31 @@ export default class VocaTaskService {
         return newArr
     }
 
+
+    /**
+     *  统计剩余天数
+     */
+    countLeftDays = ()=>{
+        let leftDays = 0
+        const notLearnTasks = this.vtd.getNotLearnedTasks()
+        if(notLearnTasks.length > 0){
+            leftDays = notLearnTasks.length + Constant.LEFT_PLUS_DAYS
+        }else{
+            // 后期剩余天数
+        }
+        return leftDays
+    }
+
+    /**
+     *  统计已学单词数
+     * @returns {number}
+     */
+    countLearnedWords = ()=>{
+        const learnedTasks = this.vtd.getLearnedTasks()
+        let sum = 0
+        for(let task of  learnedTasks){
+            sum += task.words.length
+        }
+        return sum
+    }
 }

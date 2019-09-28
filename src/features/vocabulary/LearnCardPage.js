@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {StyleSheet, StatusBar, View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import * as Progress from 'react-native-progress'
-import {Header,Button} from 'react-native-elements'
+import {Header} from 'react-native-elements'
 import {connect} from 'react-redux'
 
 import * as homeAction from './redux/action/homeAction'
@@ -12,7 +12,7 @@ import VocaCard from "./component/VocaCard";
 import VocaTaskDao from './service/VocaTaskDao'
 import vocaUtil from './common/vocaUtil'
 import * as Constant from './common/constant'
-import AudioFetch from './service/AudioFetch'
+import AudioFetch from '../../common/AudioFetch'
 import LookWordBoard from "./component/LookWordBoard";
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -67,7 +67,7 @@ class LearnCardPage extends Component {
             const finalTask = {...task, curIndex:0, progress:Constant.IN_LEARN_TEST_1}
             const routeName = this.props.navigation.getParam('nextRouteName')
             //更新任务
-            this.props.updateTask(finalTask)
+            this.props.updateTask(finalTask,false)
             //完成卡片学习
             vocaUtil.goPageWithoutStack(this.props.navigation, routeName ,{
                 task:finalTask,
@@ -91,7 +91,6 @@ class LearnCardPage extends Component {
         }
         return (
             <View style={{flex:1}}>
-                <StatusBar translucent={true} />
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
@@ -102,7 +101,7 @@ class LearnCardPage extends Component {
                             this.props.updateTask({...this.state.task})
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
                             this.audioFetch.releaseSound()
-                        }}></AliIcon> }
+                        }} /> }
                     
                     centerComponent={
                         <View style={gstyles.r_center}>
@@ -149,7 +148,7 @@ const mapStateToProps = state=>({
 })
 
 const mapDispatchToProps = {
-    updateTask: homeAction.updateTask
+    updateTask: homeAction.updateTask,
 }
 
 

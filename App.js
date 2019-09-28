@@ -12,6 +12,8 @@ import {createHttp} from './src/common/http'
 import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
+import ArticleDao from './src/features/reading/service/ArticleDao';
+
 import gstyles from './src/style';
 
 
@@ -26,7 +28,7 @@ console.log('copy realm');
 VocaDao.getInstance().open()
 VocaTaskDao.getInstance().open()
 VocaGroupDao.getInstance().open()
-
+ArticleDao.getInstance().open()
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor:gstyles.bgLightGrey,
   }
 });
-
 
 /**
  *Created by Jacy on 19/05/11.

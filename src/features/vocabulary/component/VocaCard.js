@@ -9,7 +9,7 @@ import ExampleCarousel from './ExampleCarousel'
 // import RootCard from './RootCard'
 import VocaDao from '../service/VocaDao'
 import VocaGroupDao from '../service/VocaGroupDao'
-import AudioFetch from '../service/AudioFetch';
+import AudioFetch from '../../../common/AudioFetch';
 
 
 const Dimensions = require('Dimensions');
@@ -66,16 +66,20 @@ export default class VocaCard extends Component{
 
     constructor(props){
         super(props)
+        this.audioFetch = AudioFetch.getInstance()
+        this.vocaGroupDao = VocaGroupDao.getInstance()
+        const {wordInfo} = this.props
+        //判断
+        const added = this.vocaGroupDao.isExistInDefault(wordInfo.word)
 
         this.state = {
-            added : false,
+            added : added,
             showAll : this.props.showAll,
             wordRoot : null,
             relativeRoots : [],
         }
         
-        this.audioFetch = AudioFetch.getInstance()
-        this.vocaGroupDao = VocaGroupDao.getInstance()
+
         console.disableYellowBox=true
         
     }
@@ -97,7 +101,6 @@ export default class VocaCard extends Component{
         }else if(playSentence){
             this.audioFetch.playSound(wordInfo.sen_pron_url)
         }
-
 
     }
 
@@ -186,7 +189,7 @@ export default class VocaCard extends Component{
                         onResponderStart={e=>this.props.lookWord(word)}
                     >{word} </Text>)
                 }else{
-                    return <Text style={{color:gstyles.emColor,fontSize:16, fontWeight:'500' }}>{text}</Text>
+                    return <Text style={{color:gstyles.emColor, }}>{text}</Text>
                 }
             })
         }

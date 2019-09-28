@@ -6,8 +6,8 @@ export const createHttp = (config=httpBaseConfig)=>{
     //请求拦截处理
     instance.interceptors.request.use(function (request) {
         // 在发送请求之前做些什么
-        console.log('-----------打印请求 request----------------')
-        console.log(request)
+        // console.log('-----------打印请求 request----------------')
+        // console.log(request)
         return request;
     }, function (error) {
         // 对请求错误做些什么

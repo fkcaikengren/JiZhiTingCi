@@ -13,7 +13,8 @@ import gstyles from '../../../style'
 import vocaUtil from '../common/vocaUtil'
 import VocaCard from "./VocaCard";
 import * as Constant from '../common/constant'
-import AudioFetch from '../service/AudioFetch'
+import AudioFetch from '../../../common/AudioFetch'
+import VocaTaskService from "../service/VocaTaskService";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -45,15 +46,7 @@ const styles = StyleSheet.create({
     selectBtn:{
         backgroundColor:'#EFEFEF',
         borderRadius:8,
-    },
-    modalBtn:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
-        borderWidth:1,
-        borderColor:'#A0A0A0',
-        borderRadius:2,
-        
+        height:50,
     },
 })
 
@@ -374,20 +367,23 @@ export default class TestPage extends Component {
 
             if(this.props.mode === 'study'){    //学习模式下测试
                  //拷贝task
-                if(routeName === 'Home'){ //返回到Home
+                if(routeName === 'Home'){               //回到Home
                     if(nextState.task.progress.startsWith('IN_LEARN')){
                         progress = Constant.IN_LEARN_FINISH
                     }else if(nextState.task.progress.startsWith('IN_REVIEW')){
                         progress = Constant.IN_REVIEW_FINISH
-                        //回到Home页，立刻上传数据
-                        this.props.setShouldUpload(true)
+                        //如果是1复,统计
+                        console.log('------1复，统计已学单词-----------')
+                        console.log(nextState.task.status)
+                        if(nextState.task.status === Constant.STATUS_1){
+                            this.props.changeLearnedWordCount(new VocaTaskService().countLearnedWords())
+                        }
                     }
                 }else if(routeName.startsWith('Test')){ //进入第二轮测试
                     progress = Constant.IN_LEARN_TEST_2
                 }      
                 const task = {...nextState.task, curIndex:0, progress, testTimes:nextState.task.testTimes+1}
                 console.log('-------测试完成退出----拷贝task到home----同时测试次数+1-------')
-                console.log(task)
                 this.props.updateTask(task)
                 //跳转
                 const params = routeName==='Home'?{}:{
@@ -396,7 +392,6 @@ export default class TestPage extends Component {
                     nextRouteName:'Home'
                 }
                 vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
-                
             }else{                  //普通模式下测试
                 this._normalPlayEnd(nextState)
             }
@@ -470,7 +465,7 @@ export default class TestPage extends Component {
                             title='Pass'
                             titleStyle={{color:'#FFF',fontSize:16}}
                             containerStyle={{flex:1, marginRight:20}}
-                            buttonStyle={[styles.selectBtn,{backgroundColor:bgColor }]} 
+                            buttonStyle={[styles.selectBtn,{backgroundColor:bgColor }]}
                             onPress={()=>{
                                 this._passWord(showWordInfos[curIndex].word)
                                 if(isAnsweredModalOpen){

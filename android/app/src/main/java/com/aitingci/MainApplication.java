@@ -7,6 +7,7 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -14,7 +15,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.facebook.stetho.Stetho;
 import com.horcrux.svg.SvgPackage;
-import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -55,9 +55,9 @@ public class MainApplication extends Application implements ReactApplication {
             new UmengReactPackage(),
             new NotificationPackage(),
             new MainReactPackage(),
+            new ImagePickerPackage(),
             new SplashScreenReactPackage(),
              new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new BackgroundTaskPackage(),
             new RNCWebViewPackage(),
             new SvgPackage(),
             new RealmReactPackage(),
@@ -118,8 +118,6 @@ public class MainApplication extends Application implements ReactApplication {
     WebView.setWebContentsDebuggingEnabled(true);
 
 
-    //后台任务服务初始化
-    BackgroundTaskPackage.useContext(this);
 
     //友盟初始化
     UmengConfig.init(this);

@@ -18,25 +18,20 @@ export const SET_SHOULD_UPLOAD = 'SET_SHOULD_UPLOAD'
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTasks, updateTask, uploadTasks, setShouldUpload} = createActions({
+export const {loadTasks, updateTask, uploadTasks} = createActions({
     //加载任务
-    [LOAD_TASKS]: (tasks)=>{
-        return {tasks}
+    [LOAD_TASKS]: (storedTasks, taskCount, lastLearnDate)=>{
+        return {storedTasks, taskCount, lastLearnDate}
     },
    
     //更新任务
-    [UPDATE_TASK]: (task)=>{
-        return {task}
+    [UPDATE_TASK]: (task, shouldUpload=true)=>{
+        return {task, shouldUpload}
     },
 
     //上传同步任务
-    [UPLOAD_TASKS]: (tasks) =>{
-        console.log(tasks)
-        return {tasks}
+    [UPLOAD_TASKS]: (storedTasks) =>{
+        return {storedTasks}
     },
-    //
-    [SET_SHOULD_UPLOAD]: (shouldUpload)=>{
-        return {shouldUpload}
-    }
     
 });

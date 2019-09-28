@@ -18,10 +18,11 @@ import * as ArticleAction from './redux/action/articleAction'
 import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
-import ReadUtil from './util/readUtil'
+import ReadUtil from './common/readUtil'
+import ConfirmModal from '../../component/ConfirmModal'
 
 
-
+const questionSize = 10
 
 /**
  *Created by Jacy on 19/08/09.
@@ -41,10 +42,9 @@ class ArticleTabPage extends React.Component {
     }
 
     componentDidMount(){
-        const vocaLibName = this.props.navigation.getParam('vocaLibName')
-        const articleCode = this.props.navigation.getParam('articleCode')
-        console.log(vocaLibName)
-        this.props.loadArticle(vocaLibName, articleCode);
+        const articleInfo = this.props.navigation.getParam('articleInfo')
+        console.log('---页面初始化后，加载文章----')
+        this.props.loadArticle(articleInfo);
     }
 
  
@@ -76,7 +76,6 @@ class ArticleTabPage extends React.Component {
     // 创建字号背景设置面板
     _createSettingModal = ()=>{
         const {bgThemes, themeIndex, fontRem} = this.props.article
-        console.log(this.props.article)
          // 获取任务列表数据
          const {showSettingModal} = this.state
          return <ModalBox style={[styles.settingModal, {backgroundColor:bgThemes[themeIndex]}]}
@@ -123,8 +122,8 @@ class ArticleTabPage extends React.Component {
     }
    
     _renderHeaderCenter = ()=>{
-        const articleType = this.props.navigation.getParam('articleType')
-        switch(articleType){
+        const {type} = this.props.navigation.getParam('articleInfo')
+        switch(type){
             case Constant.DETAIL_READ: //仔细阅读
                 let s1={}, s2={}
                 const selectStyle = {
@@ -138,8 +137,8 @@ class ArticleTabPage extends React.Component {
                     s2 = selectStyle
                 }
             return <View style={gstyles.r_center}>
-                        <Text style={[styles.tabTitle,s1, {marginRight:10}]}>文章</Text>
-                        <Text style={[styles.tabTitle,s2]}>答题</Text>
+                        <Text style={[gstyles.md_gray,s1, {marginRight:10}]}>文章</Text>
+                        <Text style={[gstyles.md_gray,s2]}>答题</Text>
                     </View>
             case Constant.MULTI_SELECT_READ: //选词填空
             return <View style={gstyles.r_center}>
@@ -158,57 +157,60 @@ class ArticleTabPage extends React.Component {
         
     }
 
-    //交卷
-    _handin = ()=>{
-        const vocaLibName = this.props.navigation.getParam('vocaLibName')
-        const articleCode = this.props.navigation.getParam('articleCode')
-        const articleType = this.props.navigation.getParam('articleType')
-        //Map转对象
-        const userAnswersObj = ReadUtil.strMapToObj(this.props.article.userAnswerMap)
-
-        //先加载数据再跳转
-        this.props.loadAnalysis(vocaLibName, articleCode);
+    _navToAnalysis = ()=>{
+        const articleInfo = this.props.navigation.getParam('articleInfo')
+        //提交，先加载数据再跳转
+        this.props.loadAnalysis(articleInfo);
         //跳到解析页面
         this.props.navigation.navigate('Analysis',{
-            userAnswers:userAnswersObj,
             handin:true,
-            vocaLibName,
-            articleCode,
-            articleType
+            articleInfo
         })
-        
     }
 
-    
+    //交卷
+    _handin = ()=>{
+        const {userAnswerMap, options } = this.props.article
+        const {type} = this.props.navigation.getParam('articleInfo')
+        console.log('---------handin 跳转 到解析----------')
+        const len = type===Constant.MULTI_SELECT_READ?questionSize:options.length
+        if(userAnswerMap.size < len){
+            this.confirmModalRef.show('还有试题未完成','提交','继续做题',()=>{
+                this._navToAnalysis()
+            },()=>null)
+        }else{
+           this._navToAnalysis()
+        }
+    }
+
     _renderContent = ()=>{
         const {isLoadPending, isLoadFail} = this.props.article
         //路由参数
-        const vocaLibName = this.props.navigation.getParam('vocaLibName')
-        const articleCode = this.props.navigation.getParam('articleCode')
-        const articleType = this.props.navigation.getParam('articleType')
+        const articleInfo = this.props.navigation.getParam('articleInfo')
 
         if(isLoadFail){
-            return <View style={{flex:1}}>
-                <Text>加载失败...</Text>
+            return <View style={[gstyles.c_center,{flex:1}]}>
+                <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+                <Text style={gstyles.md_black}>出错了...</Text>
             </View>
        
         }else{
             if(!isLoadPending){
-                if(articleType === Constant.DETAIL_READ){
+                if(articleInfo.type === Constant.DETAIL_READ){
                     return <Swiper 
                         showsPagination={false}
                         loop={false}
+                        index={this.state.pageIndex}
                         onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
-                        <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} />
-                        <QuestionPage vocaLibName={vocaLibName} articleCode={articleCode} />
+                        <ArticlePage {...this.props} articleInfo={articleInfo} />
+                        <QuestionPage {...this.props} articleInfo={articleInfo}/>
                     </Swiper>
                 }else{
                     return <Swiper 
                         showsPagination={false}
                         loop={false}
                         onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
-                        <ArticlePage vocaLibName={vocaLibName} articleCode={articleCode} articleType={articleType} />
-                    
+                        <ArticlePage {...this.props} articleInfo={articleInfo} />
                     </Swiper>
                 }
             }
@@ -219,32 +221,29 @@ class ArticleTabPage extends React.Component {
 
    
     render(){
-        const {bgThemes, themeIndex, showKeyWords} = this.props.article
-        const vocaLibName = this.props.navigation.getParam('vocaLibName')
-        const articleCode = this.props.navigation.getParam('articleCode')
-        const articleType = this.props.navigation.getParam('articleType')
+        const {bgThemes, themeIndex, showKeyWords, isLoadFail} = this.props.article
+        const articleInfo = this.props.navigation.getParam('articleInfo')
         return(
             <View style={{ flex:1, backgroundColor:bgThemes[themeIndex]}}>
-                {/* 头部 */}
-                <StatusBar translucent={true} />
                 <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content" // or directly
+                statusBarProps={{ barStyle: 'dark-content' }}
+                barStyle="dark-content" // or directly
                 leftComponent={ 
-                    <AliIcon name='fanhui' size={24} color='#555' onPress={()=>{
-                        // this.props.navigation.goBack();
-                    }}></AliIcon> }
+                    <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
+                        this.props.navigation.goBack();
+                    }} /> }
                 centerComponent={ this._renderHeaderCenter() }
-                rightComponent={
+                rightComponent={isLoadFail?null:
                     <View style={[gstyles.r_start]}>
-                        
-                        <TouchableWithoutFeedback onPress={this._handin}>
-                            <Text style={styles.handinBtn}>交卷</Text>
-                        </TouchableWithoutFeedback>
+                        {articleInfo.type !== Constant.EXTENSIVE_READ &&
+                            <TouchableWithoutFeedback onPress={this._handin}>
+                                <Text style={styles.handinBtn}>交卷</Text>
+                            </TouchableWithoutFeedback>
+                        }
                         
                         <Menu  renderer={renderers.Popover} rendererProps={{placement: 'bottom'}}>
                             <MenuTrigger >
-                                <AliIcon name='add' size={24} color='#555'></AliIcon>
+                                <AliIcon name='add' size={26} color='#555'></AliIcon>
                             </MenuTrigger>
                             <MenuOptions style={styles.menuOptions}>
                             <MenuOption onSelect={this._toggleKeyWords} style={styles.menuOptionView}>
@@ -280,16 +279,15 @@ class ArticleTabPage extends React.Component {
                 {
                     this._renderContent()
                 }
-                 {/* 答悬浮按钮 */}
+                {/* 答悬浮按钮 */}
+                {!isLoadFail && !(articleInfo.type===Constant.EXTENSIVE_READ) &&
                  <TouchableWithoutFeedback onPress={()=>{
                      //先加载数据再跳转
-                    this.props.loadAnalysis(vocaLibName, articleCode);
+                    this.props.loadAnalysis(articleInfo);
                     //跳转
                     this.props.navigation.navigate('Analysis',{
                         handin:false, 
-                        vocaLibName,
-                        articleCode,
-                        articleType
+                        articleInfo,
                     })
                     
                     }}>
@@ -301,6 +299,7 @@ class ArticleTabPage extends React.Component {
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
+                }
                 {
                     this._createSettingModal()
                 }
@@ -309,7 +308,7 @@ class ArticleTabPage extends React.Component {
                        <Loader />
                     </View>
                 }
-                
+                <ConfirmModal ref={ref=>this.confirmModalRef = ref} />
             </View>
         );
     }
@@ -319,7 +318,6 @@ class ArticleTabPage extends React.Component {
 
 const mapStateToProps = state =>({
     article : state.article,
-
 });
 
 const mapDispatchToProps = {
@@ -329,5 +327,6 @@ const mapDispatchToProps = {
     changeBgtheme : ArticleAction.changeBgtheme,
     changeFontSize : ArticleAction.changeFontSize,
     toggleKeyWords : ArticleAction.toggleKeyWords,
+    changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ArticleTabPage);

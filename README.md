@@ -1,4 +1,4 @@
-# 英语听词（yingyutingci）
+# 爱听词（aitingci）
 
 ## 准备工作
 
@@ -69,26 +69,14 @@ react-native init JiZhiTingCi
 
 ## 安装第三方组件
 
-### 安装ant-design库
+
+
+
+
+### 安装react-native-drawer库 
 
 ```
-yarn add @ant-design/react-native
-yarn add babel-plugin-import （按需加载）
-react-native link @ant-design/icons-react-native 
-```
-
-
-
-安装ant-design库
-
-
-
-### 安装NativeBase库 (逐步取消)
-
-需要link
-
-```
-yarn add native-base
+yarn add react-native-drawer
 ```
 
 ### 安装react-native-easy-grid
@@ -494,7 +482,7 @@ yarn add react-native-easy-toast
 
 
 
-### 实现后台任务react-native-background-task
+### 实现后台任务react-native-background-task (移除)
 
 ```
 yarn add react-native-background-task
@@ -512,6 +500,13 @@ yarn add react-native-background-timer
 ```
 
 
+
+### 图片选择器 react-native-image-picker
+
+```
+yarn add react-native-image-picker
+react-native link react-native-image-picker
+```
 
 
 
@@ -559,7 +554,7 @@ To quickly run storybook, replace contents of your app entry with:
 export default from './storybook';
 ```
 
-意思是说：把入口文件（index.js）的内容用上面这句代码替换。或者用下面的代码替换：
+意思是说：把入口文件（constant.js）的内容用上面这句代码替换。或者用下面的代码替换：
 
 ```
 import StorybookUI from './storybook';
@@ -569,7 +564,7 @@ export default StorybookUI;
 问题2：
 
 ```
-Unable to resolve module `emotion-theming` from `V:\VSCode\English\JiZhiTingCi\node_modules\@storybook\react-native\dist\preview\index.js`: Module `emotion-theming` does not exist in the Haste module map
+Unable to resolve module `emotion-theming` from `V:\VSCode\English\JiZhiTingCi\node_modules\@storybook\react-native\dist\preview\constant.js`: Module `emotion-theming` does not exist in the Haste module map
 ```
 
 解决：

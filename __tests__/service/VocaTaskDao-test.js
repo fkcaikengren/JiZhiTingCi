@@ -1,6 +1,7 @@
 
 import 'react-native'
 import VocaTaskDao from "../../src/features/vocabulary/service/VocaTaskDao";
+import * as Constant from "../../src/features/vocabulary/common/constant";
 
 const vtd = new VocaTaskDao()
 beforeEach(() => {
@@ -61,7 +62,26 @@ it('获取错词列表数据', ()=>{
             })
         }
     }
-
     console.log(wrongArr)
+})
+it('统计未学天数1', ()=>{
+    //统计
+    const notLearnTasks = vtd.getNotLearnedTasks()
+    console.log(notLearnTasks.length)
+    const leftDays = notLearnTasks.length + Constant.LEFT_PLUS_DAYS
+})
 
+it('统计未学天数2', ()=>{
+    //统计后期剩余天数
+
+})
+
+
+it('统计已学单词', ()=>{
+    const learnedTasks = vtd.getLearnedTasks()
+    let sum = 0
+    for(let task of  learnedTasks){
+        sum += task.words.length
+    }
+    console.log(sum)
 })

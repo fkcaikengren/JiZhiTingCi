@@ -13,6 +13,16 @@ var SelectedQuestionNum = 0
 var KeyWordNodes = []
 var SearchedWordNode = null   //正被查询的单词节点
 
+
+function includeKeyWord(keyWords, word){
+    for(var i in keyWords){
+        if((keyWords[i] === word) || (keyWords[i] === word.toLowerCase())){
+            return true
+        }
+    }
+    return false
+}
+
  //初始化页面
  function initPage(text,keyWords, color, size){
     //初始化背景色和字号
@@ -39,13 +49,18 @@ var SearchedWordNode = null   //正被查询的单词节点
                 node.addClass('space')
             }
             //如果是关键词
-            if(keyWords.indexOf(obj[0]) !== -1){
+
+            if(includeKeyWord(keyWords, obj[0])){
                 KeyWordNodes.push(node);
                 node.addClass('keyWord')
             }
         }else{                          //如果是非单词
             if(item === '##'){
                 node = $('<span>&nbsp&nbsp</span>')
+            }else if(item === '##“'){
+                node = $('<span>&nbsp&nbsp“</span>')
+            }else if(item === '##"'){
+                node = $('<span>&nbsp&nbsp"</span>')
             }else if(item.match(/\d+点击答题/)){        //【题型2】点击答题
                 var questionNum = item.match(/\d+/)[0]
                 numNode = $('<sapn>('+questionNum+')</sapn>')
@@ -152,6 +167,17 @@ function searchWord(e){
         JSON.stringify({command:'searchWord', payload:{word:SearchedWordNode.text()}})
     ) 
 }
+/**
+ * 取消查询单词的样式
+ * @param {*} e 
+ */
+function cancelSearchWord(){
+    if(SearchedWordNode !== null && SearchedWordNode.hasClass('searchedWord')){
+        SearchedWordNode.removeClass('searchedWord')
+    }
+}
+
+
 
 /**
  * 点击答题, 显示颜色

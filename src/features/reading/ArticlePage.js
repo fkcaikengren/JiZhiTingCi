@@ -2,24 +2,22 @@ import React from 'react';
 import { View,Text, Easing,Button, TouchableWithoutFeedback} from 'react-native';
 import ModalBox from 'react-native-modalbox';
 import { WebView } from 'react-native-webview';
-import {connect} from 'react-redux';
-
+import PropTypes from 'prop-types'
 import OptionRadio from './component/OptionRadio'
-import * as ArticleAction from './redux/action/articleAction'
+import LookWordBoard from '../vocabulary/component/LookWordBoard'
 import styles from './ArticleStyle'
-import FileService from './service/FileService'
+import FileService from '../../common/FileService'
 import gstyles from '../../style'
-import ReadUtil from './util/readUtil'
+import ReadUtil from './common/readUtil'
 import WebUtil from '../../common/webUtil'
 import AliIcon from '../../component/AliIcon'
 import * as Constant from './common/constant'
 
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
 
 
 
-class ArticlePage extends React.Component {
+
+export default class ArticlePage extends React.Component {
   
     constructor(props){
         super(props)
@@ -28,7 +26,7 @@ class ArticlePage extends React.Component {
             //是否显示答案选项面板
             showAnswerModal:false,
             //选中的问题 
-            selectedBlank:"48",
+            selectedBlank:"36",
         }
     }
 
@@ -79,8 +77,9 @@ class ArticlePage extends React.Component {
     // 创建答案选项面板
     _createAnswerOptionModal = () =>{
         const {options} = this.props.article
+        const {type} = this.props.articleInfo
         const radioOptions = []
-        if(this.props.articleType===Constant.FOUR_SELECT_READ){
+        if(type===Constant.FOUR_SELECT_READ){
             const obj = ReadUtil.getOptionObj(options, this.state.selectedBlank)
             for(let k in obj){
                 if(k.length === 1){
@@ -105,14 +104,14 @@ class ArticlePage extends React.Component {
             ref={ref => {
                 this.answerModal = ref
             }}>
-                {this.props.articleType===Constant.MULTI_SELECT_READ &&
+                {type===Constant.MULTI_SELECT_READ &&
                     <View style={[gstyles.r_start,styles.answerPanel]}>
                     {
                         options.map((item, index)=>{
 
                             let selected = null
                             if(this._isSelectedOption(item)){
-                                selected = {color:'#1890FFAA'}
+                                selected = {color:'#1890FF'}
                             }
                             return <View 
                                 onStartShouldSetResponder={(evt) => true}
@@ -125,7 +124,7 @@ class ArticlePage extends React.Component {
                     }
                     </View>
                 } 
-                {this.props.articleType===Constant.FOUR_SELECT_READ &&
+                {type===Constant.FOUR_SELECT_READ &&
                     <View style={[gstyles.c_start,{marginTop:10}]}>
                         <OptionRadio 
                             options= {radioOptions}
@@ -182,13 +181,6 @@ class ArticlePage extends React.Component {
     }
 
 
-
-
-    //查询单词
-    _searchWord = (word)=>{
-        alert(word)
-    }
-
     // 首次发送
     _sendInitMessage = ()=>{
         const { articleText, keywords,bgThemes, themeIndex, fontRem} = this.props.article
@@ -209,10 +201,15 @@ class ArticlePage extends React.Component {
         console.log(data)
         switch(data.command){
             case 'initStart':
+                console.log('--------initStart > sendFirst ---------')
                 this._sendInitMessage()
             break;
             case 'initFinish':
+                console.log('--------initFinish > changeWebLoading ---------')
                 this.props.changeWebLoading(false)
+            break;
+            case 'searchWord':
+                this.wordBoard.lookWord(data.payload.word)
             break;
             case 'exit':
                 console.log('退出')
@@ -228,6 +225,7 @@ class ArticlePage extends React.Component {
 
     render() {
         const {bgThemes, themeIndex} = this.props.article
+        const {type} = this.props.articleInfo
         return (
             <View style={[styles.container, bgThemes[themeIndex] ]}>
                 {/* 阅读文章 */}
@@ -252,23 +250,31 @@ class ArticlePage extends React.Component {
                         style={[{backgroundColor:bgThemes[themeIndex]}]}
                     /> 
                 </View>
-                {(this.props.articleType===Constant.FOUR_SELECT_READ || this.props.articleType===Constant.MULTI_SELECT_READ) &&
+                {(type===Constant.FOUR_SELECT_READ || type===Constant.MULTI_SELECT_READ) &&
                     this._createAnswerOptionModal()
                 }
+                <LookWordBoard
+                    ref={ref=>this.wordBoard = ref}
+                    onStateChange={(isOpen)=>{
+                        if(!isOpen){
+                            //发送文本给Web
+                            this.webref.postMessage(
+                                JSON.stringify({command:'cancelSearchWord', payload:null})
+                            );
+                        }
+                    }}
+                />
             </View>
         );
     }
 }
 
-const mapStateToProps = state =>({
-    article : state.article,
-    nav: state.nav
-});
 
-const mapDispatchToProps = {
-    changeWebLoading : ArticleAction.changeWebLoading,
-    changeBgtheme : ArticleAction.changeBgtheme,
-    changeFontSize : ArticleAction.changeFontSize,
-    changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ArticlePage);
+ArticlePage.propTypes = {
+    articleInfo: PropTypes.object.isRequired,
+}
+
+
+ArticlePage.defaultProps = {
+
+}

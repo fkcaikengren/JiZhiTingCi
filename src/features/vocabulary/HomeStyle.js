@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         width:'100%',
         height:STATUSBAR_HEIGHT,
         backgroundColor:'#FFE957'
-    }
+    },
 });
 
 export default styles
