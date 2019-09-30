@@ -19,6 +19,8 @@ export default class PasswordPage extends React.Component {
         this.setState({password})
     }
 
+
+
     render(){
         return(
             <View style={[{flex:1},gstyles.c_start]}>
@@ -46,7 +48,6 @@ export default class PasswordPage extends React.Component {
                         style={[styles.inputStyle,gstyles.lg_black]}
                         value={this.state.password}
                         onChangeText={this._changePassword}
-                        value={this.state.password}
 
                     />
                      <Button
@@ -55,7 +56,7 @@ export default class PasswordPage extends React.Component {
                         titleStyle={gstyles.lg_black}
                         buttonStyle={styles.buttonStyle}
                         containerStyle={{width:'100%', marginTop:25}}
-                        // onPress={}
+                        // onPress={this._modifyPassword}
                     />
                 </View>
                 

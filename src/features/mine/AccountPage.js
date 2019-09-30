@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StatusBar, View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import {Header,} from 'react-native-elements'
+import ImagePicker from 'react-native-image-picker';
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
@@ -10,7 +11,7 @@ import styles from './AccountStyle'
 export default class AccountPage extends React.Component {
     constructor(props){
         super(props);
-        this.state={user:{}}
+        this.state={user:{}, avatarSource:null}
     }
 
 
@@ -69,7 +70,8 @@ export default class AccountPage extends React.Component {
     }
 
     render(){
-        let {user} = this.state
+        let {user,avatarSource} = this.state
+        const source = avatarSource?avatarSource:require('../../image/h_icon.png')
         return(
             <View style={styles.container}>
                 {/* 头部 */}
@@ -91,10 +93,40 @@ export default class AccountPage extends React.Component {
                 <View style={styles.mainView}>
                     {
                         this._renderItem('头像', 
-                        <Image style={styles.imgStyle}  source={require('../../image/h_icon.png')}/>)
+                            <Image style={styles.imgStyle}  source={source}/>,
+                            ()=>{ //调用相册
+                                const options = {
+                                    title: 'Select Avatar',
+                                    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+                                    storageOptions: {
+                                        skipBackup: true,
+                                        path: 'images',
+                                    },
+                                };
+                                ImagePicker.launchImageLibrary(options, (response) => {
+                                    console.log(response)
+                                    if (response.error) {
+                                        console.log('ImagePicker Error: ', response.error);
+                                    } else {
+                                        const source = { uri: response.uri };
+
+                                        // You can also display the image using data:
+                                        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                                        this.setState({
+                                            avatarSource: source,
+                                        });
+                                    }
+                                });
+                            })
                     }
                     {
-                        this._renderItem('昵称', user.nickname)
+                        this._renderItem('昵称', user.nickname, ()=>{
+                            this.props.navigation.navigate('Nickname',{
+                                nickname:user.nickname,
+                                modifyNickname:(nickname)=>alert(nickname)
+                            })
+                        })
                     }
                     
                     {/* {
@@ -105,7 +137,7 @@ export default class AccountPage extends React.Component {
                     } */}
 
                         {
-                        this._renderItem('绑定手机', user.phone?user.phone:
+                        this._renderItem('手机', user.phone?user.phone:
                             <AliIcon name='shouji' size={26} color={gstyles.gray} />)
                     }
                     {

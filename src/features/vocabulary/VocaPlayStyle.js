@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
 
     itemEnText:{
         fontSize:18,
-        color:'#FFFFFF99',
+        color:'#FFFFFFDD',
     },
     itemZhText:{
         fontSize:14,
-        color:'#FFFFFF99',
+        color:'#FFFFFFAA',
     },
 
     triggerText:{
@@ -184,7 +184,23 @@ const styles = StyleSheet.create({
         position:'absolute',
         bottom:10,
         alignSelf:'center'
-    }
+    },
+    bgImage: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+        width: null,
+        height: null,
+    },
+    absolute: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0
+    },
 
   
     

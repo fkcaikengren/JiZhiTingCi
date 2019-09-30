@@ -20,6 +20,7 @@ class PhoneLoginPage extends Component {
         codeMode:false,     //是否是在验证码模式
       }
       
+      console.disableYellowBox=true
     }
 
     componentDidMount(){

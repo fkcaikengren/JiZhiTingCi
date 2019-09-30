@@ -39,11 +39,15 @@ public class MainActivity extends ReactActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SplashScreen.show(this, R.style.SplashScreenTheme);
+
+
         //以及发送间隔
         // MobclickAgent.setSessionContinueMillis(1000);
         //统计的场景
         // MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         ShareModule.initSocialSDK(this);
+
+
     }
 
     @Override

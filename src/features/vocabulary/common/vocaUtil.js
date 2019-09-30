@@ -430,8 +430,10 @@ export default class VocaUtil{
      */
     static getArticleIds = (vocaTasks)=>{
         let ids = []
+        
         for(let task of vocaTasks){
-            for(let a of task.articles){
+            const artiles = JSON.parse(task.articles)
+            for(let a of artiles){
                 ids.push(a.id)
             }
         }

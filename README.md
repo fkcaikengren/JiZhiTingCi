@@ -147,9 +147,11 @@ yarn add react-native-picker
 link
 
 ```
-react-native link
-$ pod install
+react-native link react-native-picker
+```
 
+```
+修改：import androidx.annotation.Nullable;
 ```
 
 
@@ -263,7 +265,7 @@ yarn add react-native-sound
 
 ```
 yarn add rn-fetch-blob
-手动link
+react-native link rn-fetch-blob 
 ```
 
 
@@ -453,6 +455,7 @@ yarn add react-native-linear-gradient
 ```
 yarn add react-native-spinkit
 手动link
+修改：import androidx.annotation.Nullable;
 ```
 
 ### 安装react-native-webview 5.8.0
@@ -460,6 +463,10 @@ yarn add react-native-spinkit
 ```jsx
 yarn add react-native-webview@5.8.0
 react-native link react-native-webview
+修改：
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 ```
 
 
@@ -506,6 +513,28 @@ yarn add react-native-background-timer
 ```
 yarn add react-native-image-picker
 react-native link react-native-image-picker
+```
+
+
+
+### 虚化背景@react-native-community/blur
+
+```
+yarn add @react-native-community/blur
+react-native link @react-native-community/blur
+修改：
+import androidx.renderscript.Allocation;
+import androidx.renderscript.Element;
+import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptIntrinsicBlur;
+```
+
+
+
+### 压缩包react-native-zip-archive
+
+```
+yarn add react-native-zip-archive
 ```
 
 
@@ -654,7 +683,15 @@ yarn add react-native-mock --dev
 
 
 
+2. 升级至androidx
 
+   使用android studio `Refactor -> Migrate to AndroidX`
+
+   App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.github.com/dlew/5db1b780896bbc6f542e7c00a11db6a0
+
+
+
+3.错误: 程序包android.support.annotation不存在
 
 
 

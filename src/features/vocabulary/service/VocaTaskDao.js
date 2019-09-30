@@ -2,7 +2,6 @@ import _util from "../../../common/util";
 
 const Realm = require('realm')
 import * as Constant from "../common/constant";
-import * as VConfig from '../common/vocaConfig'
 
 // 1. 任务表
 const VocaTaskSchema = {
@@ -45,9 +44,10 @@ const VocaTaskSchema = {
     name: 'TaskWord',
     primaryKey: 'word',
     properties: {
-      word: 'string',
-      passed: {type: 'bool', optional:true, default: false},
-      wrongNum:	{type: 'int',optional:true, default: 0},
+        id: 'int',
+        word: 'string',
+        passed: {type: 'bool', optional:true, default: false},
+        wrongNum:	{type: 'int',optional:true, default: 0},
     }
   };
 
@@ -107,8 +107,18 @@ export default class VocaTaskDao {
     saveVocaTasks = (tasks, wordCount)=>{
         try{
             this.realm.write(()=>{
+
+                //-------------
+                let i = 1
                 for(let task of tasks){
+                    if(i === 1){
+                        task.vocaTaskDate = _util.getDayTime(0)
+                        task.progress = Constant.IN_LEARN_PLAY
+                    }
+                    i++
+                    //--------
                     task.wordCount = wordCount
+                    task.articles = JSON.stringify(task.articles)
                     console.log(task.taskOrder)
                     this.realm.create('VocaTask', task);
                 }

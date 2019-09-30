@@ -97,8 +97,8 @@ class HomePage extends Component {
                 type="static"
                 content={DrawerPanel}
                 captureGestures={true}
-                panOpenMask={0.5}
-                panCloseMask={0.5}
+                panOpenMask={0.4}
+                panCloseMask={0.2}
                 openDrawerOffset={0.2} // 20% gap on the right side of drawer
                 styles={{
                     mainOverlay: {backgroundColor: '#AAA', opacity:0},

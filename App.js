@@ -4,7 +4,7 @@ import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store'
 const Realm = require('realm')
-// import RNFetchBlob from 'rn-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import {createStorage} from './src/common/storage';
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
  *Created by Jacy on 19/05/11.
  */
 export default class App extends React.Component {
+
   render(){
     return(
       <Provider store={store}>

@@ -1354,6 +1354,13 @@
   resolved "https://registry.npm.taobao.org/@react-native-community/async-storage/download/@react-native-community/async-storage-1.4.2.tgz#b29d2fa1b294fec8526f69b852a3deda248c8d81"
   integrity sha1-sp0vobKU/shSb2m4UqPe2iSMjYE=
 
+"@react-native-community/blur@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.npm.taobao.org/@react-native-community/blur/download/@react-native-community/blur-3.3.1.tgz#bc9ecd6d85d89739d8180138716535ac7cfa4680"
+  integrity sha1-vJ7NbYXYlznYGAE4cWU1rHz6RoA=
+  dependencies:
+    prop-types "^15.5.10"
+
 "@react-native-community/cli@^1.2.1":
   version "1.9.4"
   resolved "https://registry.npm.taobao.org/@react-native-community/cli/download/@react-native-community/cli-1.9.4.tgz#51e4ba30aa6ee29f0c1e2bedf69ac7d1a4df1a8c"
@@ -5678,6 +5685,11 @@ gzip-size@5.0.0:
     duplexer "^0.1.1"
     pify "^3.0.0"
 
+hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.npm.taobao.org/hammerjs/download/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
+
 handlebars@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npm.taobao.org/handlebars/download/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
@@ -9673,10 +9685,10 @@ react-native-calendars@^1.141.0:
     prop-types "^15.5.10"
     xdate "^0.8.0"
 
-react-native-cardview@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.npm.taobao.org/react-native-cardview/download/react-native-cardview-2.0.2.tgz#e07c13c61fbfce2152c1a2c18579895c7d9e7956"
-  integrity sha1-4HwTxh+/ziFSwaLBhXmJXH2eeVY=
+react-native-cardview@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npm.taobao.org/react-native-cardview/download/react-native-cardview-2.0.3.tgz#809134c74ec5fcc31973c41093ff35576f1ecf41"
+  integrity sha1-gJE0x07F/MMZc8QQk/81V28ez0E=
   dependencies:
     prop-types "^15.6.0"
 
@@ -9735,14 +9747,15 @@ react-native-elements@^1.1.0:
     react-native-ratings "^6.3.0"
     react-native-status-bar-height "^2.2.0"
 
-react-native-gesture-handler@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.2.1.tgz#9c48fb1ab13d29cece24bbb77b1e847eebf27a2b"
-  integrity sha1-nEj7GrE9Kc7OJLu3ex6Efuvyeis=
+react-native-gesture-handler@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.4.1.tgz#c38d9e57637b95e221722a79f2bafac62e3aeb21"
+  integrity sha1-w42eV2N7leIhcip58rr6xi466yE=
   dependencies:
+    hammerjs "^2.0.8"
     hoist-non-react-statics "^2.3.1"
-    invariant "^2.2.2"
-    prop-types "^15.5.10"
+    invariant "^2.2.4"
+    prop-types "^15.7.2"
 
 react-native-image-picker@^1.1.0:
   version "1.1.0"
@@ -9874,6 +9887,11 @@ react-native-webview@5.8.0:
   dependencies:
     escape-string-regexp "1.0.5"
     invariant "2.2.4"
+
+react-native-zip-archive@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.npm.taobao.org/react-native-zip-archive/download/react-native-zip-archive-5.0.0.tgz#7833e48b895f3da1f6c99b6f504f124ee243667f"
+  integrity sha1-eDPki4lfPaH2yZtvUE8STuJDZn8=
 
 react-native@0.59.8:
   version "0.59.8"
@@ -10583,10 +10601,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rn-fetch-blob@^0.10.15:
-  version "0.10.15"
-  resolved "https://registry.npm.taobao.org/rn-fetch-blob/download/rn-fetch-blob-0.10.15.tgz#3526860c1c57e0bf4c09bdbe409c919264afffba"
-  integrity sha1-NSaGDBxX4L9MCb2+QJyRkmSv/7o=
+rn-fetch-blob@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.npm.taobao.org/rn-fetch-blob/download/rn-fetch-blob-0.11.2.tgz#bdc483bf1b0c3810d457983494a11fbada446679"
+  integrity sha1-vcSDvxsMOBDUV5g0lKEfutpEZnk=
   dependencies:
     base-64 "0.1.0"
     glob "7.0.6"

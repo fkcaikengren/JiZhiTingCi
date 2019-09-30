@@ -5,6 +5,7 @@ import {Themes} from '../common/vocaConfig'
 import VocaUtil from '../common/vocaUtil';
 import VocaTaskDao from '../service/VocaTaskDao';
 import * as Constant from '../common/constant'
+import {CHANGE_BG} from "./action/vocaPlayAction";
 
 /**
  *  总结：
@@ -30,6 +31,10 @@ const defaultState ={
     showWord:true,
     //是否显示中文释义
     showTran:true,
+    //背景图地址
+    bgPath:'',
+    //显示blur
+    showBlur:false,
     //主题数组
     themes:Themes,
     //当前主题id
@@ -96,6 +101,10 @@ export const vocaPlay =  handleActions({
             return { ...state, showTran:action.payload.showTran }
         }
     },
+    //改变背景
+    [vpAction.CHANGE_BG] : (state, action) => ({ ...state, bgPath:action.payload.bgPath }),
+    //是否模糊
+    [vpAction.SHOW_BLUR] : (state, action) => ({ ...state, showBlur:action.payload.showBlur }),
     //改变主题
     [vpAction.CHANGE_THEME] : (state, action) => ({ ...state, themeId:action.payload.themeId }),
     [vpAction.TOGGLE_TASK_MODAL]: (state, action) => ({ ...state, tasksModalOpened:action.payload.tasksModalOpened }),

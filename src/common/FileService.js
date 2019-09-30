@@ -11,6 +11,15 @@ export default class FileService{
     constructor(){
     }
 
+    //单例模式
+    static getInstance(){
+        if(!this.instance) {
+            this.instance = new FileService();
+        }
+        return this.instance;
+    }
+
+
     loadText = async (filePath, type='txt')=>{
         console.log(filePath)
         const path = ARTICLE_ROOT+filePath
@@ -79,7 +88,13 @@ export default class FileService{
 
     }
 
-    loadPicture = ()=>{
-
+    loadPicture = async (url)=>{
+        RNFetchblob.config({
+            session : 'bg',
+            fileCache : true
+        })
+        .fetch('GET', url)
+        console.log('------获取图片后：----------')
+        console.log(res)
     }
 }

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, FlatList,View, Text, TouchableNativeFeedback, TouchableWithoutFeedback} from 'react-native';
+import { View,Text,TouchableNativeFeedback,Picker} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
-import BackgroundTimer from 'react-native-background-timer';
-import NotificationManage from '../../../modules/NotificationManage'
+import ImagePicker from 'react-native-image-picker';
 
+import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from '../../../component/react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import styles from '../VocaPlayStyle'
@@ -45,10 +45,27 @@ export default class PlayController extends React.Component {
     }
 
     //选择主题
-    _chooseTheme = (themeId)=>{
-        console.log(`改变主题：${themeId}`)
-        const {changeTheme} = this.props;
-        changeTheme(themeId);
+    _chooseBgOption = (value)=>{
+        switch (value) {
+            case 0 :
+                this.props.navigation.navigate('BgSelector')
+                break
+            case 1 :
+                const options = {
+                    title: '选择图片',
+                    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+                    storageOptions: {
+                        skipBackup: true,
+                        path: 'images',
+                    },
+                };
+                ImagePicker.launchImageLibrary(options, (response) => {
+                    // Same code as in above section!
+                    console.log(response)
+                });
+                break
+        }
+
     }
 
     //选择播放时间间隔
@@ -127,22 +144,7 @@ export default class PlayController extends React.Component {
                         >
                         <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>en</Text>
                     </View>
-                    {/* 主题按钮 */}
-                    <Menu onSelect={this._chooseTheme} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
-                        <MenuTrigger  text={Theme.themeName} customStyles={{triggerText: styles.triggerText,}}/>
-                        <MenuOptions>
-                            {
-                                themes.map((item, index)=>{
-                                    return (
-                                        <MenuOption key={item.id} value={item.themeId} style={index+1===themes.length?{}:gstyles.haireBottom} >
-                                            <Text style={popStyle}>{item.themeName}</Text>
-                                        </MenuOption>
-                                    );
-                                })
-                            }
-                            
-                        </MenuOptions>
-                    </Menu>
+                    
                     {/* 测试按钮 */}
                     <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
                         <MenuTrigger text='测试' customStyles={{triggerText: styles.triggerText,}}/>
@@ -158,6 +160,19 @@ export default class PlayController extends React.Component {
                             </MenuOption>
                             <MenuOption value={3}>
                                 <Text style={popStyle}>听音选词测试</Text>
+                            </MenuOption>
+                        </MenuOptions>
+                    </Menu>
+                    {/* 主题按钮 */}
+
+                    <Menu onSelect={this._chooseBgOption} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
+                        <MenuTrigger  text={'背景'} customStyles={{triggerText: styles.triggerText,}}/>
+                        <MenuOptions>
+                            <MenuOption value={0} style={gstyles.haireBottom} >
+                                <Text style={popStyle}>选择背景图片</Text>
+                            </MenuOption>
+                            <MenuOption value={1}  >
+                                <Text style={popStyle}>从手机相册中选择</Text>
                             </MenuOption>
                         </MenuOptions>
                     </Menu>

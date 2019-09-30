@@ -27,6 +27,7 @@ export function * postPlan(params){
     try{
         const res = yield Http.post("/plan/putPlan",params)
         const {tasks, plan, articles } = res.data.data
+        console.log(articles)
         //清空先前数据，存储新数据到realm
         const vtd = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()

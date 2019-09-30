@@ -12,7 +12,8 @@ export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';               // 更新当�
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';                 //控制时间间隔
 export const TOGGLE_WORD = 'TOGGLE_WORD';             //控制英文单词显示
 export const TOGGLE_TRAN = 'TOGGLE_TRAN';             //控制中文释义显示
-export const LOAD_THEMES = 'LOAD_THEMES';             //查看主题
+export const CHANGE_BG = 'CHANGE_BG';                 //改变背景
+export const SHOW_BLUR = 'SHOW_BLUR'                  //是否显示模糊效果
 export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
 export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
@@ -23,8 +24,8 @@ export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模�
 
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran, 
-  changeTheme,passWord , changeNormalType} = createActions({
+export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
+  changeBg,showBlur, changeTheme,passWord , changeNormalType} = createActions({
 
     //加载任务  
     [LOAD_TASK] : (task,showWordInfos)=>{
@@ -56,6 +57,14 @@ export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, ch
     //是否显示翻译
     [TOGGLE_TRAN]: (showTran=null)=>{
       return {showTran}
+    },
+    //改变背景
+    [CHANGE_BG]:(bgPath)=>{
+        return ({bgPath})
+    },
+    //是否显示模糊效果
+    [SHOW_BLUR] : (showBlur)=>{
+        return ({showBlur})
     },
     //改变主题
     [CHANGE_THEME]: (themeId)=>{ 

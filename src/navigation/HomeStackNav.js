@@ -1,4 +1,5 @@
-import { createStackNavigator } from 'react-navigation';
+import {Easing,Animated} from 'react-native'
+import { createStackNavigator,  } from 'react-navigation';
 
 import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
@@ -15,7 +16,7 @@ import TestVocaTranPage from '../features/vocabulary/TestVocaTranPage';
 import TestTranVocaPage from '../features/vocabulary/TestTranVocaPage'
 import TestSenVocaPage from '../features/vocabulary/TestSenVocaPage';
 import TestPronTranPage from '../features/vocabulary/TestPronTranPage'
-
+import BgSelectorPage from '../features/vocabulary/BgSelectorPage'
 
 //文章模块
 import AnalysisPage from '../features/reading/AnalysisPage'
@@ -25,6 +26,11 @@ import ArticleTabPage from '../features/reading/ArticleTabPage'
 //我的模块
 import AccountPage from '../features/mine/AccountPage'
 import PasswordPage from '../features/mine/PasswordPage'
+import NicknamePage from '../features/mine/NicknamePage'
+import DownloadManagePage from '../features/mine/DownloadManagePage'
+import TipsPage from '../features/mine/TipsPage'
+
+import * as Constant from '../features/vocabulary/common/constant'
 
 const article1 =  { id: 1,
   articleUrl: '/cet-6/1995-1-3-article.txt',
@@ -118,8 +124,11 @@ const VocaHomeStackNav = createStackNavigator(
       },
       // 单词轮播
       VocaPlay: {
-        screen: VocaPlayPage,
-        gesturesEnabled: true,
+          screen: VocaPlayPage,
+          navigationOptions: ({navigation}) => ({
+              gesturesEnabled: true,
+          }),
+
       },
       // 卡片学习
       LearnCard: {
@@ -152,7 +161,9 @@ const VocaHomeStackNav = createStackNavigator(
         screen: TestSenVocaPage,
       },
         
-
+      BgSelector: {
+        screen: BgSelectorPage
+      },
 
       
       //解析页面
@@ -165,22 +176,59 @@ const VocaHomeStackNav = createStackNavigator(
       },
 
 
-      //我的页面
-      Account:{
-        screen:AccountPage
-      },
-      Password:{
-        screen:PasswordPage
-      }
-
+    //我的页面
+        Account:{
+            screen: AccountPage
+        },
+        Password:{
+            screen: PasswordPage
+        },
+        Nickname:{
+            screen: NicknamePage
+        },
+        DownloadManage:{
+            screen: DownloadManagePage
+        },
+        Tips:{
+            screen: TipsPage
+        }
 
     },
     {
-      initialRouteName: 'Home',
+      initialRouteName: 'DownloadManage',
       headerMode:'none',
-      // initialRouteParams:{
-      //   articleInfo:article1
-      // }
+      initialRouteParams:{
+        articleInfo:article2
+        // mode:Constant.NORMAL_PLAY
+      },
+
+      //跳转动画
+        transitionConfig: () => ({
+            transitionSpec: {
+                duration: 300,
+                easing: Easing.out(Easing.poly(4)),
+                timing: Animated.timing,
+            },
+            screenInterpolator: sceneProps => {
+                const { layout, position, scene } = sceneProps;
+                const { index } = scene;
+
+                const initWidth = layout.initWidth;
+                const translateX = position.interpolate({
+                    inputRange: [index - 1, index, index + 1],
+                    outputRange: [initWidth, 0, 0],
+                });
+
+                const opacity = position.interpolate({
+                    inputRange: [index - 1, index - 0.99, index],
+                    outputRange: [0, 1, 1],
+                });
+
+                return { opacity, transform: [{ translateX }] };
+            },
+        }),
+
+
     }
   );
 

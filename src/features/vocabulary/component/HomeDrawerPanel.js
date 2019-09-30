@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet,StatusBar,ImageBackground, ScrollView, View, Text, Image} from 'react-native';
+import {
+  StyleSheet,
+  StatusBar,
+  ImageBackground,
+  ScrollView,
+  View,Text, Image,TouchableWithoutFeedback
+} from 'react-native';
 import {Button} from 'react-native-elements'
 
 import gstyles from '../../../style'
@@ -19,25 +25,27 @@ export default class HomeDrawerPanel extends Component {
        showsHorizontalScrollIndicator={false}
        showsVerticalScrollIndicator={false}
       >
-        <ImageBackground 
-        source={require('../../../image/panel.png')}
-        style={[styles.header, gstyles.r_between]}
-        >
-          <View style={gstyles.r_start}>
-            <Image style={styles.headerIcon}   source={require('../../../image/h_icon.png')} />
-            <Text style={[gstyles.xl_black,{marginLeft:10}]}>Jacy</Text>
-          </View>
-          <AliIcon name='youjiantou' size={30} color='#202020' style={{marginRight:10}}/>
-        </ImageBackground>
+        <TouchableWithoutFeedback onPress={()=>{
+          this.props.navigation.navigate('Account')
+        }}>
+          <ImageBackground
+          source={require('../../../image/panel.png')}
+          style={[styles.header, gstyles.r_between]}
+          >
+            <View style={gstyles.r_start}>
+              <Image style={styles.headerIcon}   source={require('../../../image/h_icon.png')} />
+              <Text style={[gstyles.xl_black,{marginLeft:10}]}>Jacy</Text>
+            </View>
+            <AliIcon name='youjiantou' size={30} color='#202020' style={{marginRight:10}} />
+          </ImageBackground>
+        </TouchableWithoutFeedback>
         <Button type='clear'
           icon={<AliIcon name='gonglvexian' size={24} color={gstyles.gray} />}
           title={'攻略'}
           titleStyle={[gstyles.lg_black, {marginLeft:20}]}
           containerStyle={{ width:'100%'}}
           buttonStyle={[styles.btn,gstyles.r_start]}
-          onPress={()=>{
-            this.props.navigation.navigate('Account')
-          }}
+          // onPress={}
         />
         
         <Button type='clear'
@@ -88,7 +96,7 @@ const styles = StyleSheet.create({
   },
   header:{
     width:'100%',
-    height:140,
+    height:160,
     paddingTop:STATUSBAR_HEIGHT,
     backgroundColor:gstyles.mainColor,
   },

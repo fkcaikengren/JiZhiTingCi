@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import OptionRadio from './component/OptionRadio'
 import LookWordBoard from '../vocabulary/component/LookWordBoard'
 import styles from './ArticleStyle'
-import FileService from '../../common/FileService'
 import gstyles from '../../style'
 import ReadUtil from './common/readUtil'
 import WebUtil from '../../common/webUtil'
@@ -21,7 +20,6 @@ export default class ArticlePage extends React.Component {
   
     constructor(props){
         super(props)
-        this.fileService = new FileService()
         this.state = {
             //是否显示答案选项面板
             showAnswerModal:false,
@@ -231,7 +229,7 @@ export default class ArticlePage extends React.Component {
                 {/* 阅读文章 */}
                 <View style={[styles.webContainer, {backgroundColor:bgThemes[themeIndex]}]}>
                     <WebView
-                        nativeConfig={{props: {webContentsDebuggingEnabled: true}}} 
+                        nativeConfig={{props: {webContentsDebuggingEnabled: true}}}
                         ref={r => (this.webref = r)}
                         originWhiteList={['*']} // 访问本地html时，需设置源的白名单为所有
                         javaScriptEnabled={true}
@@ -245,10 +243,10 @@ export default class ArticlePage extends React.Component {
                         source={{
                             uri:'file:///android_asset/web/article.html',
                             // <script src='./js/zepto.min.js'/>会以这个为根目录查找资源，否则引入的zepto.js等无效
-                            baseUrl:'file:///android_asset/web/',  
+                            baseUrl:'file:///android_asset/web/',
                         }}
                         style={[{backgroundColor:bgThemes[themeIndex]}]}
-                    /> 
+                    />
                 </View>
                 {(type===Constant.FOUR_SELECT_READ || type===Constant.MULTI_SELECT_READ) &&
                     this._createAnswerOptionModal()

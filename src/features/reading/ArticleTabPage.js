@@ -44,7 +44,7 @@ class ArticleTabPage extends React.Component {
     componentDidMount(){
         const articleInfo = this.props.navigation.getParam('articleInfo')
         console.log('---页面初始化后，加载文章----')
-        this.props.loadArticle(articleInfo);
+        // this.props.loadArticle(articleInfo);
     }
 
  
@@ -197,7 +197,7 @@ class ArticleTabPage extends React.Component {
         }else{
             if(!isLoadPending){
                 if(articleInfo.type === Constant.DETAIL_READ){
-                    return <Swiper 
+                    return <Swiper
                         showsPagination={false}
                         loop={false}
                         index={this.state.pageIndex}
@@ -206,7 +206,7 @@ class ArticleTabPage extends React.Component {
                         <QuestionPage {...this.props} articleInfo={articleInfo}/>
                     </Swiper>
                 }else{
-                    return <Swiper 
+                    return <Swiper
                         showsPagination={false}
                         loop={false}
                         onIndexChanged={(index)=>{this.setState({pageIndex:index})}}>
@@ -218,6 +218,7 @@ class ArticleTabPage extends React.Component {
             
 
     }
+
 
    
     render(){
