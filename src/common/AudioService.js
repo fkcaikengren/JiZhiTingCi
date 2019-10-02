@@ -21,11 +21,10 @@ export default class AudioFetch{
     if(startPlay){
       startPlay() //开始播放
     }
-    const where = CConstant.RESOURCE_URL+'voca/'+url
     //先暂停并释放资源
     this.releaseSound()
 
-    this.sound = new Sound(where,null, err => {
+    this.sound = new Sound(url,null, err => {
       //播放失败
       if (err) {        //获取失败
         console.log(err)

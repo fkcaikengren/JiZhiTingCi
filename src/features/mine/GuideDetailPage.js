@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, TouchableOpacity, TextInput} from 'react-native';
+import {Platform, StyleSheet, View, Text} from 'react-native';
 import {Header,Button} from 'react-native-elements'
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
+import {WebView} from "react-native-webview";
 
-
-export default class TipsPage extends React.Component {
+export default class TipsDetailPage extends React.Component {
     constructor(props){
         super(props);
-        this.state={password:null}
     }
 
     componentDidMount(){
@@ -18,7 +17,7 @@ export default class TipsPage extends React.Component {
 
     render(){
         return(
-            <View style={[{flex:1},gstyles.c_start]}>
+            <View style={[{flex:1, width:'100%'},gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
@@ -28,34 +27,19 @@ export default class TipsPage extends React.Component {
                             this.props.navigation.goBack();
                         }} /> }
 
-                    centerComponent={{ text: '修改密码', style: gstyles.lg_black_bold}}
+                    centerComponent={{ text: '攻略', style: gstyles.lg_black_bold}}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
                     }}
                 />
+                {/*虽然设置了height:100, 但flex:1使得自然铺满 */}
+                <View style={{flex:1,width:'100%',height:100}}>
+                    <WebView source={{ uri: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html' }} />
+                </View>
 
             </View>
         );
     }
 }
 
-
-
-const styles = StyleSheet.create({
-    content:{
-        width:'80%',
-        marginTop:25,
-    },
-    inputStyle: {
-        height:gstyles.mdHeight,
-        width:'100%',
-        borderBottomColor:"#DFDFDF",
-        borderBottomWidth:StyleSheet.hairlineWidth
-    },
-    buttonStyle:{
-        height:gstyles.mdHeight,
-        backgroundColor:'#FFE957',
-        borderRadius:8
-    }
-})
