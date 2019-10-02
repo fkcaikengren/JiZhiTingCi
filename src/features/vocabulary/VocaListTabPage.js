@@ -8,14 +8,11 @@ import Toast from 'react-native-easy-toast'
 import AliIcon from '../../component/AliIcon';
 import * as VocaListAction from './redux/action/vocaListAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
-import VocaTaskDao from "./service/VocaTaskDao";
 import VocaListPage from "./VocaListPage";
 import styles from './VocaListStyle'
 import * as Constant from './common/constant'
 import gstyles from "../../style";
 
-//暂时
-// VocaTaskDao.getInstance().open()
 
 class VocaListTabPage extends Component {
 

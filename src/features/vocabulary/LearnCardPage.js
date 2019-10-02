@@ -12,7 +12,7 @@ import VocaCard from "./component/VocaCard";
 import VocaTaskDao from './service/VocaTaskDao'
 import vocaUtil from './common/vocaUtil'
 import * as Constant from './common/constant'
-import AudioFetch from '../../common/AudioFetch'
+import AudioService from '../../common/AudioService'
 import LookWordBoard from "./component/LookWordBoard";
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -32,7 +32,7 @@ class LearnCardPage extends Component {
             refresh:false
         }
 
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
         this.taskDao = VocaTaskDao.getInstance()
     }
 
@@ -58,7 +58,7 @@ class LearnCardPage extends Component {
 
     _nextWord = ()=>{
         //停止播放音频
-        this.audioFetch.releaseSound()
+        this.audioService.releaseSound()
         //跳到下一个单词
         let task = this.state.task
         if(task.curIndex < task.wordCount-1){
@@ -74,7 +74,7 @@ class LearnCardPage extends Component {
                 showWordInfos:this.state.showWordInfos,
                 nextRouteName:'TestSenVoca'
             })
-            this.audioFetch.releaseSound()
+            this.audioService.releaseSound()
         }
     }
 
@@ -100,7 +100,7 @@ class LearnCardPage extends Component {
                             //更新task
                             this.props.updateTask({...this.state.task})
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
-                            this.audioFetch.releaseSound()
+                            this.audioService.releaseSound()
                         }} /> }
                     
                     centerComponent={

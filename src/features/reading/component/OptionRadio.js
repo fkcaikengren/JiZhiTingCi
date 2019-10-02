@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {StyleSheet,View, Text,} from 'react-native';
+import {StyleSheet,View, Text, TouchableOpacity} from 'react-native';
 import gstyles from '../../../style'
 
 
@@ -59,20 +59,20 @@ export default  class OptionRadio extends Component{
                     }
                 
                     return <View style={styles.optionRow}>
-                        <View 
-                        onStartShouldSetResponder={(e)=>true}
-                        onResponderStart={(e)=>{this.onChange(index, option)}}
-                        style={[gstyles.r_center,{
-                            width:this.props.size,
-                            height:this.props.size,
-                            backgroundColor:this.props.bgColor,
-                            borderRadius: 60,
-                            marginRight:10,
-                        }, selectedStyle]}>
-                            <Text style={[styles.optionText,{lineHeight:this.props.size,}]}>
-                            {option.identifier}
-                            </Text>
-                        </View>
+                        <TouchableOpacity activeOpacity={0.8} onPress={()=>{this.onChange(index, option)}}>
+                            <View
+                                style={[gstyles.r_center,{
+                                    width:this.props.size,
+                                    height:this.props.size,
+                                    backgroundColor:this.props.bgColor,
+                                    borderRadius: 60,
+                                    marginRight:10,
+                                }, selectedStyle]}>
+                                <Text style={[styles.optionText,{lineHeight:this.props.size,}]}>
+                                    {option.identifier}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
                         <Text style={[styles.optionText,{paddingTop:4}]}>{option.content}</Text>
                     </View>
                 })

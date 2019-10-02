@@ -13,7 +13,6 @@ class AuthLoadingPage extends Component {
 
     constructor(props) {
         super(props);
-        
         console.disableYellowBox=true
     }
 

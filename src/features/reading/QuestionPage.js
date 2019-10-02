@@ -9,7 +9,10 @@ import styles from './QuestionStyle'
 import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
 import * as ArticleAction from './redux/action/articleAction'
+import {VOCABULARY_DIR} from "../../common/constant";
 
+// 暂时目录
+const articlesDir = 'articles'
 
 class QuestionPage extends React.Component {
 
@@ -34,8 +37,7 @@ class QuestionPage extends React.Component {
   _loadOption = async ()=>{
     const {articleInfo} = this.props
     try{
-      const questions = await this.fileService.loadText(articleInfo.optionUrl, 'json')
-  
+      const questions = await this.fileService.load(VOCABULARY_DIR, articlesDir+articleInfo.optionUrl)
       this.setState({questions, questionNo:questions[0].no})
     }catch(e){
       console.log(e)

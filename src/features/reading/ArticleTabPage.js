@@ -44,7 +44,7 @@ class ArticleTabPage extends React.Component {
     componentDidMount(){
         const articleInfo = this.props.navigation.getParam('articleInfo')
         console.log('---页面初始化后，加载文章----')
-        // this.props.loadArticle(articleInfo);
+        this.props.loadArticle(articleInfo);
     }
 
  
@@ -305,8 +305,8 @@ class ArticleTabPage extends React.Component {
                     this._createSettingModal()
                 }
                 {this.props.article.isWebLoading &&
-                    <View style={[styles.loadingView ,{backgroundColor:bgThemes[themeIndex]}]}>
-                       <Loader />
+                    <View style={[gstyles.loadingView ,{backgroundColor:bgThemes[themeIndex]}]}>
+                        <Loader />
                     </View>
                 }
                 <ConfirmModal ref={ref=>this.confirmModalRef = ref} />

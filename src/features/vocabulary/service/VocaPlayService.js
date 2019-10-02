@@ -1,10 +1,10 @@
 
 import {BackHandler} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer';
-import AudioFetch from '../../../common/AudioFetch'
+import AudioService from '../../../common/AudioService'
 import {store} from '../../../redux/store' 
 import NotificationManage from '../../../modules/NotificationManage'
-
+import * as CConstant from '../../../common/constant'
 
 export default class VocaPlayService{
 
@@ -16,7 +16,7 @@ export default class VocaPlayService{
         this.changePlayTimer = changePlayTimer
         this.finishQuit = finishQuit
 
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
 
         //监听关闭通知控制条
         NotificationManage.onClose((evt)=>{
@@ -47,7 +47,7 @@ export default class VocaPlayService{
         })
 
         console.log("stateRef")
-        console.log(stateRef)
+        // console.log(stateRef)
     }
     //单例模式
     static getInstance(){
@@ -60,7 +60,7 @@ export default class VocaPlayService{
 
     
     setStateRef = (state)=>{
-        console.log(state)
+        // console.log(state)
         this.stateRef = {...this.stateRef, ...state}
         
     }
@@ -76,7 +76,7 @@ export default class VocaPlayService{
             source = this.stateRef
         }
 
-        const {task, showWordInfos,curIndex, interval,autoPlayTimer} = source
+        const {task, showWordInfos,curIndex, interval} = source
         const { wordCount} = task 
 
 
@@ -94,7 +94,10 @@ export default class VocaPlayService{
             }
 
             //3.播放单词音频
-            this.audioFetch.playSound(showWordInfos[curIndex].am_pron_url)
+            this.audioService.playSound({
+                pDir : CConstant.VOCABULARY_DIR,
+                fPath:showWordInfos[curIndex].am_pron_url
+            })
 
             //4.循环回调
             let timer = 0

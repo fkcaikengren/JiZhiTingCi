@@ -78,17 +78,6 @@ const styles = StyleSheet.create({
         textAlign:'center',
         textAlignVertical:'center',
     },
-    loadingView:{
-        flex:1,
-        height:height,
-        width:width,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        position:'absolute',
-        bottom:0,
-        backgroundColor:'#FDFDFD'
-    }
 })
 
 export default styles;

@@ -6,9 +6,10 @@ import Modal from 'react-native-modalbox'
 import VocaDao from '../service/VocaDao'
 import gstyles from "../../../style";
 import AliIcon from '../../../component/AliIcon'
-import AudioFetch from "../../../common/AudioFetch";
+import AudioService from "../../../common/AudioService";
 import VocaGroupDao from "../service/VocaGroupDao";
 import VocaCard from "./VocaCard";
+import * as CConstant from "../../../common/constant";
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 
@@ -23,7 +24,7 @@ export default class LookWordBoard extends Component{
         }
         this.vocaDao = VocaDao.getInstance()
         this.vocaGroupDao = VocaGroupDao.getInstance()
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
     }
 
     lookWord = (text)=>{
@@ -125,12 +126,20 @@ export default class LookWordBoard extends Component{
                     <Text style={gstyles.sm_gray}>美</Text>
                     <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
                     <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
-                        this.audioFetch.playSound(wordInfo.am_pron_url)
+                        this.audioService.playSound({
+                            pDir : CConstant.VOCABULARY_DIR,
+                            fPath : wordInfo.am_pron_url
+                        })
+
                     }}/>
                     <Text style={[gstyles.sm_gray,{marginLeft:10}]}>英</Text>
                     <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
                     <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{marginLeft:6}} onPress={()=>{
-                        this.audioFetch.playSound(wordInfo.en_pron_url)
+                        this.audioService.playSound({
+                            pDir : CConstant.VOCABULARY_DIR,
+                            fPath : wordInfo.en_pron_url
+                        })
+
                     }}/>
                 </View>
                 {/*  释义*/}

@@ -3,6 +3,7 @@ package com.aitingci;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
@@ -12,6 +13,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
 import org.devio.rn.splashscreen.SplashScreen;
+
+import androidx.multidex.MultiDex;
 
 
 public class MainActivity extends ReactActivity {
@@ -45,16 +48,16 @@ public class MainActivity extends ReactActivity {
         // MobclickAgent.setSessionContinueMillis(1000);
         //统计的场景
         // MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        ShareModule.initSocialSDK(this);
+//        ShareModule.initSocialSDK(this);
 
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onResume() {

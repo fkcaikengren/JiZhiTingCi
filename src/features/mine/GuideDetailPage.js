@@ -6,7 +6,7 @@ import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import {WebView} from "react-native-webview";
 
-export default class TipsDetailPage extends React.Component {
+export default class GuideDetailPage extends React.Component {
     constructor(props){
         super(props);
     }
@@ -16,6 +16,8 @@ export default class TipsDetailPage extends React.Component {
 
 
     render(){
+        const url = this.props.navigation.getParam('url')
+        const title = this.props.navigation.getParam('title')
         return(
             <View style={[{flex:1, width:'100%'},gstyles.c_start]}>
                 {/* 头部 */}
@@ -27,7 +29,7 @@ export default class TipsDetailPage extends React.Component {
                             this.props.navigation.goBack();
                         }} /> }
 
-                    centerComponent={{ text: '攻略', style: gstyles.lg_black_bold}}
+                    centerComponent={{ text:title, style: gstyles.lg_black_bold}}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
@@ -35,7 +37,7 @@ export default class TipsDetailPage extends React.Component {
                 />
                 {/*虽然设置了height:100, 但flex:1使得自然铺满 */}
                 <View style={{flex:1,width:'100%',height:100}}>
-                    <WebView source={{ uri: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html' }} />
+                    <WebView source={{ uri: url }} />
                 </View>
 
             </View>

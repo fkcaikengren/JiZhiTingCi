@@ -8,8 +8,9 @@ import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
-import AudioFetch from '../../common/AudioFetch'
+import AudioService from '../../common/AudioService'
 import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as CConstant from "../../common/constant";
 
 const styles = StyleSheet.create({
     
@@ -60,7 +61,11 @@ class TestVocaTranPage extends Component {
             <View style={styles.phoneticView}>
                 <Text>{'[美]'+phonetic}</Text>
                 <AliIcon name='shengyin' size={26} color='#555' style={{marginLeft:5}} onPress={()=>{
-                    AudioFetch.getInstance().playSound(amPronUrl)
+                    AudioService.getInstance().playSound({
+                        pDir : CConstant.VOCABULARY_DIR,
+                        fPath : amPronUrl
+                    })
+
                 }}/>
             </View>
             <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>

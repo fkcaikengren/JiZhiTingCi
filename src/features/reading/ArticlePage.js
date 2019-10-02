@@ -196,7 +196,7 @@ export default class ArticlePage extends React.Component {
 
     _onMessage = (e) =>{
         let data = JSON.parse(e.nativeEvent.data);
-        console.log(data)
+        // console.log(data)
         switch(data.command){
             case 'initStart':
                 console.log('--------initStart > sendFirst ---------')

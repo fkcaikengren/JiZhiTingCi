@@ -9,7 +9,8 @@ import ExampleCarousel from './ExampleCarousel'
 // import RootCard from './RootCard'
 import VocaDao from '../service/VocaDao'
 import VocaGroupDao from '../service/VocaGroupDao'
-import AudioFetch from '../../../common/AudioFetch';
+import AudioService from '../../../common/AudioService';
+import * as CConstant from "../../../common/constant";
 
 
 const Dimensions = require('Dimensions');
@@ -66,7 +67,7 @@ export default class VocaCard extends Component{
 
     constructor(props){
         super(props)
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
         this.vocaGroupDao = VocaGroupDao.getInstance()
         const {wordInfo} = this.props
         //判断
@@ -93,13 +94,23 @@ export default class VocaCard extends Component{
         }
         //自动发音
         if(playWord){
-            this.audioFetch.playSound(wordInfo.am_pron_url,null,()=>{
+
+            this.audioService.playSound({
+                pDir : CConstant.VOCABULARY_DIR,
+                fPath : wordInfo.am_pron_url
+            },null,()=>{
                 if(playSentence){
-                    this.audioFetch.playSound(wordInfo.sen_pron_url)
+                    this.audioService.playSound({
+                        pDir : CConstant.VOCABULARY_DIR,
+                        fPath : wordInfo.sen_pron_url
+                    })
                 }
             },null,false)
         }else if(playSentence){
-            this.audioFetch.playSound(wordInfo.sen_pron_url)
+            this.audioService.playSound({
+                pDir : CConstant.VOCABULARY_DIR,
+                fPath : wordInfo.sen_pron_url
+            })
         }
 
     }
@@ -123,13 +134,23 @@ export default class VocaCard extends Component{
             }
 
             if(playWord){
-                this.audioFetch.playSound(nextProps.wordInfo.am_pron_url,null,()=>{
+
+                this.audioService.playSound({
+                    pDir : CConstant.VOCABULARY_DIR,
+                    fPath : nextProps.wordInfo.am_pron_url
+                },null,()=>{
                     if(playSentence){
-                        this.audioFetch.playSound(nextProps.wordInfo.sen_pron_url)
+                        this.audioService.playSound({
+                            pDir : CConstant.VOCABULARY_DIR,
+                            fPath : nextProps.wordInfo.sen_pron_url
+                        })
                     }
                 },null,false)
             }else if(playSentence){
-                this.audioFetch.playSound(nextProps.wordInfo.sen_pron_url)
+                this.audioService.playSound({
+                    pDir : CConstant.VOCABULARY_DIR,
+                    fPath : nextProps.wordInfo.sen_pron_url
+                })
             }
             
             return true
@@ -228,7 +249,10 @@ export default class VocaCard extends Component{
                         <Row style={[gstyles.r_start, ]}>
                             <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
                             <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{marginLeft:10}} onPress={()=>{
-                                this.audioFetch.playSound(wordInfo.am_pron_url)
+                                this.audioService.playSound({
+                                    pDir : CConstant.VOCABULARY_DIR,
+                                    fPath : wordInfo.am_pron_url
+                                })
                             }}/>
                         </Row>
                         {/* 英英释义 */}
@@ -239,7 +263,10 @@ export default class VocaCard extends Component{
                         <Row style={[gstyles.r_start_top,styles.marginTop ]}>
                             <Text style={[gstyles.lg_black, {flex:10}]}>{sen}</Text>
                             <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{flex:1,marginLeft:10}} onPress={()=>{
-                                this.audioFetch.playSound(wordInfo.sen_pron_url)
+                                this.audioService.playSound({
+                                    pDir : CConstant.VOCABULARY_DIR,
+                                    fPath : wordInfo.sen_pron_url
+                                })
                             }}/>
                         </Row>
                         {/* 释义 */}

@@ -1,5 +1,8 @@
 import {Easing,Animated} from 'react-native'
-import { createStackNavigator,  } from 'react-navigation';
+import { createStackNavigator} from 'react-navigation';
+import StackViewStyleInterpolator from
+        'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator';
+
 
 import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
@@ -28,9 +31,11 @@ import AccountPage from '../features/mine/AccountPage'
 import PasswordPage from '../features/mine/PasswordPage'
 import NicknamePage from '../features/mine/NicknamePage'
 import DownloadManagePage from '../features/mine/DownloadManagePage'
-import TipsPage from '../features/mine/TipsPage'
+import GuidePage from '../features/mine/GuidePage'
+import GuideDetailPage from '../features/mine/GuideDetailPage'
 
 import * as Constant from '../features/vocabulary/common/constant'
+import FileTest from "../FileTest";
 
 const article1 =  { id: 1,
   articleUrl: '/cet-6/1995-1-3-article.txt',
@@ -103,11 +108,11 @@ const VocaHomeStackNav = createStackNavigator(
       },
       // 查词页面
       VocaSearch: {
-        screen: VocaSearchPage,
+          screen: VocaSearchPage,
       },
       // 单词库
       VocaLib:{
-        screen:VocaLibPage,
+          screen:VocaLibPage,
       },
       // 单词列表
       VocaListTab:{
@@ -166,17 +171,23 @@ const VocaHomeStackNav = createStackNavigator(
       },
 
       
-      //解析页面
-      Analysis:{
-        screen:AnalysisPage
-      },
-      //文章tab页
-      ArticleTab:{
-        screen:ArticleTabPage
-      },
+        //解析页面
+        Analysis:{
+            screen:AnalysisPage,
+            navigationOptions: ({navigation}) => ({
+              gesturesEnabled: true,
+            }),
+        },
+        //文章tab页
+        ArticleTab:{
+            screen:ArticleTabPage,
+            navigationOptions: ({navigation}) => ({
+                gesturesEnabled: true,
+            }),
+        },
 
 
-    //我的页面
+        //我的页面
         Account:{
             screen: AccountPage
         },
@@ -189,18 +200,26 @@ const VocaHomeStackNav = createStackNavigator(
         DownloadManage:{
             screen: DownloadManagePage
         },
-        Tips:{
-            screen: TipsPage
+        Guide:{
+            screen: GuidePage
+        },
+        GuideDetail:{
+          screen: GuideDetailPage
+        },
+
+        //测试
+        FileTest:{
+          screen: FileTest
         }
 
     },
     {
-      initialRouteName: 'DownloadManage',
-      headerMode:'none',
-      initialRouteParams:{
-        articleInfo:article2
-        // mode:Constant.NORMAL_PLAY
-      },
+        initialRouteName: 'Home',
+        headerMode:'none',
+        initialRouteParams:{
+            // articleInfo:article2
+            // mode:Constant.NORMAL_PLAY
+        },
 
       //跳转动画
         transitionConfig: () => ({
@@ -211,7 +230,17 @@ const VocaHomeStackNav = createStackNavigator(
             },
             screenInterpolator: sceneProps => {
                 const { layout, position, scene } = sceneProps;
-                const { index } = scene;
+                const { index, route } = scene;
+                const params = route.params || {};
+                const transition = params.transition;
+                if (transition) { //如果指定了过渡方式
+                    // StackViewStyleInterpolator.forFade()
+                    // StackViewStyleInterpolator.forHorizontal()
+                    // StackViewStyleInterpolator.forVertical()
+                    // StackViewStyleInterpolator.forFadeFromBottomAndroid()
+                    // StackViewStyleInterpolator.forFadeToBottomAndroid()
+                    return StackViewStyleInterpolator[transition](sceneProps)
+                }
 
                 const initWidth = layout.initWidth;
                 const translateX = position.interpolate({
@@ -227,8 +256,6 @@ const VocaHomeStackNav = createStackNavigator(
                 return { opacity, transform: [{ translateX }] };
             },
         }),
-
-
     }
   );
 

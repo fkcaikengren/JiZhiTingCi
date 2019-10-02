@@ -4,37 +4,42 @@ import android.app.Application;
 import android.webkit.WebView;
 
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.facebook.react.ReactApplication;
-import com.reactnativecommunity.webview.RNCWebViewPackage;
-import com.beefe.picker.PickerViewPackage;
-import com.imagepicker.ImagePickerPackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.kishanjvaghela.cardview.RNCardViewPackage;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
+import com.beefe.picker.PickerViewPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+import com.facebook.react.ReactApplication;
+import com.rnziparchive.RNZipArchivePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.facebook.stetho.Stetho;
 import com.horcrux.svg.SvgPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.um.UmengConfig;
 import com.um.UmengReactPackage;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import com.zmxv.RNSound.RNSoundPackage;
 
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.multidex.MultiDex;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.react.RealmReactPackage;
+import com.ali.feedback.FeedbackPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -53,6 +58,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNZipArchivePackage(),
+            new FeedbackPackage(),
             new RNCWebViewPackage(),
             new PickerViewPackage(),
             new ImagePickerPackage(),
@@ -92,8 +99,8 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    MultiDex.install(this);
     SoLoader.init(this, /* native exopackage */ false);
-
 
     //Realm初始化
     Realm.init(this);
@@ -112,16 +119,18 @@ public class MainApplication extends Application implements ReactApplication {
                             .withDeleteIfMigrationNeeded(true)
                             .build())
                     .build());
-
     realm.close();
 
     //运行调试WebView
     WebView.setWebContentsDebuggingEnabled(true);
 
 
-
     //友盟初始化
     UmengConfig.init(this);
+
+    //阿里百川的反馈模块初始化
+    FeedbackAPI.init(this, "27947681","c132858beb95ea7b6b38c1576c25bace ");
+
   }
 }
 

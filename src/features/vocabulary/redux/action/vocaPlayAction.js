@@ -21,8 +21,6 @@ export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模式的类型
 
 
-
-
 //驼峰式命名，不可以更改(与变量名必须对应)
 export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
   changeBg,showBlur, changeTheme,passWord , changeNormalType} = createActions({
@@ -75,9 +73,11 @@ export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, ch
     [PASS_WORD] : (word)=>{
       return {word}
     },
+
     [CHANGE_NORMAL_TYPE] : (normalType)=>{
       return {normalType}
-    }
+    },
+
    
   });
 

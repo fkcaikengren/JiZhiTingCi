@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import { View,Text,TouchableNativeFeedback,Picker} from 'react-native';
+import { View,Text,TouchableOpacity, TouchableWithoutFeedback,Picker} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from "rn-fetch-blob";
 
 import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from '../../../component/react-native-progress';
@@ -10,6 +11,9 @@ import AliIcon from '../../../component/AliIcon'
 import styles from '../VocaPlayStyle'
 import gstyles from '../../../style';
 
+
+const fs = RNFetchBlob.fs
+const DocumentDir = fs.dirs.DocumentDir + '/'
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
 
@@ -60,8 +64,18 @@ export default class PlayController extends React.Component {
                     },
                 };
                 ImagePicker.launchImageLibrary(options, (response) => {
-                    // Same code as in above section!
-                    console.log(response)
+                    //保存到本地，设置地址
+                    const bgPath = DocumentDir+'bg/'+response.fileName
+                    console.log('从相册中设置背景图片，拷贝')
+                    console.log(bgPath)
+                    RNFetchBlob.fs.writeFile(bgPath,response.data, 'base64')
+                        .then(()=>{
+                            console.log('拷贝相册图片到app成功')
+                            this.props.changeBg(bgPath)
+                        })
+                        .catch(()=>{
+                            console.log('拷贝失败')
+                        })
                 });
                 break
         }
@@ -110,8 +124,6 @@ export default class PlayController extends React.Component {
         }
     }
 
-    
-
 
     render(){
         const {task, themes, themeId, autoPlayTimer,showWord, showTran, interval, curIndex} = this.props.vocaPlay;
@@ -138,12 +150,9 @@ export default class PlayController extends React.Component {
                     marginBottom:10,
                 }}>
                  {/* 英文单词按钮 */}
-                    <View 
-                        onStartShouldSetResponder={(e)=>true}
-                        onResponderGrant={(e)=>toggleWord()}
-                        >
+                    <TouchableWithoutFeedback onPress={()=>{toggleWord()}}>
                         <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>en</Text>
-                    </View>
+                    </TouchableWithoutFeedback>
                     
                     {/* 测试按钮 */}
                     <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
@@ -177,12 +186,9 @@ export default class PlayController extends React.Component {
                         </MenuOptions>
                     </Menu>
                     {/* 中文按钮 */}
-                    <View 
-                        onStartShouldSetResponder={(e)=>true}
-                        onResponderGrant={(e)=>toggleTran()}
-                        >
+                    <TouchableWithoutFeedback onPress={()=>{toggleTran()}}>
                         <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>zh</Text>
-                    </View>
+                    </TouchableWithoutFeedback>
                 </Row>
             
                  {/* 进度条 */}
@@ -229,7 +235,7 @@ export default class PlayController extends React.Component {
                             <MenuOption style={gstyles.haireBottom} value={2.0}>
                                 <Text style={popStyle}>2.0s</Text>
                             </MenuOption>
-                            <MenuOption value={1.4}>
+                            <MenuOption value={1.2}>
                                 <Text style={popStyle}>1.0s</Text>
                             </MenuOption>
                             
@@ -241,28 +247,28 @@ export default class PlayController extends React.Component {
                         justifyContent:'space-around',
                         alignItems:'center',
                     }}>
-                        <TouchableNativeFeedback >
+                        <TouchableWithoutFeedback >
                             <View style={[styles.smallRoundBtn, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name='SanMiAppoutlinei1' size={20} color='#FFF'></AliIcon>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableWithoutFeedback>
                         
                         
-                        <TouchableNativeFeedback  onPress={this._togglePlay}>
+                        <TouchableWithoutFeedback  onPress={this._togglePlay}>
                             <View style={[styles.bigRoundBtn,{paddingLeft:autoPlayTimer?0:5}, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name={autoPlayTimer?'zanting1':'play'} size={22} color='#FFF'></AliIcon>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableWithoutFeedback>
                         
-                        <TouchableNativeFeedback  >
+                        <TouchableWithoutFeedback  >
                             <View style={[styles.smallRoundBtn, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name='SanMiAppoutlinei' size={20} color='#FFF'></AliIcon>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableWithoutFeedback>
                     </View>
-                    <TouchableNativeFeedback  onPress={this.props.openTaskListModal}>
+                    <TouchableOpacity activeOpacity={0.8} onPress={this.props.openTaskListModal}>
                         <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
-                    </TouchableNativeFeedback>
+                    </TouchableOpacity>
                 </Row>
 
             </Grid>

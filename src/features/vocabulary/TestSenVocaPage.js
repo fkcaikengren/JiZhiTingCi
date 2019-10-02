@@ -8,8 +8,10 @@ import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
-import AudioFetch from '../../common/AudioFetch'
+import AudioService from '../../common/AudioService'
 import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as CConstant from "../../common/constant";
+import gstyles from "../../style";
 
 const styles = StyleSheet.create({
     content:{
@@ -21,16 +23,15 @@ const styles = StyleSheet.create({
     },
     senFont:{
         flex:10,
-        color:'#303030',
-        fontSize:16,
-        textAlign:'left'
+        textAlign:'left',
+        lineHeight:24,
     },
     wrongText:{
         position:'absolute',
         bottom:10,
         right:10,
         color:'#EC6760',
-        fontSize:16,
+        fontSize:18,
     }
 });
 
@@ -54,16 +55,19 @@ class TestSenVocaPage extends Component {
                 if(index%2 === 0){
                   return text
                 }else{
-                  return <Text style={{color:showAnswer?'#1890FF':'#F2753F',fontSize:16 }}>{showAnswer?text:'____'}</Text>
+                  return <Text style={[gstyles.lg_black,{color:showAnswer?'#1890FF':'#F2753F',}]}>{showAnswer?text:'____'}</Text>
                 }
             })
         }
         return <View  style={styles.content}>
-           <Text style={styles.senFont}> {sen} </Text>
+           <Text style={[styles.senFont,gstyles.lg_black]}> {sen} </Text>
            <AliIcon name='shengyin' size={26} color='#F29F3F' 
             style={{flex:1}}
             onPress={()=>{
-                AudioFetch.getInstance().playSound(pronUrl)
+                AudioService.getInstance().playSound({
+                    pDir : CConstant.VOCABULARY_DIR,
+                    fPath : pronUrl
+                })
             }}/>
 
             <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>

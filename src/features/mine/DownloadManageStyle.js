@@ -42,10 +42,9 @@ const styles = StyleSheet.create({
         borderRadius:50,
     },
     clearBtn:{
-        color:gstyles.emColor,
+        color:'red',
         position:'absolute',
         bottom:20,
-
     }
 
 

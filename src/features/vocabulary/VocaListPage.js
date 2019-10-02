@@ -10,7 +10,6 @@ import * as Constant from './common/constant'
 import AliIcon from '../../component/AliIcon';
 import gstyles from '../../style'
 import styles from './VocaListStyle'
-import * as VocaListAction from './redux/action/vocaListAction'
 import VocaTaskService from './service/VocaTaskService'
 import VocaUtil from "./common/vocaUtil";
 
@@ -169,7 +168,7 @@ export default class VocaListPage extends React.Component {
         this.props.toastRef.show('当前选择不足5个，不可以播放哦')
       }else{
         const virtualTask = VocaUtil.genVirtualTask(words)
-        console.log(virtualTask)
+        // console.log(virtualTask)
 
         //暂停
         const {autoPlayTimer, } = this.props.vocaPlay
@@ -181,7 +180,7 @@ export default class VocaListPage extends React.Component {
         this.props.navigation.navigate('VocaPlay',{
           task:virtualTask, 
           mode:Constant.NORMAL_PLAY,
-          normalType: Constant.BY_VIRTUAL_TASK
+          normalType: Constant.BY_VIRTUAL_TASK,
         });
       }
 

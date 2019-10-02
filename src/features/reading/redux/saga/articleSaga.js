@@ -1,17 +1,22 @@
 import {take, put, call} from 'redux-saga/effects'
 import FileService from '../../../../common/FileService'
-const fileService = new FileService()
+import {VOCABULARY_DIR} from "../../../../common/constant";
+const fileService = FileService.getInstance()
+
+//暂时------
+const articlesDir = 'articles'
+
 
 /**加载文章 */
 export function * loadArticle(articleInfo){
     yield put({type:'LOAD_ARTICLE_START'})
     try{
-        console.log(articleInfo.articleUrl)
-        const articleText = yield fileService.loadText(articleInfo.articleUrl)
+        // console.log(articleInfo.articleUrl)
+        const articleText = yield fileService.load(VOCABULARY_DIR, articlesDir+articleInfo.articleUrl)
         const keywords = articleInfo.keyWords
         let options = []
         if(articleInfo.optionUrl !== null){
-            options = yield fileService.loadText(articleInfo.optionUrl, 'json')
+            options = yield fileService.load(VOCABULARY_DIR, articlesDir+articleInfo.optionUrl)
         }
         
         if(articleText === null || options === null){
@@ -31,10 +36,10 @@ export function * loadArticle(articleInfo){
 export function * loadAnalysis(articleInfo){
     yield put({type:'LOAD_ANALYSIS_START'})
     try{
-        console.log(articleInfo.articleUrl)
-        const analysisText = yield fileService.loadText(articleInfo.analysisUrl)
+        // console.log(articleInfo.articleUrl)
+        const analysisText = yield fileService.load(VOCABULARY_DIR, articlesDir+articleInfo.analysisUrl)
         //正确答案
-        const rightAnswers = yield fileService.loadText(articleInfo.answerUrl, 'json')
+        const rightAnswers = yield fileService.load(VOCABULARY_DIR, articlesDir+articleInfo.answerUrl)
         if(analysisText === null || rightAnswers === null){
             yield put({type:'LOAD_ANALYSIS_FAIL'})
         }else{

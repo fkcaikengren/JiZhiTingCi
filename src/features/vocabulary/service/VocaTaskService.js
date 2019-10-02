@@ -305,7 +305,7 @@ export default class VocaTaskService {
                 }
                 passArr.push(header)
                 const words = task.words
-                console.log(words)
+                // console.log(words)
                 for(let i in words){
                     if(words[i].passed){
                         count++

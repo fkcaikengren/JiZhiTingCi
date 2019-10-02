@@ -13,8 +13,9 @@ import gstyles from '../../../style'
 import vocaUtil from '../common/vocaUtil'
 import VocaCard from "./VocaCard";
 import * as Constant from '../common/constant'
-import AudioFetch from '../../../common/AudioFetch'
+import AudioService from '../../../common/AudioService'
 import VocaTaskService from "../service/VocaTaskService";
+import * as CConstant from "../../../common/constant";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -56,7 +57,7 @@ export default class TestPage extends Component {
         super(props);
         this.taskDao = VocaTaskDao.getInstance()
         this.vocaDao = VocaDao.getInstance()
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
 
         this.state = {
             task:{ words:[]},
@@ -395,7 +396,7 @@ export default class TestPage extends Component {
             }else{                  //普通模式下测试
                 this._normalPlayEnd(nextState)
             }
-            this.audioFetch.releaseSound()
+            this.audioService.releaseSound()
         }else{     //测试下一词
 
             this._genOptions(nextIndex, this.state.showWordInfos[nextIndex])   
@@ -556,7 +557,7 @@ export default class TestPage extends Component {
                             }else {
                                 this._normalPlayEnd(nextState)
                             }
-                            this.audioFetch.releaseSound()
+                            this.audioService.releaseSound()
                         }}/> }
                     centerComponent={
                         <View style={gstyles.r_center}>
@@ -632,7 +633,10 @@ export default class TestPage extends Component {
                                             }else{
                                                 url = showWordInfos[curIndex].am_pron_url
                                             }
-                                            this.audioFetch.playSound(url, null, ()=>{
+                                            this.audioService.playSound({
+                                                pDir : CConstant.VOCABULARY_DIR,
+                                                fPath : url
+                                            }, null, ()=>{
                                                 this._nextWord()
                                             }, ()=>{
                                                 this._nextWord()

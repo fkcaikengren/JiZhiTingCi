@@ -151,11 +151,11 @@ export default class StudyPlayController extends React.Component {
                         justifyContent:'space-around',
                         alignItems:'center',
                     }}>
-                        <TouchableNativeFeedback  onPress={this._togglePlay}>
+                        <TouchableWithoutFeedback  onPress={this._togglePlay}>
                             <View style={[styles.bigRoundBtn,{paddingLeft:autoPlayTimer?0:5}, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name={autoPlayTimer?'zanting1':'play'} size={22} color='#FFF'></AliIcon>
                             </View>
-                        </TouchableNativeFeedback>
+                        </TouchableWithoutFeedback>
                       
                     </View>
                     {/* 控制间隔 */}
@@ -172,7 +172,7 @@ export default class StudyPlayController extends React.Component {
                             <MenuOption style={gstyles.haireBottom} value={2.0}>
                                 <Text style={popStyle}>2.0s</Text>
                             </MenuOption>
-                            <MenuOption value={1.4}>
+                            <MenuOption value={1.2}>
                                 <Text style={popStyle}>1.0s</Text>
                             </MenuOption>
                             

@@ -145,17 +145,17 @@ export default class HomeHeader extends Component {
 
   /**导航到词库页面 */
   _navVocaLib = ()=>{
-    this.props.navigation.navigate('VocaLib');
+    this.props.navigation.navigate('VocaLib',{transition:'forFadeToBottomAndroid'});
   }
 
   /**导航到单词列表页 */
   _navVocaList = ()=>{
-    this.props.navigation.navigate('VocaListTab');
+    this.props.navigation.navigate('VocaListTab', {transition:'forFadeToBottomAndroid'});
   }
 
   /**导航到生词本页面 */
   _navVocaGroup = ()=>{
-    this.props.navigation.navigate('VocaGroup');
+    this.props.navigation.navigate('VocaGroup',{transition:'forFadeToBottomAndroid'});
   }
 
   /**导航到生词本页面 */
@@ -164,7 +164,7 @@ export default class HomeHeader extends Component {
   }
 
   _navArticleManage = ()=>{
-    this.props.navigation.navigate('ArticleManage');
+    this.props.navigation.navigate('ArticleManage',{transition:'forFadeToBottomAndroid'});
   }
 
 

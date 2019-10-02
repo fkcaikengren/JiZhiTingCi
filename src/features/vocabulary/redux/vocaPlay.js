@@ -5,7 +5,7 @@ import {Themes} from '../common/vocaConfig'
 import VocaUtil from '../common/vocaUtil';
 import VocaTaskDao from '../service/VocaTaskDao';
 import * as Constant from '../common/constant'
-import {CHANGE_BG} from "./action/vocaPlayAction";
+
 
 /**
  *  总结：
@@ -43,7 +43,8 @@ const defaultState ={
     isLoadPending:false,
 
     //normal播放模式的类型
-    normalType: Constant.BY_REAL_TASK  //默认是真实task 构建播放内容
+    normalType: Constant.BY_REAL_TASK,  //默认是真实task 构建播放内容
+
 }
 
 
@@ -57,7 +58,7 @@ export const vocaPlay =  handleActions({
     }),         
     [vpAction.UPDATE_PLAY_TASK]:  (state, action) => {
         console.log('-------UPDATE_PLAY_TASK-----')
-        console.log(action.payload.showWordInfos)
+        // console.log(action.payload.showWordInfos)
         return { ...state, 
             task:action.payload.task, 
             curIndex:action.payload.task.curIndex,

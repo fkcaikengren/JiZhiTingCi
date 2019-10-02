@@ -10,6 +10,7 @@ import {Button} from 'react-native-elements'
 
 import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
+import FeedbackModule from '../../../modules/FeedbackUtil'
 
 const Dimensions = require('Dimensions')
 const {width, height} = Dimensions.get('window')
@@ -45,7 +46,9 @@ export default class HomeDrawerPanel extends Component {
           titleStyle={[gstyles.lg_black, {marginLeft:20}]}
           containerStyle={{ width:'100%'}}
           buttonStyle={[styles.btn,gstyles.r_start]}
-          // onPress={}
+          onPress={()=>{
+            this.props.navigation.navigate('Guide')
+          }}
         />
         
         <Button type='clear'
@@ -54,7 +57,11 @@ export default class HomeDrawerPanel extends Component {
           titleStyle={[gstyles.lg_black, {marginLeft:20}]}
           containerStyle={{ width:'100%'}}
           buttonStyle={[styles.btn,gstyles.r_start]}
-          onPress={this.props.closeDrawer}
+          onPress={()=>{
+            this.props.navigation.navigate('DownloadManage',{
+              ...this.props.vocaLib.plan
+            })
+          }}
         />
         <Button type='clear'
           icon={<AliIcon name='yijianfankui' size={24} color={gstyles.gray} />}
@@ -62,7 +69,12 @@ export default class HomeDrawerPanel extends Component {
           titleStyle={[gstyles.lg_black, {marginLeft:20}]}
           containerStyle={{ width:'100%'}}
           buttonStyle={[styles.btn,gstyles.r_start]}
-          onPress={this.props.closeDrawer}
+          onPress={()=>{
+            let phone = {
+              platform: 'android'
+            }
+            FeedbackModule.openFeedbackActivity(phone)
+          }}
         />
         <Button type='clear'
           icon={<AliIcon name='haopinghua0' size={24} color={gstyles.gray} />}

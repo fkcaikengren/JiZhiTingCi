@@ -9,6 +9,7 @@ import * as VocaLibAction from './redux/action/vocaLibAction'
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
+import Loader from "../../component/Loader";
 
 
 class VocaLibPage extends Component {
@@ -124,13 +125,10 @@ class VocaLibPage extends Component {
                 />
 
                 {isLoadPending &&
-                    <View style={{
-                        flex:1,
-                        flexDirection:'column',
-                        justifyContent:'center',
-                        alignItems:'center',}}>
-                        <Text>加载</Text>
+                    <View style={[gstyles.loadingView ]}>
+                        <Loader />
                     </View>
+
                 }
                 
                 {!isLoadPending &&

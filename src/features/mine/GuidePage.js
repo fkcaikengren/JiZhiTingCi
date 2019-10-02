@@ -4,13 +4,24 @@ import {Header,Button} from 'react-native-elements'
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
-import styles from './TipsStyle'
+import styles from './GuideStyle'
 
-export default class TipsPage extends React.Component {
+export default class GuidePage extends React.Component {
     constructor(props){
         super(props);
         this.state={
-
+            guides : [
+                {title:'单词学习秘方', intro:'学错英语这么多年，原来这些方法更适合你',
+                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip-1.jpg' ,
+                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html',
+                    note:'2019-5'
+                },
+                {title:'App攻略', intro:'结合这些方法使用App，效率提升100%',
+                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip-2.jpg' ,
+                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html',
+                    note:'2019-10'
+                }
+            ]
         }
     }
 
@@ -45,28 +56,31 @@ export default class TipsPage extends React.Component {
                     style={gstyles.scrollView}
                     contentContainerStyle={gstyles.scrollViewContent}
                 >
-                    {
-                        [1,2].map((item,index)=>{
-                            return <TouchableWithoutFeedback onPress={()=>{
-                                this.props.navigation.navigate('TipsDetail')
-                            }}>
-                                <View style={[gstyles.r_start, {paddingHorizontal:16, marginTop:20}]}>
-                                    <Image style={styles.itemThumb} source={{uri:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'}}/>
-                                    <View style={[gstyles.c_start_left,styles.itemContent]}>
-                                        <Text style={[{flex:1},gstyles.xl_black_bold]}>
-                                            学习方法
-                                        </Text>
-                                        <Text style={[{flex:2,width: '85%'},gstyles.md_lightBlack]}>
-                                            学错英语这么多年，原来这些方法更适合你
-                                        </Text>
-                                        <Text style={[{flex:1},gstyles.sm_lightGray]}>
-                                            爱听词出品
-                                        </Text>
-                                    </View>
+                {
+                    this.state.guides.map((item,index)=>{
+                        return <TouchableWithoutFeedback onPress={()=>{
+                            this.props.navigation.navigate('GuideDetail',{
+                                title:item.title,
+                                url:item.contentUrl
+                            })
+                        }}>
+                            <View style={[gstyles.r_start, {paddingHorizontal:16, marginTop:20}]}>
+                                <Image style={styles.itemThumb} source={{uri:item.thumbUrl}}/>
+                                <View style={[gstyles.c_start_left,styles.itemContent]}>
+                                    <Text style={[{flex:1},gstyles.xl_black_bold]}>
+                                        {item.title}
+                                    </Text>
+                                    <Text style={[{flex:2,width: '85%'},gstyles.md_lightBlack]}>
+                                        {item.intro}
+                                    </Text>
+                                    <Text style={[{flex:1},gstyles.sm_lightGray]}>
+                                        {item.note}
+                                    </Text>
                                 </View>
-                            </TouchableWithoutFeedback>
-                        })
-                    }
+                            </View>
+                        </TouchableWithoutFeedback>
+                    })
+                }
                 </ScrollView>
 
             </View>

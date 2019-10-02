@@ -56,7 +56,7 @@ react-native init JiZhiTingCi
 |    |    |    |    |-- dao	(realm数据库操作)
 |    |    |    |    |    |--vocaTaskDao 	
 |    |    |    |    |-- net	(axios网络请求层)
-|    |    |    |    |    |--AudioFetch	
+|    |    |    |    |    |--AudioService	
 |    |    |    +-- reading 	(阅读模块)
 |    |    |    +-- gramma （语法模块）
 |    |    +-- style  (全局样式)
@@ -536,6 +536,17 @@ import androidx.renderscript.ScriptIntrinsicBlur;
 ```
 yarn add react-native-zip-archive
 ```
+
+
+
+### 用户反馈react-native-feedback
+
+```
+yarn add react-native-feedback
+集成阿里百川的反馈模块
+```
+
+
 
 
 

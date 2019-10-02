@@ -60,7 +60,8 @@ export default class VocaUtil{
             const copyArticle = {
                 ...article,
                 taskType: Constant.TASK_ARTICLE_TYPE,
-                keyWords:kwords
+                keyWords:kwords,
+
             }
             arr.push(copyArticle)
         }
@@ -428,17 +429,16 @@ export default class VocaUtil{
      * @param vocaTasks
      * @returns {string}
      */
-    static getArticleIds = (vocaTasks)=>{
-        let ids = []
-        
+    static getUserArticles = (vocaTasks)=>{
+        const myArticles = []
         for(let task of vocaTasks){
             const artiles = JSON.parse(task.articles)
-            for(let a of artiles){
-                ids.push(a.id)
+            for(let art of artiles){
+                myArticles.push(art)
             }
         }
-        console.log(ids)
-        return ids
+        console.log(myArticles)
+        return myArticles
     }
 
     /**
@@ -510,7 +510,7 @@ export default class VocaUtil{
                 return false
             }
         })
-        const todayArticles = VocaUtil.copyArticlesKW(ArticleDao.getInstance().getArticles(VocaUtil.getArticleIds(tasks)))
+        const todayArticles = VocaUtil.copyArticlesKW(ArticleDao.getInstance().getArticles(VocaUtil.getUserArticles(tasks)))
         for(let art of todayArticles){
             todayTasks.push(art)
         }

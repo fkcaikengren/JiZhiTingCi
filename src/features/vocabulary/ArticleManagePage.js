@@ -30,14 +30,18 @@ export default class ArticleManagePage extends Component {
     componentDidMount(){
         //查询已学习过的任务
         const learnedTasks = this.taskDao.getLearnedTasks()
-        const articles = VocaUtil.copyArticlesKW(this.articleDao.getArticles(VocaUtil.getArticleIds(learnedTasks)))
+        const articles = VocaUtil.copyArticlesKW(this.articleDao.getArticles(VocaUtil.getUserArticles(learnedTasks)))
         this.setState({articles})
     }
 
-    _renderRight = () =>{
-        return <View style={gstyles.r_start_bottom}>
-            <Text style={[gstyles.xs_gray,{paddingBottom: 5,paddingRight:5}]}>正确率:</Text>
-            <Text style={[{fontSize:30,color:gstyles.emColor,marginRight:10,}]}>80%</Text>
+    _renderRight = (item) =>{
+        const hasScore = (item.score !== -1)
+        const textStyle = hasScore?{fontSize:30,color:gstyles.emColor,marginRight:10,}:gstyles.lg_gray
+        return <View style={[{height:'100%'},hasScore?gstyles.r_start_bottom:gstyles.r_start]}>
+            {hasScore &&
+                <Text style={[gstyles.xs_gray,{paddingBottom: 5,paddingRight:5}]}>正确率:</Text>
+            }
+            <Text style={textStyle}>{hasScore?item.score:'未评分'}</Text>
         </View>
     }
 
@@ -45,12 +49,14 @@ export default class ArticleManagePage extends Component {
 
        let serial = 0
        if(index < 10){
-           serial = '00'+index
+           serial = '00'+(index+1)
        }else if(index < 100){
-           serial = '0'+index
+           serial = '0'+(index+1)
        }else{
-           serial = ''+index
+           serial = ''+(index+1)
        }
+
+       const hasScore = (item.score !== -1)
        return (
            <TouchableOpacity
                activeOpacity={0.8}
@@ -61,8 +67,8 @@ export default class ArticleManagePage extends Component {
                    <View style={[{flex:1},gstyles.c_center]}>
                        <Text style={gstyles.serialText}>{serial}</Text>
                    </View>
-                   <View style={[{flex:6, padding:10, borderColor: '#EFEFEF',
-                       borderBottomWidth: StyleSheet.hairlineWidth,}, gstyles.r_between_bottom]}>
+                   <View style={[{flex:6, padding:10, borderColor: '#DFDFDF',
+                       borderBottomWidth: StyleSheet.hairlineWidth,}, hasScore?gstyles.r_between_bottom:gstyles.r_between]}>
                        <View stye={styles.nameView}>
                            <Text style={[gstyles.md_black,{fontWeight:'500'}]}>{item.name}</Text>
                            <View style={styles.noteView}>
@@ -70,7 +76,7 @@ export default class ArticleManagePage extends Component {
                            </View>
                        </View>
                        {
-                           this._renderRight()
+                           this._renderRight(item)
                        }
                    </View>
                </View>

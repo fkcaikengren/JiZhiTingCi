@@ -115,28 +115,24 @@ export default class ArticleDao {
 
     /**
      *  根据id批量获取文章
-     * @param ids 可以是number数组,也可以是','分割的字符串
+     * @param userArticles 用户的文章数组
      * @returns {Array}
      */
-    getArticles = (ids)=>{
-        console.log('---获取articles by ids------ids如下：')
-        console.log(ids)
+    getArticles = (userArticles)=>{
+        console.log('---获取articles by userArticles------如下：')
+        console.log(userArticles)
         let arr = []
-        if(ids){
+        if(userArticles){
             try{
-                if(typeof ids === 'string'){
-                    ids = ids.split(',')
-                    ids = ids.map((item,i)=>parseInt(item))
-                }
-                const len = ids.length
+                const len = userArticles.length
                 if(len && len>0){
                     //拼接
                     let str = ''
-                    for(let i in ids){
+                    for(let i in userArticles){
                         if(i==(len-1)){
-                            str += 'id='+ids[i];
+                            str += 'id='+userArticles[i].id;
                         }else{
-                            str += 'id='+ids[i]+' OR ';
+                            str += 'id='+userArticles[i].id+' OR ';
                         }
                     }
                     let articles = this.realm.objects('Article').filtered(str); //数组
@@ -144,6 +140,15 @@ export default class ArticleDao {
                     arr = _.sortedUniqBy(articles, function(art) {
                         return art.id;
                     });
+                    //赋值score
+                    for(let a of arr){
+                        for(let ua of userArticles){
+                            if(a.id === ua.id){
+                                a.score = ua.score
+                                break
+                            }
+                        }
+                    }
                     console.log(arr)
                 }
     

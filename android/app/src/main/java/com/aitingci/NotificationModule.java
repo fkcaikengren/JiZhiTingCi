@@ -105,7 +105,7 @@ public class NotificationModule extends ReactContextBaseJavaModule {
         smallView.setOnClickPendingIntent(R.id.small_closeBtn, pIntentCancel);
         //3.创建一个Notification
         notificationBuilder = new NotificationCompat.Builder(this.reactContext, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.h_icon)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContent(smallView)
                 .setCustomBigContentView(bigView)
                 .setContentIntent(mainPendingIntent)

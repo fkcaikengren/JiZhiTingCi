@@ -8,15 +8,16 @@ import {connect} from 'react-redux';
 import BackgroundTimer from 'react-native-background-timer';
 
 import VocaGroupDao from './service/VocaGroupDao'
-import {playSound} from '../../common/AudioFetch'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 import VocaUtil from './common/vocaUtil'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import * as Constant from './common/constant'
+import * as CConstant from '../../common/constant'
 
 import styles from './GroupVocaStyle'
 import gstyles from '../../style'
+import AudioService from "../../common/AudioService";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -35,6 +36,7 @@ class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
         this.vgDao = VocaGroupDao.getInstance();
+        this.audioService = AudioService.getInstance()
 
         this.state = {
             onEdit:false,
@@ -45,9 +47,8 @@ class GroupVocaPage extends Component {
             sectionIndex:[], 
             stickyHeaderIndices:[]
         }
-        console.disableYellowBox=true
-
         console.log(this.props.navigation.state.params.refreshGroup)
+        console.disableYellowBox=true
     }
 
     componentDidMount(){
@@ -193,7 +194,7 @@ class GroupVocaPage extends Component {
             this.toastRef.show('当前选择不足5个，不可以播放哦')
         }else{
             const virtualTask = VocaUtil.genVirtualTask(words)
-            console.log(virtualTask)
+            // console.log(virtualTask)
 
             //暂停
             const {autoPlayTimer, } = this.props.vocaPlay
@@ -205,7 +206,7 @@ class GroupVocaPage extends Component {
             this.props.navigation.navigate('VocaPlay',{
                 task:virtualTask, 
                 mode:Constant.NORMAL_PLAY,
-                normalType: Constant.BY_VIRTUAL_TASK
+                normalType: Constant.BY_VIRTUAL_TASK,
             });
         }
     }
@@ -364,7 +365,10 @@ class GroupVocaPage extends Component {
                                     <Text style={{fontSize:12, color:'#AAA', fontWeight:'300', marginLeft:10}}>{`美 ${item.amPhonetic}`}</Text>
                             </View>
                             <AliIcon name='shengyin' size={24}  color='#666' onPress={()=>{
-                                playSound(item.amPronUrl)
+                                this.audioService.playSound({
+                                    pDir : CConstant.VOCABULARY_DIR,
+                                    fPath : item.amPronUrl
+                                })
                             }} />
                         </View>
                         <View style={[gstyles.r_start,{width:'100%'}]}>

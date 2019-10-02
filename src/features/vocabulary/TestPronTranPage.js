@@ -7,8 +7,9 @@ import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
 import TestPage from "./component/TestPage";
 import * as Constant from './common/constant'
-import AudioFetch from '../../common/AudioFetch'
+import AudioService from '../../common/AudioService'
 import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as CConstant from "../../common/constant";
 
 const styles = StyleSheet.create({
     
@@ -68,13 +69,19 @@ class TestPronTranPage extends Component {
                 <AliIcon name='shengyin' size={60} color='#F29F3F' 
                 style={{paddingTop:3}}
                 onPress={()=>{
-                    AudioFetch.getInstance().playSound(amPronUrl,this._startPlay,this._finishPlay,this._failPlay)
+                    AudioService.getInstance().playSound({
+                        pDir : CConstant.VOCABULARY_DIR,
+                        fPath : amPronUrl
+                    },this._startPlay,this._finishPlay,this._failPlay)
                 }}/>
             }
            
             {this.state.isPlaying &&
                 <TouchableWithoutFeedback onPress={()=>{
-                    AudioFetch.getInstance().playSound(amPronUrl)
+                    AudioService.getInstance().playSound({
+                        pDir : CConstant.VOCABULARY_DIR,
+                        fPath : amPronUrl
+                    })
                }}>
                    <Image source={require('../../image/audio.gif')} style={styles.img}/>
                </TouchableWithoutFeedback>

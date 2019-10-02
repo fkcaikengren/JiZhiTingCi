@@ -73,7 +73,7 @@ class HomePage extends Component {
         console.log('--------返回时，是否刷新了--------------')
         if(this.props.home.shouldUpload === true){
             const storedTasks = VocaUtil.filterRawTasks(this.props.home.tasks)
-            console.log(storedTasks)
+            // console.log(storedTasks)
             const notSyncTasks = storedTasks.filter((task,index)=>{
                 if(task.isSync){
                     return false
@@ -83,7 +83,7 @@ class HomePage extends Component {
             })
             if(notSyncTasks.length > 0){
                 console.log('---------- start upload ---------')
-                console.log(notSyncTasks)
+                // console.log(notSyncTasks)
                 this.props.uploadTasks(notSyncTasks);
             }
         }

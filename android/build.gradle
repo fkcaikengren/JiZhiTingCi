@@ -3,10 +3,11 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 16
+        minSdkVersion = 19
         compileSdkVersion = 28
         targetSdkVersion = 28
         supportLibVersion = "28.0.0"
+        googlePlayServicesVersion = '16.+'
     }
     repositories {
         google()
@@ -34,6 +35,10 @@ allprojects {
         }
 
         maven {
+            url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
+        }
+
+        maven {
             // stetho-realm的地址源
             url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
         }     
@@ -42,6 +47,7 @@ allprojects {
 
         //友盟的仓库
         maven { url 'https://dl.bintray.com/umsdk/release' }
+
 
     }
 }

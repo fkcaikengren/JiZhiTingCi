@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { StyleSheet,Text, View, Image, Dimensions, TouchableWithoutFeedback} from 'react-native'
 import Swiper from 'react-native-swiper'
 import {PropTypes} from 'prop-types';
-import AudioFetch from '../../../common/AudioFetch'
+import AudioService from '../../../common/AudioService'
+import * as CConstant from "../../../common/constant";
 
 const { width } = Dimensions.get('window')
 const Location = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
@@ -58,7 +59,7 @@ export default class ExampleCarousel extends Component {
     this.state = {
       loadQueue: [0, 0, 0]
     }
-    this.audioFetch = AudioFetch.getInstance()
+    this.audioService = AudioService.getInstance()
     this.curIndex = 0
     this.shouldPlay = true
   }
@@ -117,16 +118,22 @@ export default class ExampleCarousel extends Component {
           if(!this.shouldPlay){
             this.shouldPlay = true
           }else{
-            this.audioFetch.playSound(this.props.examples[i].pron_url)
+            this.audioService.playSound({
+                pDir : CConstant.VOCABULARY_DIR,
+                fPath : this.props.examples[i].pron_url
+            })
           }
-          
         }}
         loadMinimal loadMinimalSize={1} >
             {
                 this.props.examples.map((item, i)=>{
                     return <View style={styles.slide}>
                         <TouchableWithoutFeedback onPress={()=>{
-                          this.audioFetch.playSound(item.pron_url)
+                          this.audioService.playSound({
+                              pDir : CConstant.VOCABULARY_DIR,
+                              fPath : item.pron_url
+                          })
+
                         }}>
                           <Image onLoad={()=>{this._loadHandle(i)}} style={styles.image} source={{uri: Location+item.pic_url}} />
                         </TouchableWithoutFeedback>

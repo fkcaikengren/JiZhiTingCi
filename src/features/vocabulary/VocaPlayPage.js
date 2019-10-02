@@ -24,7 +24,7 @@ import VocaUtil from './common/vocaUtil'
 import gstyles from '../../style'
 import VocaTaskDao from './service/VocaTaskDao';
 import VocaDao from './service/VocaDao';
-import AudioFetch from '../../common/AudioFetch'
+import AudioService from '../../common/AudioService'
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import ShareUtil from '../../modules/ShareUtil'
@@ -47,7 +47,7 @@ class VocaPlayPage extends React.Component {
 
         this.taskDao = VocaTaskDao.getInstance()
         this.vocaDao = VocaDao.getInstance()
-        this.audioFetch = AudioFetch.getInstance()
+        this.audioService = AudioService.getInstance()
         
         //当前模式
         this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
@@ -74,6 +74,7 @@ class VocaPlayPage extends React.Component {
             interval:2.0,
             showWord:true,
             showTran:true,
+
         }:{}
         this.state = {
             //学习模式特有状态
@@ -138,7 +139,7 @@ class VocaPlayPage extends React.Component {
             //改变状态
             this.changeState({task,showWordInfos, curIndex:task.curIndex})
             console.log('---chagne state------')
-            console.log(this.vocaPlayService.stateRef)
+            // console.log(this.vocaPlayService.stateRef)
 
             // 1s后自动播放
             const timeoutId = BackgroundTimer.setTimeout(()=>{
@@ -151,7 +152,7 @@ class VocaPlayPage extends React.Component {
                     const showWordInfos = VocaUtil.getShowWordInfos(task.words)
                     this.props.loadTask(task, showWordInfos)
                     console.log('---chagne state------')
-                    console.log(this.vocaPlayService.stateRef)
+                    // console.log(this.vocaPlayService.stateRef)
                     NotificationManage.play((e)=>{
                         console.log(e)
                     },()=>null);
@@ -652,75 +653,72 @@ class VocaPlayPage extends React.Component {
         const imgSource = (bgPath && bgPath!=='')?{ uri : Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath }:
         require('../../image/7.jpg')
         return(
-           <TouchableWithoutFeedback onPress={()=>{
-                this.props.showBlur(!this.props.vocaPlay.showBlur)
-           }}>
-               <View style={{flex: 1, }}>
-                   <Image style={[styles.bgImage]}
-                          ref={img => {this._backgroundImage = img}}
-                          source={imgSource}
-                          resizeMode={'cover'}
-                          onLoadEnd={()=>{this.setState({ viewRef: findNodeHandle(this._backgroundImage) })}}/>
-                   {this.state.viewRef && this.props.vocaPlay.showBlur &&
-                   <BlurView
-                       style={styles.absolute}
-                       viewRef={this.state.viewRef}
-                       blurType="light"
-                       blurAmount={32} //最大模糊
-                       blurRadius={24} //最大
-                       overlayColor={'#80808066'}   // set a overlay
-                   />
-                   }
-                   <Header
-                       statusBarProps={{ barStyle: 'light-content' }}
-                       barStyle="light-content" // or directly
-                       leftComponent={this.isStudyMode?null:
-                           <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
-                               this.props.navigation.goBack();
-                           }}/>  }
-                       centerComponent={{ text:task.taskOrder?name:'未选择', style: gstyles.lg_white_bold }}
-                       rightComponent={this.isStudyMode?
-                           <Text style={gstyles.md_black}>{`${this.finishedTimes+1}/${this.totalTimes}`}</Text>:
-                           <AliIcon name='fenxiang' size={26} color='#FFF' onPress={()=>{
-                               const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
-                               ShareUtil.shareboard('我在爱听词听单词', imgUrl, 'http://www.baidu.com', '爱听词播放', [0, 1, 2, 3, 4, 5, 6], (code, message) => {
-                                   console.log("result:" + code + message);
-                               });
-                           }}/> }
-                       containerStyle={{
-                           backgroundColor: '#FCFCFC00',
-                           borderBottomColor: '#FCFCFC00',
-                       }}
-                   />
+           <View style={{flex: 1, }}>
+               <Image style={[styles.bgImage]}
+                      ref={img => {this._backgroundImage = img}}
+                      source={imgSource}
+                      resizeMode={'cover'}
+                      onLoadEnd={()=>{this.setState({ viewRef: findNodeHandle(this._backgroundImage) })}}/>
+               {this.state.viewRef && this.props.vocaPlay.showBlur &&
+               <BlurView
+                   style={styles.absolute}
+                   viewRef={this.state.viewRef}
+                   blurType="light"
+                   blurAmount={32} //最大模糊
+                   blurRadius={24} //最大
+                   overlayColor={'#80808066'}   // set a overlay
+               />
+               }
+               <Header
+                   statusBarProps={{ barStyle: 'light-content' }}
+                   barStyle="light-content" // or directly
+                   leftComponent={this.isStudyMode?null:
+                       <AliIcon name='fanhui' size={26} color='#FFF' onPress={()=>{
+                           this.props.navigation.goBack();
+                       }}/>  }
+                   centerComponent={{ text:task.taskOrder?name:'未选择', style: gstyles.lg_white_bold }}
+                   rightComponent={this.isStudyMode?
+                       <Text style={gstyles.md_black}>{`${this.finishedTimes+1}/${this.totalTimes}`}</Text>:
+                       <AliIcon name='fenxiang' size={26} color='#FFF' onPress={()=>{
+                           const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
+                           ShareUtil.shareboard('我在爱听词听单词', imgUrl, 'http://www.baidu.com', '爱听词播放', [0, 1, 2, 3, 4, 5, 6], (code, message) => {
+                               console.log("result:" + code + message);
+                           });
+                       }}/> }
+                   containerStyle={{
+                       backgroundColor: '#FCFCFC00',
+                       borderBottomColor: '#FCFCFC00',
+                   }}
+               />
 
-                   {/* 内容列表区 */}
+               {/* 内容列表区 */}
+               <TouchableWithoutFeedback onPress={()=>{
+                   this.props.showBlur(!this.props.vocaPlay.showBlur)
+               }}>
                    <View style={ [styles.content, {height:contentHeight}]}>
-                       {
-                           this._renderList()
-                       }
+                       { this._renderList() }
                    </View>
-                   <Toast
-                       ref="toastRef"
-                       position='top'
-                       positionValue={120}
-                       fadeInDuration={750}
-                       fadeOutDuration={1000}
-                       opacity={0.8}
-                   />
-                   {/* 底部播放控制区 */}
-                   {
-                       this._renderController()
-                   }
-                   {
-                       this._createTaskListModal()
-                   }
-                   {
-                       this._createVocaModal()
-                   }
+               </TouchableWithoutFeedback>
+               <Toast
+                   ref="toastRef"
+                   position='top'
+                   positionValue={120}
+                   fadeInDuration={750}
+                   fadeOutDuration={1000}
+                   opacity={0.8}
+               />
+               {/* 底部播放控制区 */}
+               {
+                   this._renderController()
+               }
+               {
+                   this._createTaskListModal()
+               }
+               {
+                   this._createVocaModal()
+               }
 
-
-               </View>
-           </TouchableWithoutFeedback>
+           </View>
         );
     }
 }
@@ -740,12 +738,15 @@ const mapDispatchToProps = {
     changeInterval : vocaPlayAction.changeInterval,
     passWord : vocaPlayAction.passWord,
     changeNormalType : vocaPlayAction.changeNormalType,
+    setInPlan : vocaPlayAction.setInPlan,
     showBlur : vocaPlayAction.showBlur,
+    changeBg : vocaPlayAction.changeBg,
 
     loadTask : vocaPlayAction.loadTask,
     loadTheme : vocaPlayAction.loadThemes,
     changeTheme : vocaPlayAction.changeTheme,
     updateTask: homeAction.updateTask,
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

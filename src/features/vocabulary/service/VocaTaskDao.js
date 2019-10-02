@@ -109,13 +109,13 @@ export default class VocaTaskDao {
             this.realm.write(()=>{
 
                 //-------------
-                let i = 1
+                // let i = 1
                 for(let task of tasks){
-                    if(i === 1){
-                        task.vocaTaskDate = _util.getDayTime(0)
-                        task.progress = Constant.IN_LEARN_PLAY
-                    }
-                    i++
+                    // if(i === 1){
+                    //     task.vocaTaskDate = _util.getDayTime(0)
+                    //     task.progress = Constant.IN_LEARN_PLAY
+                    // }
+                    // i++
                     //--------
                     task.wordCount = wordCount
                     task.articles = JSON.stringify(task.articles)
@@ -239,14 +239,14 @@ export default class VocaTaskDao {
      */
     getTaskByOrder = (taskOrder)=>{
         let vocaTask = this.realm.objects('VocaTask').filtered('taskOrder = "'+taskOrder+'"')[0]
-        console.log(vocaTask)
+        // console.log(vocaTask)
         return vocaTask;
     }
 
     /** 根据错词频数查询单词 */
     getWordsEqWrongNum = (num)=>{
         let words = this.realm.objects('TaskWord').filtered('wrongNum = "'+num+'"')
-        console.log(words)
+        // console.log(words)
         return words;
     }
     /** 查询错误频数大于num 的所有单词*/

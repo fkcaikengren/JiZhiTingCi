@@ -80,10 +80,15 @@ const gstyles = StyleSheet.create({
         justifyContent:'flex-end',
         alignItems:'center',
     },
+
+
+
+
     haireBottom:{
         borderColor: '#F4F4F4',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
+
     //Modal
     modal: {
         width:width,
@@ -126,6 +131,29 @@ const gstyles = StyleSheet.create({
         borderColor: '#F4F4F4',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
+
+    scrollView:{
+        width:'100%' ,
+        backgroundColor:'#F9F9F9'
+    },
+
+    scrollViewContent:{
+        backgroundColor:'#F9F9F9',
+    },
+
+    loadingView:{
+        flex:1,
+        height:height,
+        width:width,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        position:'absolute',
+        bottom:0,
+        backgroundColor:'#FDFDFD'
+    },
+
+
     //灰色
     xs_lightGray:{
         color: '#AAA',
@@ -173,23 +201,23 @@ const gstyles = StyleSheet.create({
 
     //浅黑色
     xs_lightBlack:{
-        color: '#303030',
+        color: '#505050',
         fontSize: 12
     },
     sm_lightBlack:{
-        color: '#303030',
+        color: '#505050',
         fontSize: 14
     },
     md_lightBlack:{
-        color: '#303030',
+        color: '#505050',
         fontSize: 16
     },
     lg_lightBlack:{
-        color: '#303030',
+        color: '#505050',
         fontSize: 18
     },
     xl_lightBlack:{
-        color: '#303030',
+        color: '#505050',
         fontSize: 20
     },
 
