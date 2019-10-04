@@ -107,17 +107,11 @@ export default class VocaTaskDao {
     saveVocaTasks = (tasks, wordCount)=>{
         try{
             this.realm.write(()=>{
-
-                //-------------
-                // let i = 1
                 for(let task of tasks){
-                    // if(i === 1){
-                    //     task.vocaTaskDate = _util.getDayTime(0)
-                    //     task.progress = Constant.IN_LEARN_PLAY
-                    // }
-                    // i++
-                    //--------
                     task.wordCount = wordCount
+                    for(let art of task.articles){
+                        art.taskOrder = task.taskOrder
+                    }
                     task.articles = JSON.stringify(task.articles)
                     console.log(task.taskOrder)
                     this.realm.create('VocaTask', task);
@@ -174,6 +168,26 @@ export default class VocaTaskDao {
             })
         }catch (e) {
             console.log('VocaTaskDao : 修改TaskWord失败')
+            console.log(e)
+        }
+    }
+
+    modifyArticle = (userArticle)=>{
+        try{
+            this.realm.write(()=>{
+                const vocaTasks = this.realm.objects('VocaTask').filtered( 'taskOrder='+userArticle.taskOrder )
+                if(vocaTasks[0]){
+                    const articles = JSON.parse(vocaTasks[0].articles)
+                    for(let art of articles){
+                        if(art.id === userArticle.id){  //同一篇文章
+                            art.score = userArticle.score
+                        }
+                    }
+                    vocaTasks[0].articles = JSON.stringify(articles)
+                }
+            })
+        }catch (e) {
+            console.log('--VocaTaskDao modifyArticle修改失败--')
             console.log(e)
         }
     }

@@ -145,6 +145,7 @@ export default class ArticleDao {
                         for(let ua of userArticles){
                             if(a.id === ua.id){
                                 a.score = ua.score
+                                a.taskOrder = ua.taskOrder
                                 break
                             }
                         }

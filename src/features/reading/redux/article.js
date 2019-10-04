@@ -7,6 +7,7 @@ import {BgThemes} from '../common/readConfig'
 
 const defaultState ={
 
+
     //主题数组
     bgThemes:BgThemes,
     //当前主题下标

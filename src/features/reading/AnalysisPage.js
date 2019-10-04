@@ -14,12 +14,12 @@ import styles from './AnalysisStyle'
 import WebUtil from '../../common/webUtil'
 import ReadUtil from './common/readUtil';
 import _util from '../../common/util'
+import VocaTaskDao from "../vocabulary/service/VocaTaskDao";
 
 class AnalysisPage extends React.Component {
   
     constructor(props){
         super(props)
-        this.fileService = new FileService()
     }
 
     
@@ -83,16 +83,25 @@ class AnalysisPage extends React.Component {
             case 'initStart':
                 console.log('----initStart-----')
                 this._sendInitMessage()
-            break;
+                break;
             case 'initFinish':
-                    console.log('----initFinish-----')
+                console.log('----initFinish-----')
                 this.props.changeWebLoading(false)
-            break;
+                break;
+            case 'scoreFinish':
+                console.log('----scoreFinish-----')
+                const { id, taskOrder} = this.props.navigation.getParam('articleInfo')
+                const userArticle = {
+                    id,
+                    taskOrder,
+                    score: data.payload.score
+                }
+                VocaTaskDao.getInstance().modifyArticle(userArticle)
+                break;
             case 'exit':
                 console.log('退出')
             case 'error':
-
-            break;
+                break;
         }
     }
 
@@ -134,14 +143,14 @@ class AnalysisPage extends React.Component {
                         <TouchableWithoutFeedback onPress={()=>{
                             _util.goPageWithoutStack(this.props.navigation,'Home',{})
                         }}>
-                            <Text style={styles.barText}>退出</Text>
+                            <Text style={[styles.barText,gstyles.md_black]}>退出</Text>
                         </TouchableWithoutFeedback>
                         <View style={styles.seperator}></View>
                         <TouchableWithoutFeedback onPress={()=>{
                             this.props.changeUserAnswerMap(new Map())
                             this.props.navigation.goBack()
                         }}>
-                            <Text style={styles.barText}>重做</Text>
+                            <Text style={[styles.barText,gstyles.md_black]}>重做</Text>
                         </TouchableWithoutFeedback>
                     </View>
                 }

@@ -35,6 +35,7 @@ export default class ArticleManagePage extends Component {
     }
 
     _renderRight = (item) =>{
+        console.log(item.score)
         const hasScore = (item.score !== -1)
         const textStyle = hasScore?{fontSize:30,color:gstyles.emColor,marginRight:10,}:gstyles.lg_gray
         return <View style={[{height:'100%'},hasScore?gstyles.r_start_bottom:gstyles.r_start]}>

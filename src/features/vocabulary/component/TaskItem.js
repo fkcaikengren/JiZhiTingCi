@@ -30,61 +30,56 @@ export default class TaskItem extends Component {
         //提示先完成新学任务
         this.props.toastRef.show('需要您先完成新学任务哦')
       }else{
-        if(this.isVocaTask){
-          //根据进度进行不同的跳转
-          let {index, item } = this.props
-          //如果是1复任务 且未点击
-          if(item.status === Constant.STATUS_1 ){
-            let task = null
-            for(let t of this.props.home.tasks){
-              if(t.taskOrder === item.taskOrder && t.status === Constant.STATUS_0){
-                task = t
-                break
-              }
-            }
-            if(task && item.listenTimes < task.listenTimes){
-              item = {...item, listenTimes:task.listenTimes, testTimes:task.testTimes}
-              this.props.updateTask(item)
+        //根据进度进行不同的跳转
+        let {index, item } = this.props
+        //如果是1复任务 且未点击
+        if(item.status === Constant.STATUS_1 ){
+          let task = null
+          for(let t of this.props.home.tasks){
+            if(t.taskOrder === item.taskOrder && t.status === Constant.STATUS_0){
+              task = t
+              break
             }
           }
-          switch(item.progress){
-            case Constant.IN_LEARN_PLAY:
-              this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY, nextRouteName:'LearnCard'})
-            break;
-            case Constant.IN_LEARN_CARD:
-              this.props.navigation.navigate('LearnCard',{task:item,
-                showAll:false, 
-                playWord:true,      //自动播放单词
-                playSentence:true,  //自动播放例句
-                nextRouteName:'TestVocaTran'})
-            break;
-            case Constant.IN_LEARN_TEST_1:
-              this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'TestSenVoca'})
-            break;
-            case Constant.IN_LEARN_RETEST_1:
-              this.props.navigation.navigate('TestVocaTran',{task:item,  isRetest:true, nextRouteName:'TestSenVoca'})
-            break;
-            case Constant.IN_LEARN_TEST_2:
-              this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:false, nextRouteName:'Home'})
-            break;
-            case Constant.IN_LEARN_RETEST_2:
-              this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:true, nextRouteName:'Home'})
-            break;
-            //复习
-            case Constant.IN_REVIEW_PLAY:
-              this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY,  nextRouteName:'TestVocaTran'})
-            break;
-            case Constant.IN_REVIEW_TEST:
-              this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'Home'})
-            break;
-            case Constant.IN_REVIEW_RETEST:
-              this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:true, nextRouteName:'Home'})
-            break;
-            
+          if(task && item.listenTimes < task.listenTimes){
+            item = {...item, listenTimes:task.listenTimes, testTimes:task.testTimes}
+            this.props.updateTask(item)
           }
-        }else{
-          //进入阅读
-          this.props.navigation.navigate('TestVocaTran')
+        }
+        switch(item.progress){
+          case Constant.IN_LEARN_PLAY:
+            this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.LEARN_PLAY, nextRouteName:'LearnCard'})
+          break;
+          case Constant.IN_LEARN_CARD:
+            this.props.navigation.navigate('LearnCard',{task:item,
+              showAll:false,
+              playWord:true,      //自动播放单词
+              playSentence:true,  //自动播放例句
+              nextRouteName:'TestVocaTran'})
+          break;
+          case Constant.IN_LEARN_TEST_1:
+            this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'TestSenVoca'})
+          break;
+          case Constant.IN_LEARN_RETEST_1:
+            this.props.navigation.navigate('TestVocaTran',{task:item,  isRetest:true, nextRouteName:'TestSenVoca'})
+          break;
+          case Constant.IN_LEARN_TEST_2:
+            this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:false, nextRouteName:'Home'})
+          break;
+          case Constant.IN_LEARN_RETEST_2:
+            this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:true, nextRouteName:'Home'})
+          break;
+          //复习
+          case Constant.IN_REVIEW_PLAY:
+            this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY,  nextRouteName:'TestVocaTran'})
+          break;
+          case Constant.IN_REVIEW_TEST:
+            this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'Home'})
+          break;
+          case Constant.IN_REVIEW_RETEST:
+            this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:true, nextRouteName:'Home'})
+          break;
+
         }
       }
       

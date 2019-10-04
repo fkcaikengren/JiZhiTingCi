@@ -1,4 +1,6 @@
 
+
+
 export default class ReadUtil{
 
     static strMapToObj = (strMap)=> {
@@ -17,5 +19,10 @@ export default class ReadUtil{
       return {}
     }
 
+
+    //修改得分
+    static updateScore = (id, score)=>{
+
+    }
 
 }

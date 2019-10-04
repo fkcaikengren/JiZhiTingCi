@@ -117,19 +117,21 @@
                 border-bottom:1px solid #555;
             }
             .answerNum{
-                width: 1rem;
-                height: 1rem;
-                padding: 0.3rem;
-                font-size: 0.7rem;
+                width: 0.8rem;
+                height: 0.8rem;
+                padding: 0.2rem;
+                font-size: 0.6rem;
                 border-radius: 2rem;
                 background-color: #F29F3F;
                 color:#FFF;
-                margin-right: 0.4rem;
+                margin-right: 0.3rem;
+                vertical-align: center;
             }
             .answerWrapper{
                 width:50%;
-                padding-bottom: 10px;
-                padding-left: 5px;
+                padding-bottom: 0.8rem;
+                padding-left: 0.2rem;
+                vertical-align: center;
             }
             
 
@@ -177,12 +179,10 @@
                 //退出页面
                 window.ReactNativeWebView.postMessage(JSON.stringify({command:'exit', payload:null }));
             }
-
         })
 
-
-
-
+//
+//
 //         var analysisText = `##【解析】
 // ##这篇文章选自Time杂志，讲述的是美国采取了一系列的食品援助行动为低收入者提供食物，经济萧条让越来越多的人陷入温饱危机，其中甚至包括有工作的人。
 // ##文章思路比较清晰，理解起来并不难。选项中也没有易混淆的干扰项，考生只要把握文章的主线，注意通过词性排除选项，很容易得出答案。
@@ -225,7 +225,7 @@
 //         }
 //         var showRightAnswers = true
 //         var showUserAnswers = true
-//         initPage(analysisText,showRightAnswers, rightAnswers,{hasArticle:true, content:answerArticle}, 
+//         initPage(analysisText,showRightAnswers, rightAnswers,{hasArticle:true, content:answerArticle},
 //             showUserAnswers,
 //             userAnswers , 'pink', '1rem')
         // console.log(document.getElementsByTagName('body'))

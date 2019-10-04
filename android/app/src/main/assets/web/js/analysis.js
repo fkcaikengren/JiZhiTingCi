@@ -24,8 +24,6 @@
     if(!showRightAnswers){
         toggleRightAnswers()
     }
-    
-
 
     //显示用户答案
     if(showUserAnswers){
@@ -41,7 +39,7 @@
             totalCount++
             var wrapperNode = $('<sapn></sapn>').addClass('answerWrapper')
             var numNode = $('<sapn>'+k+'</sapn>').addClass('answerNum')
-            var answerNode = $('<sapn>'+userAnswers[k]+'</sapn>')
+            var answerNode = $('<sapn >'+userAnswers[k]+'</sapn>')
             if(userAnswers[k]){
                 if(userAnswers[k] === RightAnswers[k]){ //正确绿色显示
                     rightCount++
@@ -59,16 +57,16 @@
             wrapperNode.append(numNode).append(answerNode)
             userAnswerNode.append(wrapperNode)
         }
-
-        var acc =  ((rightCount/totalCount).toFixed(3)*100)+'%';
+        var score = Math.round(100*(rightCount/totalCount))
+        var acc = score +'%';
         //统计正确率
         cardBarNode.append($('<span>正确率: '+acc.fontcolor("#01D867")+'</span>'))
-
-        //完成初始化
-        setTimeout(function(){
-            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initFinish', payload:null }));
-        },100)
+        window.ReactNativeWebView.postMessage(JSON.stringify({command:'scoreFinish', payload:{score:score} }));
     }
+     //完成初始化
+     setTimeout(function(){
+         window.ReactNativeWebView.postMessage(JSON.stringify({command:'initFinish', payload:null }));
+     },100)
  }
 
 

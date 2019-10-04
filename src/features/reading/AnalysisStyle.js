@@ -31,14 +31,12 @@ const styles = StyleSheet.create({
     },
     barText:{
         width: '50%',
-        color:'#FFF',
-        fontSize:16,
         textAlign:'center'
     },
     seperator:{
         width:1,
         height:40,
-        backgroundColor:'#FFF'
+        backgroundColor:'#303030'
     },
     showAnswerBtn:{
         backgroundColor:'#FFE957',
