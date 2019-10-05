@@ -8,7 +8,7 @@ import * as Constant from '../common/constant'
 import VocaUtil from '../../vocabulary/common/vocaUtil'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
-import VocaTaskDao from '../service/VocaTaskDao';
+import {DETAIL_READ,MULTI_SELECT_READ ,FOUR_SELECT_READ ,EXTENSIVE_READ} from "../../reading/common/constant";
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -87,6 +87,23 @@ export default class TaskItem extends Component {
 
   _renderRight = ()=>{
     const { item, progressNum } = this.props
+    const hasScore = (item.score !== -1)
+    const textStyle = hasScore?{fontSize:22,color:gstyles.emColor,marginRight:5,}:gstyles.md_gray
+    let type = ''
+    switch (item.type) {
+      case DETAIL_READ:
+        type = '仔细阅读'
+        break
+      case MULTI_SELECT_READ:
+        type = '选词填空'
+        break
+      case FOUR_SELECT_READ:
+        type = '四选一'
+        break
+      case EXTENSIVE_READ:
+        type = '泛读'
+        break
+    }
     if(this.isVocaTask){
       if(progressNum === 100){
         return <View style={styles.playView}>
@@ -100,12 +117,11 @@ export default class TaskItem extends Component {
                 <FontAwesome name="play-circle" size={24} color="#999"/>
                 <Text style={[{marginLeft:12,}, gstyles.md_gray]}>待完成</Text>
             </View>
-        
       }
     }else{
-      return <View style={styles.playView}>
-                <Text style={[{marginLeft:12,}, gstyles.md_gray]}>选做</Text>
-            </View>
+      return <View style={[{height:'100%'},gstyles.r_start]}>
+        <Text style={textStyle}>{hasScore?item.score+'%':type}</Text>
+      </View>
     }
    
   }

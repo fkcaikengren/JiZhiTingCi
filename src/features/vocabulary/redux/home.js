@@ -1,8 +1,8 @@
 
-import {  handleActions } from 'redux-actions';
 import * as ha from './action/homeAction'
 import _util from "../../../common/util";
 import * as Constant from "../common/constant";
+import VocaTaskDao from "../service/VocaTaskDao";
 
 const defaultState ={
     //任务数组
@@ -65,6 +65,8 @@ export const home =  (state=defaultState, action) => {
                     }
                 }
             }
+            console.log('----redudx: after update tasks-----------')
+            console.log(tasks)
             return {...state, tasks, shouldUpload:action.payload.shouldUpload}
         //上传同步任务
         case ha.UPLOAD_TASKS_START :
@@ -81,6 +83,24 @@ export const home =  (state=defaultState, action) => {
         case ha.SET_SHOULD_UPLOAD:
             //获取 需要上传的id,设置其isSync=false, isSyncLocal=false。 为空则不变。
             return { ...state, shouldUpload:action.payload.shouldUpload}
+        case ha.UPDATE_SCORE:
+            const { id,taskOrder, score} = action.payload.userArticle
+            VocaTaskDao.getInstance().modifyArticle(action.payload.userArticle)
+            const newTasks = state.tasks.map((task, i)=>{
+                if(task.taskType === Constant.TASK_ARTICLE_TYPE && task.id === id){
+                    task.score = score
+                }else if(task.taskType === Constant.TASK_VOCA_TYPE && task.taskOrder === taskOrder){
+                    const articles = JSON.parse(task.articles)
+                    for(let art of articles){
+                        if(art.id === id){  //同一篇文章
+                            art.score = score
+                        }
+                    }
+                    task.articles = JSON.stringify(articles)
+                }
+                return task
+            })
+            return {...state, tasks:newTasks}
         default:
             return state
     }

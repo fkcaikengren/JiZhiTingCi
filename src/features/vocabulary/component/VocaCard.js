@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     carousel:{
         backgroundColor:'#FFF',
         borderRadius:5,
-        marginBottom:16
+        marginBottom:60
     },
     root:{
         backgroundColor:'#FFF',

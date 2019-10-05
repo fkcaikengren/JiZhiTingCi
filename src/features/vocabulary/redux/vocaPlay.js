@@ -26,7 +26,7 @@ const defaultState ={
     //是否播放, <=0表示暂停，>0表示播放
     autoPlayTimer:0,
     //时间间隔
-    interval:2.0,
+    interval:1.4,
     //是否显示英文单词
     showWord:true,
     //是否显示中文释义
@@ -103,7 +103,7 @@ export const vocaPlay =  handleActions({
         }
     },
     //改变背景
-    [vpAction.CHANGE_BG] : (state, action) => ({ ...state, bgPath:action.payload.bgPath }),
+    [vpAction.CHANGE_BG] : (state, action) => ({ ...state, bgPath:action.payload.bgPath, showBlur:false}),
     //是否模糊
     [vpAction.SHOW_BLUR] : (state, action) => ({ ...state, showBlur:action.payload.showBlur }),
     //改变主题
@@ -133,4 +133,17 @@ export const vocaPlay =  handleActions({
     },
 
     [vpAction.CHANGE_NORMAL_TYPE]: (state, action) => ({ ...state, normalType:action.payload.normalType }),
-}, defaultState);
+    // 清空任务
+    [vpAction.CLEAR_PLAY]: (state,vpAction)=>{
+        return {
+            ...defaultState,
+            bgPath:state.bgPath,
+            interval:state.interval,
+            showTran:state.showTran,
+            showWord:state.showWord,
+            showBlur:state.showBlur,
+        }
+    }
+
+    }
+, defaultState);

@@ -13,12 +13,16 @@ export const UPLOAD_TASKS_START = 'UPLOAD_TASKS_START'
 export const UPLOAD_TASKS_SUCCEED = 'UPLOAD_TASKS_SUCCEED'
 export const UPLOAD_TASKS_FAIL = 'UPLOAD_TASKS_FAIL'
 
+
 //设置是否上传同步
 export const SET_SHOULD_UPLOAD = 'SET_SHOULD_UPLOAD'
 
+//修改阅读得分
+export const UPDATE_SCORE = 'UPDATE_SCORE'
+
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTasks, updateTask, uploadTasks} = createActions({
+export const {loadTasks, updateTask, uploadTasks, updateScore} = createActions({
     //加载任务
     [LOAD_TASKS]: (storedTasks, taskCount, lastLearnDate)=>{
         return {storedTasks, taskCount, lastLearnDate}
@@ -33,5 +37,8 @@ export const {loadTasks, updateTask, uploadTasks} = createActions({
     [UPLOAD_TASKS]: (storedTasks) =>{
         return {storedTasks}
     },
-    
+
+    [UPDATE_SCORE] : (userArticle)=>{
+        return {userArticle}
+    }
 });

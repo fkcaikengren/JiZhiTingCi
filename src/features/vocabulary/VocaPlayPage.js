@@ -28,6 +28,7 @@ import AudioService from '../../common/AudioService'
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import ShareUtil from '../../modules/ShareUtil'
+import _util from "../../common/util";
 
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -71,7 +72,7 @@ class VocaPlayPage extends React.Component {
             showWordInfos:[],
             curIndex:0,
             autoPlayTimer:0,
-            interval:2.0,
+            interval:1.4,
             showWord:true,
             showTran:true,
 
@@ -490,6 +491,21 @@ class VocaPlayPage extends React.Component {
     _createTaskListModal = () =>{
         // 获取任务列表数据
         const {isTasksModalOpened} = this.state
+        const data = this.taskDao.getLearnedTasks().filter((task,index)=>{
+            if(task.vocaTaskDate === _util.getDayTime(0) && task.status === Constant.STATUS_1){
+                if(task.progress === Constant.IN_REVIEW_FINISH){ //复习
+                    return true
+                }else{
+                    return false
+                }
+            }else{
+                if(task.progress.startsWith('IN_REVIEW')){ //复习
+                    return true
+                }else{
+                    return false
+                }
+            }
+        })
         return <ModalBox style={[styles.tasksModal]}
             isOpen={isTasksModalOpened} 
             onClosed={this._closeTaskListModal}
@@ -504,25 +520,28 @@ class VocaPlayPage extends React.Component {
             }}>
             <View style={[gstyles.c_start, {width:'100%'}]}>
                 <View style={[styles.modalHeader,gstyles.r_center]}>
-                    <Text style={gstyles.lg_black}>四级词汇</Text>
+                    <Text style={gstyles.lg_black}>{this.props.vocaLib.plan.bookName}</Text>
                 </View>
                 <View style={{height:40}}>
                 </View>
-                <FlatList
-                    style={{width:'100%'}}
-                    //数据源
-                    data={this.taskDao.getLearnedTasks().filter((task,index)=>{
-                        if(task.progress === Constant.IN_REVIEW_FINISH){
-                            return true
-                        }else{
-                            return false
-                        }
-                    })}
-                    //渲染列表数据
-                    renderItem={this._renderTaskItem}
-                    keyExtractor={(item, index) => index}
-                    ListFooterComponent={<View style={{width:'100%',height:50,backgroundColor:'#FFF'}}></View>}
-                />
+                {data.length > 0 &&
+                    <FlatList
+                        style={{width:'100%'}}
+                        //数据源
+                        data={data}
+                        //渲染列表数据
+                        renderItem={this._renderTaskItem}
+                        keyExtractor={(item, index) => index}
+                        ListFooterComponent={<View style={[{width:'100%',height:50,},gstyles.r_center]}>
+                        </View>}
+                    />
+                }
+                {data.length <= 0 &&
+                    <View style={[gstyles.c_center,{marginTop:80}]}>
+                        <AliIcon name={'nodata_icon'} size={80} color={gstyles.black} />
+                        <Text style={gstyles.md_black}>暂无列表，先去学习吧</Text>
+                    </View>
+                }
             </View>
         </ModalBox>
     }
@@ -564,14 +583,7 @@ class VocaPlayPage extends React.Component {
                 {this.state.clickIndex!==null && showWordInfos[this.state.clickIndex] &&
                     <VocaCard wordInfo={showWordInfos[this.state.clickIndex]}/>
                 }
-                {/* 底部 */}
-                {/*<CardView */}
-                {/*    cardElevation={5}*/}
-                {/*    cardMaxElevation={5}*/}
-                {/*    cornerRadius={5} */}
-                {/*    style={styles.closeBtn}>*/}
 
-                {/*    </CardView>*/}
                 <View style={styles.closeBtn}
                       onStartShouldSetResponder={e=>true}
                       onResponderGrant={e=>this._closeVocaModal()}
@@ -726,6 +738,7 @@ class VocaPlayPage extends React.Component {
 
 
 const mapStateToProps = state =>({
+    vocaLib : state.vocaLib,
     vocaPlay : state.vocaPlay,
 });
 

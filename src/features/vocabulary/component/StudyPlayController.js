@@ -172,7 +172,7 @@ export default class StudyPlayController extends React.Component {
                             <MenuOption style={gstyles.haireBottom} value={2.0}>
                                 <Text style={popStyle}>2.0s</Text>
                             </MenuOption>
-                            <MenuOption value={1.2}>
+                            <MenuOption value={1.4}>
                                 <Text style={popStyle}>1.0s</Text>
                             </MenuOption>
                             

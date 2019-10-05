@@ -181,9 +181,6 @@ const VocaHomeStackNav = createStackNavigator(
         //文章tab页
         ArticleTab:{
             screen:ArticleTabPage,
-            navigationOptions: ({navigation}) => ({
-                gesturesEnabled: true,
-            }),
         },
 
 

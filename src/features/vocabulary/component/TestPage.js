@@ -385,6 +385,7 @@ export default class TestPage extends Component {
                 }      
                 const task = {...nextState.task, curIndex:0, progress, testTimes:nextState.task.testTimes+1}
                 console.log('-------测试完成退出----拷贝task到home----同时测试次数+1-------')
+                console.log(task)
                 this.props.updateTask(task)
                 //跳转
                 const params = routeName==='Home'?{}:{

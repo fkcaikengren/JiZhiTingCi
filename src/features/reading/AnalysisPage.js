@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet,StatusBar, View, Text, Button, TouchableWithoutFeedback} from 'react-native';
+import { View, Text, TouchableWithoutFeedback} from 'react-native';
 import {Header} from 'react-native-elements'
 import { WebView } from 'react-native-webview';
 import {connect} from 'react-redux';
@@ -7,14 +7,13 @@ import {connect} from 'react-redux';
 import Loader from '../../component/Loader'
 import * as ArticleAction from './redux/action/articleAction'
 import AliIcon from '../../component/AliIcon'
-import FileService from '../../common/FileService'
 import * as Constant from './common/constant'
 import gstyles from '../../style'
 import styles from './AnalysisStyle'
 import WebUtil from '../../common/webUtil'
 import ReadUtil from './common/readUtil';
 import _util from '../../common/util'
-import VocaTaskDao from "../vocabulary/service/VocaTaskDao";
+import * as HomeAction from '../../features/vocabulary/redux/action/homeAction'
 
 class AnalysisPage extends React.Component {
   
@@ -96,7 +95,7 @@ class AnalysisPage extends React.Component {
                     taskOrder,
                     score: data.payload.score
                 }
-                VocaTaskDao.getInstance().modifyArticle(userArticle)
+                this.props.updateScore(userArticle)
                 break;
             case 'exit':
                 console.log('退出')
@@ -219,5 +218,7 @@ const mapDispatchToProps = {
     changeWebLoading: ArticleAction.changeWebLoading,
     changeLoadingFail: ArticleAction.changeLoadingFail,
     changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
+
+    updateScore: HomeAction.updateScore
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);

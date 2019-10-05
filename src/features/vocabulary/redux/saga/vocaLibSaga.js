@@ -37,6 +37,7 @@ export function * postPlan(params){
         artDao.saveArticles(articles)
         //加载今日数据
         const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)
+        yield put({type:'CLEAR_PLAY'})
         yield put({type:'LOAD_TASKS_SUCCEED', payload:{tasks:rawTasks}})
         yield put({type:'CHANGE_VOCA_BOOK_SUCCEED', plan:plan,
             totalDays:tasks.length+Constant.LEFT_PLUS_DAYS,

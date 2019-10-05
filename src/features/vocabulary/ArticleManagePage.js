@@ -10,7 +10,7 @@ import gstyles from '../../style'
 import VocaTaskDao from "./service/VocaTaskDao";
 import ArticleDao from "../reading/service/ArticleDao";
 import VocaUtil from './common/vocaUtil'
-
+import {DETAIL_READ} from "../reading/common/constant";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -35,14 +35,29 @@ export default class ArticleManagePage extends Component {
     }
 
     _renderRight = (item) =>{
-        console.log(item.score)
+        let type = ''
+        switch (item.type) {
+            case DETAIL_READ:
+                type = '仔细阅读'
+                break
+            case MULTI_SELECT_READ:
+                type = '选词填空'
+                break
+            case FOUR_SELECT_READ:
+                type = '四选一'
+                break
+            case EXTENSIVE_READ:
+                type = '泛读'
+                break
+        }
+
         const hasScore = (item.score !== -1)
         const textStyle = hasScore?{fontSize:30,color:gstyles.emColor,marginRight:10,}:gstyles.lg_gray
         return <View style={[{height:'100%'},hasScore?gstyles.r_start_bottom:gstyles.r_start]}>
             {hasScore &&
                 <Text style={[gstyles.xs_gray,{paddingBottom: 5,paddingRight:5}]}>正确率:</Text>
             }
-            <Text style={textStyle}>{hasScore?item.score:'未评分'}</Text>
+            <Text style={textStyle}>{hasScore?item.score+'%':type}</Text>
         </View>
     }
 
