@@ -2,9 +2,7 @@
 import {  handleActions } from 'redux-actions';
 import * as vl from './action/vocaListAction'
 
-
 const defaultState ={
-
     //是否处于编辑状态
     onEdit:false
 }

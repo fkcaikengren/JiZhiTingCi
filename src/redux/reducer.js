@@ -28,6 +28,7 @@ const vocalibConfig = {
 const vocaLibReducer = persistReducer(vocalibConfig, vocaLib)
 
 const reducers =  combineReducers({
+    nav:navReducer,
     home:homeReducer,
     vocaLib:vocaLibReducer,
     ...vocaPlay,

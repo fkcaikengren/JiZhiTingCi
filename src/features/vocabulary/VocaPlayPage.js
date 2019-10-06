@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing,Image,Picker,TouchableWithoutFeedback,
+import {Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing,Image,TouchableWithoutFeedback,
      findNodeHandle } from 'react-native';
 import {Header, Button} from 'react-native-elements'
 import {connect} from 'react-redux';
 import ModalBox from 'react-native-modalbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 import {PropTypes} from 'prop-types'
 import Modal from 'react-native-modalbox';
 import BackgroundTimer from 'react-native-background-timer';
@@ -24,7 +24,6 @@ import VocaUtil from './common/vocaUtil'
 import gstyles from '../../style'
 import VocaTaskDao from './service/VocaTaskDao';
 import VocaDao from './service/VocaDao';
-import AudioService from '../../common/AudioService'
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import ShareUtil from '../../modules/ShareUtil'
@@ -48,7 +47,6 @@ class VocaPlayPage extends React.Component {
 
         this.taskDao = VocaTaskDao.getInstance()
         this.vocaDao = VocaDao.getInstance()
-        this.audioService = AudioService.getInstance()
         
         //当前模式
         this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
@@ -104,7 +102,6 @@ class VocaPlayPage extends React.Component {
     
     componentDidMount(){
 
-
         //修改当前normalType
         let normalType = this.props.navigation.getParam('normalType')
         if(normalType){
@@ -147,8 +144,11 @@ class VocaPlayPage extends React.Component {
                 this.vocaPlayService.autoplay(task.curIndex)
             },1000);
         }else {
-            if(this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK){
+
+            if(this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK || normalType  === Constant.BY_VIRTUAL_TASK){
                 const task = this.props.navigation.getParam('task')
+                console.log('-----------------virtual task---------------------')
+                // console.log(task)
                 if(task){
                     const showWordInfos = VocaUtil.getShowWordInfos(task.words)
                     this.props.loadTask(task, showWordInfos)
@@ -165,15 +165,12 @@ class VocaPlayPage extends React.Component {
             }
            
         }
-
     }
 
     componentDidUpdate(prevProps, prevState) {
         //如果播放状态变化
-        if(this.isStudyMode){
-            if(prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
-                this.vocaPlayService.listRef.closePassBtn()
-            }
+        if(prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
+            this.vocaPlayService.listRef.closePassBtn()
         }
     }
 
@@ -268,8 +265,8 @@ class VocaPlayPage extends React.Component {
         }else{
             this.props.passWord(word)
         }
-        
-        
+        //Pass的单词添加到ModifiedWordSet
+        ModifiedWordSet.add(word)
     }
 
     //退出页面（学习模式下）
@@ -315,7 +312,7 @@ class VocaPlayPage extends React.Component {
             }
             // 拷贝给home
             this.props.updateTask(finalTask)
-            console.log(routeName)
+            console.log('--routeName--: '+ routeName)
             // 抹掉stack，跳转
             VocaUtil.goPageWithoutStack(this.props.navigation,routeName, {
                 task:finalTask,
@@ -527,11 +524,9 @@ class VocaPlayPage extends React.Component {
                 {data.length > 0 &&
                     <FlatList
                         style={{width:'100%'}}
-                        //数据源
                         data={data}
-                        //渲染列表数据
                         renderItem={this._renderTaskItem}
-                        keyExtractor={(item, index) => index}
+                        keyExtractor={(item, index) => index.toString()}
                         ListFooterComponent={<View style={[{width:'100%',height:50,},gstyles.r_center]}>
                         </View>}
                     />
@@ -583,13 +578,11 @@ class VocaPlayPage extends React.Component {
                 {this.state.clickIndex!==null && showWordInfos[this.state.clickIndex] &&
                     <VocaCard wordInfo={showWordInfos[this.state.clickIndex]}/>
                 }
-
-                <View style={styles.closeBtn}
-                      onStartShouldSetResponder={e=>true}
-                      onResponderGrant={e=>this._closeVocaModal()}
-                >
+            <TouchableWithoutFeedback onPress={this._closeVocaModal}>
+                <View style={styles.closeBtn}>
                     <AliIcon name='cha' size={20} color={gstyles.black} />
                 </View>
+            </TouchableWithoutFeedback>
         </Modal>
     }
 
@@ -613,38 +606,37 @@ class VocaPlayPage extends React.Component {
     }
 
     _renderList = ()=>{
-        let {task, showWordInfos} = this.props.vocaPlay
+        let {task, showWordInfos, curIndex, showWord, showTran} = this.props.vocaPlay
         if(this.isStudyMode){
             task = this.state.task
             showWordInfos = this.state.showWordInfos
         }
-        const flatListProps = {
-            ref: comp => {
-                this.vocaPlayService.listRef = comp;
-            },
-            horizontal: false,
-            showsHorizontalScrollIndicator: false,
-            showsVerticalScrollIndicator: false,
-            pagingEnabled: false,
-            extraData: this.isStudyMode?this.state:this.props.vocaPlay,      //促使FlatList刷新  
-            keyExtractor: this._keyExtractor,
-            data:showWordInfos,
-            renderItem: this._renderItem,
-            initialNumToRender: 16,
-            getItemLayout: this._getItemLayout,
 
-        }
-
+        //this.isStudyMode?this.state:{ showWord, showTran},      //促使FlatList刷新
         if(task.taskOrder){
-            return <SwipeableFlatList 
-                {...flatListProps}
+            return <SwipeableFlatList
+                ref={comp => {
+                    this.vocaPlayService.listRef = comp}
+                }
+                horizontal={false}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                pagingEnabled={false}
+                // extraData={{showWord, showTran}}
+                keyExtractor={this._keyExtractor}
+                data={showWordInfos}
+                renderItem={this._renderItem}
+                initialNumToRender={16}
+                getItemLayout={this._getItemLayout}
+
+
                 bounceFirstRowOnMount={false}
                 onOpen={this._onOpen}
                 renderQuickActions={(data)=>!this.disablePass}
                 maxSwipeDistance={40}
             />
         }
-        
+
     }
 
 
@@ -734,8 +726,6 @@ class VocaPlayPage extends React.Component {
         );
     }
 }
-
-
 
 const mapStateToProps = state =>({
     vocaLib : state.vocaLib,

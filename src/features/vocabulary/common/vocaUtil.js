@@ -437,7 +437,7 @@ export default class VocaUtil{
                 myArticles.push(art)
             }
         }
-        console.log(myArticles)
+        // console.log(myArticles)
         return myArticles
     }
 
@@ -474,25 +474,6 @@ export default class VocaUtil{
     }
 
 
-    /**
-     * 同步单词任务到本地
-     * @param storedTasks 可保存的单词任务
-     * @param vts
-     */
-    static syncTasksLocal = (storedTasks)=>{
-        //筛选出需要同步的
-        const notSyncTasks = storedTasks.filter((task,index)=>{
-            if(task.isSyncLocal){
-                return false
-            }else{
-                task.isSyncLocal = true
-                return true
-            }
-        })
-        VocaTaskDao.getInstance().modifyTasks(notSyncTasks)
-
-    }
-
 
     /**
      *  加载今天的全部任务（单词和文章）
@@ -515,6 +496,33 @@ export default class VocaUtil{
             todayTasks.push(art)
         }
         return todayTasks
+    }
+
+    /**
+     *  拷贝得到一份上传的任务数组
+     * @param task
+     * @returns {*}
+     */
+    static genUploadedTask = (task)=>{
+        const uploadedTask = {
+            taskOrder: task.taskOrder,
+            status: task.status,
+            vocaTaskDate: task.vocaTaskDate,
+            progress: task.progress,
+            leftTimes: task.leftTimes,
+            delayDays: task.delayDays,
+            wordCount: task.wordCount,
+            listenTimes: task.listenTimes,
+            testTimes: task.testTimes,
+        }
+        uploadedTask.words = task.words.filter((item,i)=>{
+            if(ModifiedWordSet.has(item.word)){
+                return true
+            }else{
+                return false
+            }
+        })
+        return uploadedTask
     }
 
 }

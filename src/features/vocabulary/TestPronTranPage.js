@@ -111,6 +111,7 @@ const mapStateToProps = state=>({
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
+    uploadTask: homeAction.uploadTask,
     changeLearnedWordCount : VocaLibAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }

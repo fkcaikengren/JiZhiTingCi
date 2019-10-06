@@ -54,7 +54,7 @@ class SwipeableFlatList extends React.Component {
 
   //获取打开的滑块
   getOpenedRowKey = ()=>{
-    return this.state.openRowKey
+      return this.state.openRowKey
   }
 
   _onScroll = (e) => {
@@ -71,7 +71,7 @@ class SwipeableFlatList extends React.Component {
 
   _renderItem = (info)=> {
       const slideoutView = this.props.renderQuickActions(info);
-      const key = this.props.keyExtractor(info.item, info.constant);
+      const key = this.props.keyExtractor(info.item, info.index);
 
       // If renderQuickActions is unspecified or returns falsey, don't allow swipe
       if (!slideoutView) {
@@ -90,7 +90,7 @@ class SwipeableFlatList extends React.Component {
           slideoutView={slideoutView}
           isOpen={key === this.state.openRowKey}
           maxSwipeDistance={this._getMaxSwipeDistance(info)}
-          onOpen={() => { 
+          onOpen={() => {
             this.props.onOpen(key)
             this.setState({
               openRowKey: key,
@@ -132,8 +132,6 @@ class SwipeableFlatList extends React.Component {
       });
     }
   }
-
-
 
 }
 

@@ -1,14 +1,7 @@
 import {take, put, call} from 'redux-saga/effects'
 import VocaUtil from "../../common/vocaUtil";
-import VocaTaskService from "../../service/VocaTaskService";
-import ArticleDao from "../../../reading/service/ArticleDao";
+import VocaTaskDao from "../../service/VocaTaskDao";
 
-/* task 同步的4中状态
- sync: true, synlocal:true;
- sync: false, synlocal:false;
- sync: false, synlocal:true;
- sync: true, synlocal:true;
- */
 
 
 /** 加载今日任务 */
@@ -24,25 +17,55 @@ export function * loadTasks(params){
 }
 
 /**上传单词任务 */
-export function * uploadTasks(storedTasks){
-    yield put({type:'UPLOAD_TASKS_START'})
+export function * uploadTask(storedTask){    //一次只上传一个
+    yield put({type:'UPLOAD_TASK_START'})
+    // 数据更新到本地realm数据库
+    VocaTaskDao.getInstance().modifyTask(storedTask)
+    //修改成需要上传的数据
+    const curUploadedTask = VocaUtil.genUploadedTask(storedTask)
+    console.log('-------本次上传的的数据：-------------')
+    console.log(curUploadedTask)
+
     try{
-        const res = yield Http.post("/vocaTask/sync",storedTasks)  //上传到服务端
+        //1. 取之前没有上传的数据
+        let uploadedTasks = yield Storage.getAllDataForKey('uploadedTasks')
+        //2. 合并本次上传的数据 (遍历移除同taskOrder的数据)
+        uploadedTasks = uploadedTasks.filter((upTask, i)=>{
+            if(upTask.taskOrder === curUploadedTask.taskOrder)
+                return false
+            return true
+        })
+        uploadedTasks.push(curUploadedTask)
+        console.log('-------所有上传的的数据：-------------')
+        console.log(uploadedTasks)
+        //3. 成功则清空， 失败则写入本次上传数据
+        const res = yield Http.post("/vocaTask/sync",uploadedTasks)  //上传到服务端
+        /*  判断是否上传成功 */
         console.log(res)
-        /*res res判断是否上传成功，
-            上传失败：
-            上传成功：sync改为true
-           */
+        if(res.data.code === 200){ //清空
+            ModifiedWordSet.clear()
+            Storage.clearMapForKey('uploadedTasks');
+        }else{ //把要上传的数据保存到本地
+            console.log('---未上传 保存至本地----------------------------------->')
+            Storage.save({
+                key: 'uploadedTasks',
+                id: curUploadedTask.taskOrder,
+                data: curUploadedTask,
+            });
+        }
 
-        // 数据更新到本地realm数据库
-        VocaUtil.syncTasksLocal(storedTasks)
-        yield put({type:'UPLOAD_TASKS_SUCCEED'})
+        yield put({type:'UPLOAD_TASK_SUCCEED'})
     }catch(err){
-        VocaUtil.syncTasksLocal(storedTasks)
-        yield put({type:'UPLOAD_TASKS_FAIL'})
+        console.log('--- 异常导致未上传， 保存至本地----------------------------------->')
+        Storage.save({
+            key: 'uploadedTasks',
+            id: curUploadedTask.taskOrder,
+            data: curUploadedTask,
+        });
+        yield put({type:'UPLOAD_TASK_FAIL'})
     }
-}
 
+}
 
 
 /**watch saga */
@@ -54,11 +77,11 @@ export function * watchLoadTasks(){
         yield call(loadTasks,action.payload)
     }
 }
-export function * watchUploadTasks(){
+export function * watchUploadTask(){
     while (true) {
-        const action  = yield take(['UPLOAD_TASKS'])
+        const action  = yield take(['UPLOAD_TASK'])
         console.log('---action:---')
         // console.log(action)
-        yield call(uploadTasks,action.payload.storedTasks)
+        yield call(uploadTask,action.payload.storedTask)
     }
 }

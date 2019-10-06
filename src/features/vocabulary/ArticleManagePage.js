@@ -12,8 +12,6 @@ import ArticleDao from "../reading/service/ArticleDao";
 import VocaUtil from './common/vocaUtil'
 import {DETAIL_READ} from "../reading/common/constant";
 
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
 
 export default class ArticleManagePage extends Component {
 
@@ -34,6 +32,8 @@ export default class ArticleManagePage extends Component {
         this.setState({articles})
     }
 
+
+
     _renderRight = (item) =>{
         let type = ''
         switch (item.type) {
@@ -52,7 +52,7 @@ export default class ArticleManagePage extends Component {
         }
 
         const hasScore = (item.score !== -1)
-        const textStyle = hasScore?{fontSize:30,color:gstyles.emColor,marginRight:10,}:gstyles.lg_gray
+        const textStyle = hasScore?{fontSize:28,color:gstyles.emColor,marginRight:10,}:[gstyles.lg_gray,{paddingRight: 10}]
         return <View style={[{height:'100%'},hasScore?gstyles.r_start_bottom:gstyles.r_start]}>
             {hasScore &&
                 <Text style={[gstyles.xs_gray,{paddingBottom: 5,paddingRight:5}]}>正确率:</Text>
@@ -61,7 +61,7 @@ export default class ArticleManagePage extends Component {
         </View>
     }
 
-   _renderItem = ({item, index})=>{
+    _renderItem = ({item, index})=>{
 
        let serial = 0
        if(index < 10){
@@ -74,12 +74,10 @@ export default class ArticleManagePage extends Component {
 
        const hasScore = (item.score !== -1)
        return (
-           <TouchableOpacity
-               activeOpacity={0.8}
-               onPress={()=>{
-                   this.props.navigation.navigate('ArticleTab',{articleInfo:item })
-               }}>
-               <View style={[{flex:1,}, gstyles.r_start]}>
+           <TouchableOpacity  activeOpacity={0.8} onPress={()=>{
+               this.props.navigation.navigate('ArticleTab',{articleInfo:item })
+           }}>
+               <View style={[{flex:1}, gstyles.r_start]}>
                    <View style={[{flex:1},gstyles.c_center]}>
                        <Text style={gstyles.serialText}>{serial}</Text>
                    </View>
@@ -96,7 +94,6 @@ export default class ArticleManagePage extends Component {
                        }
                    </View>
                </View>
-
            </TouchableOpacity>
        );
    }
@@ -111,7 +108,7 @@ export default class ArticleManagePage extends Component {
                     barStyle='dark-content'
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
-                            this.props.navigation.goBack();
+                            this.props.navigation.goBack()
                         }} /> }
                     centerComponent={{ text: '阅读真题', style: gstyles.lg_black_bold }}
                     containerStyle={{
@@ -125,7 +122,6 @@ export default class ArticleManagePage extends Component {
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state.articles}
                 />
-
             </View>
         );
     }

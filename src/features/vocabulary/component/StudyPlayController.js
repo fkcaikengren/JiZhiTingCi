@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {Platform, StatusBar, StyleSheet,View, Text, TouchableNativeFeedback, TouchableWithoutFeedback} from 'react-native';
+import {Platform, StatusBar, StyleSheet,View, Text,  TouchableWithoutFeedback} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import {PropTypes} from 'prop-types';
@@ -66,6 +66,7 @@ export default class StudyPlayController extends React.Component {
         
     }
 
+
     render(){
         const { task, autoPlayTimer,showWord, showTran, interval} = this.props.playState
         const { themes, themeId } = this.props.vocaPlay;
@@ -108,17 +109,8 @@ export default class StudyPlayController extends React.Component {
                 </Row>
             
                  {/* 进度条 */}
-                <Row style={{
-                    flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',
-                    marginBottom: 5,
-                }}>
-                    <View style={{
-                        flexDirection:'row',
-                        justifyContent:'center',
-                        alignItems:'center',
-                    }}>
+                <Row style={[{ marginBottom: 5},gstyles.r_center]}>
+                    <View style={gstyles.r_center}>
                         <Text style={{color:'#fff' , marginRight:5}}>{wordCount==0?0:curIndex+1}</Text>
                         <Progress.Bar 
                             progress={wordCount==0?0:progressNum} 
@@ -132,25 +124,17 @@ export default class StudyPlayController extends React.Component {
                 </Row>
              
                 {/*  */}
-                <Row style={{
-                    flexDirection:'row',
-                    justifyContent:'space-around',
-                    alignItems:'center',
+                <Row style={[{
                     paddingHorizontal:30,
                     marginBottom:10,
-                }}>
+                },gstyles.r_around]}>
                     {/* 返回 */}
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={()=>{
                         this.props.updateTask({...task})
                         this.props.navigation.goBack()
                     }}/>
                     {/* 控制播放 */}
-                    <View style={{
-                        width:width*(1/2),
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        alignItems:'center',
-                    }}>
+                    <View style={[{ width:width*(1/2)},gstyles.r_around]}>
                         <TouchableWithoutFeedback  onPress={this._togglePlay}>
                             <View style={[styles.bigRoundBtn,{paddingLeft:autoPlayTimer?0:5}, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name={autoPlayTimer?'zanting1':'play'} size={22} color='#FFF'></AliIcon>

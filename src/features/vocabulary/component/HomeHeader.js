@@ -14,7 +14,6 @@ import gstyles from '../../../style'
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const SCREEN_WIDTH = width; //屏幕宽度
 const HEADER_HEIGHT = 290;  //头部背景高度
 const TITLE_HEIGHT = 55;    //标题栏高度
 export default class HomeHeader extends Component {
@@ -26,9 +25,20 @@ export default class HomeHeader extends Component {
       shift: new Animated.Value(0)
     };
   }
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.home === this.props.home && nextProps.vocaLib === this.props.vocaLib){
+      console.log('--- Header not changed ------')
+      return false
+    }
+    return true
+  }
  
 
   render() {
+    console.log('-----header 重绘-------')
+    console.log(this.props.vocaPlay)
     const translateY = this.state.shift.interpolate({
       inputRange: [-HEADER_HEIGHT, 0, HEADER_HEIGHT / 2, HEADER_HEIGHT],
       outputRange: [-30, 0, 25, 30],

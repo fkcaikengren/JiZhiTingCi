@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {Platform, StatusBar,StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback} from 'react-native';
 import {PropTypes} from 'prop-types';
 import {Grid, Row, Col} from 'react-native-easy-grid'
 
 import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
-// import RootCard from './RootCard'
+
 import VocaDao from '../service/VocaDao'
 import VocaGroupDao from '../service/VocaGroupDao'
 import AudioService from '../../../common/AudioService';
@@ -15,53 +15,6 @@ import * as CConstant from "../../../common/constant";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-
-const styles = StyleSheet.create({
-    contentContainer:{
-        paddingVertical:16,
-        backgroundColor:'#F9F9F9',
-    },
-    grid:{
-        marginHorizontal:10,
-        backgroundColor:'#F9F9F9',
-    },
-    basic:{
-        backgroundColor:'#FFF',
-        padding:10,
-        borderRadius:5,
-        marginBottom:16
-    },
-    carousel:{
-        backgroundColor:'#FFF',
-        borderRadius:5,
-        marginBottom:60
-    },
-    root:{
-        backgroundColor:'#FFF',
-        borderRadius:5,
-        marginBottom:16
-    },
-
-
-    grayFont:{
-        color:'#505050',
-        fontSize:16,
-    },
-    marginTop:{
-        marginTop:10,
-    },
-   clickView:{
-        width:'100%',
-        height:height/2,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-   },
-   clickText:{
-       fontSize:16,
-       color:'#555',
-   }
-})
 
 export default class VocaCard extends Component{
 
@@ -152,9 +105,9 @@ export default class VocaCard extends Component{
                     fPath : nextProps.wordInfo.sen_pron_url
                 })
             }
-            
-            return true
         }
+
+        return true
     }
 
     _genTrans = (transStr)=>{
@@ -162,7 +115,7 @@ export default class VocaCard extends Component{
         const comps = []
         if(trans){
             for(let k in trans)
-                comps.push(<View style={[gstyles.r_start,{width:width-80}]}>
+                comps.push(<View key={k.toString()} style={[gstyles.r_start,{width:width-80}]}>
                     <Text numberOfLines={1} style={[{width:40},gstyles.md_black]}>{k+'.'}</Text>
                     <Text numberOfLines={1} style={gstyles.md_black}>{trans[k]}</Text>
                 </View>)
@@ -206,11 +159,12 @@ export default class VocaCard extends Component{
                 if(index%2 === 0){
                     const words = text.split(' ')
                     return words.map((word,i)=><Text
+                        key={word+index+i}
                         onStartShouldSetResponder={e=>true}
                         onResponderStart={e=>this.props.lookWord(word)}
                     >{word} </Text>)
                 }else{
-                    return <Text style={{color:gstyles.emColor, }}>{text}</Text>
+                    return <Text key={text+index} style={{color:gstyles.emColor, }}>{text}</Text>
                 }
             })
         }
@@ -283,7 +237,7 @@ export default class VocaCard extends Component{
                     {/* 场景例句 */}
                     {this.state.showAll && wordInfo.examples.length>0 &&
                         <Col style={styles.carousel}>
-                            <ExampleCarousel {...this.props} examples={wordInfo.examples}/>
+                            <ExampleCarousel lookWord={this.props.lookWord} examples={wordInfo.examples}/>
                         </Col>
                     }
                     {/* 词根 */}
@@ -325,3 +279,52 @@ VocaCard.defaultProps = {
     playSentence : false,
 
 }
+
+
+
+const styles = StyleSheet.create({
+    contentContainer:{
+        paddingVertical:16,
+        backgroundColor:'#F9F9F9',
+    },
+    grid:{
+        marginHorizontal:10,
+        backgroundColor:'#F9F9F9',
+    },
+    basic:{
+        backgroundColor:'#FFF',
+        padding:10,
+        borderRadius:5,
+        marginBottom:16
+    },
+    carousel:{
+        backgroundColor:'#FFF',
+        borderRadius:5,
+        marginBottom:60
+    },
+    root:{
+        backgroundColor:'#FFF',
+        borderRadius:5,
+        marginBottom:16
+    },
+
+
+    grayFont:{
+        color:'#505050',
+        fontSize:16,
+    },
+    marginTop:{
+        marginTop:10,
+    },
+    clickView:{
+        width:'100%',
+        height:height/2,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    clickText:{
+        fontSize:16,
+        color:'#555',
+    }
+})

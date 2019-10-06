@@ -67,7 +67,7 @@ class LearnCardPage extends Component {
             const finalTask = {...task, curIndex:0, progress:Constant.IN_LEARN_TEST_1}
             const routeName = this.props.navigation.getParam('nextRouteName')
             //更新任务
-            this.props.updateTask(finalTask,false)
+            this.props.updateTask(finalTask)
             //完成卡片学习
             vocaUtil.goPageWithoutStack(this.props.navigation, routeName ,{
                 task:finalTask,
@@ -97,8 +97,10 @@ class LearnCardPage extends Component {
                     barStyle="dark-content" // or directly
                     leftComponent={//返回
                         <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
-                            //更新task
-                            this.props.updateTask({...this.state.task})
+                            //更新、上传task
+                            const newTask = {...this.state.task}
+                            this.props.updateTask(newTask)
+                            this.props.uploadTask(newTask)
                             vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
                             this.audioService.releaseSound()
                         }} /> }
@@ -149,6 +151,7 @@ const mapStateToProps = state=>({
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
+    uploadTask: homeAction.uploadTask,
 }
 
 

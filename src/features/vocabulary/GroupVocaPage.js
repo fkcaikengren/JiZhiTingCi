@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { StatusBar, View, Text, FlatList, TouchableWithoutFeedback} from 'react-native';
-import {Header, CheckBox , Button, Icon, } from 'react-native-elements'
-import _ from 'lodash'
+import {Header, CheckBox , Button } from 'react-native-elements'
+import {sortBy} from 'lodash'
 import CardView from 'react-native-cardview'
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 import {connect} from 'react-redux';
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -21,7 +21,6 @@ import AudioService from "../../common/AudioService";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const ITEM_HEIGHT = 60;         //item的高度
 const HEADER_HEIGHT = 24;       //分组头部的高度
 const SEPARATOR_HEIGHT = 1;     //分割线的高度
@@ -47,7 +46,7 @@ class GroupVocaPage extends Component {
             sectionIndex:[], 
             stickyHeaderIndices:[]
         }
-        console.log(this.props.navigation.state.params.refreshGroup)
+        // console.log(this.props.navigation.state.params.refreshGroup)
         console.disableYellowBox=true
     }
 
@@ -82,7 +81,7 @@ class GroupVocaPage extends Component {
         let sectionIndex = [];
 
         //对section排序
-        sections = _.sortBy(sections, ['section'])
+        sections = sortBy(sections, ['section'])
 
         //格式化sections
         for (let i = 0; i < sections.length; i++) {        //遍历章节
@@ -211,6 +210,13 @@ class GroupVocaPage extends Component {
         }
     }
 
+    _keyExtractor = (item, index) => {
+        if(item.type === 'section'){
+            return item.section+index
+        }else{
+            return item.word+index
+        }
+    }
 
     render() {
         const groupName = this.props.navigation.getParam('groupName')
@@ -226,8 +232,8 @@ class GroupVocaPage extends Component {
                 barStyle='dark-content' // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
-                        this.props.navigation.goBack();
-                    }}></AliIcon> }
+                        this.props.navigation.goBack()
+                    }}/> }
                 centerComponent={{ text: groupName, style:gstyles.lg_black_bold }}
                 rightComponent={
                     <TouchableWithoutFeedback onPress={this._toggleEdit}>
@@ -257,8 +263,8 @@ class GroupVocaPage extends Component {
                             renderItem={this._renderItem}
                             extraData={this.state}
                             getItemLayout={this._getItemLayout}
-                            keyExtractor={(item,index) => index.toString()}
-                            stickyHeaderIndices={this.state.sectionIndex}/> 
+                            keyExtractor={this._keyExtractor}
+                            stickyHeaderIndices={this.state.sectionIndex}/>
                         <IndexSectionList
                         sections={ this.state.sideSections}
                         onSectionSelect={this._onSectionselect}/> 
@@ -317,7 +323,6 @@ class GroupVocaPage extends Component {
             console.log(`include --- ${index}`)
             length = HEADER_HEIGHT
         }
-
         //  计算几个header,设计偏移量算法
         // sectionIndex [0, 8, 16, 24, 32, 37, 45, 53, 61, 69]
         let headerCount = 0;

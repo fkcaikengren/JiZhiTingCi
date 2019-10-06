@@ -4,6 +4,8 @@ import {NavigationActions, StackActions} from "react-navigation";
 
 export default class _util{
 
+
+
     /**
      *  从今天往后推的第nth天的零点时间戳。（当nth==0, 表示今天的零点时间戳）
      * @param nth

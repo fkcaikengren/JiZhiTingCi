@@ -382,7 +382,7 @@ export default class VocaTaskService {
                 const header = {
                     isHeader: true,
                     checked: false,
-                    title: `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
+                    title: `${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
                 }
                 newArr.push(header)
 

@@ -54,7 +54,7 @@ class VocaLibPage extends Component {
             pickerConfirmBtnColor: [30,30,30,1],
             pickerToolBarBg: [255,233,87, 1],
             onPickerConfirm: data => {
-                console.log(data)
+                // console.log(data)
                 const sum = parseInt(data[0].replace(/新学(\d+).+/,'$1'))
                 console.log(sum)
                 let taskCount = null
@@ -115,6 +115,7 @@ class VocaLibPage extends Component {
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
+                        Picker.hide()
                     }} /> }
              
                 centerComponent={{ text: plan.bookName, style: gstyles.lg_black_bold}}

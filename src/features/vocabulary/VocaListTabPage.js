@@ -96,28 +96,28 @@ class VocaListTabPage extends Component {
                         <Text style={[gstyles.sm_gray,styles.tabText, index===3?selectTextStyle:null]}>未学</Text>
                     </View>
                 </View>
-               <Swiper 
+               <Swiper
                     ref={ref=>this.swiperRef = ref}
                     showsPagination={false}
                     loop={false}
                     onIndexChanged={(index)=>{this.setState({pageIndex:index})}}
                     index={this.state.pageIndex}
                     scrollEnabled={!this.props.vocaList.onEdit}
-                    loadMinimal loadMinimalSize={2} 
+                    loadMinimal loadMinimalSize={1}
                     >
-                    <VocaListPage {...this.props} type={Constant.WRONG_LIST} 
+                    <VocaListPage {...this.props} type={Constant.WRONG_LIST}
                         index={0}
                         pageIndex={this.state.pageIndex}
                         toastRef={this.state.toastRef}/>
-                    <VocaListPage {...this.props} type={Constant.PASS_LIST} 
+                    <VocaListPage {...this.props} type={Constant.PASS_LIST}
                         index={1}
                         pageIndex={this.state.pageIndex}
                         toastRef={this.state.toastRef}/>
-                    <VocaListPage {...this.props} type={Constant.LEARNED_LIST} 
+                    <VocaListPage {...this.props} type={Constant.LEARNED_LIST}
                         index={2}
                         pageIndex={this.state.pageIndex}
                         toastRef={this.state.toastRef}/>
-                    <VocaListPage {...this.props} type={Constant.NEW_LIST} 
+                    <VocaListPage {...this.props} type={Constant.NEW_LIST}
                         index={3}
                         pageIndex={this.state.pageIndex}
                         toastRef={this.state.toastRef}/>

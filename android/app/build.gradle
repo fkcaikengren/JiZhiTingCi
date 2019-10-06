@@ -71,11 +71,14 @@ import com.android.build.OutputFile
  *
  *   // supply additional arguments to the packager
  *   extraPackagerArgs: []
+
+
  * ]
  */
 
 project.ext.react = [
-    entryFile: "constant.js"
+    entryFile: "constant.js",
+    bundleCommand: "ram-bundle",
 ]
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"

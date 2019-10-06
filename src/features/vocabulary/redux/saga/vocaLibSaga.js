@@ -1,6 +1,5 @@
 import {take, put, call} from 'redux-saga/effects'
 import VocaTaskDao from '../../service/VocaTaskDao';
-import VocaTaskService from '../../service/VocaTaskService';
 import ArticleDao from "../../../reading/service/ArticleDao";
 import VocaUtil from "../../common/vocaUtil";
 import * as Constant from "../../common/constant";
@@ -13,7 +12,7 @@ export function * getVocaBooks(){
     try{
         const res = yield Http.get("/vocaBook/getAll")
         console.log(res);           //返回的是结果对象response，不是一个promise
-        console.log(res.data.data);
+        // console.log(res.data.data);
         yield put({type:'LOAD_VOCA_BOOKS_SUCCEED', books:res.data.data.books})
     }catch(err){
         yield put({type:'LOAD_VOCA_BOOKS_FAIL'})
@@ -63,7 +62,7 @@ function * watchVocaLib(){
         yield call(getVocaBooks)
 
         const action  = yield take('CHANGE_VOCA_BOOK')
-        console.log(action)
+        // console.log(action)
         yield call(postPlan,action.payload)
     }
 }

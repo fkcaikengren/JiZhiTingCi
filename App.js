@@ -4,7 +4,6 @@ import { MenuProvider } from 'react-native-popup-menu'
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store'
 const Realm = require('realm')
-import RNFetchBlob from 'rn-fetch-blob';
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import {createStorage} from './src/common/storage';
@@ -13,7 +12,6 @@ import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
 import ArticleDao from './src/features/reading/service/ArticleDao';
-
 import gstyles from './src/style';
 
 
@@ -21,8 +19,14 @@ import gstyles from './src/style';
 //设置全局变量 (注：这部分代码只在安装App时运行一次)
 Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重新拷贝
 console.log('copy realm');
-// global.Storage = createStorage();
-// global.Http = createHttp()
+
+
+//设置全局变量和拷贝realm (注：这部分代码只在安装App时运行一次)
+global.Storage = createStorage()
+global.Http = createHttp()
+
+global.ModifiedWordSet = new Set()
+global.ScoreModifiedOrderSet = new Set()
 
 //开启数据库
 VocaDao.getInstance().open()

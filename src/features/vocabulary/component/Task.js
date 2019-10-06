@@ -18,17 +18,29 @@ export default class Task extends Component {
   };
   constructor(props) {
     super(props);
+  }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.home === this.props.home ){
+            console.log('--- task not changed ------')
+            return false
+        }
+        return true
+    }
+
+  _navVocaLib = ()=>{
+      this.props.navigation.navigate('VocaLib')
   }
 
   render() {
+      console.log('-----Task 重绘-------')
     return (
       <View style={styles.taskView}>
         <View style={styles.taskList}>
-          {this.props.tasks.length>0 &&
+          {this.props.home.tasks.length>0 &&
             this.renderTaskItems() 
           }
-          {this.props.tasks<=0 &&
+          {this.props.home.tasks<=0 &&
             <View style={[gstyles.r_center,{height:200}]}>
                 <Button 
                   title='制定计划'
@@ -40,9 +52,7 @@ export default class Task extends Component {
                   buttonStyle={{
                     backgroundColor:'#FFE957',
                     borderRadius:50, }}
-                  onPress={()=>{
-                      this.props.navigation.navigate('VocaLib')
-                  }}
+                  onPress={this._navVocaLib}
                 />
             </View>
           } 
@@ -55,14 +65,14 @@ export default class Task extends Component {
     //是否新学全部
     let isAllLearned = true
     return (
-      this.props.tasks.map((item, index) => {
+      this.props.home.tasks.map((item, index) => {
         //判断是否是单词任务
         const isVocaTask = (item.taskType === Constant.TASK_VOCA_TYPE)
 
         let disable = false
         let separator = null
         let progressNum = null
-        if (index < this.props.tasks.length - 1) {
+        if (index < this.props.home.tasks.length - 1) {
           separator = gstyles.separator
         }
         //计算进度
@@ -76,7 +86,7 @@ export default class Task extends Component {
         }
 
         return (
-          <TaskItem {...this.props} 
+          <TaskItem key={index.toString()} {...this.props}
           index={index+1} 
           item={item} 
           progressNum={progressNum }

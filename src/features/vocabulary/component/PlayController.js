@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View,Text,TouchableOpacity, TouchableWithoutFeedback,Picker} from 'react-native';
+import { View,Text,TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import { Grid, Col, Row,} from 'react-native-easy-grid'
 import {Menu, MenuOptions, MenuOption, MenuTrigger, renderers} from 'react-native-popup-menu';
 import ImagePicker from 'react-native-image-picker';
@@ -25,8 +25,17 @@ export default class PlayController extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        //blur的变化，不引起重绘
+        if(nextProps.vocaPlay.showBlur === !this.props.vocaPlay.showBlur){
+            return false
+        }
 
-     //选择测试
+        return true
+    }
+
+
+    //选择测试
      _chooseTest = (value) =>{
         const {navigate} = this.props.navigation
         const {task} = this.props.vocaPlay
@@ -126,6 +135,9 @@ export default class PlayController extends React.Component {
 
 
     render(){
+
+        console.log('-----重绘Controller---------')
+
         const {task, themes, themeId, autoPlayTimer,showWord, showTran, interval, curIndex} = this.props.vocaPlay;
         const {words,wordCount} = task
         const {toggleWord, toggleTran, } = this.props;
@@ -142,13 +154,7 @@ export default class PlayController extends React.Component {
             //  底部控制
              <Grid style={{width:width, position:'absolute', bottom:0}}>
                 {/* 功能按钮 */}
-                <Row style={{
-                    flexDirection:'row',
-                    justifyContent:'space-around',
-                    alignItems:'center',
-                    marginHorizontal:10,
-                    marginBottom:10,
-                }}>
+                <Row style={[{ marginHorizontal:10, marginBottom:10},gstyles.r_around]}>
                  {/* 英文单词按钮 */}
                     <TouchableWithoutFeedback onPress={()=>{toggleWord()}}>
                         <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>en</Text>
@@ -192,17 +198,8 @@ export default class PlayController extends React.Component {
                 </Row>
             
                  {/* 进度条 */}
-                <Row style={{
-                    flexDirection:'row',
-                    justifyContent:'center',
-                    alignItems:'center',
-                    marginBottom: 5,
-                }}>
-                    <View style={{
-                        flexDirection:'row',
-                        justifyContent:'center',
-                        alignItems:'center',
-                    }}>
+                <Row style={[{marginBottom: 5},gstyles.r_center]}>
+                    <View style={gstyles.r_center}>
                         <Text style={{color:'#fff' , marginRight:5}}>{(wordCount==0 || wordCount==undefined)?0:curIndex+1}</Text>
                         <Progress.Bar 
                             progress={wordCount==0?0:progressNum}  //
@@ -241,12 +238,7 @@ export default class PlayController extends React.Component {
                             
                         </MenuOptions>
                     </Menu>
-                    <View style={{
-                        width:width*(1/2)+30,
-                        flexDirection:'row',
-                        justifyContent:'space-around',
-                        alignItems:'center',
-                    }}>
+                    <View style={[{width:width*(1/2)+30 },gstyles.r_around]}>
                         <TouchableWithoutFeedback >
                             <View style={[styles.smallRoundBtn, {backgroundColor:Theme.themeColor}]}>
                                 <AliIcon name='SanMiAppoutlinei1' size={20} color='#FFF'></AliIcon>

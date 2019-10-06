@@ -12,8 +12,7 @@ import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import FeedbackModule from '../../../modules/FeedbackUtil'
 
-const Dimensions = require('Dimensions')
-const {width, height} = Dimensions.get('window')
+
 const STATUSBAR_HEIGHT = StatusBar.currentHeight
 
 
@@ -59,7 +58,7 @@ export default class HomeDrawerPanel extends Component {
           buttonStyle={[styles.btn,gstyles.r_start]}
           onPress={()=>{
             this.props.navigation.navigate('DownloadManage',{
-              ...this.props.vocaLib.plan
+              ...this.props.plan
             })
           }}
         />

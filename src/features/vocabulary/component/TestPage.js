@@ -200,20 +200,22 @@ export default class TestPage extends Component {
         let isRight = false
         if(index == 4){                         //查看提示
             this.setState({selectedIndex:index, selectedStatus:0})
-        }else if(index === this.answerIndex){    //选择正确
-            this._doRight(index)
+        }else if(index === this.answerIndex){    //选择正确 (包括没有查看提示)
+            this._doRightOrTips(index)
             isRight = true
         }else{                                  //选择错误
             this._doWrong(index)
         }
         return isRight
     }
-    _doRight = (index)=>{
+    _doRightOrTips = (index)=>{
         const curIndex = this.state.curIndex
         const words = vocaUtil.getNotPassedWords(this.state.task.words)
         if(this.hasSeenDetail){ //看过答案，归为做错
             words[curIndex].wrongNum = words[curIndex].wrongNum + 1
             words[curIndex].testWrongNum = words[curIndex].testWrongNum + 1
+            //做错的单词添加到ModifiedWordSet
+            ModifiedWordSet.add(words[curIndex].word)
         }else{
             if(words[curIndex].testWrongNum > 0){
                 words[curIndex].testWrongNum = words[curIndex].testWrongNum - 1
@@ -240,13 +242,16 @@ export default class TestPage extends Component {
         if(this.hasSeenDetail){
             this.hasSeenDetail = false
         }
+
+        //做错的单词添加到ModifiedWordSet
+        ModifiedWordSet.add(words[curIndex].word)
     }
 
     //统计pass数据,计算返回下一个状态
     _calculateNextStateByPassed = ()=>{
         const {task, showWordInfos, testArr} = this.state
         console.log('-----passed words----------')
-        console.log(this.passedWords)
+        // console.log(this.passedWords)
         if(this.passedWords.length > 0){
             //重计算task 、showWordInfos、testArr、 curIndex
             const newTestArr = []
@@ -385,8 +390,9 @@ export default class TestPage extends Component {
                 }      
                 const task = {...nextState.task, curIndex:0, progress, testTimes:nextState.task.testTimes+1}
                 console.log('-------测试完成退出----拷贝task到home----同时测试次数+1-------')
-                console.log(task)
+                // console.log(task)
                 this.props.updateTask(task)
+                this.props.uploadTask(task)
                 //跳转
                 const params = routeName==='Home'?{}:{
                     task:task, 
@@ -421,9 +427,12 @@ export default class TestPage extends Component {
     _normalPlayEnd = (nextState)=>{
         if(this.props.vocaPlay.normalType === Constant.BY_REAL_TASK){
             const testTimes = nextState.task.testTimes+1
-            this.props.updatePlayTask({...nextState.task, curIndex:0, testTimes}, nextState.showWordInfos)
+            const newTask = {...nextState.task, curIndex:0, testTimes}
+            this.props.updatePlayTask(newTask, nextState.showWordInfos)
             //保存到realm数据库
             this.taskDao.modifyTask({taskOrder:nextState.task.taskOrder, testTimes})
+            //上传数据
+            this.props.uploadTask(newTask)
         }
         this.props.navigation.goBack()
     }
@@ -528,7 +537,9 @@ export default class TestPage extends Component {
         // 在重测、返回、结束时用pass的数据对state进行修改
 
         //修改wordCount
-        
+
+        //Pass的单词添加到ModifiedWordSet
+        ModifiedWordSet.add(passedWord)
     }
 
     render() {
@@ -551,9 +562,10 @@ export default class TestPage extends Component {
                         <AliIcon name='fanhui' size={26} color='#555' onPress={()=>{
                             const nextState = this._calculateNextStateByPassed() //计算pass的单词
                             console.log('--返回--')
-                            console.log(nextState)
-                            if(this.props.mode === 'study'){
-                                this.props.updateTask({...nextState.task,curIndex:nextState.curIndex})
+                            if(this.props.mode === 'study'){ //更新上传任务
+                                const newTask = {...nextState.task,curIndex:nextState.curIndex}
+                                this.props.updateTask(newTask)
+                                this.props.uploadTask(newTask)
                                 vocaUtil.goPageWithoutStack(this.props.navigation,'Home')
                             }else {
                                 this._normalPlayEnd(nextState)

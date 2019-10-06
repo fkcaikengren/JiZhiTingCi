@@ -73,8 +73,9 @@ export default class ExampleCarousel extends Component {
         this._swiper.scrollBy(0-this.curIndex,false)
         this.shouldPlay = false
       }
-      return true
     }
+
+    return true
   }
 
   _loadHandle (i) {
@@ -92,11 +93,12 @@ export default class ExampleCarousel extends Component {
               if(index%2 === 0){
                   const words = text.split(' ')
                   return words.map((word,i)=><Text
+                      key={word+index+i}
                       onStartShouldSetResponder={e=>true}
                       onResponderStart={e=>this.props.lookWord(word)}
                   >{word} </Text>)
               }else{
-                return <Text style={{color:'#F2753F',fontSize:14, fontWeight:'500' }}>{text}</Text>
+                return <Text key={text+index} style={{color:'#F2753F',fontSize:14, fontWeight:'500' }}>{text}</Text>
               }
           })
         }
@@ -127,7 +129,7 @@ export default class ExampleCarousel extends Component {
         loadMinimal loadMinimalSize={1} >
             {
                 this.props.examples.map((item, i)=>{
-                    return <View style={styles.slide}>
+                    return <View key={i.toString()} style={styles.slide}>
                         <TouchableWithoutFeedback onPress={()=>{
                           this.audioService.playSound({
                               pDir : CConstant.VOCABULARY_DIR,

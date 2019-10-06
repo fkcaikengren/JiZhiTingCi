@@ -37,6 +37,19 @@ class HomePage extends Component {
         })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.home !== this.props.home ){
+            console.log('---home is changed ------')
+            return true
+        }
+        //vocaPlay的task 下标不变，不重绘
+        const {task, autoPlayTimer} = this.props.vocaPlay
+        if( nextProps.vocaPlay.autoPlayTimer === autoPlayTimer){
+            return false
+        }
+        return true
+    }
+
 
     _init = ()=>{
         const {tasks, lastLearnDate} = this.props.home
@@ -68,28 +81,10 @@ class HomePage extends Component {
 
 
     render() {
-        /** 判断是否上传数据*/
-        //上传同步数据
-        console.log('--------返回时，是否刷新了--------------')
-        if(this.props.home.shouldUpload === true){
-            const storedTasks = VocaUtil.filterRawTasks(this.props.home.tasks)
-            // console.log(storedTasks)
-            const notSyncTasks = storedTasks.filter((task,index)=>{
-                if(task.isSync){
-                    return false
-                }else{
-                    return true
-                }
-            })
-            if(notSyncTasks.length > 0){
-                console.log('---------- start upload ---------')
-                // console.log(notSyncTasks)
-                this.props.uploadTasks(notSyncTasks);
-            }
-        }
 
         const {task} = this.props.vocaPlay
-        const DrawerPanel = <HomeDrawerPanel {...this.props} closeDrawer={this._closeDrawerPanel} />
+        const DrawerPanel = <HomeDrawerPanel navigation={this.props.navigation}
+            plan={this.props.vocaLib.plan} closeDrawer={this._closeDrawerPanel} />
     
         return (
             <Drawer
@@ -105,7 +100,7 @@ class HomePage extends Component {
                 }}
                 tweenDuration={350}
                 tweenHandler={ (ratio) => {
-                    console.log(ratio)
+                    // console.log(ratio)
                     return {
                         mainOverlay: { opacity:ratio*0.6 }
                     }
@@ -116,8 +111,10 @@ class HomePage extends Component {
                     <StatusBar translucent={false} barStyle="dark-content" />
                     <View style={styles.statusBar} />
                     {/*顶部背景和任务列表 */}
-                    <HomeHeader {...this.props} toastRef={this.state.toastRef} openDrawer={this._openDrawerPanel}>
-                        <Task {...this.props} tasks={this.props.home.tasks} toastRef={this.state.toastRef}/>
+                    <HomeHeader navigation={this.props.navigation} home={this.props.home} vocaLib={this.props.vocaLib}
+                                toastRef={this.state.toastRef} openDrawer={this._openDrawerPanel}>
+                        <Task   navigation={this.props.navigation} home={this.props.home} updateTask={this.props.updateTask}
+                                toastRef={this.state.toastRef}/>
                     </HomeHeader>
 
                     {/* 底部播放控制 */}
@@ -146,7 +143,7 @@ const mapStateToProps = state =>({
   
 const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
-    uploadTasks : HomeAction.uploadTasks,
+    uploadTask : HomeAction.uploadTask,
     updateTask : HomeAction.updateTask,
     changeLeftDays : VocaLibAction.changeLeftDays,
     changePlayTimer : VocaPlayAction.changePlayTimer,

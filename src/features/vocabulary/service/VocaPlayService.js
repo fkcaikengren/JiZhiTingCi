@@ -71,6 +71,7 @@ export default class VocaPlayService{
      * @description 自动播放 
      */
     autoplay = (index) => {
+
         let source = store.getState().vocaPlay
         if(this.stateRef){
             source = this.stateRef

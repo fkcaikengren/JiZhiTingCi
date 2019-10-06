@@ -63,7 +63,7 @@ export default class VocaDao{
      * @memberof VocaDao
      */
     lookWordInfo = (word,i=1)=>{
-        console.log(word)
+        // console.log(word)
         let wordObj = null
         try{
             //查询单词基本信息

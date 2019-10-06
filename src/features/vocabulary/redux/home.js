@@ -11,8 +11,7 @@ const defaultState ={
     lastLearnDate:null,
     //状态
     isLoadPending:false,
-    //是否需要同步
-    shouldUpload:true,
+
     //上传同步的状态
     isUploading:false,
     //上传同步失败
@@ -31,7 +30,6 @@ export const home =  (state=defaultState, action) => {
             console.log(_util.getDayTime(0))
             return { ...state,tasks:action.payload.tasks,
                 isLoadPending:false,
-                shouldUpload:false,
                 isUploadFail:false,
                 lastLearnDate:_util.getDayTime(0)
             };
@@ -58,7 +56,7 @@ export const home =  (state=defaultState, action) => {
                 for(let t of tasks){
                     if(t.taskOrder === task.taskOrder && t.status === Constant.STATUS_1){
                         console.log('--------修改 1复 sync------------')
-                        console.log()
+                        // console.log()
                         t.isSyncLocal = false
                         t.isSync = false
                         break
@@ -66,23 +64,20 @@ export const home =  (state=defaultState, action) => {
                 }
             }
             console.log('----redudx: after update tasks-----------')
-            console.log(tasks)
-            return {...state, tasks, shouldUpload:action.payload.shouldUpload}
+            // console.log(tasks)
+            // //保存至本地
+            return {...state, tasks}
         //上传同步任务
-        case ha.UPLOAD_TASKS_START :
+        case ha.UPLOAD_TASK_START :
             return { ...state,  isUploading:true}
-        case ha.UPLOAD_TASKS_SUCCEED :
+        case ha.UPLOAD_TASK_SUCCEED :
             console.log('--------保存后，上传后的tasks:------------------')
             // console.log(state.tasks)
-            return { ...state, isUploading:false, shouldUpload:false, isUploadFail:false}
-        case ha.UPLOAD_TASKS_FAIL :
+            return { ...state, isUploading:false, isUploadFail:false}
+        case ha.UPLOAD_TASK_FAIL :
             console.log('--------上传失败后的 tasks: -------------')
             // console.log(state.tasks)
-            return { ...state, isUploading:false, shouldUpload:false, isUploadFail:true}
-        //是否上传同步
-        case ha.SET_SHOULD_UPLOAD:
-            //获取 需要上传的id,设置其isSync=false, isSyncLocal=false。 为空则不变。
-            return { ...state, shouldUpload:action.payload.shouldUpload}
+            return { ...state, isUploading:false, isUploadFail:true}
         case ha.UPDATE_SCORE:
             const { id,taskOrder, score} = action.payload.userArticle
             VocaTaskDao.getInstance().modifyArticle(action.payload.userArticle)

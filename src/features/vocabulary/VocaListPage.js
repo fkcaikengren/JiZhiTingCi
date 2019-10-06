@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList , View, Text,} from "react-native";
+import React, {Component, PureComponent} from "react";
+import {FlatList, View, Text, ActivityIndicator, StatusBar,} from "react-native";
 import { CheckBox , Button} from 'react-native-elements'
 import BackgroundTimer from 'react-native-background-timer';
 import PropTypes from 'prop-types'
@@ -13,8 +13,14 @@ import styles from './VocaListStyle'
 import VocaTaskService from './service/VocaTaskService'
 import VocaUtil from "./common/vocaUtil";
 
+const Dimensions = require('Dimensions');
+const {width, height} = Dimensions.get('window');
+const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+const ITEM_HEIGHT = styles.item.height;         //item的高度
+const HEADER_HEIGHT = styles.headerView.height;       //分组头部的高度
+const SEPARATOR_HEIGHT = 0;     //分割线的高度
 
-export default class VocaListPage extends React.Component {
+export default class VocaListPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -22,7 +28,6 @@ export default class VocaListPage extends React.Component {
       stickyHeaderIndices: [],
       checked:false, //是否有被选的
     };
-
     this.vtService = new VocaTaskService()
   }
 
@@ -42,7 +47,6 @@ export default class VocaListPage extends React.Component {
       case Constant.NEW_LIST:
           data= this.vtService.getNewList()
       break;
-
     }
     
     const headers = [];
@@ -61,7 +65,9 @@ export default class VocaListPage extends React.Component {
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    if(this.props.vocaList.onEdit == true && nextProps.vocaList.onEdit == false){
+    const {data, checked} = this.state
+    const {onEdit} = this.props.vocaList
+        if(onEdit == true && nextProps.vocaList.onEdit == false){
       //清理check
       this._cancleCheck()
       return false
@@ -71,24 +77,37 @@ export default class VocaListPage extends React.Component {
       return false
     }
 
-    return true
+    //刷新的因素：data,checked,onEdit
+    if(data === nextState.data &&  checked === nextState.checked && onEdit === nextProps.vocaList.onEdit){
+      return false
+    }else{
+      return true
+    }
+
   }
 
   // 取消check
   _cancleCheck = ()=>{
+    let start = new Date().getTime()
     const data = [...this.state.data]
     for(let d of data){
       d.checked = false
     }
     this.setState({data, checked:false})
+    let end = new Date().getTime()
+    console.log('cancle: '+ (end-start))
   }
 
   //多选
   _selectItem = (index)=>{
+    console.log('change state --'+index)
+    console.log(index)
+
+
     const data = [...this.state.data]
-    let checked = this.state.checked 
+    let checked = this.state.checked
     if(data[index].checked){//取消
-      data[index].checked = false
+      data[index] = {...data[index], checked : false}
       let exist = false
       //遍历判断是否存在被选中的
       for(let d of data){
@@ -101,54 +120,20 @@ export default class VocaListPage extends React.Component {
         checked = false
       }
     }else{                  //选中
-      data[index].checked = true
+      data[index] = {...data[index], checked : true}
     }
     //如果首次被选
     if(this.state.checked == false){
       checked = true
     }
     this.setState({data, checked})
+
+
   }
 
   renderItem = ({ item, index }) => {
-    
-    if (item.isHeader) {
-      return (
-        <View style={styles.headerView}
-        >
-          <Text style={styles.headerText}>{item.title}</Text>
-        </View>
-      );
-    } else {
-      const onEdit = (this.props.vocaList.onEdit )
-      return (
-        <View style={[gstyles.r_start, styles.item]}>
-          <View style={[styles.itemLeft]}>
-            {onEdit &&
-              <CheckBox
-                containerStyle={styles.checkBox}
-                onPress={()=>{this._selectItem(index)}}
-                checked={item.checked}
-                iconType='ionicon'
-                checkedIcon='ios-checkmark-circle'
-                uncheckedIcon='ios-radio-button-off'
-                checkedColor='#F29F3F'
-                />
-            }
-            <Text style={[styles.word, {marginLeft:onEdit?0:10}]}>
-              {item.content.word}
-            </Text>
-          </View>
-          <View style={styles.itemCenter}>
-            <TogglePane word={item.content.word}/>
-          </View>
-          <View style={[styles.itemRight]}>
-            <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>
-          </View>
-        </View>
-        
-      );
-    }
+    return <Cell item={item} index={index} onEdit={this.props.vocaList.onEdit}
+                 selectItem={this._selectItem}/>
   };
   
 
@@ -183,12 +168,42 @@ export default class VocaListPage extends React.Component {
           normalType: Constant.BY_VIRTUAL_TASK,
         });
       }
-
     }
   }
-  
+
+
+  //data:item数组, index: item的下标
+  _getItemLayout = (data, index)=> {
+    let length = ITEM_HEIGHT
+    const {stickyHeaderIndices} = this.state
+    if(stickyHeaderIndices.includes(index)){
+      length = HEADER_HEIGHT
+    }
+    //  计算几个header,设计偏移量算法
+    let headerCount = 0;
+    for (let i in stickyHeaderIndices){
+      if(stickyHeaderIndices[i] < index){
+        headerCount++;
+      }else{
+        break;
+      }
+    }
+    const offset = (index-headerCount)*(ITEM_HEIGHT+SEPARATOR_HEIGHT) + headerCount*(HEADER_HEIGHT+SEPARATOR_HEIGHT)
+    return {index, offset, length};
+  }
+
+  _keyExtractor = (item, index) => {
+    if(item.content){
+      return item.content.word+index
+    }else{
+      return item.title+index.toString()
+    }
+  }
 
   render() {
+    //性能测试
+    console.log('-------------------> VocaListPage : '+ this.props.type)
+
     let title = ''
     let iconName = 'Home_tv_x'
     let noData = '暂无数据'
@@ -213,7 +228,6 @@ export default class VocaListPage extends React.Component {
     }
 
     const playIconColor= this.state.checked?gstyles.mainColor:'#999'
-
     return (
       <View style={styles.container}>
 
@@ -221,10 +235,10 @@ export default class VocaListPage extends React.Component {
           <FlatList
               data={this.state.data}
               renderItem={this.renderItem}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={this._keyExtractor}
               stickyHeaderIndices={this.state.stickyHeaderIndices}
-              extraData={this.props.vocaList}
-
+              getItemLayout={this._getItemLayout}
+              extraData={this.props.vocaList.onEdit}
           />
         }
         {this.state.data.length <= 0 &&
@@ -257,9 +271,6 @@ export default class VocaListPage extends React.Component {
   }
 }
 
-
-
-
 VocaListPage.propTypes = {
   type : PropTypes.string.isRequired,
   index : PropTypes.number.isRequired,
@@ -270,3 +281,68 @@ VocaListPage.propTypes = {
 
 
 
+class Cell extends Component{
+
+  constructor(props) {
+    super(props);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const {item, onEdit, index,} = this.props
+
+    // console.log('----------cell---'+index)
+    // console.log(item === nextProps.item)
+    if(item === nextProps.item && onEdit === nextProps.onEdit ){
+      // console.log('false ----'+index)
+      return false
+    }else {
+      // console.log('true ----'+index)
+      return true
+    }
+  }
+
+  _select = ()=>{
+    this.props.selectItem(this.props.index)
+  }
+
+  render(){
+    // console.log('-cell------rerender-')
+    const {item, onEdit, index} = this.props
+
+    if (item.isHeader) {
+      return (
+          <View style={styles.headerView}>
+            <Text style={styles.headerText}>{item.title}</Text>
+          </View>
+      );
+    } else {
+      return (
+          <View style={[gstyles.r_start, styles.item]}>
+            <View style={[styles.itemLeft]}>
+              {onEdit &&
+              <CheckBox
+                  containerStyle={styles.checkBox}
+                  onPress={this._select}
+                  checked={item.checked}
+                  iconType='ionicon'
+                  checkedIcon='ios-checkmark-circle'
+                  uncheckedIcon='ios-radio-button-off'
+                  checkedColor='#F29F3F'
+              />
+              }
+              <Text style={[styles.word, {marginLeft:onEdit?0:10}]}>
+                {item.content.word}
+              </Text>
+            </View>
+            <View style={styles.itemCenter}>
+              <TogglePane word={item.content.word}/>
+            </View>
+            <View style={[styles.itemRight]}>
+              <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>
+            </View>
+          </View>
+
+      );
+    }
+  }
+}

@@ -11,7 +11,6 @@ import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './BgSelectorStyle'
-import FileService from "../../common/FileService";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -43,8 +42,7 @@ class BgSelectorPage extends Component {
             'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/7.jpg',
             'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/8.jpg',
             'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/9.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/10.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/11.jpg']
+            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/10.jpg',]
         const bgPaths = []
         //判断是否已经缓存过
         console.log('----path-----')
@@ -64,7 +62,6 @@ class BgSelectorPage extends Component {
         }else{ //如果已存在，遍历获取
             const stat = await RNFetchBlob.fs.lstat(RootPath)
             // console.log(stat)
-
             //遍历
             console.log('---遍历----')
             const fileNames = await RNFetchBlob.fs.ls(RootPath)
@@ -127,7 +124,7 @@ class BgSelectorPage extends Component {
                 barStyle='dark-content' // or directly
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
-                        this.props.navigation.goBack();
+                        this.props.navigation.goBack()
                     }} /> }
              
                 centerComponent={{ text:'选择背景', style: gstyles.lg_black_bold}}
