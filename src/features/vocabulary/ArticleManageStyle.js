@@ -7,11 +7,6 @@ const styles = StyleSheet.create({
     nameView: {
         flex: 1
     },
-    noteView:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        alignItems:'center',
-    },
     noteText: {
         fontSize:12,
         lineHeight: 24,

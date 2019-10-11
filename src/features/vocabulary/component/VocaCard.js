@@ -47,7 +47,6 @@ export default class VocaCard extends Component{
         }
         //自动发音
         if(playWord){
-
             this.audioService.playSound({
                 pDir : CConstant.VOCABULARY_DIR,
                 fPath : wordInfo.am_pron_url
@@ -59,6 +58,7 @@ export default class VocaCard extends Component{
                     })
                 }
             },null,false)
+
         }else if(playSentence){
             this.audioService.playSound({
                 pDir : CConstant.VOCABULARY_DIR,

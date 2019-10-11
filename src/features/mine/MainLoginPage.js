@@ -26,7 +26,7 @@ class MainLoginPage extends Component {
                 <View style={styles.logoView}>
                     <Image 
                     style={{width:80,height:80}}
-                    source={require('../../image/h_icon.png')}/>
+                    source={require('../../image/bg.jpg')}/>
                 </View>
                 <View style={styles.loginView}>
                     <View style={[styles.loginBtn, {backgroundColor:'#30DE76'}]}>

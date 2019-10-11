@@ -188,7 +188,7 @@ class GroupVocaPage extends Component {
         const words = this.state.checkedIndex.map((itemIndex, i)=>{
             return this.state.flatData[itemIndex].word
         })
-        
+        console.log(words)
         if(words.length < Constant.MIN_PLAY_NUMBER){
             this.toastRef.show('当前选择不足5个，不可以播放哦')
         }else{

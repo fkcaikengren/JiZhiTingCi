@@ -58,13 +58,6 @@ class SwipeableFlatList extends React.Component {
   }
 
   _onScroll = (e) => {
-    // Close any opens rows on ListView scroll
-    if (this.state.openRowKey) {
-      this.props.onClose()
-      this.setState({
-        openRowKey: null,
-      });
-    }
 
     this.props.onScroll && this.props.onScroll(e);
   };

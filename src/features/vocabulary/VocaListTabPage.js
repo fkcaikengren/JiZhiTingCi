@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import {StyleSheet, StatusBar, View, Text, TouchableWithoutFeedback} from 'react-native';
+import {  View, Text, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';   
 import Swiper from 'react-native-swiper'
-import {Header, Button} from 'react-native-elements'
+import {Header} from 'react-native-elements'
 import Toast from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
@@ -39,6 +39,10 @@ class VocaListTabPage extends Component {
         }
     }
 
+    _onIndexChanged = (index)=>{
+        this.setState({pageIndex:index})
+    }
+
     render() {
         const editBtn = this.props.vocaList.onEdit?<Text style={gstyles.md_black}>取消</Text>
         :<AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
@@ -48,7 +52,6 @@ class VocaListTabPage extends Component {
         return (
            
             <View style={{flex:1}}>
-                <StatusBar translucent={true} />
                 <Header
                 statusBarProps={{ barStyle:'dark-content' }}
                 barStyle='dark-content' // or directly
@@ -59,9 +62,9 @@ class VocaListTabPage extends Component {
                             this.props.navigation.goBack();
                         }
                     }} /> }
-                rightComponent={ <TouchableWithoutFeedback onPress={()=>{this.props.toggleEdit()}}>
+                rightComponent={ <TouchableOpacity activeOpacity={0.8} onPress={()=>{this.props.toggleEdit()}}>
                     { editBtn }
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 }
                 centerComponent={{ text: '单词列表', style: gstyles.lg_black_bold }}
                 containerStyle={{
@@ -100,7 +103,7 @@ class VocaListTabPage extends Component {
                     ref={ref=>this.swiperRef = ref}
                     showsPagination={false}
                     loop={false}
-                    onIndexChanged={(index)=>{this.setState({pageIndex:index})}}
+                    onIndexChanged={this._onIndexChanged}
                     index={this.state.pageIndex}
                     scrollEnabled={!this.props.vocaList.onEdit}
                     loadMinimal loadMinimalSize={1}

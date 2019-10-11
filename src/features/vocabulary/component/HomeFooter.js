@@ -63,7 +63,7 @@ export default class HomeFooter extends React.Component{
         }
     }
     render(){
-        const {task, curIndex, autoPlayTimer, showWordInfos} = this.props.vocaPlay
+        const {task, curIndex, autoPlayTimer, showWordInfos, bgPath} = this.props.vocaPlay
         // console.log(curIndex)
         // console.log(showWordInfos)
         const {wordCount} = task
@@ -71,6 +71,9 @@ export default class HomeFooter extends React.Component{
         //任务名
         let name = VocaUtil.genTaskName(task.taskOrder)
         let word = showWordInfos[curIndex]?showWordInfos[curIndex].word:''
+
+        const imgSource = (bgPath && bgPath!=='')?{ uri : Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath }:
+            require('../../../image/bg.jpg')
         return (
            
             <Grid 
@@ -84,7 +87,7 @@ export default class HomeFooter extends React.Component{
                 <Col style={{width:55, height:55, marginHorizontal:10, paddingBottom:10}}>
                     <Row style={gstyles.r_center}>
                         <Image style={styles.imgStyle}
-                               source={require('../../../image/h_icon.png')} />
+                               source={imgSource} />
                     </Row>
                 
                 </Col>
@@ -96,7 +99,7 @@ export default class HomeFooter extends React.Component{
                         </View>
                     </Row>
                     <Row style={[gstyles.r_between,{marginBottom:5}]}>
-                        <View style={gstyles.c_center_start}>
+                        <View style={gstyles.c_center_left}>
                             <Text style={gstyles.md_black}>{word}</Text>
                             <Text style={gstyles.sm_gray}>{name}</Text>
                         </View>

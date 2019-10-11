@@ -1,21 +1,18 @@
-import React, {Component, PureComponent} from "react";
-import {FlatList, View, Text, ActivityIndicator, StatusBar,} from "react-native";
-import { CheckBox , Button} from 'react-native-elements'
+import React, {Component} from "react";
+import {FlatList, View, Text} from "react-native";
+import { Button} from 'react-native-elements'
 import BackgroundTimer from 'react-native-background-timer';
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
 
-import TogglePane from './component/TogglePane'
 import * as Constant from './common/constant'
 import AliIcon from '../../component/AliIcon';
 import gstyles from '../../style'
 import styles from './VocaListStyle'
 import VocaTaskService from './service/VocaTaskService'
 import VocaUtil from "./common/vocaUtil";
+import WordCell from "./component/WordCell";
 
-const Dimensions = require('Dimensions');
-const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const ITEM_HEIGHT = styles.item.height;         //item的高度
 const HEADER_HEIGHT = styles.headerView.height;       //分组头部的高度
 const SEPARATOR_HEIGHT = 0;     //分割线的高度
@@ -65,9 +62,9 @@ export default class VocaListPage extends Component {
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    const {data, checked} = this.state
+    const {data, checked,isVocaModalOpen} = this.state
     const {onEdit} = this.props.vocaList
-        if(onEdit == true && nextProps.vocaList.onEdit == false){
+    if(onEdit == true && nextProps.vocaList.onEdit == false){
       //清理check
       this._cancleCheck()
       return false
@@ -88,21 +85,18 @@ export default class VocaListPage extends Component {
 
   // 取消check
   _cancleCheck = ()=>{
-    let start = new Date().getTime()
     const data = [...this.state.data]
     for(let d of data){
       d.checked = false
     }
     this.setState({data, checked:false})
-    let end = new Date().getTime()
-    console.log('cancle: '+ (end-start))
+
   }
 
   //多选
   _selectItem = (index)=>{
     console.log('change state --'+index)
     console.log(index)
-
 
     const data = [...this.state.data]
     let checked = this.state.checked
@@ -131,9 +125,17 @@ export default class VocaListPage extends Component {
 
   }
 
+  _lookDetail = (index)=>{
+    //导航到详情页
+    this.props.navigation.navigate('VocaDetail', {
+      word:this.state.data[index].content.word
+    })
+  }
+
   renderItem = ({ item, index }) => {
-    return <Cell item={item} index={index} onEdit={this.props.vocaList.onEdit}
-                 selectItem={this._selectItem}/>
+    return <WordCell  item={item} index={index} onEdit={this.props.vocaList.onEdit}
+    selectItem={this._selectItem} lookDetail={this._lookDetail}/>
+
   };
   
 
@@ -200,10 +202,11 @@ export default class VocaListPage extends Component {
     }
   }
 
+
+
   render() {
     //性能测试
     console.log('-------------------> VocaListPage : '+ this.props.type)
-
     let title = ''
     let iconName = 'Home_tv_x'
     let noData = '暂无数据'
@@ -277,72 +280,3 @@ VocaListPage.propTypes = {
   pageIndex : PropTypes.number.isRequired,
   toastRef : PropTypes.object
 };
-
-
-
-
-class Cell extends Component{
-
-  constructor(props) {
-    super(props);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const {item, onEdit, index,} = this.props
-
-    // console.log('----------cell---'+index)
-    // console.log(item === nextProps.item)
-    if(item === nextProps.item && onEdit === nextProps.onEdit ){
-      // console.log('false ----'+index)
-      return false
-    }else {
-      // console.log('true ----'+index)
-      return true
-    }
-  }
-
-  _select = ()=>{
-    this.props.selectItem(this.props.index)
-  }
-
-  render(){
-    // console.log('-cell------rerender-')
-    const {item, onEdit, index} = this.props
-
-    if (item.isHeader) {
-      return (
-          <View style={styles.headerView}>
-            <Text style={styles.headerText}>{item.title}</Text>
-          </View>
-      );
-    } else {
-      return (
-          <View style={[gstyles.r_start, styles.item]}>
-            <View style={[styles.itemLeft]}>
-              {onEdit &&
-              <CheckBox
-                  containerStyle={styles.checkBox}
-                  onPress={this._select}
-                  checked={item.checked}
-                  iconType='ionicon'
-                  checkedIcon='ios-checkmark-circle'
-                  uncheckedIcon='ios-radio-button-off'
-                  checkedColor='#F29F3F'
-              />
-              }
-              <Text style={[styles.word, {marginLeft:onEdit?0:10}]}>
-                {item.content.word}
-              </Text>
-            </View>
-            <View style={styles.itemCenter}>
-              <TogglePane word={item.content.word}/>
-            </View>
-            <View style={[styles.itemRight]}>
-              <AliIcon name='youjiantou' size={26} color='#C9C9C9'></AliIcon>
-            </View>
-          </View>
-
-      );
-    }
-  }
-}

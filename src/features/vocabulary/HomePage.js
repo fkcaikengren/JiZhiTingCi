@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar, View} from 'react-native';
+import {StatusBar, View, AppState} from 'react-native';
 import Toast from 'react-native-easy-toast'
 import {connect} from 'react-redux'
 import SplashScreen from 'react-native-splash-screen'
@@ -16,6 +16,7 @@ import * as VocaLibAction from './redux/action/vocaLibAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
+import {BY_REAL_TASK} from "./common/constant";
 
 class HomePage extends Component {
     constructor(props) {
@@ -23,6 +24,7 @@ class HomePage extends Component {
         this.state = {
             modalVisible:false,
             toastRef:null,
+            appState: AppState.currentState
         }
         this.vts = new VocaTaskService()
         console.disableYellowBox = true
@@ -35,19 +37,49 @@ class HomePage extends Component {
         this.setState({
             toastRef:this.refs.toastRef
         })
+
+        //上传数据
+        this.props.uploadTask(null)
+
+        //监听App状态
+        AppState.addEventListener('change',this._handleAppStateChange);
+    }
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.home !== this.props.home ){
+
+        //home vocaLib变化
+        if(nextProps.home !== this.props.home || nextProps.vocaLib !== this.props.vocaLib){
             console.log('---home is changed ------')
             return true
         }
+
+        const {task, autoPlayTimer,bgPath} = this.props.vocaPlay
+        if(nextProps.vocaPlay.bgPath !== bgPath){
+            return true
+        }
         //vocaPlay的task 下标不变，不重绘
-        const {task, autoPlayTimer} = this.props.vocaPlay
-        if( nextProps.vocaPlay.autoPlayTimer === autoPlayTimer){
+        if(nextProps.vocaPlay.autoPlayTimer === autoPlayTimer){
             return false
         }
         return true
+    }
+    _handleAppStateChange = (nextAppState)=> {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            console.log('App 到前台')
+        }
+        if (this.state.appState.match(/active/) && nextAppState === 'background') {
+            console.log('App 到后台')
+            // 离开App时，数据持久化
+            const modifiedWords = Array.from(ModifiedWordSet)
+            Storage.save({
+                key: 'modifiedWords',
+                data: modifiedWords,
+            });
+        }
+        this.setState({appState: nextAppState});
     }
 
 
@@ -58,11 +90,20 @@ class HomePage extends Component {
         console.log(today)
         if(lastLearnDate && (today !== lastLearnDate)){  //任务过期(每天第一次打开App)
             const storedTasks = VocaUtil.filterRawTasks(tasks)
-            //计算保存单词任务到本地
-            console.log('---------任务过期-> 计算保存任务------------')
-            this.vts.storeTasks(storedTasks)
+
             //统计
             this.props.changeLeftDays(this.vts.countLeftDays())
+            //判断是否清空VocaPlay
+            const {task, normalType} = this.props.vocaPlay
+            if(normalType === BY_REAL_TASK){
+                for(let st of storedTasks){
+                    if(st.taskOrder && st.taskOrder === task.taskOrder){
+                        this.props.clearPlay()
+                        break
+                    }
+                }
+            }
+
             //获取今日任务
             console.log('---------任务过期->加载今日任务------------')
             this.props.loadTasks(storedTasks,plan.taskCount,lastLearnDate)
@@ -147,6 +188,7 @@ const mapDispatchToProps = {
     updateTask : HomeAction.updateTask,
     changeLeftDays : VocaLibAction.changeLeftDays,
     changePlayTimer : VocaPlayAction.changePlayTimer,
+    clearPlay : VocaPlayAction.clearPlay,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 

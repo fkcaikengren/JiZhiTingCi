@@ -11,16 +11,12 @@ export default class GuidePage extends React.Component {
         super(props);
         this.state={
             guides : [
-                {title:'单词学习秘方', intro:'学错英语这么多年，原来这些方法更适合你',
-                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip-1.jpg' ,
-                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html',
-                    note:'2019-5'
+                {title:'高效记忆单词', intro:'这样记单词，猪都可以记住！',
+                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/guide_cover_1.jpg' ,
+                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html',
+                    note:'2019-10-10'
                 },
-                {title:'App攻略', intro:'结合这些方法使用App，效率提升100%',
-                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip-2.jpg' ,
-                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/tip_1.html',
-                    note:'2019-10'
-                }
+               
             ]
         }
     }

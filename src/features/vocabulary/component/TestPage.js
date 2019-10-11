@@ -19,7 +19,6 @@ import * as CConstant from "../../../common/constant";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const StatusBarHeight = StatusBar.currentHeight;
 
 
 const styles = StyleSheet.create({
@@ -74,9 +73,9 @@ export default class TestPage extends Component {
             isRetest:this.props.navigation.getParam('isRetest', false),
             //[true, ture, false, ...] 测试数组，用来实现二轮测试
             testArr:[],
-            //当前测试个数
+            //当前测试总数（包括passed）
             leftCount:100,  
-            //当前测试个数
+            //当前测试序号
             curCount:1,
 
             //显示答案
@@ -95,11 +94,7 @@ export default class TestPage extends Component {
         const {getParam} = this.props.navigation
         let task = getParam('task')
        
-        if(!task){
-            alert('getTask')
-            const taskOrder = getParam('taskOrder')
-            task = this.taskDao.getTaskByOrder(taskOrder)
-        }
+
         this.wordInfos =  this.vocaDao.getWordInfos(task.words.map((item, i)=>item.word))
         const showWords = vocaUtil.getNotPassedWords(task.words)
         let showWordInfos = getParam('showWordInfos')
@@ -148,8 +143,22 @@ export default class TestPage extends Component {
         //不显示Pass
         this.noPass = (task.status === Constant.STATUS_0 ||
             this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK)
+
+
+        //如果是听词选义
+        if(this.props.type === Constant.PRON_TRAN){
+            const amPronUrl = showWordInfos[task.curIndex]?showWordInfos[task.curIndex].am_pron_url:null
+            this.props.playAudio(amPronUrl)
+        }else if(this.props.type === Constant.TRAN_WORD){
+            const trans = showWordInfos[task.curIndex]?
+                JSON.parse(showWordInfos[task.curIndex].trans):null
+            if(trans){
+                const transNum = vocaUtil.randomNum(0,Object.keys(trans).length-1)
+                this.props.setTransNum(transNum)
+            }
+        }
     }
-    
+
 
      //开始倒计时
      _countDown = ()=>{
@@ -185,13 +194,20 @@ export default class TestPage extends Component {
     }
 
 
-     //产生选项和答案
+     /*
+      产生选项和答案
+      curIndex: showWordInfos的当前单词下标
+      curWord: 当前的单词
+      rightIndex: wordInfos的当前单词下标
+     */
     _genOptions = (curIndex, curWord)=>{
         //生成选项
         const rightIndex = vocaUtil.getIndexInWordInfos(curWord,  this.wordInfos)
         this.answerIndex = vocaUtil.randomNum(0,3)                  //产生一个随机下标
-        this.options = vocaUtil.randomArr(0,  this.wordInfos.length-1, [curIndex,rightIndex])     //3个选项
-        this.options.splice(this.answerIndex, 0, curIndex)          //插入正确答案      
+        this.options = vocaUtil.randomArr(0,  this.wordInfos.length-1, [curIndex,rightIndex], curWord.word, this.wordInfos)     //3个选项
+        this.options.splice(this.answerIndex, 0, curIndex)          //插入正确答案
+        console.log('------->  options: ')
+        console.log(this.options)
     }
 
     //判断答案 isWrong: 返回是否选错
@@ -392,21 +408,37 @@ export default class TestPage extends Component {
                 console.log('-------测试完成退出----拷贝task到home----同时测试次数+1-------')
                 // console.log(task)
                 this.props.updateTask(task)
-                this.props.uploadTask(task)
                 //跳转
-                const params = routeName==='Home'?{}:{
-                    task:task, 
-                    showWordInfos:this.state.showWordInfos,
-                    nextRouteName:'Home'
+                let params = {}
+                if(routeName==='Home'){
+                    //数据上传（特殊：如果是新学则上传其1复数据）
+                    let uploadedTask = task
+                    if(task.status === Constant.STATUS_0){
+                        let reviewTask = task
+                        for(let item of this.props.home.tasks){
+                            if(item.taskOrder === task.taskOrder && item.status === Constant.STATUS_1) {
+                                reviewTask = item
+                                break
+                            }
+                        }
+                        uploadedTask = vocaUtil.updateNewTaskToReviewTask(reviewTask,task)
+                    }
+                    this.props.uploadTask(uploadedTask)
+                }else{
+                    params = {
+                        task:task,
+                        showWordInfos:this.state.showWordInfos,
+                        nextRouteName:'Home'
+                    }
                 }
+
                 vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
             }else{                  //普通模式下测试
                 this._normalPlayEnd(nextState)
             }
             this.audioService.releaseSound()
         }else{     //测试下一词
-
-            this._genOptions(nextIndex, this.state.showWordInfos[nextIndex])   
+            this._genOptions(nextIndex, nextState?nextState.showWordInfos[nextIndex] : this.state.showWordInfos[nextIndex])
             const newState = {
                 ...nextState,
                 curIndex:nextIndex, 
@@ -421,7 +453,21 @@ export default class TestPage extends Component {
             }
             this.setState(newState)
 
+
+            //如果是听词选义
+            if(this.props.type === Constant.PRON_TRAN){
+                const amPronUrl = this.state.showWordInfos[nextIndex]?this.state.showWordInfos[nextIndex].am_pron_url:null
+                this.props.playAudio(amPronUrl)
+            }else if(this.props.type === Constant.TRAN_WORD){
+                const trans = this.state.showWordInfos[nextIndex]?
+                    JSON.parse(this.state.showWordInfos[nextIndex].trans):null
+                if(trans){
+                    const transNum = vocaUtil.randomNum(0,Object.keys(trans).length-1)
+                    this.props.setTransNum(transNum)
+                }
+            }
         }
+
     }
 
     _normalPlayEnd = (nextState)=>{
@@ -542,6 +588,7 @@ export default class TestPage extends Component {
         ModifiedWordSet.add(passedWord)
     }
 
+
     render() {
         const {selectedStatus,selectedIndex,showWordInfos,curIndex, leftCount, curCount} = this.state
        
@@ -553,7 +600,6 @@ export default class TestPage extends Component {
       
         return (
             <View style={styles.container}>
-                <StatusBar translucent={true} />
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'light-content' }}

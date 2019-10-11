@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { StyleSheet,Text, View,Image,TouchableOpacity} from 'react-native';
+import { StyleSheet,Text, View,InteractionManager,TouchableOpacity} from 'react-native';
 import {PropTypes} from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as Constant from '../common/constant'
@@ -23,6 +23,11 @@ export default class TaskItem extends Component {
     super(props);
   }
 
+  _startStudyInteraction = ()=>{
+    InteractionManager.runAfterInteractions(() => {
+      this._startStudy()
+    })
+  }
   
   //开始学习
   _startStudy = ()=>{
@@ -42,7 +47,8 @@ export default class TaskItem extends Component {
             }
           }
           if(task && item.listenTimes < task.listenTimes){
-            item = {...item, listenTimes:task.listenTimes, testTimes:task.testTimes}
+            item = VocaUtil.updateNewTaskToReviewTask(item,task)
+            console.log('---1复更新到最新--')
             this.props.updateTask(item)
           }
         }
@@ -69,15 +75,19 @@ export default class TaskItem extends Component {
           case Constant.IN_LEARN_RETEST_2:
             this.props.navigation.navigate('TestSenVoca',{task:item,  isRetest:true, nextRouteName:'Home'})
           break;
+
           //复习
           case Constant.IN_REVIEW_PLAY:
-            this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY,  nextRouteName:'TestVocaTran'})
+            const nextRouteName = this._nextRoute(item.status)
+            this.props.navigation.navigate('VocaPlay',{task:item, mode:Constant.REVIEW_PLAY,  nextRouteName:nextRouteName})
           break;
           case Constant.IN_REVIEW_TEST:
-            this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:false, nextRouteName:'Home'})
+            const routeName1 = this._nextRoute(item.status)
+            this.props.navigation.navigate(routeName1,{task:item, isRetest:false, nextRouteName:'Home'})
           break;
           case Constant.IN_REVIEW_RETEST:
-            this.props.navigation.navigate('TestVocaTran',{task:item, isRetest:true, nextRouteName:'Home'})
+            const routeName2 = this._nextRoute(item.status)
+            this.props.navigation.navigate(routeName2,{task:item, isRetest:true, nextRouteName:'Home'})
           break;
 
         }
@@ -85,6 +95,22 @@ export default class TaskItem extends Component {
       
   }
 
+  _nextRoute = (status)=>{
+    let nextRouteName = 'TestVocaTran'
+    switch (status) {
+      case Constant.STATUS_1:
+      case Constant.STATUS_7:
+        nextRouteName = 'TestTranVoca'
+        break
+      case Constant.STATUS_2:
+        break
+      case Constant.STATUS_4:
+      case Constant.STATUS_15:
+        nextRouteName = 'TestPronTran'
+        break
+    }
+    return nextRouteName
+  }
   _renderRight = ()=>{
     const { item, progressNum } = this.props
     const hasScore = (item.score !== -1)
@@ -131,6 +157,9 @@ export default class TaskItem extends Component {
   }
 
   render() {
+
+    console.log('-----TaskItem 绘制** -------')
+
     this.isVocaTask = (this.props.item.taskType === Constant.TASK_VOCA_TYPE)
     const {index, item, progressNum, disable } = this.props
     //任务名
@@ -156,18 +185,18 @@ export default class TaskItem extends Component {
     return (
       <TouchableOpacity 
       activeOpacity={activeOpacity}
-      onPress={this.isVocaTask?this._startStudy:this._startRead}>
+      onPress={this.isVocaTask?this._startStudyInteraction:this._startRead}>
         <View style={[{paddingHorizontal:12}, disableView]}>
             <View style={[this.props.separator,styles.container]}>
               <View style={gstyles.r_start}>
                 <View style={[gstyles.c_center, {marginRight:10}]}>
                   <Text style={gstyles.serialText}>{index<10?'0'+index:index}</Text>
                 </View>
-                <View stye={styles.nameView}>
+                <View stye={{flex:1}}>
                   <Text style={[gstyles.md_black,{fontWeight:'500'}]}>{name}</Text>
-                  <View style={styles.noteView}>
-                    <Text style={styles.labelText}>{label}</Text>
-                    <Text style={styles.noteText}>{note}</Text>
+                  <View style={gstyles.r_start}>
+                    <Text style={gstyles.labelText}>{label}</Text>
+                    <Text style={gstyles.noteText}>{note}</Text>
                   </View>
                 </View>
               </View>
@@ -192,31 +221,8 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingBottom: 12,
   },
- 
-  nameView: {
-    flex: 1
-  },
 
-  noteView:{
-    flexDirection:'row',
-    justifyContent:'flex-start',
-    alignItems:'center',
-  },
-  noteText: {
-    fontSize:12,
-    lineHeight: 24,
-    marginLeft:3,
-  },
-  labelText: {
-    textAlign:'center',
-    paddingTop:2,
-    lineHeight: 8,
-    paddingHorizontal: 2,
-    fontSize:8,
-    color:gstyles.black,
-    backgroundColor: gstyles.mainColor,
-    borderRadius: 3,
-  },
+
   playView:{
     flexDirection:'row',
     justifyContent:'flex-start',

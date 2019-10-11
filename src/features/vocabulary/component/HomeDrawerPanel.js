@@ -29,11 +29,11 @@ export default class HomeDrawerPanel extends Component {
           this.props.navigation.navigate('Account')
         }}>
           <ImageBackground
-          source={require('../../../image/panel.png')}
+          source={require('../../../image/panel.jpg')}
           style={[styles.header, gstyles.r_between]}
           >
             <View style={gstyles.r_start}>
-              <Image style={styles.headerIcon}   source={require('../../../image/h_icon.png')} />
+              <Image style={styles.headerIcon}   source={require('../../../image/bg.jpg')} />
               <Text style={[gstyles.xl_black,{marginLeft:10}]}>Jacy</Text>
             </View>
             <AliIcon name='youjiantou' size={30} color='#202020' style={{marginRight:10}} />

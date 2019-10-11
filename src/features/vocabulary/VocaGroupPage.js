@@ -2,24 +2,24 @@
 
 'use strict';
 import React, { Component } from "react";
-import {StatusBar, View, Text, TouchableNativeFeedback, Alert, ScrollView,
+import {View, Text, TouchableNativeFeedback, Alert, ScrollView,
     TextInput,Keyboard} from 'react-native';
-import {Header, Button,Icon} from 'react-native-elements'
+import {Header, Button} from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 import CardView from 'react-native-cardview'
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast  from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
 import VocaGroupDao from './service/VocaGroupDao'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
 import DashSecondLine from '../../component/DashSecondLine'
+import ConfirmModal from "../../component/ConfirmModal";
 
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const StatusBarHeight = StatusBar.currentHeight;
+
 
 export default class VocaGroupPage extends Component {
 
@@ -87,6 +87,7 @@ export default class VocaGroupPage extends Component {
                 onClosed={isAdd?this._closeAddModal:this._closeUpdateModal}
                 backdrop={true}
                 backdropPressToClose={true}
+                animationDuration={0.5}
                 position={'bottom'}
                 ref={ref => {
                     isAdd
@@ -115,7 +116,7 @@ export default class VocaGroupPage extends Component {
                 title='取消'
                 titleStyle={gstyles.lg_gray}>
                 </Button>
-                <View style={{width:1,height:30,backgroundColor:'#303030'}}/>
+                <View style={{width:1,height:30,backgroundColor:'#AAA'}}/>
                 <Button type='clear' onPress={isAdd?this._addVocaGroup:this._updateVocaGroup}
                 title='确定'
                 titleStyle={gstyles.lg_black}
@@ -212,7 +213,7 @@ export default class VocaGroupPage extends Component {
                 leftComponent={ 
                     <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
                         this.props.navigation.goBack();
-                    }}></AliIcon> }
+                    }} /> }
                 rightComponent={ <AliIcon name='tongbu' size={24} color={gstyles.black} />}
                 centerComponent={{ text: '生词本', style: gstyles.lg_black_bold }}
                 containerStyle={{
@@ -272,16 +273,8 @@ export default class VocaGroupPage extends Component {
                                                     </TouchableNativeFeedback>
                                                     {/* 删除 */}
                                                     <TouchableNativeFeedback onPress={()=>{
-                                                        Alert.alert(
-                                                            '删除生词本',
-                                                            `是否删除${item.groupName}?`,
-                                                            [
-                                                            {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                                                            {text: '确认', onPress: () => {this._deleteVocaGroup(item.groupName)}}
-                                                            ],
-                                                            { cancelable: false }
-                                                        )
-                                                        
+                                                        this.confirmModalRef.show(`删除生词本"${item.groupName}"?`,'取消','确认',()=>null,
+                                                            () => {this._deleteVocaGroup(item.groupName)})
                                                     }}>
                                                         <Text style={{fontSize:14, color:'red', marginRight:10}}>删除</Text>
                                                     </TouchableNativeFeedback>
@@ -306,7 +299,7 @@ export default class VocaGroupPage extends Component {
                         <View style={gstyles.r_around}>
                             <Button 
                             type="clear"
-                            icon={ <Icon name="add"  size={24} color="#303030" />}
+                            icon={ <AliIcon name="tianjia"  size={20} color="#303030" />}
                             title='添加'
                             titleStyle={gstyles.md_black_bold}
                             onPress={this._openAddModal}>
@@ -314,7 +307,7 @@ export default class VocaGroupPage extends Component {
                             <View style={{width:1,height:20,backgroundColor:'#555'}}></View>
                             <Button 
                             type="clear"
-                            icon={ <Icon name="edit"  size={20} color="#303030" />}
+                            icon={ <AliIcon name="bianji1"  size={20} color="#303030" />}
                             title={this.state.inEdit?'完成':'编辑'}
                             titleStyle={gstyles.md_black_bold}
                             onPress={this._toggleEdit}>
@@ -334,6 +327,9 @@ export default class VocaGroupPage extends Component {
                 }
                 {
                     this._createModal(false) //创建修改弹框
+                }
+                {
+                    <ConfirmModal ref={ref=>this.confirmModalRef = ref} />
                 }
             </View>    
         );

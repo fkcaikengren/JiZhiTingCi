@@ -176,7 +176,7 @@ export default class VocaUtil{
      */
     static genTaskName = (taskOrder)=>{
         if(taskOrder === Constant.VIRTUAL_TASK_ORDER){
-            return '听词'
+            return '爱听词'
         }
         if(taskOrder){
             let name = ''
@@ -196,7 +196,7 @@ export default class VocaUtil{
 
 
     /**
-     * @description 生成一个minNum到maxMum间的随机数
+     * @description 生成一个minNum到maxMum间的随机数 (含头含尾)
      * @memberof VocaUtil
      */
     static randomNum = (minNum, maxNum) => {
@@ -210,20 +210,29 @@ export default class VocaUtil{
      * @description 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
      * @memberof VocaUtil
      */
-    static randomArr = (minNum, maxNum, numArr) => {
+    static randomArr = (minNum, maxNum, numArr, word, wordInfos) => {
         //判断错误
         if((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof numArr !== "object")){
             throw new Error('参数类型错误，minNum, maxNum must be number, numArr must be object ')
         }
         let options = []
-
+        console.log('--生成选项时 word -')
+        console.log(word)
         for(let i of [1,2,3]){ //产生3个选项
             let option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
-            while(options.includes(option) || numArr.includes(option)){
+            while(options.includes(option) || numArr.includes(option) || word===wordInfos[option].word){
+                if(word===wordInfos[option].word){
+                    // console.log('--------生成选项时，单词重复-------------')
+                    // console.log(word)
+                }
                 option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
             }
             options.push(option)
         }
+        // console.log('--------生成选项时，单词-------------')
+        // for(let o of options){
+        //     console.log(wordInfos[o].word)
+        // }
         return options
     }
 
@@ -379,7 +388,6 @@ export default class VocaUtil{
         return (sum/count).toFixed(1)
     }
 
-
     /** 
      * 构建一个虚拟Task 
      * words 是task的words
@@ -387,14 +395,7 @@ export default class VocaUtil{
     static genVirtualTask = (words)=>{
         let copyTask = {
             taskOrder: Constant.VIRTUAL_TASK_ORDER,
-            // status: null,
-            // vocaTaskDate: task.vocaTaskDate,
-            // progress: task.progress,
             curIndex:0,
-            // leftTimes:task.leftTimes,
-            // delayDays:task.delayDays,
-            // createTime:task.createTime,
-            // isSync: task.isSync,
             words: [],
             wordCount: words.length,
             listenTimes: 0,
@@ -419,7 +420,6 @@ export default class VocaUtil{
                 })
             }
         }
-        
         return copyTask
     }
 
@@ -523,6 +523,19 @@ export default class VocaUtil{
             }
         })
         return uploadedTask
+    }
+
+    /**
+     * 新学任务数据迁移至1复任务
+     * @param reviewTask 1复任务
+     * @param newTask  新学任务
+     * @returns
+     * */
+    static updateNewTaskToReviewTask = (reviewTask, newTask)=>{
+        const ws = newTask.words.map((w,i)=>{
+            return {...w,testWrongNum:0}
+        })
+        return {...reviewTask, listenTimes:newTask.listenTimes, testTimes:newTask.testTimes, words:ws}
     }
 
 }

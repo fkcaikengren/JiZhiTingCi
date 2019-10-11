@@ -3,6 +3,7 @@ import VocaTaskDao from '../../service/VocaTaskDao';
 import ArticleDao from "../../../reading/service/ArticleDao";
 import VocaUtil from "../../common/vocaUtil";
 import * as Constant from "../../common/constant";
+import {store} from "../../../../redux/store";
 
 
 /**获取单词书 */
@@ -36,7 +37,9 @@ export function * postPlan(params){
         artDao.saveArticles(articles)
         //加载今日数据
         const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)
-        yield put({type:'CLEAR_PLAY'})
+        if(store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK){
+            yield put({type:'CLEAR_PLAY'})
+        }
         yield put({type:'LOAD_TASKS_SUCCEED', payload:{tasks:rawTasks}})
         yield put({type:'CHANGE_VOCA_BOOK_SUCCEED', plan:plan,
             totalDays:tasks.length+Constant.LEFT_PLUS_DAYS,

@@ -37,24 +37,33 @@ export default class PlayController extends React.Component {
 
     //选择测试
      _chooseTest = (value) =>{
+
+
+
         const {navigate} = this.props.navigation
         const {task} = this.props.vocaPlay
         const testTask = {...task, curIndex:0}
-        this._pause()
-        switch(value){
-            case 0: //中义选词测试
-                // this.props.navigation.navigate('TestEnTran');
-                break;
-            case 1: //例句选词测试
-                // this.props.navigation.navigate('TestSentence');
-                break;
-            case 2: //词选中义测试 
-                navigate('TestVocaTran',{task:testTask, mode:'normal', isRetest:false})
-                break;
-            case 3: //听音选词测试
-                alert(value);
-                break;
-        }
+         //如果没有列表单词，则提示
+         if(task.words && task.words.length>0 && task.wordCount>0){
+             this._pause()
+             switch(value){
+                 case 0: //中义选词测试
+                     navigate('TestTranVoca',{task:testTask, mode:'normal', isRetest:false})
+                     break;
+                 case 1: //例句选词测试
+                     navigate('TestSenVoca',{task:testTask, mode:'normal', isRetest:false})
+                     break;
+                 case 2: //词选中义测试
+                     navigate('TestVocaTran',{task:testTask, mode:'normal', isRetest:false})
+                     break;
+                 case 3: //听音选义测试
+                     navigate('TestPronTran',{task:testTask, mode:'normal', isRetest:false})
+                     break;
+             }
+         }else{
+            this.props.toastRef.show('没有单词可以测试')
+         }
+
     }
 
     //选择主题
@@ -156,10 +165,10 @@ export default class PlayController extends React.Component {
                 {/* 功能按钮 */}
                 <Row style={[{ marginHorizontal:10, marginBottom:10},gstyles.r_around]}>
                  {/* 英文单词按钮 */}
-                    <TouchableWithoutFeedback onPress={()=>{toggleWord()}}>
-                        <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>en</Text>
-                    </TouchableWithoutFeedback>
-                    
+                    <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}
+                          onStartShouldSetResponder={() => true}
+                          onResponderStart={(e)=>{toggleWord()}}
+                    >en</Text>
                     {/* 测试按钮 */}
                     <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{placement: 'top'}}>
                         <MenuTrigger text='测试' customStyles={{triggerText: styles.triggerText,}}/>
@@ -174,7 +183,7 @@ export default class PlayController extends React.Component {
                                 <Text  style={popStyle}>词选中义测试</Text>
                             </MenuOption>
                             <MenuOption value={3}>
-                                <Text style={popStyle}>听音选词测试</Text>
+                                <Text style={popStyle}>听音选义测试</Text>
                             </MenuOption>
                         </MenuOptions>
                     </Menu>
@@ -192,9 +201,10 @@ export default class PlayController extends React.Component {
                         </MenuOptions>
                     </Menu>
                     {/* 中文按钮 */}
-                    <TouchableWithoutFeedback onPress={()=>{toggleTran()}}>
-                        <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>zh</Text>
-                    </TouchableWithoutFeedback>
+                    <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}
+                          onStartShouldSetResponder={() => true}
+                          onResponderStart={(e)=>{toggleTran()}}
+                    >zh</Text>
                 </Row>
             
                  {/* 进度条 */}

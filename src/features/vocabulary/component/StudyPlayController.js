@@ -93,19 +93,19 @@ export default class StudyPlayController extends React.Component {
                     marginBottom:16,
                 }}>
                  {/* 英文单词按钮 */}
-             
-                    <TouchableWithoutFeedback onPress={this._toggleWord}>
-                        <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}>
-                            en
-                        </Text>
-                    </TouchableWithoutFeedback>
+
+                    <Text style={[styles.textIcon, showWord?selected:styles.unSelected]}
+                          onStartShouldSetResponder={() => true}
+                          onResponderStart={(e)=>{this._toggleWord()}}>
+                        en
+                    </Text>
                   
                     {/* 中文按钮 */}
-                    <TouchableWithoutFeedback onPress={this._toggleTran}>
-                        <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}>
-                            zh
-                        </Text>
-                    </TouchableWithoutFeedback>
+                    <Text style={[styles.textIcon, showTran?selected:styles.unSelected]}
+                          onStartShouldSetResponder={() => true}
+                          onResponderStart={(e)=>{this._toggleTran()}}>
+                        zh
+                    </Text>
                 </Row>
             
                  {/* 进度条 */}

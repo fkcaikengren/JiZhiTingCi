@@ -20,6 +20,7 @@ import TestTranVocaPage from '../features/vocabulary/TestTranVocaPage'
 import TestSenVocaPage from '../features/vocabulary/TestSenVocaPage';
 import TestPronTranPage from '../features/vocabulary/TestPronTranPage'
 import BgSelectorPage from '../features/vocabulary/BgSelectorPage'
+import VocaDetailPage from '../features/vocabulary/VocaDetailPage'
 
 //文章模块
 import AnalysisPage from '../features/reading/AnalysisPage'
@@ -145,6 +146,7 @@ const VocaHomeStackNav = createStackNavigator(
         screen: GroupVocaPage,
       },
 
+        //文章管理页
       ArticleManage:{
          screen: ArticleManagePage,
       },
@@ -165,11 +167,16 @@ const VocaHomeStackNav = createStackNavigator(
       TestSenVoca: {
         screen: TestSenVocaPage,
       },
-        
-      BgSelector: {
-        screen: BgSelectorPage
-      },
 
+        //背景选择页
+        BgSelector: {
+            screen: BgSelectorPage
+        },
+
+        //单词详情页
+        VocaDetail: {
+          screen : VocaDetailPage,
+        },
       
         //解析页面
         Analysis:{

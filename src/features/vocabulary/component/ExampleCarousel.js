@@ -4,16 +4,19 @@ import Swiper from 'react-native-swiper'
 import {PropTypes} from 'prop-types';
 import AudioService from '../../../common/AudioService'
 import * as CConstant from "../../../common/constant";
+import AliIcon from "../../../component/AliIcon";
+import {BASE_URL} from "../../../common/constant";
+import gstyles from "../../../style";
 
 const { width } = Dimensions.get('window')
-const Location = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
+
+
 
 const styles = StyleSheet.create({
     wrapper: {
         width:width-20,
         height:0.5617*(width-20)
     },
-
     slide: {
         flex: 1,
         justifyContent: 'center',
@@ -23,7 +26,7 @@ const styles = StyleSheet.create({
         width:width-20,
         height:0.5617*(width-20),
         borderRadius:5,
-        backgroundColor: '#FFE957',
+        backgroundColor: 'rgba(0,0,0,.1)'
     },
 
     origin:{
@@ -66,16 +69,19 @@ export default class ExampleCarousel extends Component {
 
 
   shouldComponentUpdate(nextProps, nextState){
-    if(this.props.examples === nextProps.examples){
-      return false
-    }else{
-      if(this._swiper && this.curIndex !== 0){
-        this._swiper.scrollBy(0-this.curIndex,false)
-        this.shouldPlay = false
+      if(this.state.loadQueue !== nextState.loadQueue ){
+          return true
       }
-    }
+      if(this.props.examples === nextProps.examples){
+          return false
+      }else{
+          if(this._swiper && this.curIndex !== 0){
+              this._swiper.scrollBy(0-this.curIndex,false)
+              this.shouldPlay = false
+          }
+      }
+      return true
 
-    return true
   }
 
   _loadHandle (i) {
@@ -137,7 +143,7 @@ export default class ExampleCarousel extends Component {
                           })
 
                         }}>
-                          <Image onLoad={()=>{this._loadHandle(i)}} style={styles.image} source={{uri: Location+item.pic_url}} />
+                            <Image style={styles.image} source={{uri: BASE_URL+item.pic_url}} />
                         </TouchableWithoutFeedback>
                         <Text style={styles.origin}>{item.origin}</Text>
                         <View style={styles.bottomView}>

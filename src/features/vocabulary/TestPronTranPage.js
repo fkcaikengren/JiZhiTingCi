@@ -10,6 +10,7 @@ import * as Constant from './common/constant'
 import AudioService from '../../common/AudioService'
 import * as VocaLibAction from "./redux/action/vocaLibAction";
 import * as CConstant from "../../common/constant";
+import vocaUtil from "./common/vocaUtil";
 
 const styles = StyleSheet.create({
     
@@ -37,14 +38,12 @@ class TestPronTranPage extends Component {
 
     constructor(props){
         super(props);
-
         this.state = {
             isPlaying : false
         }
-
         console.disableYellowBox=true
-
     }
+
 
     _startPlay = ()=>{  
         this.setState({isPlaying:true})
@@ -53,15 +52,24 @@ class TestPronTranPage extends Component {
     _finishPlay = ()=>{
         setTimeout(()=>{
             this.setState({isPlaying:false})
-        },1000)
+        },500)
     }
     _failPlay = ()=>{
         this.setState({isPlaying:false})
     }
 
+    _playAudio = (amPronUrl)=>{
+        // this.setState({isPlaying})
+        //播放单词音频
+        AudioService.getInstance().playSound({
+            pDir : CConstant.VOCABULARY_DIR,
+            fPath : amPronUrl
+        },this._startPlay,this._finishPlay,this._failPlay)
+    }
+
     _renderContent = (state)=>{
         const {showWordInfos, curIndex, task} = state
-        const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''
+        const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:null
         const words = vocaUtil.getNotPassedWords(task.words)
         const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
         return <View  style={styles.content}>
@@ -97,6 +105,7 @@ class TestPronTranPage extends Component {
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.PRON_TRAN}
                 renderContent={this._renderContent}
+                playAudio={this._playAudio}
             />
         )
     }

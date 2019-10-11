@@ -706,6 +706,12 @@ yarn add react-native-mock --dev
 
 
 
+4.打包时，react-native-picker:verifyReleaseResources FAILED
+
+参考：https://github.com/beefe/react-native-picker/issues/374
+
+解决：修改编译版本
+
 
 
 # 集成
@@ -747,7 +753,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 //生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "生产环境热更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "第4次生产环境更新" --m true
 ```
 
 
@@ -757,5 +763,10 @@ code-push release-react aitingci android --dev false --d Production --des "生�
 ```
 //查看签名
 keytool -list -v -keystore aitingci.jks
+
+//进入android目录后打包
+./gradlew assembleStaging
+./gradlew assembleRelease
+
 ```
 

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     content:{
-        marginTop:12,
+        marginTop:20,
         width:'100%'
     },
     backgroundVideo: {
@@ -145,46 +145,20 @@ const styles = StyleSheet.create({
     },
     taskItem:{
         width:'100%',
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
         paddingHorizontal:10,
         paddingVertical:8,
         borderColor: '#F4F4F4',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
-    nameView: {
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'flex-start',
-    },  
-    nameText: {
-        fontSize: 18,
-        color:'#303030'
-    },
-    noteText: {
-        fontSize:12,
-        lineHeight: 16,
-    },
+
+
+
     WrongAvgDot: {
         width:4,
         height:4,
         borderRadius:20
     },
-    closeBtn:{
 
-        width:60,
-        height:60,
-        backgroundColor: '#FFF',//'#FFE957',
-        borderRadius:50,
-        elevation:5,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        position:'absolute',
-        bottom:10,
-        alignSelf:'center'
-    },
     bgImage: {
         position: 'absolute',
         left: 0,

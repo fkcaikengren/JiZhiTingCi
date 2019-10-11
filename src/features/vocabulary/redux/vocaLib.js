@@ -19,6 +19,7 @@ const defaultState ={
     leftDays : 0,           // 剩余学习天数
 
     //加载状态
+    loadingType: 'normal',       //'normal', 'genPlan'
     isLoadPending:false,
 }
 
@@ -31,15 +32,17 @@ export const vocaLib =  (state=defaultState, action) => {
         case vl.LOAD_VOCA_BOOKS_SUCCEED :
             return { ...state, books:action.books, isLoadPending:false};
         case vl.CHANGE_VOCA_BOOK_START :
-            return { ...state,  isLoadPending:true};
+            return { ...state,  isLoadPending:true, loadingType: 'genPlan'};
         case vl.CHANGE_VOCA_BOOK_SUCCEED :
             const {plan, totalWordCount, totalDays} = action
             return { ...state,
                 plan:{...state.plan, ...plan},
+                learnedWordCount:0,
                 totalWordCount:totalWordCount,
                 totalDays:totalDays,
                 leftDays : totalDays,
-                isLoadPending:false
+                isLoadPending:false,
+                loadingType: 'normal'
             };
         case vl.CHANGE_LEFT_DAYS :
             return {...state,leftDays:action.payload.leftDays}

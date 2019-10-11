@@ -56,8 +56,9 @@ export default class ConfirmModal extends Component {
             backdropPressToClose={true}
             swipeToClose={false}
             position={'center'}
-            >
-        <View style={[gstyles.c_center,{height:'69%'}]}>
+            animationDuration={1}
+        >
+        <View style={[gstyles.c_center,{height:'69%',paddingHorizontal:10}]}>
             <Text style={[gstyles.lg_black_bold]}>
                 {this.state.title}
             </Text>
@@ -69,7 +70,7 @@ export default class ConfirmModal extends Component {
             titleStyle={gstyles.lg_gray}
             containerStyle={{flex:1}}>
             </Button>
-            <View style={{width:1,height:30,backgroundColor:'#303030'}}/>
+            <View style={{width:1,height:30,backgroundColor:'#AAA'}}/>
             <Button type='clear' onPress={this._onConfirm}
             title={this.state.confirmText}
             titleStyle={[gstyles.lg_black,{color:gstyles.secColor}]}

@@ -64,10 +64,7 @@ const styles = StyleSheet.create({
         paddingVertical:10,
     },
  
-    itemRight:{
-        flex:1,
-        paddingLeft:10,
-    },
+
     checkBox:{
         margin:0,
         padding:0,

@@ -49,7 +49,6 @@ public class FeedBackModule extends ReactContextBaseJavaModule {
         } else {
             FeedbackAPI.setAppExtInfo(null);
         }
-//        FeedbackAPI.setTitleBarHeight(ScreenUtil.dip2px(mReactContext, 50));
         FeedbackAPI.setTranslucent(false);
         FeedbackAPI.openFeedbackActivity();
 }

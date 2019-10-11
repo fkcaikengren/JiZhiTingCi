@@ -71,7 +71,7 @@ export default class AccountPage extends React.Component {
 
     render(){
         let {user,avatarSource} = this.state
-        const source = avatarSource?avatarSource:require('../../image/h_icon.png')
+        const source = avatarSource?avatarSource:require('../../image/bg.jpg')
         return(
             <View style={styles.container}>
                 {/* 头部 */}

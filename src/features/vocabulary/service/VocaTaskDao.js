@@ -23,8 +23,6 @@ const VocaTaskSchema = {
         delayDays:{type: 'int',optional:true, default: 0},
             //创建时间
         createTime:'int?',
-            //是否同步
-        isSync: {type: 'bool',optional:true, default: true},
         //任务单词数组
         words: 'TaskWord[]',
         //未被pass的单词数量
@@ -224,6 +222,15 @@ export default class VocaTaskDao {
      */
     getLearnedTasks = ()=>{
         let vocaTasks = this.realm.objects('VocaTask').filtered('status > 0')
+        return vocaTasks;
+    }
+
+    /**
+     * 倒序获取已学任务
+     * @returns {Realm.Results<any>} 查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
+     */
+    getLearnedTasks = ()=>{
+        let vocaTasks = this.realm.objects('VocaTask').filtered('status > 0 SORT(vocaTaskDate DESC)')
         return vocaTasks;
     }
 

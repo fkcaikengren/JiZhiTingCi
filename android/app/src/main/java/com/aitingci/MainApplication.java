@@ -1,15 +1,16 @@
 package com.aitingci;
 
 import android.app.Application;
+import android.util.Log;
 import android.webkit.WebView;
 
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import com.ali.feedback.FeedbackPackage;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.beefe.picker.PickerViewPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
-import com.rnziparchive.RNZipArchivePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -24,9 +25,12 @@ import com.ocetnik.timer.BackgroundTimerPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.rnziparchive.RNZipArchivePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.um.UmengConfig;
 import com.um.UmengReactPackage;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import com.zmxv.RNSound.RNSoundPackage;
 
@@ -39,7 +43,6 @@ import androidx.multidex.MultiDex;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.react.RealmReactPackage;
-import com.ali.feedback.FeedbackPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -127,10 +130,28 @@ public class MainApplication extends Application implements ReactApplication {
 
     //友盟初始化
     UmengConfig.init(this);
+    //分享初始化
+    initPush();
 
     //阿里百川的反馈模块初始化
     FeedbackAPI.init(this, "27947681","c132858beb95ea7b6b38c1576c25bace ");
 
+  }
+
+
+  private void initPush(){
+    PushAgent.getInstance(this).register(new IUmengRegisterCallback(){
+
+      @Override
+      public void onSuccess(String s) {
+        Log.i("walle", "--->>> onSuccess, s is " + s);
+      }
+
+      @Override
+      public void onFailure(String s, String s1) {
+        Log.i("walle", "--->>> onFailure, s is " + s + ", s1 is " + s1);
+      }
+    });
   }
 }
 

@@ -50,7 +50,7 @@ const gstyles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
-    c_center_start:{
+    c_center_left:{
         flexDirection:'column',
         justifyContent:'center',
         alignItems:'flex-start',
@@ -81,7 +81,21 @@ const gstyles = StyleSheet.create({
         alignItems:'center',
     },
 
-
+    noteText: {
+        fontSize:12,
+        lineHeight: 24,
+        marginLeft:3,
+    },
+    labelText: {
+        textAlign:'center',
+        paddingTop:2,
+        lineHeight: 8,
+        paddingHorizontal: 2,
+        fontSize:8,
+        color:'#202020',
+        backgroundColor: '#FFE957',
+        borderRadius: 3,
+    },
 
 
     haireBottom:{
@@ -153,6 +167,19 @@ const gstyles = StyleSheet.create({
         backgroundColor:'#FDFDFD'
     },
 
+    closeBtn:{
+        width:60,
+        height:60,
+        backgroundColor: '#FFF',//'#FFE957',
+        borderRadius:50,
+        elevation:5,
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+        position:'absolute',
+        bottom:10,
+        alignSelf:'center'
+    },
 
     //灰色
     xs_lightGray:{

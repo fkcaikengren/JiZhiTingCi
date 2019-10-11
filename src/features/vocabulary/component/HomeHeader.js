@@ -2,7 +2,7 @@
 
 'use strict';
 import React, { Component } from 'react';
-import {StyleSheet,Text,View,Image,Animated, TouchableOpacity} from 'react-native';
+import {StyleSheet,Text,View,Image,Animated, InteractionManager} from 'react-native';
 import {PropTypes} from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import {Grid, Col, Row} from 'react-native-easy-grid'
@@ -22,7 +22,7 @@ export default class HomeHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      shift: new Animated.Value(0)
+      shift: new Animated.Value(0),
     };
   }
 
@@ -155,26 +155,41 @@ export default class HomeHeader extends Component {
 
   /**导航到词库页面 */
   _navVocaLib = ()=>{
-    this.props.navigation.navigate('VocaLib',{transition:'forFadeToBottomAndroid'});
+
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaLib',{transition:'forFadeToBottomAndroid'});
+    })
+
   }
 
   /**导航到单词列表页 */
   _navVocaList = ()=>{
-    this.props.navigation.navigate('VocaListTab', {transition:'forFadeToBottomAndroid'});
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaListTab', {transition:'forFadeToBottomAndroid'});
+    })
+
   }
 
   /**导航到生词本页面 */
   _navVocaGroup = ()=>{
-    this.props.navigation.navigate('VocaGroup',{transition:'forFadeToBottomAndroid'});
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaGroup',{transition:'forFadeToBottomAndroid'});
+    })
   }
 
-  /**导航到生词本页面 */
+  /**导航到搜索页面 */
   _navVocaSearch = ()=>{
-    this.props.navigation.navigate('VocaSearch');
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaSearch');
+    })
+
   }
 
   _navArticleManage = ()=>{
-    this.props.navigation.navigate('ArticleManage',{transition:'forFadeToBottomAndroid'});
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('ArticleManage',{transition:'forFadeToBottomAndroid'});
+    })
+
   }
 
 

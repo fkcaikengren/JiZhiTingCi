@@ -25,7 +25,7 @@ export const CLEAR_PLAY = 'CLEAR_PLAY'    //清空任务
 
 //驼峰式命名，不可以更改(与变量名必须对应)
 export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
-  changeBg,showBlur, changeTheme,passWord , changeNormalType} = createActions({
+  changeBg,showBlur, changeTheme,passWord , changeNormalType, clearPlay} = createActions({
 
     //加载任务  
     [LOAD_TASK] : (task,showWordInfos)=>{
@@ -80,6 +80,9 @@ export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, ch
       return {normalType}
     },
 
+    [CLEAR_PLAY] : ()=>{
+      return {}
+    }
    
   });
 

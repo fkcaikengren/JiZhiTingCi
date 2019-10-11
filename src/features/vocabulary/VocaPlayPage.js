@@ -148,7 +148,7 @@ class VocaPlayPage extends React.Component {
             if(this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK || normalType  === Constant.BY_VIRTUAL_TASK){
                 const task = this.props.navigation.getParam('task')
                 console.log('-----------------virtual task---------------------')
-                // console.log(task)
+                console.log(task)
                 if(task){
                     const showWordInfos = VocaUtil.getShowWordInfos(task.words)
                     this.props.loadTask(task, showWordInfos)
@@ -169,9 +169,13 @@ class VocaPlayPage extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         //如果播放状态变化
-        if(prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
+        if(this.state.autoPlayTimer && prevState.autoPlayTimer !== this.state.autoPlayTimer) {
+            this.vocaPlayService.listRef.closePassBtn()
+        }else if(prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
             this.vocaPlayService.listRef.closePassBtn()
         }
+
+
     }
 
     componentWillUnmount(){ //退出界面
@@ -389,7 +393,7 @@ class VocaPlayPage extends React.Component {
                                     //关闭侧滑
                                     this.vocaPlayService.listRef.closePassBtn()
                                     if(task.wordCount <= 3){
-                                        this.refs.toastRef.show('只剩5个了，不能再pass了哦')
+                                        this.refs.toastRef.show('只剩3个了，不能再pass了哦')
                                     }else{
                                         this._passWord(item.word)
                                     }
@@ -430,15 +434,17 @@ class VocaPlayPage extends React.Component {
 
     // 渲染任务列表
     _renderTaskItem = ({item, index})=>{
-        const {autoPlayTimer} = this.props.vocaPlay
+        const {autoPlayTimer, themes} = this.props.vocaPlay
         const { loadTask, changeNormalType} = this.props
         let name = VocaUtil.genTaskName(item.taskOrder)
         const listenTimes = item.listenTimes
+        const testTimes = item.testTimes
+        const label = item.status===Constant.STATUS_200?'掌握':'学习 '
         const wrongAvg = VocaUtil.calculateWrongAvg(item.words)
         let dotColor = ''
-        if(wrongAvg < 0.4){ 
+        if(wrongAvg < 0.5){
             dotColor = '#1890FF'
-        }else if(wrongAvg > 1.5){
+        }else if(wrongAvg > 1.8){
             dotColor = '#F2753F'
         }else{
             dotColor = '#FFE957'
@@ -460,16 +466,21 @@ class VocaPlayPage extends React.Component {
             // NotificationManage.play((e)=>{
             //     console.log(e)
             // },()=>null);
+            //随机切换主题
+            this.props.changeTheme(VocaUtil.randomNum(0,themes.length-1))
         }}>
-            <View style={styles.taskItem}>
-                <View style={gstyles.r_start}>
+            <View style={[styles.taskItem,gstyles.r_between]}>
+                <View style={[{flex:1,height:'100%'},gstyles.r_start]}>
                     <View style={[gstyles.c_center, {marginRight:10}]}>
                         <Text style={gstyles.serialText}>{index<9?'0'+(index+1):(index+1)}</Text>
                         <View style={[styles.WrongAvgDot,{backgroundColor:dotColor}]} />
                     </View>
-                    <View style={styles.nameView}>
-                        <Text style={styles.nameText}>{name}</Text>
-                        <Text style={[styles.noteText]}>{`共${item.wordCount}词，已听${listenTimes}遍`}</Text>
+                    <View style={{flex:1}}>
+                        <Text style={gstyles.lg_black}>{name}</Text>
+                        <View style={[gstyles.r_start]}>
+                            <Text style={gstyles.labelText}>{label}</Text>
+                            <Text style={[gstyles.noteText]}>{`共${item.wordCount}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>
+                        </View>
                     </View>
                 </View>
                 <FontAwesome name="play-circle" size={24} color="#999" style={{marginRight:10}}/>
@@ -489,7 +500,7 @@ class VocaPlayPage extends React.Component {
         // 获取任务列表数据
         const {isTasksModalOpened} = this.state
         const data = this.taskDao.getLearnedTasks().filter((task,index)=>{
-            if(task.vocaTaskDate === _util.getDayTime(0) && task.status === Constant.STATUS_1){
+            if(task.vocaTaskDate === _util.getDayTime(0)){
                 if(task.progress === Constant.IN_REVIEW_FINISH){ //复习
                     return true
                 }else{
@@ -579,7 +590,7 @@ class VocaPlayPage extends React.Component {
                     <VocaCard wordInfo={showWordInfos[this.state.clickIndex]}/>
                 }
             <TouchableWithoutFeedback onPress={this._closeVocaModal}>
-                <View style={styles.closeBtn}>
+                <View style={gstyles.closeBtn}>
                     <AliIcon name='cha' size={20} color={gstyles.black} />
                 </View>
             </TouchableWithoutFeedback>
@@ -601,7 +612,7 @@ class VocaPlayPage extends React.Component {
                 />
         }else{
             return <PlayController {...this.props} autoplay={this.vocaPlayService.autoplay} 
-                openTaskListModal={this._openTaskListModal}  />
+                openTaskListModal={this._openTaskListModal}  toastRef={this.refs.toastRef}/>
         }
     }
 
@@ -639,6 +650,15 @@ class VocaPlayPage extends React.Component {
 
     }
 
+    _share = ()=>{
+        //    [0, 1, 2, 3, 4, 5, 6] 表示 [QQ,微博，微信，朋友圈，空间，邮件，短信]
+        const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
+        const url = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html'
+        ShareUtil.shareboard('我在爱听词听单词，一起吧！', imgUrl, url, '爱听词', [ 2, 3, ], (code, message) => {
+            console.log("result:" + code + message);
+        });
+    }
+
 
     render(){
 
@@ -652,10 +672,10 @@ class VocaPlayPage extends React.Component {
         this.totalTimes = this.mode===Constant.LEARN_PLAY?Constant.LEARN_PLAY_TIMES:Constant.REVIEW_PLAY_TIMES
         this.finishedTimes = task.leftTimes?this.totalTimes-task.leftTimes:0
        
-        const contentHeight = this.isStudyMode?height-STATUSBAR_HEIGHT-210:height-STATUSBAR_HEIGHT-250
+        const contentHeight = height-STATUSBAR_HEIGHT-260
 
         const imgSource = (bgPath && bgPath!=='')?{ uri : Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath }:
-        require('../../image/7.jpg')
+        require('../../image/bg.jpg')
         return(
            <View style={{flex: 1, }}>
                <Image style={[styles.bgImage]}
@@ -668,8 +688,8 @@ class VocaPlayPage extends React.Component {
                    style={styles.absolute}
                    viewRef={this.state.viewRef}
                    blurType="light"
-                   blurAmount={32} //最大模糊
-                   blurRadius={24} //最大
+                   blurAmount={28} //最大模糊32
+                   blurRadius={20} //最大24
                    overlayColor={'#80808066'}   // set a overlay
                />
                }
@@ -682,13 +702,8 @@ class VocaPlayPage extends React.Component {
                        }}/>  }
                    centerComponent={{ text:task.taskOrder?name:'未选择', style: gstyles.lg_white_bold }}
                    rightComponent={this.isStudyMode?
-                       <Text style={gstyles.md_black}>{`${this.finishedTimes+1}/${this.totalTimes}`}</Text>:
-                       <AliIcon name='fenxiang' size={26} color='#FFF' onPress={()=>{
-                           const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
-                           ShareUtil.shareboard('我在爱听词听单词', imgUrl, 'http://www.baidu.com', '爱听词播放', [0, 1, 2, 3, 4, 5, 6], (code, message) => {
-                               console.log("result:" + code + message);
-                           });
-                       }}/> }
+                       <Text style={{color:'#FFF',fontSize:16}}>{`${this.finishedTimes+1}/${this.totalTimes}`}</Text>:
+                       <AliIcon name='fenxiang' size={26} color='#FFF' onPress={this._share}/> }
                    containerStyle={{
                        backgroundColor: '#FCFCFC00',
                        borderBottomColor: '#FCFCFC00',

@@ -37,7 +37,14 @@ class TestTranVocaPage extends Component {
 
     constructor(props){
         super(props);
+        this.state={
+            transNum:0,
+        }
         console.disableYellowBox=true
+    }
+
+    _setTransNum = (transNum)=>{
+        this.setState({transNum})
     }
 
     _renderContent = (state)=>{
@@ -48,10 +55,14 @@ class TestTranVocaPage extends Component {
         let property = ''
         let translation = ''
         if(trans){
+            let i = 0
             for(let k in trans){
-                property = k
-                translation = trans[k]
-                break;
+                if(i === this.state.transNum){
+                    property = k
+                    translation = trans[k]
+                    break
+                }
+                i++
             }
         }
         return <View  style={styles.content}>
@@ -71,6 +82,7 @@ class TestTranVocaPage extends Component {
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.TRAN_WORD}
                 renderContent={this._renderContent}
+                setTransNum={this._setTransNum}
             />
         )
     }

@@ -35,34 +35,15 @@ export const home =  (state=defaultState, action) => {
             };
         //更新任务
         case ha.UPDATE_TASK :
-            let isNewFinish = false
             const task = action.payload.task
             const tasks = state.tasks.map((item, i)=>{
                 if(item.taskOrder === task.taskOrder && item.status === task.status){ //要更新的
-                    if(task.status === Constant.STATUS_0 && task.progress === Constant.IN_LEARN_FINISH){ //新学完成
-                        isNewFinish = true
-                    }else{
-                        task.isSyncLocal = false
-                        task.isSync = false
-                    }
                     return task
                 }else{
                     return item
                 }
             })
 
-            if(isNewFinish){
-                //改其对于的 1复为需要同步
-                for(let t of tasks){
-                    if(t.taskOrder === task.taskOrder && t.status === Constant.STATUS_1){
-                        console.log('--------修改 1复 sync------------')
-                        // console.log()
-                        t.isSyncLocal = false
-                        t.isSync = false
-                        break
-                    }
-                }
-            }
             console.log('----redudx: after update tasks-----------')
             // console.log(tasks)
             // //保存至本地

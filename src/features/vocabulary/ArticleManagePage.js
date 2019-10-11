@@ -85,7 +85,7 @@ export default class ArticleManagePage extends Component {
                        borderBottomWidth: StyleSheet.hairlineWidth,}, hasScore?gstyles.r_between_bottom:gstyles.r_between]}>
                        <View stye={styles.nameView}>
                            <Text style={[gstyles.md_black,{fontWeight:'500'}]}>{item.name}</Text>
-                           <View style={styles.noteView}>
+                           <View style={styles.r_start}>
                                <Text style={styles.noteText}>{item.note}</Text>
                            </View>
                        </View>

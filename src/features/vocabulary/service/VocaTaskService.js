@@ -1,6 +1,4 @@
 
-
-
 import * as Constant from '../common/constant'
 import _util from '../../../common/util'
 import VocaUtil from '../common/vocaUtil'
@@ -55,12 +53,10 @@ export default class VocaTaskService {
                     //step2.学习：不产生任何学习数据
                     //step3.计算、保存任务
                     storedTasks = VocaUtil.filterRawTasks(todayTasks)
-                    this.storeTasks(storedTasks)
-                    for(let task of storedTasks){
-                        if(!task.isSyncLocal){
-                            task.isSyncLocal = true
-                        }
+                    if(storedTasks.length > 0){
+                        this.vtd.modifyTasks(storedTasks)
                     }
+                    this.storeTasks(storedTasks)
                 }
             }else if(d > 13){
                 //重学
@@ -72,16 +68,21 @@ export default class VocaTaskService {
                         rt.vocaTaskDate = 0
                         rt.progress = Constant.IN_LEARN_PLAY
                         rt.leftTimes = Constant.LEARN_PLAY_TIMES
-                        rt.isSync = false
-                        rt.isSyncLocal = true
                     }
                 })
             }
 
             //0.生成今日新学任务
-            const copyStoredTasks = VocaUtil.copyTasks(storedTasks)
-            const leftCount = this.calculateTasks(copyStoredTasks)
-            this.vtd.modifyTasks(copyStoredTasks)
+            // const copyStoredTasks = VocaUtil.copyTasks(storedTasks)
+            //根据taskOrder从数据库中读
+            const latestTasks = storedTasks.map((st, i)=>{
+                return this.vtd.getTaskByOrder(st.taskOrder)
+            })
+            let leftCount = 0
+            this.vtd.modify(()=>{
+                leftCount = this.calculateTasks(latestTasks)
+            })
+            // this.vtd.modifyTasks(copyStoredTasks)
             if(leftCount <= 0 || d > 13){           //如果不存在遗留任务,才生成新任务 (若d>13, 则重学)
                 this.vtd.modify(()=>{
                     let newTasks = this.vtd.getNotLearnedTasks()
@@ -105,8 +106,7 @@ export default class VocaTaskService {
         //2. 深拷贝
         for(let task of tasks){
             let copyTask = VocaUtil.copyTaskDeep(task)
-            copyTask.isSyncLocal = true                //是否同步到本地数据库
-            copyTask.taskType = Constant.TASK_VOCA_TYPE //任务类：单词任务
+            copyTask.taskType = Constant.TASK_VOCA_TYPE  //标记为单词任务
             for(let copyWord of copyTask.words){
                 copyWord.testWrongNum = 0
             }
@@ -143,9 +143,6 @@ export default class VocaTaskService {
     storeTasks = (storedTasks)=>{
         const copyStoredTasks = VocaUtil.copyTasks(storedTasks)
         this.calculateTasks(copyStoredTasks)
-        if(copyStoredTasks.length > 0){
-            this.vtd.modifyTasks(copyStoredTasks)
-        }
     }
 
 
@@ -155,6 +152,8 @@ export default class VocaTaskService {
      * @returns {number} 返回没有完成的任务数量
      */
     calculateTasks = (storedTasks)=>{
+        console.log('-----------calculateTasks ---before-----------')
+        console.log(storedTasks)
         let leftCount = 0
         for(let storedTask of storedTasks){
             if(storedTask.progress.startsWith('IN_LEARN') && storedTask.progress !== Constant.IN_LEARN_FINISH){      //新学未完成
@@ -243,6 +242,8 @@ export default class VocaTaskService {
                 storedTask.leftTimes = Constant.REVIEW_PLAY_TIMES
             }
         }
+        console.log('-----------calculateTasks ---after-----------')
+        console.log(storedTasks)
         return leftCount
     }
 

@@ -25,8 +25,19 @@ console.log('copy realm');
 global.Storage = createStorage()
 global.Http = createHttp()
 
-global.ModifiedWordSet = new Set()
+
 global.ScoreModifiedOrderSet = new Set()
+Storage.load({
+  key: 'modifiedWords',
+}).then(data => {
+  console.log('--load modifiedWords--');
+  console.log(data);
+  global.ModifiedWordSet = new Set(data)
+}).catch(err => {
+  console.warn(err.message);
+  console.warn(err.name);
+  global.ModifiedWordSet = new Set()
+});
 
 //开启数据库
 VocaDao.getInstance().open()

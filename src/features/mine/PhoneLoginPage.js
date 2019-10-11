@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { TextInput, View, Text, StatusBar} from 'react-native'
 import {Button, Input} from 'react-native-elements'
 import SplashScreen from 'react-native-splash-screen'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import AliIcon from '../../component/AliIcon'
 import styles from './PhoneLoginStyle'
 
@@ -106,7 +105,7 @@ class PhoneLoginPage extends Component {
                   {!this.state.codeMode &&
                       <View style={{width:'100%'}}>
                           <View style={[gstyles.r_start,styles.phoneInput]}>
-                              <Ionicons name="ios-phone-portrait" size={26} color={gstyles.gray}/>
+                              <AliIcon name="shouji" size={26} color={gstyles.gray}/>
                               <TextInput
                                   placeholder="手机号"
                                   maxLength={11}
