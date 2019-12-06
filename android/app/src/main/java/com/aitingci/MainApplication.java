@@ -114,6 +114,7 @@ public class MainApplication extends Application implements ReactApplication {
             .build();
     Realm realm =  Realm.getDefaultInstance();
     Realm.setDefaultConfiguration(configuration);
+    realm.close();
     Stetho.initialize(
             Stetho.newInitializerBuilder(this)
                     .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -122,7 +123,7 @@ public class MainApplication extends Application implements ReactApplication {
                             .withDeleteIfMigrationNeeded(true)
                             .build())
                     .build());
-    realm.close();
+    
 
     //运行调试WebView
     WebView.setWebContentsDebuggingEnabled(true);

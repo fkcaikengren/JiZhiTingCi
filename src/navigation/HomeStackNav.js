@@ -1,7 +1,7 @@
-import {Easing,Animated} from 'react-native'
-import { createStackNavigator} from 'react-navigation';
+import { Easing, Animated } from 'react-native'
+import { createStackNavigator } from 'react-navigation';
 import StackViewStyleInterpolator from
-        'react-navigation-stack/dist/views/StackView/StackViewStyleInterpolator';
+  'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator';
 
 
 import HomePage from '../features/vocabulary/HomePage';
@@ -38,16 +38,18 @@ import GuideDetailPage from '../features/mine/GuideDetailPage'
 import * as Constant from '../features/vocabulary/common/constant'
 import FileTest from "../FileTest";
 
-const article1 =  { id: 1,
+const article1 = {
+  id: 1,
   articleUrl: '/cet-6/1995-1-3-article.txt',
   optionUrl: '/cet-6/1995-1-3-option.json',
   answerUrl: '/cet-6/1995-1-3-answer.json',
   analysisUrl: '/cet-6/1995-1-3-analysis.txt',
   name: '六级阅读1',
   note: '1995年1月份真题',
-  keyWords: ["reverse","data","opportunity"],
-  type: 'R1' }
-  
+  keyWords: ["reverse", "data", "opportunity"],
+  type: 'R1'
+}
+
 const article2 = {
   name: "六级阅读37",
   note: "2015年12月份真题",
@@ -65,7 +67,7 @@ const article2 = {
   type: "R2"
 }
 
-const article3 =  {
+const article3 = {
   name: "六级阅读8",
   note: "2005年6月份真题",
   articleUrl: "/cet-6/2005-6-5-article.txt",
@@ -102,165 +104,165 @@ const article4 = {
 }
 
 const VocaHomeStackNav = createStackNavigator(
-    {
-      // 首页
-      Home: {
-        screen: HomePage,
-      },
-      // 查词页面
-      VocaSearch: {
-          screen: VocaSearchPage,
-      },
-      // 单词库
-      VocaLib:{
-          screen:VocaLibPage,
-      },
-      // 单词列表
-      VocaListTab:{
-        screen:VocaListTabPage,
-      },
-      // 生词本
-      VocaGroup:{
-        screen:VocaGroupPage,
-      },
+  {
+    // 首页
+    Home: {
+      screen: HomePage,
+    },
+    // 查词页面
+    VocaSearch: {
+      screen: VocaSearchPage,
+    },
+    // 单词库
+    VocaLib: {
+      screen: VocaLibPage,
+    },
+    // 单词列表
+    VocaListTab: {
+      screen: VocaListTabPage,
+    },
+    // 生词本
+    VocaGroup: {
+      screen: VocaGroupPage,
+    },
 
-      // 学习统计
-      Statistics:{
-        screen:StatisticsPage,
-      },
-      // 单词轮播
-      VocaPlay: {
-          screen: VocaPlayPage,
-          navigationOptions: ({navigation}) => ({
-              gesturesEnabled: true,
-          }),
-
-      },
-      // 卡片学习
-      LearnCard: {
-        screen: LearnCardPage,
-      },
-
-      // 生词本的生词页
-      GroupVoca: {
-        screen: GroupVocaPage,
-      },
-
-        //文章管理页
-      ArticleManage:{
-         screen: ArticleManagePage,
-      },
-
-      // 单词选中义测试
-      TestVocaTran: {
-        screen: TestVocaTranPage,
-      },
-      // 听音选中义测试
-      TestPronTran: {
-        screen: TestPronTranPage,
-      },
-      // 中义选单词测试
-      TestTranVoca:{
-        screen: TestTranVocaPage
-      },
-      // 例句选词测试
-      TestSenVoca: {
-        screen: TestSenVocaPage,
-      },
-
-        //背景选择页
-        BgSelector: {
-            screen: BgSelectorPage
-        },
-
-        //单词详情页
-        VocaDetail: {
-          screen : VocaDetailPage,
-        },
-      
-        //解析页面
-        Analysis:{
-            screen:AnalysisPage,
-            navigationOptions: ({navigation}) => ({
-              gesturesEnabled: true,
-            }),
-        },
-        //文章tab页
-        ArticleTab:{
-            screen:ArticleTabPage,
-        },
-
-
-        //我的页面
-        Account:{
-            screen: AccountPage
-        },
-        Password:{
-            screen: PasswordPage
-        },
-        Nickname:{
-            screen: NicknamePage
-        },
-        DownloadManage:{
-            screen: DownloadManagePage
-        },
-        Guide:{
-            screen: GuidePage
-        },
-        GuideDetail:{
-          screen: GuideDetailPage
-        },
-
-        //测试
-        FileTest:{
-          screen: FileTest
-        }
+    // 学习统计
+    Statistics: {
+      screen: StatisticsPage,
+    },
+    // 单词轮播
+    VocaPlay: {
+      screen: VocaPlayPage,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: true,
+      }),
 
     },
-    {
-        initialRouteName: 'Home',
-        headerMode:'none',
-        initialRouteParams:{
-            // articleInfo:article2
-            // mode:Constant.NORMAL_PLAY
-        },
+    // 卡片学习
+    LearnCard: {
+      screen: LearnCardPage,
+    },
 
-      //跳转动画
-        transitionConfig: () => ({
-            transitionSpec: {
-                duration: 300,
-                easing: Easing.out(Easing.poly(4)),
-                timing: Animated.timing,
-            },
-            screenInterpolator: sceneProps => {
-                const { layout, position, scene } = sceneProps;
-                const { index, route } = scene;
-                const params = route.params || {};
-                const transition = params.transition;
-                if (transition) { //如果指定了过渡方式
-                    // StackViewStyleInterpolator.forFade()
-                    // StackViewStyleInterpolator.forHorizontal()
-                    // StackViewStyleInterpolator.forVertical()
-                    // StackViewStyleInterpolator.forFadeFromBottomAndroid()
-                    // StackViewStyleInterpolator.forFadeToBottomAndroid()
-                    return StackViewStyleInterpolator[transition](sceneProps)
-                }
+    // 生词本的生词页
+    GroupVoca: {
+      screen: GroupVocaPage,
+    },
 
-                const initWidth = layout.initWidth;
-                const translateX = position.interpolate({
-                    inputRange: [index - 1, index, index + 1],
-                    outputRange: [initWidth, 0, 0],
-                });
+    //文章管理页
+    ArticleManage: {
+      screen: ArticleManagePage,
+    },
 
-                const opacity = position.interpolate({
-                    inputRange: [index - 1, index - 0.99, index],
-                    outputRange: [0, 1, 1],
-                });
+    // 单词选中义测试
+    TestVocaTran: {
+      screen: TestVocaTranPage,
+    },
+    // 听音选中义测试
+    TestPronTran: {
+      screen: TestPronTranPage,
+    },
+    // 中义选单词测试
+    TestTranVoca: {
+      screen: TestTranVocaPage
+    },
+    // 例句选词测试
+    TestSenVoca: {
+      screen: TestSenVocaPage,
+    },
 
-                return { opacity, transform: [{ translateX }] };
-            },
-        }),
+    //背景选择页
+    BgSelector: {
+      screen: BgSelectorPage
+    },
+
+    //单词详情页
+    VocaDetail: {
+      screen: VocaDetailPage,
+    },
+
+    //解析页面
+    Analysis: {
+      screen: AnalysisPage,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: true,
+      }),
+    },
+    //文章tab页
+    ArticleTab: {
+      screen: ArticleTabPage,
+    },
+
+
+    //我的页面
+    Account: {
+      screen: AccountPage
+    },
+    Password: {
+      screen: PasswordPage
+    },
+    Nickname: {
+      screen: NicknamePage
+    },
+    DownloadManage: {
+      screen: DownloadManagePage
+    },
+    Guide: {
+      screen: GuidePage
+    },
+    GuideDetail: {
+      screen: GuideDetailPage
+    },
+
+    //测试
+    FileTest: {
+      screen: FileTest
     }
-  );
 
-  export default VocaHomeStackNav;
+  },
+  {
+    initialRouteName: 'Home',
+    headerMode: 'none',
+    initialRouteParams: {
+      // articleInfo:article2
+      // mode:Constant.NORMAL_PLAY
+    },
+
+    //跳转动画
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 300,
+        easing: Easing.out(Easing.poly(4)),
+        timing: Animated.timing,
+      },
+      screenInterpolator: sceneProps => {
+        const { layout, position, scene } = sceneProps;
+        const { index, route } = scene;
+        const params = route.params || {};
+        const transition = params.transition;
+        if (transition) { //如果指定了过渡方式
+          // StackViewStyleInterpolator.forFade()
+          // StackViewStyleInterpolator.forHorizontal()
+          // StackViewStyleInterpolator.forVertical()
+          // StackViewStyleInterpolator.forFadeFromBottomAndroid()
+          // StackViewStyleInterpolator.forFadeToBottomAndroid()
+          return StackViewStyleInterpolator[transition](sceneProps)
+        }
+
+        const initWidth = layout.initWidth;
+        const translateX = position.interpolate({
+          inputRange: [index - 1, index, index + 1],
+          outputRange: [initWidth, 0, 0],
+        });
+
+        const opacity = position.interpolate({
+          inputRange: [index - 1, index - 0.99, index],
+          outputRange: [0, 1, 1],
+        });
+
+        return { opacity, transform: [{ translateX }] };
+      },
+    }),
+  }
+);
+
+export default VocaHomeStackNav;
