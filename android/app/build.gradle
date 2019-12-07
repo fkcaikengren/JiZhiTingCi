@@ -138,12 +138,6 @@ android {
             keyPassword sign_keyPassword
             storePassword sign_storePassword
         }
-        debug {
-            storeFile file(sign_storeFile);
-            keyAlias sign_keyAlias
-            keyPassword sign_keyPassword
-            storePassword sign_storePassword
-        }
     }
 
     splits {

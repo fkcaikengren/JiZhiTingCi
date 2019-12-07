@@ -150,8 +150,9 @@ link
 react-native link react-native-picker
 ```
 
-```
-修改：import androidx.annotation.Nullable;
+```js
+//修改：
+import androidx.annotation.Nullable;
 ```
 
 
@@ -463,7 +464,7 @@ yarn add react-native-spinkit
 ```jsx
 yarn add react-native-webview@5.8.0
 react-native link react-native-webview
-修改：
+//修改：
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -510,19 +511,20 @@ yarn add react-native-background-timer
 
 ### 图片选择器 react-native-image-picker
 
-```
+```js
 yarn add react-native-image-picker
 react-native link react-native-image-picker
+
 ```
 
 
 
 ### 虚化背景@react-native-community/blur
 
-```
+```js
 yarn add @react-native-community/blur
 react-native link @react-native-community/blur
-修改：
+//修改：
 import androidx.renderscript.Allocation;
 import androidx.renderscript.Element;
 import androidx.renderscript.RenderScript;
@@ -658,7 +660,7 @@ yarn add react-native-mock --dev
 
 **参考：基本配置**    <https://github.com/uPhyca/stetho-realm>
 
-**参考： suppoort realm5.10.0**  <https://github.com/uPhyca/stetho-realm/issues/62>
+**参考： support realm5.10.0**  <https://github.com/uPhyca/stetho-realm/issues/62>
 
 
 
@@ -684,33 +686,57 @@ yarn add react-native-mock --dev
 
 # Issue
 
-1. 使用react-native-webview-bridge时，react-native run-android 报错：
+### 1.使用react-native-webview-bridge时，react-native run-android 报错：
 
-   **Failed to install the following Android SDK packages as some licences have not been accepted**
+**Failed to install the following Android SDK packages as some licences have not been accepted**
 
-   解决办法：<https://www.rumoss.cn/archives/226/>
+解决办法：<https://www.rumoss.cn/archives/226/>
 
-   运行sdkmanager 同意安装所有包的证书即可。
-
-
-
-2. 升级至androidx
-
-   使用android studio `Refactor -> Migrate to AndroidX`
-
-   App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.github.com/dlew/5db1b780896bbc6f542e7c00a11db6a0
+运行sdkmanager 同意安装所有包的证书即可。
 
 
 
-3.错误: 程序包android.support.annotation不存在
+### 2.升级至androidx
+
+使用android studio `Refactor -> Migrate to AndroidX`
+
+App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.github.com/dlew/5db1b780896bbc6f542e7c00a11db6a0
 
 
 
-4.打包时，react-native-picker:verifyReleaseResources FAILED
+### 3.错误: 程序包android.support.annotation不存在
+
+
+
+### 4.打包时，react-native-picker:verifyReleaseResources FAILED
 
 参考：https://github.com/beefe/react-native-picker/issues/374
 
 解决：修改编译版本
+
+
+
+### 5.node12使用npm i出现  node-gyp 相关问题
+
+1）can't find python 
+
+​	需要安装python2.7, 配置环境变量。
+
+2）gyp Error!
+
+参考： https://blog.csdn.net/dahuzix/article/details/90728059 
+
+3）node12 安装realm数据库出现编译问题
+
+将node12降级到node10
+
+
+
+
+
+
+
+
 
 
 
