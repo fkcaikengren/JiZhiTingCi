@@ -6,7 +6,7 @@ export const LEARN_PLAY = 'LEARN_PLAY'          //学习模式的轮播
 export const REVIEW_PLAY = 'REVIEW_PLAY'        //复习模式的轮播
 
 export const LEARN_PLAY_TIMES = 3        //学习模式默认播放3遍
-export const REVIEW_PLAY_TIMES = 3      //复习模式默认播放12遍
+export const REVIEW_PLAY_TIMES = 10      //复习模式默认播放10遍
 
 
 export const DELAY_DAYS_0 = 0       //待学可推迟天数

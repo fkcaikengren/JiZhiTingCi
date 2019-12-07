@@ -115,7 +115,7 @@ yarn add react-native-vector-icons
 ### ~~安装react-native-progress库~~（拷贝源码）
 
 ```
-yarn add react-native-progress
+ yarn add react-native-progress
 ```
 
 取消依赖，直接拷贝源码，然后修改源码：
@@ -753,7 +753,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 //生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "第4次生产环境更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "第6次生产环境更新" --m true
 ```
 
 

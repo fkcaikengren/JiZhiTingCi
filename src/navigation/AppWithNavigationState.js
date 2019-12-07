@@ -4,7 +4,6 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { Col, Row, Grid, } from 'react-native-easy-grid';
 import { createNavigationReducer,createReactNavigationReduxMiddleware,createReduxContainer} from 'react-navigation-redux-helpers';
 import { connect} from 'react-redux'
-import SplashScreen from 'react-native-splash-screen'
 import HomeStackNav from './HomeStackNav';
 import LoginStackNav from '../features/mine/navigation/LoginStackNav';
 
@@ -22,7 +21,6 @@ class AuthLoadingPage extends Component {
 
     // token验证登录状态
      _bootstrap = async () => {
-        SplashScreen.hide();
         //登录进入前，无token
 
         try{
@@ -48,11 +46,7 @@ class AuthLoadingPage extends Component {
 
     render() {
         return (
-            <View>
-                <Grid>
-                    <Col style={{ backgroundColor: '#635DB7', height: 200 }}></Col>
-                    <Col style={{ backgroundColor: '#00CE9F', height: 200 }}></Col>
-                </Grid>
+            <View style={{flex:1}}>
             </View>
         );
     }

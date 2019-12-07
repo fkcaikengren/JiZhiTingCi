@@ -78,7 +78,7 @@ export const vocaPlay =  handleActions({
             listenTimes++
             VocaTaskDao.getInstance().modifyTask({taskOrder:state.task.taskOrder,listenTimes:listenTimes})
         }
-        // 学习模式下的轮播 -> 记录curIndex,leftTimes 拷贝task给下一阶段
+        // 学习模式下的轮播 -> 记录curIndex 拷贝task给下一阶段
         newTask = {...state.task, curIndex:action.payload.curIndex,listenTimes}
         return { ...state, task:newTask, curIndex:action.payload.curIndex, }
         

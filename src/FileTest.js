@@ -25,7 +25,7 @@ export default class FileTest extends React.Component {
     }
 
     componentDidMount(){
-        SplashScreen.hide();
+        // SplashScreen.hide();
     }
 
 

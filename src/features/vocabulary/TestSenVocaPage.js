@@ -81,8 +81,7 @@ class TestSenVocaPage extends Component {
                 {...this.props}
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.SEN_WORD}
-                // playType='sentence'
-                testTime={16}
+                playType='sentence'
                 renderContent={this._renderContent}
             />
         )

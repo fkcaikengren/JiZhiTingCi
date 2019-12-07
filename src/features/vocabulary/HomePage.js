@@ -50,18 +50,16 @@ class HomePage extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
 
-        //home vocaLib变化
-        if(nextProps.home !== this.props.home || nextProps.vocaLib !== this.props.vocaLib){
-            console.log('---home is changed ------')
-            return true
-        }
 
         const {task, autoPlayTimer,bgPath} = this.props.vocaPlay
-        if(nextProps.vocaPlay.bgPath !== bgPath){
-            return true
-        }
+        const {toastRef} = this.state
+     
         //vocaPlay的task 下标不变，不重绘
-        if(nextProps.vocaPlay.autoPlayTimer === autoPlayTimer){
+        if(nextProps.vocaPlay.autoPlayTimer === autoPlayTimer 
+            && nextProps.vocaPlay.bgPath === bgPath
+            && nextState.toastRef === toastRef
+            && nextProps.home === this.props.home 
+            && nextProps.vocaLib === this.props.vocaLib){
             return false
         }
         return true

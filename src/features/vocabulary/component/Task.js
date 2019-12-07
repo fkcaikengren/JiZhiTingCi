@@ -21,7 +21,7 @@ export default class Task extends Component {
   }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.home === this.props.home ){
+        if(nextProps.home === this.props.home && nextProps.toastRef == this.props.toastRef){
             console.log('--- task not changed ------')
             return false
         }
@@ -78,11 +78,11 @@ export default class Task extends Component {
         //计算进度
         if(isVocaTask){
           progressNum = VocaUtil.calculateProcess(item)
-          // if(item.status === Constant.STATUS_0 && progressNum !== 100){
-          //   isAllLearned = false
-          // }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
-          //   disable = true
-          // }
+          if(item.status === Constant.STATUS_0 && progressNum !== 100){
+            isAllLearned = false
+          }else if(item.status === Constant.STATUS_1 && isAllLearned === false){
+            disable = true
+          }
         }
 
         return (

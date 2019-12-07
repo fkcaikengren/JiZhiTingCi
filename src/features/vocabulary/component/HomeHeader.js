@@ -28,7 +28,8 @@ export default class HomeHeader extends Component {
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    if(nextProps.home === this.props.home && nextProps.vocaLib === this.props.vocaLib){
+    if(nextProps.home === this.props.home && nextProps.vocaLib === this.props.vocaLib 
+        && nextProps.toastRef == this.props.toastRef){
       console.log('--- Header not changed ------')
       return false
     }

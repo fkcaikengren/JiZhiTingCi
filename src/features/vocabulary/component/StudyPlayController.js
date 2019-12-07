@@ -46,7 +46,7 @@ export default class StudyPlayController extends React.Component {
         if(this.props.mode === Constant.REVIEW_PLAY){
             if(this.props.finishedTimes <= 0 && this.props.playState.showWord===false){
                 //提示前1遍不看释义
-                this.props.toastRef.show('建议前1遍不看单词哦', 1000);
+                this.props.toastRef.show('建议前2遍不看单词哦', 1000);
             }
         }
     }
@@ -56,11 +56,11 @@ export default class StudyPlayController extends React.Component {
         if(this.props.mode === Constant.LEARN_PLAY){
             if(this.props.finishedTimes === 0 && this.props.playState.showTran===false){
                 //提示第一遍不看释义
-                this.props.toastRef.show('建议第1遍不看释义哦', 1000);
+                this.props.toastRef.show('建议前4遍不看释义哦', 1000);
             }
         }else{
             if(this.props.finishedTimes <= 1 && this.props.playState.showTran===false){
-                this.props.toastRef.show('建议前2遍不看释义哦', 1000);
+                this.props.toastRef.show('建议前4遍不看释义哦', 1000);
             }
         }
         

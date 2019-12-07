@@ -93,6 +93,7 @@ class VocaPlayPage extends React.Component {
         console.disableYellowBox = true
     }
 
+
     //自定义改变状态函数
     changeState = (state)=>{
         this.vocaPlayService.setStateRef(state)
@@ -101,7 +102,6 @@ class VocaPlayPage extends React.Component {
   
     
     componentDidMount(){
-
         //修改当前normalType
         let normalType = this.props.navigation.getParam('normalType')
         if(normalType){
@@ -120,16 +120,17 @@ class VocaPlayPage extends React.Component {
             this.totalTimes = this.mode===Constant.LEARN_PLAY?Constant.LEARN_PLAY_TIMES:Constant.REVIEW_PLAY_TIMES
             this.finishedTimes = task.leftTimes?this.totalTimes-task.leftTimes:0
 
+            //设置单词、释义可见性
             if(this.mode === Constant.LEARN_PLAY){
                 if(this.finishedTimes <= 0 ){
                     this._toggleTran(false)
                 }
                 
             }else if(this.mode === Constant.REVIEW_PLAY){
-                if(this.finishedTimes <= 0){
+                if(this.finishedTimes <= 1){
                     this._toggleWord(false)
                     this._toggleTran(false)
-                }else if(this.finishedTimes <= 1){
+                }else if(this.finishedTimes <= 3){
                     this._toggleTran(false)
                 }
             }
@@ -195,7 +196,17 @@ class VocaPlayPage extends React.Component {
              if(this.state.curIndex+1 === wordCount){
                 leftTimes--
                 listenTimes++
+                 //单词、释义到一定遍数后自动显示
+                 if(this.mode === Constant.REVIEW_PLAY){
+                     const fTimes = Constant.REVIEW_PLAY_TIMES - leftTimes
+                     if(fTimes === 2){
+                         this._toggleWord(true)
+                     }else if(fTimes === 4){
+                         this._toggleTran(true)
+                     }
+                 }
             }
+
             this.changeState({
                 task:{...this.state.task, curIndex:curIndex, leftTimes, listenTimes},
                 curIndex:curIndex
@@ -212,8 +223,7 @@ class VocaPlayPage extends React.Component {
         }else{
             this.props.toggleTran(showTran)
         }
-        
-       
+
     }
 
     // 控制单词显示

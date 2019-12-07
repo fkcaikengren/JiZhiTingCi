@@ -760,6 +760,6 @@ TestPage.propTypes = {
 TestPage.defaultProps = {
     mode: 'study',
     playType: 'word',
-    testTime: 30,
+    testTime: 9,
     renderContent: (state)=>null,
 }

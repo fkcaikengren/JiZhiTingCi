@@ -33,7 +33,7 @@ export default class TaskItem extends Component {
   _startStudy = ()=>{
       if(this.props.disable){
         //提示先完成新学任务
-        this.props.toastRef.show('需要您先完成新学任务哦')
+        this.props.toastRef.show('完成前面的任务才可以解锁哦')
       }else{
         //根据进度进行不同的跳转
         let {index, item } = this.props
@@ -112,24 +112,9 @@ export default class TaskItem extends Component {
     return nextRouteName
   }
   _renderRight = ()=>{
-    const { item, progressNum } = this.props
+    const { item, progressNum,disable } = this.props
     const hasScore = (item.score !== -1)
     const textStyle = hasScore?{fontSize:22,color:gstyles.emColor,marginRight:5,}:gstyles.md_gray
-    let type = ''
-    switch (item.type) {
-      case DETAIL_READ:
-        type = '仔细阅读'
-        break
-      case MULTI_SELECT_READ:
-        type = '选词填空'
-        break
-      case FOUR_SELECT_READ:
-        type = '四选一'
-        break
-      case EXTENSIVE_READ:
-        type = '泛读'
-        break
-    }
     if(this.isVocaTask){
       if(progressNum === 100){
         return <View style={styles.playView}>
@@ -141,10 +126,25 @@ export default class TaskItem extends Component {
       }else{
         return <View style={styles.playView}>
                 <FontAwesome name="play-circle" size={24} color="#999"/>
-                <Text style={[{marginLeft:12,}, gstyles.md_gray]}>待完成</Text>
+                <Text style={[{marginLeft:12,}, gstyles.md_gray]}>{disable?'待解锁':'待完成'}</Text>
             </View>
       }
     }else{
+      let type = ''
+      switch (item.type) {
+        case DETAIL_READ:
+          type = '仔细阅读'
+          break
+        case MULTI_SELECT_READ:
+          type = '选词填空'
+          break
+        case FOUR_SELECT_READ:
+          type = '四选一'
+          break
+        case EXTENSIVE_READ:
+          type = '泛读'
+          break
+      }
       return <View style={[{height:'100%'},gstyles.r_start]}>
         <Text style={textStyle}>{hasScore?item.score+'%':type}</Text>
       </View>
@@ -173,9 +173,7 @@ export default class TaskItem extends Component {
       label = '推荐'
       note = item.note
     }
-    const disableView = disable?{
-      backgroundColor:'#F4F4F4'
-    }:null
+
 
     //点击透明度
     let activeOpacity = this.props.disable?0.8:0.5
@@ -186,7 +184,7 @@ export default class TaskItem extends Component {
       <TouchableOpacity 
       activeOpacity={activeOpacity}
       onPress={this.isVocaTask?this._startStudyInteraction:this._startRead}>
-        <View style={[{paddingHorizontal:12}, disableView]}>
+        <View style={[{paddingHorizontal:12}]}>
             <View style={[this.props.separator,styles.container]}>
               <View style={gstyles.r_start}>
                 <View style={[gstyles.c_center, {marginRight:10}]}>
