@@ -27,8 +27,9 @@ export const {loadVocaBooks,changeVocaBook,changeLearnedWordCount, changeLeftDay
         return {}
     },
     //修改单词书
-    [CHANGE_VOCA_BOOK]:(bookCode,totalWordCount, taskCount, taskWordCount,lastLearnDate) => {
-        return {bookCode,totalWordCount, taskCount, taskWordCount, lastLearnDate};
+    //bookCode,totalWordCount, taskCount, taskWordCount, lastLearnDate
+    [CHANGE_VOCA_BOOK]:(data) => {
+        return data;
     },
     [CHANGE_LEARNED_WORD_COUNT]:(learnedWordCount)=>{
         return {learnedWordCount}

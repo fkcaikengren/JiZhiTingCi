@@ -21,24 +21,20 @@ class AuthLoadingPage extends Component {
 
     // token验证登录状态
      _bootstrap = async () => {
-        //登录进入前，无token
-
         try{
-            // Http.setHeader('token', null)
             const token = await Storage.load({
                 key: 'token',
             })
-            if(token && token !== ''){
-                //设置网络请求头，带上token参数
-                Http.defaults.headers['token'] = token
-                console.log('--------------登录-------------')
-                console.log(Http.defaults.headers)
+            if(token){
+                Http.defaults.headers['Authorization'] = token
                 this.props.navigation.navigate('HomeStack')
             }else{
+                // 未登录
                 this.props.navigation.navigate('LoginStack')
             }
-        }catch(e){
-            console.log(e)
+           
+        }catch(err){
+            console.log(err) //token 过期
             this.props.navigation.navigate('LoginStack')
         }
         

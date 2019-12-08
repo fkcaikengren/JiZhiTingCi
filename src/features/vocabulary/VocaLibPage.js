@@ -29,7 +29,7 @@ class VocaLibPage extends Component {
         this.props.loadVocaBooks()
     }
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         if(this.planTimer){
             clearTimeout(this.planTimer)
         }
@@ -68,7 +68,6 @@ class VocaLibPage extends Component {
             onPickerConfirm: data => {
                 // console.log(data)
                 const sum = parseInt(data[0].replace(/新学(\d+).+/,'$1'))
-                console.log(sum)
                 let taskCount = null
                 let taskWordCount = null
                 if(sum <= 19){
@@ -79,27 +78,34 @@ class VocaLibPage extends Component {
                     taskCount = 3 //3
                 }
                 taskWordCount = sum/taskCount
-                console.log('制定计划，单词书编号为：'+el.id)
+                console.log('制定计划，单词书编号为：'+el._id)
                 console.log(taskCount, taskWordCount);
                 //提交计划
                 if(taskCount!==null && taskWordCount!==null){
                     //如果网络不畅，提示
                     //如果本地时间不对，提示修改手机时间
-                    Axios.get('http://api.k780.com:88/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json')
-                        .then(res=>{
-                            const d = res.data.result.timestamp - parseInt(new Date().getTime()/1000)
-                            if(d <= 10 && d >= -10){
-                                this.props.changeVocaBook(`VB_${el.id}`,el.count, taskCount,taskWordCount, this.props.home.lastLearnDate)
-                                //开始倒计时
-                                this.planTimer = setTimeout(this._planCountDown,1000)
-                            }else{
-                                alert('手机时间不准确，请调整手机时间后重试')
-                            }
-                        })
-                        .catch(e=>{
-                            alert('网络出现问题，请重试')
-                            console.log(e)
-                        })
+                    // Axios.get('http://api.k780.com:88/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json')
+                    //     .then(res=>{
+                    //         const d = res.data.result.timestamp - parseInt(new Date().getTime()/1000)
+                    //         if(d <= 10 && d >= -10){
+                                
+                    //         }else{
+                    //             alert('手机时间不准确，请调整手机时间后重试')
+                    //         }
+                    //     })
+                    //     .catch(e=>{
+                    //         alert('网络出现问题，请重试')
+                    //         console.log(e)
+                    //     })
+                    this.props.changeVocaBook({
+                        bookId:el._id,
+                        totalWordCount:el.count, 
+                        taskCount:taskCount, 
+                        taskWordCount:taskWordCount, 
+                        lastLearnDate:this.props.home.lastLearnDate
+                    })
+                    //开始倒计时
+                    this.planTimer = setTimeout(this._planCountDown,1000)
                 }else{
                     console.error('VocaLibPage: 设置计划时，数据错误！')
                 }
@@ -113,7 +119,7 @@ class VocaLibPage extends Component {
         Picker.show();
     }
 
-    _renderBooks = ({item, index})=>{
+    _renderBook = ({item, index})=>{
         return <View style={[styles.c_center, styles.bookView]}
         onStartShouldSetResponder={(e)=>true}
         onResponderGrant={(e)=>this._show(item,index)}
@@ -163,24 +169,20 @@ class VocaLibPage extends Component {
         }else{
             return <FlatList
                 data={books}
-                renderItem={this._renderBooks}
+                renderItem={this._renderBook}
+                keyExtractor={item => item._id}
                 ItemSeparatorComponent={()=><View style={{borderBottomWidth:1,borderBottomColor:'#A8A8A8'}}></View>}
                 // 水平布局的列的数量
                 numColumns = {2}
-
             />
         }
-
-
     }
     
     render() {
         const {plan} = this.props.vocaLib
         //数据
         return (
-            
             <View style={{flex: 1}}>
-
                 <Header
                 statusBarProps={{ barStyle: 'dark-content' }}
                 barStyle='dark-content' // or directly

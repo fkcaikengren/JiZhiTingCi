@@ -8,8 +8,8 @@ const defaultState ={
     books:[],
     //当前计划
     plan: {
-        bookCode: "",
-        bookName: "",
+        bookId: "",
+        name: "",
         taskCount: 0,
         taskWordCount: 0,
     },

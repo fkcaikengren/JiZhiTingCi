@@ -9,31 +9,31 @@ import {store} from "../../../../redux/store";
 /**获取单词书 */
 export function * getVocaBooks(){
     yield put({type:'LOAD_VOCA_BOOKS_START'})
-    console.log(Http)
+  
     try{
-        const res = yield Http.get("/vocaBook/getAll")
-        console.log(res);           //返回的是结果对象response，不是一个promise
-        // console.log(res.data.data);
-        yield put({type:'LOAD_VOCA_BOOKS_SUCCEED', books:res.data.data.books})
+        const res = yield Http.get("/vocaBook/list")
+        console.log('----获取全部单词书-----')
+        console.log(res.data);           //返回的是结果对象response，不是一个promise
+        yield put({type:'LOAD_VOCA_BOOKS_SUCCEED', books:res.data})
     }catch(err){
         yield put({type:'LOAD_VOCA_BOOKS_FAIL'})
     }
 }
 
 /**提交单词计划 */
-export function * postPlan(params){
+export function * createPlan(params){
     yield put({type:'CHANGE_VOCA_BOOK_START'})
     yield put({type:'LOAD_TASKS_START'})
     try{
-        const res = yield Http.post("/plan/putPlan",params)
-        const {tasks, plan, articles } = res.data.data
-        console.log(articles)
+        const res = yield Http.post("/plan/create",params)
+        const {vocaTasks, plan, articles } = res.data
+        
         //清空先前数据，存储新数据到realm
         const vtd = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
         vtd.deleteAllTasks()
         artDao.deleteAllArticles()
-        vtd.saveVocaTasks(tasks, params.taskWordCount)
+        vtd.saveVocaTasks(vocaTasks, params.taskWordCount)
         artDao.saveArticles(articles)
         //加载今日数据
         const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)
@@ -64,9 +64,9 @@ function * watchVocaLib(){
         yield take('LOAD_VOCA_BOOKS')
         yield call(getVocaBooks)
 
-        const action  = yield take('CHANGE_VOCA_BOOK')
-        // console.log(action)
-        yield call(postPlan,action.payload)
+        const {type,payload}  = yield take('CHANGE_VOCA_BOOK')
+     
+        yield call(createPlan,payload)
     }
 }
 export default watchVocaLib

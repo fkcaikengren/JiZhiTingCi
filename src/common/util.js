@@ -12,7 +12,7 @@ export default class _util{
      * @returns {number} 零点时间戳
      */
     static getDayTime(nth){
-        // return new Date(new Date().toLocaleDateString()).getTime()
+
         return new Date(new Date().toLocaleDateString()).getTime() +nth*CConstant.DAY_MS
     }
 

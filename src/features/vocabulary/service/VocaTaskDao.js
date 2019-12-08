@@ -42,7 +42,6 @@ const VocaTaskSchema = {
     name: 'TaskWord',
     primaryKey: 'word',
     properties: {
-        id: 'int',
         word: 'string',
         passed: {type: 'bool', optional:true, default: false},
         wrongNum:	{type: 'int',optional:true, default: 0},

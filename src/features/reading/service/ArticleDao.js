@@ -6,7 +6,7 @@ const ArticleSchema = {
     name: 'Article',
     primaryKey: 'id',
     properties: {
-        id: 'int',                      //文章id
+        id: 'string?',                      //文章id
         articleUrl: "string?",
         optionUrl: "string?",
         answerUrl: "string?",
@@ -77,7 +77,8 @@ export default class ArticleDao {
         try{
             this.realm.write(()=>{
                 for(let art of articls){
-                    art.keyWords = JSON.stringify(art.keyWords )
+                    art.id = art._id
+                    art.keyWords = JSON.stringify(art.keyWords.map((item,i)=>item.word) )
                     this.realm.create('Article', art);
                 }
             })
@@ -127,12 +128,12 @@ export default class ArticleDao {
                 const len = userArticles.length
                 if(len && len>0){
                     //拼接
-                    let str = ''
+                    let str = ""
                     for(let i in userArticles){
                         if(i==(len-1)){
-                            str += 'id='+userArticles[i].id;
+                            str += "id='"+ userArticles[i].id +"'"
                         }else{
-                            str += 'id='+userArticles[i].id+' OR ';
+                            str += "id='"+ userArticles[i].id +"'" + " OR "
                         }
                     }
                     let articles = this.realm.objects('Article').filtered(str); //数组
@@ -158,8 +159,6 @@ export default class ArticleDao {
                 console.log('ArticleDao : getArticles() Error')
             }
         }
-        
-       
         return arr
     }
 

@@ -29,28 +29,25 @@ class PhoneLoginPage extends Component {
 
 
     _login = () => {
-        //判断验证码verifyCode (暂时不判断)
         //获取登录信息
-        let param = {phone:this.state.phone, verifyCode:this.state.verifyCode}
-        console.log('login param: ')
-        console.log(param)
-        Http.post('/user/phoneLogin', param)
-        .then(response =>{
-            
-          let user = response.data.data.user
-          console.log('login:')
-          console.log(user)
-          //保存用户信息
-          Storage.save({
-            key: 'token', // Note: Do not use underscore("_") in key!
-            data: user.token,
-            expires: 1000 * 3600 * 24 * 365    //保存一年
-          });
-          Storage.save({
-            key: 'user', // Note: Do not use underscore("_") in key!
-            data: user.user,
-            expires: 1000 * 3600 * 24 * 365    //保存一年
-          });
+        let param = {phone:this.state.phone, code:this.state.verifyCode}
+        Http.post('/user/loginByCode', param)
+        .then(res =>{
+          console.log('login:--------------')
+          if(res.status === 200){
+            const {token , user} = res.data
+            console.log(token)
+            //保存用户信息
+            Storage.save({
+              key: 'token', // Note: Do not use underscore("_") in key!
+              data: token,
+            });
+            Storage.save({
+              key: 'user', // Note: Do not use underscore("_") in key!
+              data: user,
+            });
+          }
+          
           this.props.navigation.navigate('AuthLoading');
         })
     };

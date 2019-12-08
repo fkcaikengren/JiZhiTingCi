@@ -484,6 +484,7 @@ export default class VocaUtil{
      */
     static loadTodayRawTasks = (storedTask, taskCount, lastLearnDate)=>{
         const todayTasks = new VocaTaskService().getTodayTasks(storedTask,taskCount,lastLearnDate)
+
         const tasks = todayTasks.filter((task,i)=>{
             if(task.status === Constant.STATUS_0){
                 return true
