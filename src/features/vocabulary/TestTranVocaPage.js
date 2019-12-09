@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {StyleSheet, Text, View,TouchableNativeFeedback} from 'react-native';
-import {connect} from 'react-redux'
+import { StyleSheet, Text, View, TouchableNativeFeedback } from 'react-native';
+import { connect } from 'react-redux'
 
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
@@ -11,53 +11,53 @@ import vocaUtil from './common/vocaUtil'
 import * as VocaLibAction from "./redux/action/vocaLibAction";
 
 const styles = StyleSheet.create({
-    content:{
-        padding:10,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        height:'35%'
+    content: {
+        padding: 10,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '35%'
     },
-    tranFont:{
-        width:'70%',
-        color:'#303030',
-        fontSize:18,
-        textAlign:'center'
+    tranFont: {
+        width: '70%',
+        color: '#303030',
+        fontSize: 18,
+        textAlign: 'center'
     },
-    wrongText:{
-        position:'absolute',
-        bottom:10,
-        right:10,
-        color:'#EC6760',
-        fontSize:16,
+    wrongText: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        color: '#EC6760',
+        fontSize: 16,
     }
 });
 
 class TestTranVocaPage extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            transNum:0,
+        this.state = {
+            transNum: 0,
         }
-        console.disableYellowBox=true
+        console.disableYellowBox = true
     }
 
-    _setTransNum = (transNum)=>{
-        this.setState({transNum})
+    _setTransNum = (transNum) => {
+        this.setState({ transNum })
     }
 
-    _renderContent = (state)=>{
-        const {showWordInfos, curIndex, task} = state
-        const trans = showWordInfos[curIndex]?JSON.parse(showWordInfos[curIndex].trans):null
+    _renderContent = (state) => {
+        const { showWordInfos, curIndex, task } = state
+        const trans = showWordInfos[curIndex] ? JSON.parse(showWordInfos[curIndex].trans) : null
         const words = vocaUtil.getNotPassedWords(task.words)
-        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
+        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
         let property = ''
         let translation = ''
-        if(trans){
+        if (trans) {
             let i = 0
-            for(let k in trans){
-                if(i === this.state.transNum){
+            for (let k in trans) {
+                if (i === this.state.transNum) {
                     property = k
                     translation = trans[k]
                     break
@@ -65,19 +65,19 @@ class TestTranVocaPage extends Component {
                 i++
             }
         }
-        return <View  style={styles.content}>
-           <Text style={styles.tranFont}>
-               <Text style={{fontSize:16}}>{`${property}. `}</Text>
+        return <View style={styles.content}>
+            <Text style={styles.tranFont}>
+                <Text style={{ fontSize: 16 }}>{`${property}. `}</Text>
                 {translation}
-           </Text>
-           <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
+            </Text>
+            <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
- 
+
     render() {
 
         return (
-            <TestPage 
+            <TestPage
                 {...this.props}
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.TRAN_WORD}
@@ -90,15 +90,15 @@ class TestTranVocaPage extends Component {
 
 
 
-const mapStateToProps = state=>({
-    home:state.home,
+const mapStateToProps = state => ({
+    home: state.home,
     vocaPlay: state.vocaPlay
 })
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
-    uploadTask: homeAction.uploadTask,
-    changeLearnedWordCount : VocaLibAction.changeLearnedWordCount,
+    syncTask: homeAction.syncTask,
+    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

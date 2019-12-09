@@ -23,66 +23,66 @@ export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模�
 export const CLEAR_PLAY = 'CLEAR_PLAY'    //清空任务
 
 
-//驼峰式命名，不可以更改(与变量名必须对应)
-export const {loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
-  changeBg,showBlur, changeTheme,passWord , changeNormalType, clearPlay} = createActions({
+// 驼峰式命名，不可以更改(与变量名必须对应)
+export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
+  changeBg, showBlur, changeTheme, passWord, changeNormalType, clearPlay } = createActions({
 
     //加载任务  
-    [LOAD_TASK] : (task,showWordInfos)=>{
-      return {task,showWordInfos};
+    [LOAD_TASK]: (task, showWordInfos) => {
+      return { task, showWordInfos };
     },
-    [UPDATE_PLAY_TASK] : (task,showWordInfos)=>{
-      return {task,showWordInfos};
+    [UPDATE_PLAY_TASK]: (task, showWordInfos) => {
+      return { task, showWordInfos };
     },
     //改变需要显示的单词信息数组
-    [CHANGE_SHOW_WORD_INFOS]: (showWordInfos)=>{
-      return {showWordInfos}
+    [CHANGE_SHOW_WORD_INFOS]: (showWordInfos) => {
+      return { showWordInfos }
     },
     //暂停、播放
-    [CHANGE_PLAY_TIMER]: (autoPlayTimer)=>{ 
-      return { autoPlayTimer};
+    [CHANGE_PLAY_TIMER]: (autoPlayTimer) => {
+      return { autoPlayTimer };
     },
     //更新当前单词
-    [CHANGE_CUR_INDEX]: (curIndex)=> {
+    [CHANGE_CUR_INDEX]: (curIndex) => {
       return { curIndex };
     },
     //改变播放间隔
-    [CHANGE_INTERVAL]: (interval)=>{
-      return {interval};
+    [CHANGE_INTERVAL]: (interval) => {
+      return { interval };
     },
     //是否显示单词
-    [TOGGLE_WORD]: (showWord=null)=>{
-      return {showWord}
+    [TOGGLE_WORD]: (showWord = null) => {
+      return { showWord }
     },
     //是否显示翻译
-    [TOGGLE_TRAN]: (showTran=null)=>{
-      return {showTran}
+    [TOGGLE_TRAN]: (showTran = null) => {
+      return { showTran }
     },
     //改变背景
-    [CHANGE_BG]:(bgPath)=>{
-        return ({bgPath})
+    [CHANGE_BG]: (bgPath) => {
+      return ({ bgPath })
     },
     //是否显示模糊效果
-    [SHOW_BLUR] : (showBlur)=>{
-        return ({showBlur})
+    [SHOW_BLUR]: (showBlur) => {
+      return ({ showBlur })
     },
     //改变主题
-    [CHANGE_THEME]: (themeId)=>{ 
-      return { themeId};
+    [CHANGE_THEME]: (themeId) => {
+      return { themeId };
     },
-    
+
     //pass单词
-    [PASS_WORD] : (word)=>{
-      return {word}
+    [PASS_WORD]: (payload) => {
+      return payload
     },
 
-    [CHANGE_NORMAL_TYPE] : (normalType)=>{
-      return {normalType}
+    [CHANGE_NORMAL_TYPE]: (normalType) => {
+      return { normalType }
     },
 
-    [CLEAR_PLAY] : ()=>{
+    [CLEAR_PLAY]: () => {
       return {}
     }
-   
+
   });
 

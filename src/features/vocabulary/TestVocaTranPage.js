@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {StyleSheet, Text, View,TouchableNativeFeedback} from 'react-native';
-import {connect} from 'react-redux'
+import { StyleSheet, Text, View, TouchableNativeFeedback } from 'react-native';
+import { connect } from 'react-redux'
 
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
@@ -13,68 +13,68 @@ import * as VocaLibAction from "./redux/action/vocaLibAction";
 import * as CConstant from "../../common/constant";
 
 const styles = StyleSheet.create({
-    
-    content:{
-        padding:10,
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-        height:'35%'
+
+    content: {
+        padding: 10,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '35%'
     },
-    phoneticView:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
+    phoneticView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    wordFont:{
-        fontSize:30,
-        color:'#202020',
-        fontWeight:'600'
+    wordFont: {
+        fontSize: 30,
+        color: '#202020',
+        fontWeight: '600'
     },
-    wrongText:{
-        position:'absolute',
-        bottom:10,
-        right:10,
-        color:'#EC6760',
-        fontSize:16,
+    wrongText: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        color: '#EC6760',
+        fontSize: 16,
     }
 });
 
 class TestVocaTranPage extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        console.disableYellowBox=true
+        console.disableYellowBox = true
     }
 
-    _renderContent = (state)=>{
-        const {showWordInfos, curIndex, task} = state
+    _renderContent = (state) => {
+        const { showWordInfos, curIndex, task } = state
         const words = vocaUtil.getNotPassedWords(task.words)
-        const word = showWordInfos[curIndex]?showWordInfos[curIndex].word:''
-        const amPronUrl = showWordInfos[curIndex]?showWordInfos[curIndex].am_pron_url:''
-        const phonetic = showWordInfos[curIndex]?showWordInfos[curIndex].am_phonetic:''
-        const testWrongNum = words[curIndex]?words[curIndex].testWrongNum:0
-        return <View  style={styles.content}>
+        const word = showWordInfos[curIndex] ? showWordInfos[curIndex].word : ''
+        const amPronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].am_pron_url : ''
+        const phonetic = showWordInfos[curIndex] ? showWordInfos[curIndex].am_phonetic : ''
+        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+        return <View style={styles.content}>
             <View style={{}}>
                 <Text style={styles.wordFont}>{word}</Text>
             </View>
             <View style={styles.phoneticView}>
-                <Text>{'[美]'+phonetic}</Text>
-                <AliIcon name='shengyin' size={26} color='#555' style={{marginLeft:5}} onPress={()=>{
+                <Text>{'[美]' + phonetic}</Text>
+                <AliIcon name='shengyin' size={26} color='#555' style={{ marginLeft: 5 }} onPress={() => {
                     AudioService.getInstance().playSound({
-                        pDir : CConstant.VOCABULARY_DIR,
-                        fPath : amPronUrl
+                        pDir: CConstant.VOCABULARY_DIR,
+                        fPath: amPronUrl
                     })
 
-                }}/>
+                }} />
             </View>
             <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
- 
+
     render() {
         return (
-            <TestPage 
+            <TestPage
                 {...this.props}
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.WORD_TRAN}
@@ -86,15 +86,15 @@ class TestVocaTranPage extends Component {
 
 
 
-const mapStateToProps = state=>({
-    home:state.home,
+const mapStateToProps = state => ({
+    home: state.home,
     vocaPlay: state.vocaPlay
 })
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
-    uploadTask: homeAction.uploadTask,
-    changeLearnedWordCount : VocaLibAction.changeLearnedWordCount,
+    syncTask: homeAction.syncTask,
+    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

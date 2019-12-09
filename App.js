@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Platform, StatusBar, View, StyleSheet,} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StatusBar, View, StyleSheet, } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu'
-import {Provider} from 'react-redux';
-import {store} from './src/redux/store'
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store'
 const Realm = require('realm')
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
-import {createStorage} from './src/common/storage';
-import {createHttp} from './src/common/http'
+import { createStorage } from './src/common/storage';
+import { createHttp } from './src/common/http'
 import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
@@ -26,18 +26,9 @@ global.Storage = createStorage()
 global.Http = createHttp()
 
 
+// 目的：只上传修改的words
 global.ScoreModifiedOrderSet = new Set()
-Storage.load({
-  key: 'modifiedWords',
-}).then(data => {
-  console.log('--load modifiedWords--');
-  console.log(data);
-  global.ModifiedWordSet = new Set(data)
-}).catch(err => {
-  console.warn(err.message);
-  console.warn(err.name);
-  global.ModifiedWordSet = new Set()
-});
+
 
 //开启数据库
 VocaDao.getInstance().open()
@@ -47,8 +38,8 @@ ArticleDao.getInstance().open()
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
-    backgroundColor:gstyles.bgLightGrey,
+    flex: 1,
+    backgroundColor: gstyles.bgLightGrey,
   }
 });
 
@@ -57,16 +48,16 @@ const styles = StyleSheet.create({
  */
 export default class App extends React.Component {
 
-  render(){
-    return(
+  render() {
+    return (
       <Provider store={store}>
         <MenuProvider>
           <View style={styles.container}>
-            <AppWithNavigationState/>
+            <AppWithNavigationState />
           </View>
         </MenuProvider>
       </Provider>
-      
+
     );
   }
 }
