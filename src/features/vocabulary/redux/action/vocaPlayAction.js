@@ -43,8 +43,8 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
       return { autoPlayTimer };
     },
     //更新当前单词
-    [CHANGE_CUR_INDEX]: (curIndex) => {
-      return { curIndex };
+    [CHANGE_CUR_INDEX]: (payload) => {
+      return payload;
     },
     //改变播放间隔
     [CHANGE_INTERVAL]: (interval) => {

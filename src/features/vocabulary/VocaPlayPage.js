@@ -30,7 +30,7 @@ import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
 import ShareUtil from '../../modules/ShareUtil'
 import _util from "../../common/util";
-import { COMMAND_MODIFY_PASSED } from '../../common/constant';
+import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
 
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -191,36 +191,52 @@ class VocaPlayPage extends React.Component {
         }
     }
 
+    // 更新单词下标
+    _changeCurIndex = (state, playIndex) => {
+        const beforeCount = state.task.wordCount
+        let listenTimes = state.task.listenTimes
+        let leftTimes = state.task.leftTimes
+        const normalType = this.props.navigation.getParam('normalType')
 
-    // 改变下标，更新单词
-    _changeCurIndex = (curIndex) => {
-        if (this.isStudyMode) {
-            const wordCount = this.state.task.wordCount
-            let leftTimes = this.state.task.leftTimes
-            let listenTimes = this.state.task.listenTimes
-            //播放到最后一个单词
-            if (this.state.curIndex + 1 === wordCount) {
+        //播放到最后一个单词
+        if (playIndex + 1 === beforeCount) {
+            listenTimes++
+            if (leftTimes && leftTimes > 0) {
                 leftTimes--
-                listenTimes++
-                //单词、释义到一定遍数后自动显示
-                if (this.mode === Constant.REVIEW_PLAY) {
-                    const fTimes = Constant.REVIEW_PLAY_TIMES - leftTimes
-                    if (fTimes === 2) {
-                        this._toggleWord(true)
-                    } else if (fTimes === 4) {
-                        this._toggleTran(true)
-                    }
-                }
             }
+            if (normalType !== Constant.BY_VIRTUAL_TASK) {
+                VocaTaskDao.getInstance().modifyTask({ taskOrder: state.task.taskOrder, listenTimes: listenTimes, leftTimes })
+            }
+        }
 
+        //分情况处理-----------
+        if (this.isStudyMode) {
             this.changeState({
-                task: { ...this.state.task, curIndex: curIndex, leftTimes, listenTimes },
-                curIndex: curIndex
+                task: { ...this.state.task, curIndex: playIndex, listenTimes, leftTimes },
+                curIndex: playIndex
             })
         } else {
-            this.props.changeCurIndex(curIndex)
+            this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
+
+
+            if (listenTimes === state.task.listenTimes + 1 && normalType !== Constant.BY_VIRTUAL_TASK) {
+                //上传
+                this.props.syncTask({
+                    command: COMMAND_MODIFY_LISTEN_TIMES,
+                    data: {
+                        taskOrder: state.task.taskOrder,
+                        listenTimes
+
+                    }
+                })
+            }
         }
     }
+
+
+
+
+
     // 控制翻译显示
     _toggleTran = (showTran = null) => {
         if (this.isStudyMode) {
@@ -268,18 +284,17 @@ class VocaPlayPage extends React.Component {
             this.changeState(VocaUtil.passWordInState(this.state, word))
         } else {
             this.props.passWord(VocaUtil.passWordInState(this.props.vocaPlay, word))
-            //同步pass记录到云端 
-            if (this.props.vocaPlay.normalType === Constant.BY_REAL_TASK) {
-                this.props.syncTask({
-                    command: COMMAND_MODIFY_PASSED,
-                    data: {
-                        word,
-                        passed: true,
-                        taskOrder: this.props.vocaPlay.task.taskOrder
-                    }
-                })
-            }
-
+        }
+        //同步pass记录到云端 
+        if (this.props.vocaPlay.normalType === Constant.BY_REAL_TASK) {
+            this.props.syncTask({
+                command: COMMAND_MODIFY_PASSED,
+                data: {
+                    word,
+                    passed: true,
+                    taskOrder: this.props.vocaPlay.task.taskOrder
+                }
+            })
         }
     }
 

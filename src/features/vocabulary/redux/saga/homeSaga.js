@@ -1,7 +1,7 @@
 import { take, put, call } from 'redux-saga/effects'
 import VocaUtil from "../../common/vocaUtil";
 import VocaTaskDao from "../../service/VocaTaskDao";
-import { COMMAND_MODIFY_TASK, COMMAND_MODIFY_SCORE, COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../../../common/constant';
+import { COMMAND_MODIFY_TASK } from '../../../../common/constant';
 import { SYNC_TASK } from '../action/homeAction';
 
 
@@ -58,18 +58,16 @@ export function* syncTask(syncObj) {    //一次只上传一个
                     })
 
                     break
-                case COMMAND_MODIFY_SCORE:
-                    break
-                case COMMAND_MODIFY_PASSED:
+                default:
                     curUploadedObj = syncObj
-                    break
-                case COMMAND_MODIFY_LISTEN_TIMES:
-                    break
+
             }
         }
 
 
-        uploadedTasks.push(curUploadedObj)
+        if (curUploadedObj) {
+            uploadedTasks.push(curUploadedObj)
+        }
         console.log('-------所有上传的的数据：-------------')
         console.log(uploadedTasks)
         //3. 成功则清空， 失败则写入本次上传数据

@@ -580,17 +580,7 @@ export default class TestPage extends Component {
         // 在重测、返回、结束时用pass的数据对state进行修改
 
 
-        //同步pass记录到云端 
-        if (this.props.vocaPlay.normalType === Constant.BY_REAL_TASK) {
-            this.props.syncTask({
-                command: COMMAND_MODIFY_PASSED,
-                data: {
-                    word,
-                    passed: true,
-                    taskOrder: this.props.vocaPlay.task.taskOrder
-                }
-            })
-        }
+
     }
 
 

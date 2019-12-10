@@ -1,25 +1,26 @@
 
 import RNFetchBlob from 'rn-fetch-blob'
-import {Platform} from "react-native";
+import { Platform } from "react-native";
 import { unzip } from 'react-native-zip-archive'
-import {BASE_URL, VOCABULARY_DIR} from './constant'
-import {store} from "../redux/store";
+import { BASE_URL, VOCABULARY_DIR } from './constant'
+import { store } from "../redux/store";
 
 const fs = RNFetchBlob.fs
 const dirs = fs.dirs
 const CacheDir = dirs.CacheDir + '/'
 const DocumentDir = dirs.DocumentDir + '/'
 
-export default class FileService{
-    constructor(){
+export default class FileService {
+    constructor() {
         console.disableYellowBox = true
     }
 
     //单例模式
-    static getInstance(){
-        if(!this.instance) {
+    static getInstance() {
+        if (!this.instance) {
             this.instance = new FileService();
         }
+
         return this.instance;
     }
 
@@ -32,22 +33,22 @@ export default class FileService{
 		如果本地没有，网络请求失败，返回null.
      */
 
-    fetch = async (url,path)=>{
+    fetch = async (url, path) => {
         //后台下载
         const res = await RNFetchBlob.config({
-            fileCache:true,
-            path : path
+            fileCache: true,
+            path: path
         })
-        .fetch('GET', url, {
-            //headers..
-        })
+            .fetch('GET', url, {
+                //headers..
+            })
         //日志打印
         console.log('---file fetch-----')
         console.log(url)
         console.log(res.respInfo.status)
-        if(res.respInfo.status === 200){
+        if (res.respInfo.status === 200) {
             return res
-        }else{
+        } else {
             await fs.unlink(path)
             console.log('--not found and remove file--')
             return null
@@ -60,10 +61,10 @@ export default class FileService{
      * @param filePath  文件路径
      * @returns {Promise<string|{uri: string}|null|*|Promise<*>>}
      */
-    load = async (primaryDir, filePath)=>{
+    load = async (primaryDir, filePath) => {
 
         //处理格式
-        if(filePath.startsWith('/')){
+        if (filePath.startsWith('/')) {
             filePath = filePath.substr(1)
         }
 
@@ -71,63 +72,63 @@ export default class FileService{
         let secondDir = ''
         switch (primaryDir) {
             case VOCABULARY_DIR:  //单词目录
-                const {bookCode} = store.getState().vocaLib.plan
-                secondDir = (bookCode && bookCode!=='')?bookCode+'/':''
+                const { bookCode } = store.getState().vocaLib.plan
+                secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
                 break
         }
 
-        const url = BASE_URL+filePath
-        const cachePath = CacheDir+primaryDir+filePath //不使用二级目录
-        const downloadPath = DocumentDir+primaryDir+secondDir+filePath
+        const url = BASE_URL + filePath
+        const cachePath = CacheDir + primaryDir + filePath //不使用二级目录
+        const downloadPath = DocumentDir + primaryDir + secondDir + filePath
 
-        try{
+        try {
             //1.是否存在
             let cacheExist = await fs.exists(cachePath)
             const downloadExist = await fs.exists(downloadPath)
             let exist = false
             let realPath = cachePath
-            if(cacheExist){
+            if (cacheExist) {
                 exist = true
-            }else if(downloadExist){
+            } else if (downloadExist) {
                 exist = true
                 realPath = downloadPath
             }
 
             //2.分类型讨论
-            if(filePath.match(/\.json$/)){
-                if(exist){
+            if (filePath.match(/\.json$/)) {
+                if (exist) {
                     //读取文件
                     const data = await fs.readFile(realPath)
                     return JSON.parse(data)
-                }else{
+                } else {
                     //下载文件
                     const res = await this.fetch(url, realPath)
                     return res.json()
                 }
-            }else if(filePath.match(/\.txt$/)){
-                if(exist){
+            } else if (filePath.match(/\.txt$/)) {
+                if (exist) {
                     return fs.readFile(realPath)
-                }else{
+                } else {
                     const res = await this.fetch(url, realPath)
                     return fs.readFile(realPath)
                 }
-            }else if(filePath.match(/(\.jpg|\.png|\.gif)$/)){
-                if(exist){
-                    return {uri : Platform.OS === 'android' ? 'file://' + realPath : '' + realPath }
-                }else{
+            } else if (filePath.match(/(\.jpg|\.png|\.gif)$/)) {
+                if (exist) {
+                    return { uri: Platform.OS === 'android' ? 'file://' + realPath : '' + realPath }
+                } else {
                     const res = await this.fetch(url, realPath)
-                    return {uri : Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
+                    return { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
                 }
-            }else if(filePath.match(/(\.mp3|\.wav)$/)){
-                if(exist){
+            } else if (filePath.match(/(\.mp3|\.wav)$/)) {
+                if (exist) {
                     return realPath
-                }else{
+                } else {
                     const res = await this.fetch(url, realPath)
                     return res.path()
                 }
             }
 
-        }catch(e) {
+        } catch (e) {
             console.log('-----FileService load error: -------')
             console.log(e)
         }
@@ -143,53 +144,53 @@ export default class FileService{
      * @param shouldUnzip
      * @returns {Promise<void>}
      */
-    download = async (primaryDir, filePath, progressFunc=null, shouldUnzip=false, )=>{
+    download = async (primaryDir, filePath, progressFunc = null, shouldUnzip = false, ) => {
 
         //处理格式
-        if(filePath.startsWith('/')){
+        if (filePath.startsWith('/')) {
             filePath = filePath.substr(1)
         }
 
-         //制定二级目录 (分类、bookCode、类型检测)
+        //制定二级目录 (分类、bookCode、类型检测)
         let secondDir = ''
         switch (primaryDir) {
             case VOCABULARY_DIR:  //单词目录
-                const {bookCode} = store.getState().vocaLib.plan
-                secondDir = (bookCode && bookCode!=='')?bookCode+'/':''
+                const { bookCode } = store.getState().vocaLib.plan
+                secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
                 break
 
         }
 
-        const url = BASE_URL+filePath
-        const downloadPath = DocumentDir+primaryDir+secondDir+filePath
-        try{
+        const url = BASE_URL + filePath
+        const downloadPath = DocumentDir + primaryDir + secondDir + filePath
+        try {
             const res = await RNFetchBlob.config({
-                path : downloadPath
+                path: downloadPath
             })
-            .fetch('GET', url, {
-                //headers..
-            })
-            // 显示下载进度
-            .progress((received, total) => {
-                console.log(`${received}/${total} -->`, received / total)
-                if(progressFunc){
-                    progressFunc(received, total)
-                }
-            })
-        }catch (e) {
+                .fetch('GET', url, {
+                    //headers..
+                })
+                // 显示下载进度
+                .progress((received, total) => {
+                    console.log(`${received}/${total} -->`, received / total)
+                    if (progressFunc) {
+                        progressFunc(received, total)
+                    }
+                })
+        } catch (e) {
             console('下载失败')
             console.log(e)
         }
 
         //是否解压
-        if(shouldUnzip){
-            try{
+        if (shouldUnzip) {
+            try {
                 console.log(downloadPath)
-                const path = await unzip(downloadPath, DocumentDir+primaryDir+secondDir)
+                const path = await unzip(downloadPath, DocumentDir + primaryDir + secondDir)
                 console.log(`unzip completed at ${path}`)
                 // 删除压缩包
                 await fs.unlink(downloadPath)
-            }catch (e) {
+            } catch (e) {
                 console.log('下载后，解压失败')
                 console.log(e)
             }
@@ -204,25 +205,25 @@ export default class FileService{
      * @param realPath
      * @returns {Promise<string|number>}
      */
-    getSize = async(realPath)=>{
-        console.log('getSize path: '+realPath)
+    getSize = async (realPath) => {
+        console.log('getSize path: ' + realPath)
         const exist = await fs.exists(realPath)
-        if(exist){
+        if (exist) {
             this.size = 0
             await this._statisticsCacheSize(realPath)
-            return (this.size/1024/1024).toFixed(1)
-        }else{
+            return (this.size / 1024 / 1024).toFixed(1)
+        } else {
             return 0
         }
     }
 
-    _statisticsCacheSize = async (path)=>{
+    _statisticsCacheSize = async (path) => {
         const lstat = await fs.lstat(path)
         for (let stat of lstat) {
             if (stat.type === "directory") {
                 await this._statisticsCacheSize(stat.path)
             } else {
-                console.log(stat.path + ' : '+stat.size)
+                console.log(stat.path + ' : ' + stat.size)
                 this.size += parseInt(stat.size)
             }
         }
@@ -233,8 +234,8 @@ export default class FileService{
      * @param path
      * @returns {Promise<string|number>}
      */
-    clearCache = async (path='')=>{
-        const realPath = CacheDir+path
+    clearCache = async (path = '') => {
+        const realPath = CacheDir + path
         const size = await this.clear(realPath)
         return size
     }
@@ -244,8 +245,8 @@ export default class FileService{
      * @param path
      * @returns {Promise<string|number>}
      */
-    clearDownload = async (path)=>{
-        const realPath = DocumentDir+path
+    clearDownload = async (path) => {
+        const realPath = DocumentDir + path
         const size = await this.clear(realPath)
         return size
     }
@@ -255,9 +256,9 @@ export default class FileService{
      * @param realPath
      * @returns {Promise<string|number>}
      */
-    clear = async (realPath)=>{
+    clear = async (realPath) => {
         const exist = await fs.exists(realPath)
-        if(exist){
+        if (exist) {
             await fs.unlink(realPath)
         }
         const size = await this.getSize(realPath)

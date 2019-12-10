@@ -58,8 +58,6 @@ export const vocaPlay = handleActions({
         showWordInfos: action.payload.showWordInfos,
     }),
     [vpAction.UPDATE_PLAY_TASK]: (state, action) => {
-        console.log('-------UPDATE_PLAY_TASK-----')
-        // console.log(action.payload.showWordInfos)
         return {
             ...state,
             task: action.payload.task,
@@ -71,17 +69,8 @@ export const vocaPlay = handleActions({
     [vpAction.CHANGE_PLAY_TIMER]: (state, action) => ({ ...state, autoPlayTimer: action.payload.autoPlayTimer }),
     //更新当前单词
     [vpAction.CHANGE_CUR_INDEX]: (state, action) => {
-        const beforeCount = state.task.wordCount
-        const index = state.curIndex
-        let listenTimes = state.task.listenTimes
-        let newTask = state.task
-        //播放到最后一个单词
-        if (index + 1 === beforeCount) {
-            listenTimes++
-            VocaTaskDao.getInstance().modifyTask({ taskOrder: state.task.taskOrder, listenTimes: listenTimes })
-        }
-        // 学习模式下的轮播 -> 记录curIndex 拷贝task给下一阶段
-        newTask = { ...state.task, curIndex: action.payload.curIndex, listenTimes }
+
+        const newTask = { ...state.task, curIndex: action.payload.curIndex, listenTimes: action.payload.listenTimes }
         return { ...state, task: newTask, curIndex: action.payload.curIndex, }
 
     },

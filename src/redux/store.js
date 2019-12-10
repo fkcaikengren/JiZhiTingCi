@@ -1,10 +1,10 @@
 
-import {createStore, applyMiddleware,compose} from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import logger from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage';
-import {navigationReduxMiddleware} from '../navigation/AppWithNavigationState'
+import { navigationReduxMiddleware } from '../navigation/AppWithNavigationState'
 import reducers from './reducer'
 import rootSaga from './rootSaga'
 
@@ -12,14 +12,14 @@ import rootSaga from './rootSaga'
 //创建saga中间件
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
-const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware,sagaMiddleware));
+const enhancer = composeEnhancers(applyMiddleware(navigationReduxMiddleware, sagaMiddleware));
 
 //redux持久化
 const persistConfig = {
-    key: 'root',
-    storage: AsyncStorage,
-    blacklist: ['nav', 'home','vocaLib', 'vocaList', 'article']
-  }
+  key: 'root',
+  storage: AsyncStorage,
+  blacklist: ['nav', 'home', 'vocaLib', 'vocaList', 'article', 'app']
+}
 
 export const persistedReducer = persistReducer(persistConfig, reducers)
 export const store = createStore(persistedReducer, enhancer);
@@ -45,7 +45,7 @@ sagaMiddleware.run(rootSaga, store);
 //     blacklist: ['TaskReducer3'] 
 //   }
 
-  
+
 // export const persistedReducer = persistReducer(persistConfig, reducers)
 // export const store = createStore(persistedReducer, enhancer);
 // export const persistor = persistStore(store);

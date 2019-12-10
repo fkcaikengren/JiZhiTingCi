@@ -1,42 +1,49 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, View, TouchableOpacity, TextInput} from 'react-native';
-import {Header,Button} from 'react-native-elements'
+import React, { Component } from 'react';
+import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import { Header, Button } from 'react-native-elements'
+
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 
 
 export default class NicknamePage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            nickname:this.props.navigation.getParam('nickname')
+        this.state = {
+            nickname: this.props.navigation.getParam('nickname')
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
     }
 
-    _changeNickname = (nickname)=>{
-        this.setState({nickname})
+    _changeNickname = (nickname) => {
+        this.setState({ nickname })
     }
-    _modifyNickname = ()=>{
-        const modifyNickname = this.props.navigation.getParam('modifyNickname')
-        modifyNickname(this.state.nickname)
+    _modifyNickname = async () => {
+        if (this.state.nickname === '') {
+            alert('昵称不能为空')
+        } else {
+            const res = await Http.post('/user/modifyNickname', { nickname: this.state.nickname })
+            if (res.status === 200) {
+                console.log(res.data)
+            }
+        }
     }
-    render(){
-        return(
-            <View style={[{flex:1},gstyles.c_start]}>
+    render() {
+        return (
+            <View style={[{ flex: 1 }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle='dark-content' // or directly
                     leftComponent={
-                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
-                        }} /> }
+                        }} />}
 
-                    centerComponent={{ text: '修改昵称', style: gstyles.lg_black_bold}}
+                    centerComponent={{ text: '修改昵称', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
@@ -46,7 +53,7 @@ export default class NicknamePage extends React.Component {
                 <View style={[gstyles.c_start, styles.content]}>
                     <TextInput
                         maxLength={12}
-                        style={[styles.inputStyle,gstyles.lg_black]}
+                        style={[styles.inputStyle, gstyles.lg_black]}
                         value={this.state.nickname}
                         onChangeText={this._changeNickname}
                     />
@@ -55,7 +62,7 @@ export default class NicknamePage extends React.Component {
                         title="确认修改"
                         titleStyle={gstyles.lg_black}
                         buttonStyle={styles.buttonStyle}
-                        containerStyle={{width:'100%', marginTop:25}}
+                        containerStyle={{ width: '100%', marginTop: 25 }}
                         onPress={this._modifyNickname}
                     />
                 </View>
@@ -68,19 +75,19 @@ export default class NicknamePage extends React.Component {
 
 
 const styles = StyleSheet.create({
-    content:{
-        width:'80%',
-        marginTop:25,
+    content: {
+        width: '80%',
+        marginTop: 25,
     },
     inputStyle: {
-        height:gstyles.mdHeight,
-        width:'100%',
-        borderBottomColor:"#DFDFDF",
-        borderBottomWidth:StyleSheet.hairlineWidth
+        height: gstyles.mdHeight,
+        width: '100%',
+        borderBottomColor: "#DFDFDF",
+        borderBottomWidth: StyleSheet.hairlineWidth
     },
-    buttonStyle:{
-        height:gstyles.mdHeight,
-        backgroundColor:'#FFE957',
-        borderRadius:8
+    buttonStyle: {
+        height: gstyles.mdHeight,
+        backgroundColor: '#FFE957',
+        borderRadius: 8
     }
 })

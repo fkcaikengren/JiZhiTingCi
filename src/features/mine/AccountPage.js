@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Platform, StatusBar, View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
-import {Header,} from 'react-native-elements'
+import React, { Component } from 'react';
+import { Platform, StatusBar, View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
+import { Header, } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker';
 
 import AliIcon from '../../component/AliIcon';
@@ -9,92 +9,92 @@ import styles from './AccountStyle'
 
 
 export default class AccountPage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={user:{}, avatarSource:null}
+        this.state = { user: {}, avatarSource: null }
     }
 
 
-    componentDidMount(){
+    componentDidMount() {
         console.log('加载')
         this._init()
     }
-    
+
     _init = async () => {
         try {
-          const user = await Storage.load({key: 'user'})
-          if(user !== null) {
-            this.setState({user})
-          }
-        } catch(e) {
-          console.log(e)
+            const user = await Storage.load({ key: 'user' })
+            if (user !== null) {
+                this.setState({ user })
+            }
+        } catch (e) {
+            console.log(e)
         }
-      }
+    }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
     }
 
 
     //退出登录
-    _logout = ()=>{
+    _logout = () => {
         BackHandler.exitApp()
     }
 
 
     // Item
-    _renderItem = (title, rightPart=null,onPress=()=>null, hasBorderLine=true)=>{
+    _renderItem = (title, rightPart = null, onPress = () => null, hasBorderLine = true) => {
         const isText = (typeof rightPart === 'string')
-        const borderLine = hasBorderLine?null:{borderBottomWidth:0}
-        return <TouchableOpacity 
+        const borderLine = hasBorderLine ? null : { borderBottomWidth: 0 }
+        return <TouchableOpacity
             activeOpacity={0.8}
             onPress={onPress}
-            >
-                <View style={styles.itemWrapper}>
-                    <View style={[gstyles.r_start, styles.itemView,borderLine]}>
-                        <View style={[{flex:1},gstyles.r_start]}>
-                            <Text numberOfLines={1} style={gstyles.lg_black}>{title}</Text>
-                        </View>
-                        <View style={gstyles.r_start}>
-                            {isText &&
-                                <Text numberOfLines={1} style={gstyles.lg_gray}>{rightPart}</Text>
-                            }
-                            {!isText &&
-                                rightPart
-                            }
-                            <AliIcon name='youjiantou' size={26} color={gstyles.gray} 
-                                style={{marginLeft:10, marginRight:10}}/>
-                        </View>
+        >
+            <View style={styles.itemWrapper}>
+                <View style={[gstyles.r_start, styles.itemView, borderLine]}>
+                    <View style={[{ flex: 1 }, gstyles.r_start]}>
+                        <Text numberOfLines={1} style={gstyles.lg_black}>{title}</Text>
+                    </View>
+                    <View style={gstyles.r_start}>
+                        {isText &&
+                            <Text numberOfLines={1} style={gstyles.lg_gray}>{rightPart}</Text>
+                        }
+                        {!isText &&
+                            rightPart
+                        }
+                        <AliIcon name='youjiantou' size={26} color={gstyles.gray}
+                            style={{ marginLeft: 10, marginRight: 10 }} />
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
+        </TouchableOpacity>
     }
 
-    render(){
-        let {user,avatarSource} = this.state
-        const source = avatarSource?avatarSource:require('../../image/bg.jpg')
-        return(
+    render() {
+        let { user, avatarSource } = this.state
+        const source = avatarSource ? avatarSource : require('../../image/bg.jpg')
+        return (
             <View style={styles.container}>
                 {/* 头部 */}
                 <Header
-                statusBarProps={{ barStyle: 'dark-content' }}
-                barStyle='dark-content' // or directly
-                leftComponent={ 
-                    <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
-                        this.props.navigation.goBack();
-                    }} /> }
-             
-                centerComponent={{ text: '个人中心', style: gstyles.lg_black_bold}}
-                containerStyle={{
-                    backgroundColor: gstyles.mainColor,
-                    justifyContent: 'space-around',
-                }}
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle='dark-content' // or directly
+                    leftComponent={
+                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
+                            this.props.navigation.goBack();
+                        }} />}
+
+                    centerComponent={{ text: '个人中心', style: gstyles.lg_black_bold }}
+                    containerStyle={{
+                        backgroundColor: gstyles.mainColor,
+                        justifyContent: 'space-around',
+                    }}
                 />
 
                 <View style={styles.mainView}>
                     {
-                        this._renderItem('头像', 
-                            <Image style={styles.imgStyle}  source={source}/>,
-                            ()=>{ //调用相册
+                        this._renderItem('头像',
+                            <Image style={styles.imgStyle} source={source} />,
+                            () => { //调用相册
                                 const options = {
                                     title: 'Select Avatar',
                                     customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -121,14 +121,13 @@ export default class AccountPage extends React.Component {
                             })
                     }
                     {
-                        this._renderItem('昵称', user.nickname, ()=>{
-                            this.props.navigation.navigate('Nickname',{
-                                nickname:user.nickname,
-                                modifyNickname:(nickname)=>alert(nickname)
+                        this._renderItem('昵称', user.nickname, () => {
+                            this.props.navigation.navigate('Nickname', {
+                                nickname: user.nickname
                             })
                         })
                     }
-                    
+
                     {/* {
                         this._renderItem('绑定微信', <AliIcon name='weixin' size={26} color='#30DE76' />)
                     }
@@ -136,12 +135,12 @@ export default class AccountPage extends React.Component {
                         this._renderItem('绑定QQ', <AliIcon name='qq' size={26} color='#3EC6FB' />)
                     } */}
 
-                        {
-                        this._renderItem('手机', user.phone?user.phone:
+                    {
+                        this._renderItem('手机', user.phone ? user.phone :
                             <AliIcon name='shouji' size={26} color={gstyles.gray} />)
                     }
                     {
-                        this._renderItem('修改密码',null, ()=>{
+                        this._renderItem('修改密码', null, () => {
                             this.props.navigation.navigate('Password')
                         }, false)
                     }
@@ -149,7 +148,7 @@ export default class AccountPage extends React.Component {
                     // onPress={}
                     >
                         <View style={[gstyles.r_center, styles.logout]}>
-                            <Text style={[gstyles.lg_black,{color:'red'}]}>退出登录</Text>
+                            <Text style={[gstyles.lg_black, { color: 'red' }]}>退出登录</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

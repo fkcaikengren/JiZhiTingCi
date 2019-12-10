@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
-import {View} from 'react-native'
+import React, { Component } from 'react';
+import { View } from 'react-native'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { Col, Row, Grid, } from 'react-native-easy-grid';
-import { createNavigationReducer,createReactNavigationReduxMiddleware,createReduxContainer} from 'react-navigation-redux-helpers';
-import { connect} from 'react-redux'
+import { createNavigationReducer, createReactNavigationReduxMiddleware, createReduxContainer } from 'react-navigation-redux-helpers';
+import { connect } from 'react-redux'
 import HomeStackNav from './HomeStackNav';
 import LoginStackNav from '../features/mine/navigation/LoginStackNav';
 
@@ -12,37 +11,37 @@ class AuthLoadingPage extends Component {
 
     constructor(props) {
         super(props);
-        console.disableYellowBox=true
+        console.disableYellowBox = true
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this._bootstrap();
     }
 
     // token验证登录状态
-     _bootstrap = async () => {
-        try{
+    _bootstrap = async () => {
+        try {
             const token = await Storage.load({
                 key: 'token',
             })
-            if(token){
+            if (token) {
                 Http.defaults.headers['Authorization'] = token
                 this.props.navigation.navigate('HomeStack')
-            }else{
+            } else {
                 // 未登录
                 this.props.navigation.navigate('LoginStack')
             }
-           
-        }catch(err){
+
+        } catch (err) {
             console.log(err) //token 过期
             this.props.navigation.navigate('LoginStack')
         }
-        
+
     };
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
             </View>
         );
     }
@@ -50,9 +49,9 @@ class AuthLoadingPage extends Component {
 
 const AppNavigator = createAppContainer(createSwitchNavigator(
     {
-      AuthLoading: AuthLoadingPage,
-      HomeStack: HomeStackNav,
-      LoginStack: LoginStackNav,
+        AuthLoading: AuthLoadingPage,
+        HomeStack: HomeStackNav,
+        LoginStack: LoginStackNav,
     },
     {
         initialRouteName: 'AuthLoading',
@@ -62,12 +61,13 @@ const AppNavigator = createAppContainer(createSwitchNavigator(
 //1. 创建reducer
 export const navReducer = createNavigationReducer(AppNavigator);
 
+
 //2. 创建中间件
 export const navigationReduxMiddleware = createReactNavigationReduxMiddleware(
     state => state.nav,
 );
 
-  
+
 //3. 创建redux容器
 const App = createReduxContainer(AppNavigator);
 

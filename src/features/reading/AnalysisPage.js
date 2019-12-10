@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback} from 'react-native';
-import {Header} from 'react-native-elements'
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { Header } from 'react-native-elements'
 import { WebView } from 'react-native-webview';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import Loader from '../../component/Loader'
 import * as ArticleAction from './redux/action/articleAction'
@@ -14,35 +14,36 @@ import WebUtil from '../../common/webUtil'
 import ReadUtil from './common/readUtil';
 import _util from '../../common/util'
 import * as HomeAction from '../../features/vocabulary/redux/action/homeAction'
+import { COMMAND_MODIFY_SCORE } from '../../common/constant';
 
 class AnalysisPage extends React.Component {
-  
-    constructor(props){
+
+    constructor(props) {
         super(props)
     }
 
-    
+
     //发送给Web, 初始化
-    _sendInitMessage = ()=>{
-        const {bgThemes, themeIndex, fontRem,articleText, options,analysisText, rightAnswers, userAnswerMap} = this.props.article
+    _sendInitMessage = () => {
+        const { bgThemes, themeIndex, fontRem, articleText, options, analysisText, rightAnswers, userAnswerMap } = this.props.article
         const handin = this.props.navigation.getParam('handin')
         const articleType = this.props.navigation.getParam('articleInfo').type
         const userAnswers = ReadUtil.strMapToObj(userAnswerMap)
-        try{
+        try {
             //答案的格式：文章 or 答案键值对
             let content = null
             let hasArticle = true
-            if(articleType===Constant.MULTI_SELECT_READ || articleType===Constant.FOUR_SELECT_READ){
+            if (articleType === Constant.MULTI_SELECT_READ || articleType === Constant.FOUR_SELECT_READ) {
                 content = articleText
-            }else{
+            } else {
                 hasArticle = false
                 content = Object.create(null)
-                for(let k in rightAnswers){
+                for (let k in rightAnswers) {
                     const Opt = ReadUtil.getOptionObj(options, k)
                     const word = Opt[rightAnswers[k]]
-                    if(articleType===Constant.DETAIL_READ){
+                    if (articleType === Constant.DETAIL_READ) {
                         content[k] = rightAnswers[k]
-                    }else{
+                    } else {
                         content[k] = rightAnswers[k] + ' ' + word
                     }
                 }
@@ -50,35 +51,53 @@ class AnalysisPage extends React.Component {
             // console.log(content)
             //发送给Web
             this.webref.postMessage(
-                JSON.stringify({command:'initPage', payload:{
-                    analysis:analysisText,
-                    showRightAnswers:handin,
-                    rightAnswers:rightAnswers,
-                    formatAnswer:{hasArticle, content},
-                    showUserAnswers:handin,
-                    userAnswers:userAnswers,
-                    color:bgThemes[themeIndex],
-                    size:fontRem+'rem'
-                }})
+                JSON.stringify({
+                    command: 'initPage', payload: {
+                        analysis: analysisText,
+                        showRightAnswers: handin,
+                        rightAnswers: rightAnswers,
+                        formatAnswer: { hasArticle, content },
+                        showUserAnswers: handin,
+                        userAnswers: userAnswers,
+                        color: bgThemes[themeIndex],
+                        size: fontRem + 'rem'
+                    }
+                })
             );
-        }catch(e){
+        } catch (e) {
             console.log(e)
         }
     }
- 
-    _toggleRightAnswers = ()=>{
+
+    _toggleRightAnswers = () => {
         //发送给Web
         this.webref.postMessage(
             //是否显示用户答案，是否显示答案, 显示解析
-            JSON.stringify({command:'toggleRightAnswers', payload:{}})
+            JSON.stringify({ command: 'toggleRightAnswers', payload: {} })
         );
     }
 
+    _dealScore = (data) => {
+        const { id, taskOrder } = this.props.navigation.getParam('articleInfo')
+        const userArticle = {
+            id,
+            taskOrder,
+            score: data.payload.score
+        }
+        this.props.updateScore(userArticle)
+        //同步至服务器
+
+        this.props.syncTask({
+            command: COMMAND_MODIFY_SCORE,
+            data: userArticle
+        })
+    }
+
     //接收Web信息
-    _onMessage = (e) =>{
+    _onMessage = (e) => {
         let data = JSON.parse(e.nativeEvent.data);
         console.log(data)
-        switch(data.command){
+        switch (data.command) {
             case 'initStart':
                 console.log('----initStart-----')
                 this._sendInitMessage()
@@ -89,13 +108,7 @@ class AnalysisPage extends React.Component {
                 break;
             case 'scoreFinish':
                 console.log('----scoreFinish-----')
-                const { id, taskOrder} = this.props.navigation.getParam('articleInfo')
-                const userArticle = {
-                    id,
-                    taskOrder,
-                    score: data.payload.score
-                }
-                this.props.updateScore(userArticle)
+                this._dealScore(data)
                 break;
             case 'exit':
                 console.log('退出')
@@ -104,52 +117,52 @@ class AnalysisPage extends React.Component {
         }
     }
 
-    _renderContent = ()=>{
-        const {bgThemes, themeIndex,isLoadPending , isLoadFail} = this.props.article
+    _renderContent = () => {
+        const { bgThemes, themeIndex, isLoadPending, isLoadFail } = this.props.article
         const handin = this.props.navigation.getParam('handin')
-        if(isLoadFail){
-            return <View style={[gstyles.c_center,{flex:1}]}>
-                    <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
-                    <Text style={gstyles.md_black}>出错了...</Text>
-                </View>
-        }else{
+        if (isLoadFail) {
+            return <View style={[gstyles.c_center, { flex: 1 }]}>
+                <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+                <Text style={gstyles.md_black}>出错了...</Text>
+            </View>
+        } else {
             return <View>
                 {!isLoadPending &&
-                    <View style={[styles.webContainer,{backgroundColor:bgThemes[themeIndex]}]}>
+                    <View style={[styles.webContainer, { backgroundColor: bgThemes[themeIndex] }]}>
                         <WebView
                             ref={r => (this.webref = r)}
-                            originWhiteList={['*']} 
+                            originWhiteList={['*']}
                             javaScriptEnabled={true}
                             // 接受web的数据
                             onMessage={this._onMessage}
                             onError={(error) => {
                                 console.log("error", error);
                             }}
-                            
+
                             // 发送给web的脚本
                             injectedJavaScript={WebUtil.ANALYSIS_LISTEN_JAVASCRIPT}
                             source={{
-                                uri:'file:///android_asset/web/analysis.html',
-                                baseUrl:'file:///android_asset/web/',
+                                uri: 'file:///android_asset/web/analysis.html',
+                                baseUrl: 'file:///android_asset/web/',
                             }}
-                            style={[styles.webViewStyle, {backgroundColor:bgThemes[themeIndex]}]}
-                                
+                            style={[styles.webViewStyle, { backgroundColor: bgThemes[themeIndex] }]}
+
                         />
                     </View>
                 }
                 {handin &&
                     <View style={styles.bottomBar}>
-                        <TouchableWithoutFeedback onPress={()=>{
-                            _util.goPageWithoutStack(this.props.navigation,'Home',{})
+                        <TouchableWithoutFeedback onPress={() => {
+                            _util.goPageWithoutStack(this.props.navigation, 'Home', {})
                         }}>
-                            <Text style={[styles.barText,gstyles.md_black]}>退出</Text>
+                            <Text style={[styles.barText, gstyles.md_black]}>退出</Text>
                         </TouchableWithoutFeedback>
                         <View style={styles.seperator}></View>
-                        <TouchableWithoutFeedback onPress={()=>{
+                        <TouchableWithoutFeedback onPress={() => {
                             this.props.changeUserAnswerMap(new Map())
                             this.props.navigation.goBack()
                         }}>
-                            <Text style={[styles.barText,gstyles.md_black]}>重做</Text>
+                            <Text style={[styles.barText, gstyles.md_black]}>重做</Text>
                         </TouchableWithoutFeedback>
                     </View>
                 }
@@ -158,24 +171,24 @@ class AnalysisPage extends React.Component {
     }
 
     render() {
-        const {bgThemes, themeIndex,isWebLoading, isLoadFail} = this.props.article
+        const { bgThemes, themeIndex, isWebLoading, isLoadFail } = this.props.article
         const handin = this.props.navigation.getParam('handin')
         return (
-            <View style={[styles.container, {backgroundColor:bgThemes[themeIndex]}]}>
+            <View style={[styles.container, { backgroundColor: bgThemes[themeIndex] }]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle="dark-content" // or directly
-                    centerComponent={{ text: handin?'练习结果':'答案解析', style: gstyles.lg_black_bold}}
-                    rightComponent={isLoadFail || handin?null:
-                    <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
-                        <Text style={styles.showAnswerBtn}>答案</Text>
-                    </TouchableWithoutFeedback>
-                }
-                containerStyle={{
-                    backgroundColor: bgThemes[themeIndex],
-                    justifyContent: 'space-around',
-                }}
+                    centerComponent={{ text: handin ? '练习结果' : '答案解析', style: gstyles.lg_black_bold }}
+                    rightComponent={isLoadFail || handin ? null :
+                        <TouchableWithoutFeedback onPress={this._toggleRightAnswers}>
+                            <Text style={styles.showAnswerBtn}>答案</Text>
+                        </TouchableWithoutFeedback>
+                    }
+                    containerStyle={{
+                        backgroundColor: bgThemes[themeIndex],
+                        justifyContent: 'space-around',
+                    }}
                 />
                 {/* WebView : 用户答案，标准答案，解析*/}
                 {
@@ -183,12 +196,12 @@ class AnalysisPage extends React.Component {
                 }
                 {/* 答悬浮按钮 */}
                 {!handin &&
-                    <TouchableWithoutFeedback onPress={()=>{
-                        if(isLoadFail){
+                    <TouchableWithoutFeedback onPress={() => {
+                        if (isLoadFail) {
                             this.props.changeLoadingFail(false)
                         }
                         this.props.navigation.goBack()
-                        }}>
+                    }}>
                         <View style={[styles.floatBtn]}>
                             <View>
                                 <Text style={styles.floatText}>返</Text>
@@ -199,8 +212,8 @@ class AnalysisPage extends React.Component {
                     </TouchableWithoutFeedback>
                 }
                 {isWebLoading &&
-                    <View style={[styles.loadingView, {backgroundColor:bgThemes[themeIndex]}]}>
-                       <Loader />
+                    <View style={[styles.loadingView, { backgroundColor: bgThemes[themeIndex] }]}>
+                        <Loader />
                     </View>
                 }
             </View>
@@ -209,8 +222,8 @@ class AnalysisPage extends React.Component {
 }
 
 
-const mapStateToProps = state =>({
-    article : state.article,
+const mapStateToProps = state => ({
+    article: state.article,
 });
 
 const mapDispatchToProps = {
@@ -219,6 +232,8 @@ const mapDispatchToProps = {
     changeLoadingFail: ArticleAction.changeLoadingFail,
     changeUserAnswerMap: ArticleAction.changeUserAnswerMap,
 
-    updateScore: HomeAction.updateScore
+    updateScore: HomeAction.updateScore,
+    syncTask: HomeAction.syncTask,
+
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisPage);
