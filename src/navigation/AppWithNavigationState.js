@@ -5,47 +5,8 @@ import { createNavigationReducer, createReactNavigationReduxMiddleware, createRe
 import { connect } from 'react-redux'
 import HomeStackNav from './HomeStackNav';
 import LoginStackNav from '../features/mine/navigation/LoginStackNav';
+import AuthLoadingPage from '../features/mine/AuthLoadingPage'
 
-
-class AuthLoadingPage extends Component {
-
-    constructor(props) {
-        super(props);
-        console.disableYellowBox = true
-    }
-
-    componentDidMount() {
-        this._bootstrap();
-    }
-
-    // token验证登录状态
-    _bootstrap = async () => {
-        try {
-            const token = await Storage.load({
-                key: 'token',
-            })
-            if (token) {
-                Http.defaults.headers['Authorization'] = token
-                this.props.navigation.navigate('HomeStack')
-            } else {
-                // 未登录
-                this.props.navigation.navigate('LoginStack')
-            }
-
-        } catch (err) {
-            console.log(err) //token 过期
-            this.props.navigation.navigate('LoginStack')
-        }
-
-    };
-
-    render() {
-        return (
-            <View style={{ flex: 1 }}>
-            </View>
-        );
-    }
-}
 
 const AppNavigator = createAppContainer(createSwitchNavigator(
     {

@@ -28,8 +28,6 @@ global.Storage = createStorage()
 global.Http = createHttp()
 
 
-// 目的：只上传修改的words
-global.ScoreModifiedOrderSet = new Set()
 
 
 //开启数据库
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
 class Main extends React.Component {
 
   componentDidMount() {
-    this.props.setLoadingToast(this.refs.toast)
+    this.props.setToast({ toast: this.refs.toast })
   }
 
   render() {
@@ -78,8 +76,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = {
-  setMsgToast: AppAction.setMsgToast,
-  setLoadingToast: AppAction.setLoadingToast
+  setToast: AppAction.setToast,
 }
 const MainComp = connect(mapStateToProps, mapDispatchToProps)(Main)
 

@@ -7,6 +7,8 @@ import { home } from '../features/vocabulary/redux/home'
 import { vocaLib } from '../features/vocabulary/redux/vocaLib'
 import { appReducer } from './appReducer'
 import { navReducer } from '../navigation/AppWithNavigationState'
+import { mine } from '../features/mine/redux/mine'
+
 const vocaPlay = require('../features/vocabulary/redux/vocaPlay');
 const vocaList = require('../features/vocabulary/redux/vocaList')
 
@@ -27,11 +29,19 @@ const vocalibConfig = {
 }
 const vocaLibReducer = persistReducer(vocalibConfig, vocaLib)
 
+const mineConfig = {
+    key: 'mine',
+    storage: AsyncStorage,
+}
+const mineReducer = persistReducer(mineConfig, mine)
+
+
 const reducers = combineReducers({
+    app: appReducer,
+    mine: mineReducer,
     nav: navReducer,
     home: homeReducer,
     vocaLib: vocaLibReducer,
-    app: appReducer,
     ...vocaPlay,
     ...vocaList,
     //文章模块

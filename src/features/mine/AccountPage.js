@@ -6,32 +6,16 @@ import ImagePicker from 'react-native-image-picker';
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './AccountStyle'
+import { connect } from 'react-redux';
+import * as MineAction from './redux/action/mineAction'
 
 
-export default class AccountPage extends React.Component {
+class AccountPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { user: {}, avatarSource: null }
     }
-
-
     componentDidMount() {
-        console.log('加载')
-        this._init()
-    }
 
-    _init = async () => {
-        try {
-            const user = await Storage.load({ key: 'user' })
-            if (user !== null) {
-                this.setState({ user })
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    componentWillUnmount() {
     }
 
 
@@ -40,6 +24,35 @@ export default class AccountPage extends React.Component {
         BackHandler.exitApp()
     }
 
+    _changeAvatar = () => { //调用相册
+        const options = {
+            title: '选择图片',
+            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.launchImageLibrary(options, (result) => {
+            if (result.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (result.error) {
+                console.log('ImagePicker Error: ', result.error);
+            } else if (result.customButton) {
+                console.log('User tapped custom button: ', result.customButton);
+            } else {
+                //modifyAvatar
+                this.props.modifyAvatar({
+                    token: this.props.mine.token,
+                    result: result
+                })
+                // const source = { uri: result.uri };
+                // this.setState({
+                //     avatarSource: source,
+                // });
+            }
+        });
+    }
 
     // Item
     _renderItem = (title, rightPart = null, onPress = () => null, hasBorderLine = true) => {
@@ -70,7 +83,7 @@ export default class AccountPage extends React.Component {
     }
 
     render() {
-        let { user, avatarSource } = this.state
+        const { user, avatarSource } = this.props.mine
         const source = avatarSource ? avatarSource : require('../../image/bg.jpg')
         return (
             <View style={styles.container}>
@@ -91,35 +104,14 @@ export default class AccountPage extends React.Component {
                 />
 
                 <View style={styles.mainView}>
+                    {/* 头像 */}
                     {
                         this._renderItem('头像',
-                            <Image style={styles.imgStyle} source={source} />,
-                            () => { //调用相册
-                                const options = {
-                                    title: 'Select Avatar',
-                                    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-                                    storageOptions: {
-                                        skipBackup: true,
-                                        path: 'images',
-                                    },
-                                };
-                                ImagePicker.launchImageLibrary(options, (response) => {
-                                    console.log(response)
-                                    if (response.error) {
-                                        console.log('ImagePicker Error: ', response.error);
-                                    } else {
-                                        const source = { uri: response.uri };
-
-                                        // You can also display the image using data:
-                                        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-                                        this.setState({
-                                            avatarSource: source,
-                                        });
-                                    }
-                                });
-                            })
+                            <Image style={styles.imgStyle}
+                                source={source} />,
+                            this._changeAvatar)
                     }
+                    {/* 昵称 */}
                     {
                         this._renderItem('昵称', user.nickname, () => {
                             this.props.navigation.navigate('Nickname', {
@@ -134,11 +126,12 @@ export default class AccountPage extends React.Component {
                     {
                         this._renderItem('绑定QQ', <AliIcon name='qq' size={26} color='#3EC6FB' />)
                     } */}
-
+                    {/* 手机号 */}
                     {
                         this._renderItem('手机', user.phone ? user.phone :
                             <AliIcon name='shouji' size={26} color={gstyles.gray} />)
                     }
+                    {/* 密码 */}
                     {
                         this._renderItem('修改密码', null, () => {
                             this.props.navigation.navigate('Password')
@@ -156,4 +149,12 @@ export default class AccountPage extends React.Component {
         );
     }
 }
+const mapStateToProps = state => ({
+    app: state.app,
+    mine: state.mine
+})
 
+const mapDispatchToProps = {
+    modifyAvatar: MineAction.modifyAvatar
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

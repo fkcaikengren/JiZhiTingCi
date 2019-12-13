@@ -46,16 +46,40 @@ ip: 129.211.71.111
 
 
 ## 12月9-12月15 -------------------------------------
-	1. 任务数据同步 【doing】
-		任务 【yes】
-		passed:  （服务端应该修改wordCount）
+	1. 任务数据同步 【finish】
+		vocaTask 【yes】
+		passed:  【yes】
+			服务端应该修改wordCount 
+			轮播时pass （学习还是常规）必须有
+			测试时pass: 不需要
 			
-		score: 
-	2. 生词本数据同步 
+		score: 【yes】
+			bug: 修复两篇文章打开是同一篇
+		listenTimes: 【yes】
 		
-	3. 剩余天数测试
 	
-	4. pass测试
+	2. 我的-接口
+		1）.修改昵称 【yes】
+			//用户数据保存到redux状态
+		2）.修改密码 【yes】
+		3）.修改头像 【yes]
+			添加一个filename
+			"https://aitingci-1259360612.cos.ap-chengdu.myqcloud.com/test/avatar_5df08608ddfa171808b73e75.jpg?q-sign-algorithm=sha1&q-ak=AKID9LcOGA418KYnR8ucTOfy17HOao6QsHQe&q-sign-time=1576218689;1576219589&q-key-time=1576218689;1576219589&q-header-list=&q-url-param-list=&q-signature=8945bb135e134f636795a35cd75122a1c7322fad"
+		
+		4）.退出登录
+			
+		5）.密码登录
+		6）.短信登录
+	
+	4. 生词本数据同步 
+		一次性同步
+		1. 手动同步 （标记是否最新）
+		2. 从【生词本页面】退出， 更新生词本
+		3. 从【生词页面】退出， 更新具体某一生词本
+	
+	5. 剩余天数测试
+	
+	6. pass测试
 
 
 
@@ -65,10 +89,12 @@ ip: 129.211.71.111
 
 
 
-
-
-
-
+备注：
+	a. 添加一个时间接口
+	b. 添加分享内容接口
+	c. 建议在1复习时可以pass
+	d. 统一axios 加载处理、错误提示 【yes, no】
+	e. 添加背景接口
 
 
 

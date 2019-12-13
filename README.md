@@ -459,10 +459,10 @@ yarn add react-native-spinkit
 修改：import androidx.annotation.Nullable;
 ```
 
-### 安装react-native-webview 5.8.0
+### 安装react-native-webview
 
 ```jsx
-yarn add react-native-webview@5.8.0
+yarn add react-native-webview
 react-native link react-native-webview
 //修改：
 import androidx.annotation.RequiresApi;

@@ -22,13 +22,13 @@ const ArticleSchema = {
 
 export default class ArticleDao {
 
-    constructor(){
+    constructor() {
         this.realm = null
     }
 
     //单例模式
     static getInstance() {
-        if(!this.instance) {
+        if (!this.instance) {
             this.instance = new ArticleDao();
         }
         return this.instance;
@@ -38,13 +38,13 @@ export default class ArticleDao {
      * 打开数据库
      * @returns {Promise<null>}
      */
-    async open(){
-        try{
-            if(!this.realm){
-                this.realm  = await Realm.open({path: 'Article.realm', schema:[ ArticleSchema]})
+    async open() {
+        try {
+            if (!this.realm) {
+                this.realm = await Realm.open({ path: 'Article.realm', schema: [ArticleSchema] })
                 // console.log(this.realm)
             }
-        }catch(err){
+        } catch (err) {
             console.log('ArticleDao: 创建Article.realm数据库失败')
             console.log(err)
         }
@@ -55,15 +55,15 @@ export default class ArticleDao {
      * 判断数据库是否关闭
      * @returns {boolean}
      */
-    isOpen(){
+    isOpen() {
         return (this.realm !== null)
     }
 
     /**
      * 关闭数据库
      */
-    close = ()=>{
-        if(this.realm && !this.realm.isClosed){
+    close = () => {
+        if (this.realm && !this.realm.isClosed) {
             this.realm.close()
             this.realm = null
         }
@@ -73,17 +73,17 @@ export default class ArticleDao {
      * 保存文章数据
      * @param articls
      */
-    saveArticles = (articls)=>{
-        try{
-            this.realm.write(()=>{
-                for(let art of articls){
+    saveArticles = (articls) => {
+        try {
+            this.realm.write(() => {
+                for (let art of articls) {
                     art.id = art._id
-                    art.keyWords = JSON.stringify(art.keyWords.map((item,i)=>item.word) )
+                    art.keyWords = JSON.stringify(art.keyWords.map((item, i) => item.word))
                     this.realm.create('Article', art);
                 }
             })
             console.log('articles 保存成功，结束！')
-        }catch(e){
+        } catch (e) {
             console.log('articles 保存失败！')
             console.log(e)
         }
@@ -92,7 +92,7 @@ export default class ArticleDao {
 
 
     /**自定义修改 */
-    modify =  (fn)=>{
+    modify = (fn) => {
         this.realm.write(fn)
     }
 
@@ -100,7 +100,7 @@ export default class ArticleDao {
      *  查询全部文章
      * @returns {Realm.Results<any> | never}
      */
-    getAllArticles = ()=>{
+    getAllArticles = () => {
         return this.realm.objects('Article')
     }
 
@@ -109,9 +109,9 @@ export default class ArticleDao {
      * @param id
      * @returns {*} 获取失败，返回null, 否则返回article
      */
-    getArticleById = (id)=>{
-        const res = this.realm.objects('Article').filtered('id='+id);
-        return res.length?null:res
+    getArticleById = (id) => {
+        const res = this.realm.objects('Article').filtered('id=' + id);
+        return res.length ? null : res
     }
 
     /**
@@ -119,32 +119,32 @@ export default class ArticleDao {
      * @param userArticles 用户的文章数组
      * @returns {Array}
      */
-    getArticles = (userArticles)=>{
+    getArticles = (userArticles) => {
         console.log('---获取articles by userArticles------如下：')
         console.log(userArticles)
         let arr = []
-        if(userArticles){
-            try{
+        if (userArticles) {
+            try {
                 const len = userArticles.length
-                if(len && len>0){
+                if (len && len > 0) {
                     //拼接
                     let str = ""
-                    for(let i in userArticles){
-                        if(i==(len-1)){
-                            str += "id='"+ userArticles[i].id +"'"
-                        }else{
-                            str += "id='"+ userArticles[i].id +"'" + " OR "
+                    for (let i in userArticles) {
+                        if (i == (len - 1)) {
+                            str += "id='" + userArticles[i].id + "'"
+                        } else {
+                            str += "id='" + userArticles[i].id + "'" + " OR "
                         }
                     }
                     let articles = this.realm.objects('Article').filtered(str); //数组
                     //排序
-                    arr = _.sortedUniqBy(articles, function(art) {
+                    arr = _.sortedUniqBy(articles, function (art) {
                         return art.id;
                     });
                     //赋值score
-                    for(let a of arr){
-                        for(let ua of userArticles){
-                            if(a.id === ua.id){
+                    for (let a of arr) {
+                        for (let ua of userArticles) {
+                            if (a.id === ua.id) {
                                 a.score = ua.score
                                 a.taskOrder = ua.taskOrder
                                 break
@@ -153,8 +153,8 @@ export default class ArticleDao {
                     }
                     console.log(arr)
                 }
-    
-            }catch (e) {
+
+            } catch (e) {
                 console.log(e)
                 console.log('ArticleDao : getArticles() Error')
             }
@@ -166,8 +166,8 @@ export default class ArticleDao {
     /**
      *  清空所有任务，清空数据库
      */
-    deleteAllArticles = ()=>{
-        this.realm.write(()=>{
+    deleteAllArticles = () => {
+        this.realm.write(() => {
             this.realm.deleteAll();
         })
     }

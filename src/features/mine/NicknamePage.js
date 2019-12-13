@@ -1,13 +1,31 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
 import { Header, Button } from 'react-native-elements'
-
-
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
+import { connect } from 'react-redux';
+import * as MineAction from './redux/action/mineAction'
 
 
-export default class NicknamePage extends React.Component {
+const styles = StyleSheet.create({
+    content: {
+        width: '80%',
+        marginTop: 25,
+    },
+    inputStyle: {
+        height: gstyles.mdHeight,
+        width: '100%',
+        borderBottomColor: "#DFDFDF",
+        borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    buttonStyle: {
+        height: gstyles.mdHeight,
+        backgroundColor: '#FFE957',
+        borderRadius: 8
+    }
+})
+
+class NicknamePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,10 +43,16 @@ export default class NicknamePage extends React.Component {
         if (this.state.nickname === '') {
             alert('昵称不能为空')
         } else {
-            const res = await Http.post('/user/modifyNickname', { nickname: this.state.nickname })
-            if (res.status === 200) {
-                console.log(res.data)
-            }
+            this.props.modifyNickname({
+                nickname: this.state.nickname,
+                cb: (err) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        this.props.navigation.goBack()
+                    }
+                }
+            })
         }
     }
     render() {
@@ -73,21 +97,13 @@ export default class NicknamePage extends React.Component {
 }
 
 
-
-const styles = StyleSheet.create({
-    content: {
-        width: '80%',
-        marginTop: 25,
-    },
-    inputStyle: {
-        height: gstyles.mdHeight,
-        width: '100%',
-        borderBottomColor: "#DFDFDF",
-        borderBottomWidth: StyleSheet.hairlineWidth
-    },
-    buttonStyle: {
-        height: gstyles.mdHeight,
-        backgroundColor: '#FFE957',
-        borderRadius: 8
-    }
+const mapStateToProps = state => ({
+    app: state.app,
+    mine: state.mine
 })
+
+const mapDispatchToProps = {
+    modifyNickname: MineAction.modifyNickname,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NicknamePage)

@@ -3,11 +3,10 @@ import { TextInput, View, Text, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Button, Input } from 'react-native-elements'
 import SplashScreen from 'react-native-splash-screen'
-import { DURATION } from 'react-native-easy-toast'
 import AliIcon from '../../component/AliIcon'
 import styles from './PhoneLoginStyle'
 import gstyles from "../../style";
-
+import * as MineAction from './redux/action/mineAction'
 
 
 class PhoneLoginPage extends Component {
@@ -29,29 +28,10 @@ class PhoneLoginPage extends Component {
     SplashScreen.hide();
   }
 
-
   _login = () => {
     //获取登录信息
     let param = { phone: this.state.phone, code: this.state.verifyCode }
-    Http.post('/user/loginByCode', param)
-      .then(res => {
-        console.log('login:--------------')
-        if (res.status === 200) {
-          const { token, user } = res.data
-          console.log(token)
-          //保存用户信息
-          Storage.save({
-            key: 'token', // Note: Do not use underscore("_") in key!
-            data: token,
-          });
-          Storage.save({
-            key: 'user', // Note: Do not use underscore("_") in key!
-            data: user,
-          });
-        }
-
-        this.props.navigation.navigate('AuthLoading');
-      })
+    this.props.loginByCode(param)
   };
 
 
@@ -73,15 +53,14 @@ class PhoneLoginPage extends Component {
     this.setState({ codeMode: true })
     //服务器发送验证码
     let param = { phone: this.state.phone }
-    Http.post('/user/signUp', param)
-      .then(response => {
-        return response.data.data
-      })
+    // Http.post('/user/signUp', param)
+    //   .then(response => {
+    //     return response.data.data
+    //   })
   }
 
   // 更改验证码
   _changeVerifyCode = (verifyCode) => {
-
     this.setState({ verifyCode })
   }
 
@@ -91,6 +70,9 @@ class PhoneLoginPage extends Component {
   }
 
   render() {
+    if (this.props.mine.token) {
+      this.props.navigation.navigate('AuthLoading'); //副作用
+    }
     return (
       <View style={styles.container}>
         <StatusBar translucent={false} barStyle="dark-content" />
@@ -220,9 +202,11 @@ class PhoneLoginPage extends Component {
 
 
 const mapStateToProps = state => ({
-  app: state.app
+  app: state.app,
+  mine: state.mine
 })
 
 const mapDispatchToProps = {
+  loginByCode: MineAction.loginByCode
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PhoneLoginPage)
