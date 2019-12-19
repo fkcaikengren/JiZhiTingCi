@@ -5,6 +5,7 @@ import watchVocaLib from '../features/vocabulary/redux/saga/vocaLibSaga'
 import watchVocaPlay from '../features/vocabulary/redux/saga/vocaPlaySaga'
 import { watchLoadArticle, watchLoadAnalysis } from '../features/reading/redux/saga/articleSaga'
 import { watchLoginByCode, watchModifyNickname, watchModifyPwd, watchModifyAvatar } from '../features/mine/redux/saga/mineSaga'
+import { watchSyncGroup } from '../features/vocabulary/redux/saga/vocaGroupSaga'
 
 
 function* rootSaga() {
@@ -14,6 +15,7 @@ function* rootSaga() {
         call(watchSyncTask),
         call(watchVocaLib),
         call(watchVocaPlay),
+        call(watchSyncGroup),
         // 阅读
         call(watchLoadArticle),
         call(watchLoadAnalysis),

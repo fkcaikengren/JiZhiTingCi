@@ -22,7 +22,6 @@ class AuthLoadingPage extends Component {
             // 未登录
             this.props.navigation.navigate('LoginStack')
         }
-        //    this.props.navigation.navigate('LoginStack') //过期
 
     };
 

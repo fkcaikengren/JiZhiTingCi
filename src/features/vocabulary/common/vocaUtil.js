@@ -1,6 +1,5 @@
 
 import * as Constant from './constant'
-import * as CConstant from '../../../common/constant'
 import VocaDao from '../service/VocaDao'
 import VocaTaskDao from '../service/VocaTaskDao'
 import { NavigationActions, StackActions } from 'react-navigation'

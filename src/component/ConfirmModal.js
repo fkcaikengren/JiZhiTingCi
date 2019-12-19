@@ -16,8 +16,8 @@ export default class ConfirmModal extends Component {
             title : '',
             cancelText: '取消',
             confirmText: '确认',
-            onCancel: ()=>null,
-            onConfirm: ()=>null,
+            onCancel: null,
+            onConfirm: null,
         }
         this.state = {
             ...this.defaultState
@@ -25,18 +25,22 @@ export default class ConfirmModal extends Component {
     }
 
 
-    show = (title,cancelText,confirmText,onCancel,onConfirm)=>{
+    show = (title,onCancel=null,onConfirm=null,cancelText="取消",confirmText="确定")=>{
         this.setState({isOpen:true, title,cancelText,confirmText,onCancel,onConfirm})
     }
 
     _onCancel = ()=>{
         this.setState(this.defaultState);
-        this.state.onCancel()
+        if(this.state.onCancel){
+            this.state.onCancel()
+        }
     }
 
     _onConfirm = ()=>{
         this.setState(this.defaultState);
-        this.state.onConfirm()
+        if(this.state.onConfirm){
+            this.state.onConfirm()
+        }
     }
 
     _openModal = ()=>{

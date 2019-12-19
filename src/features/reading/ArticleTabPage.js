@@ -19,7 +19,6 @@ import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
 import ReadUtil from './common/readUtil'
-import ConfirmModal from '../../component/ConfirmModal'
 
 
 const questionSize = 10
@@ -176,9 +175,9 @@ class ArticleTabPage extends React.Component {
         console.log('---------handin 跳转 到解析----------')
         const len = type === Constant.MULTI_SELECT_READ ? questionSize : options.length
         if (userAnswerMap.size < len) {
-            this.confirmModalRef.show('还有试题未完成', '提交', '继续做题', () => {
+            this.props.app.confirmModal.show('还有试题未完成', () => {
                 this._handinToAnalysis()
-            }, () => null)
+            }, null, '提交', '继续做题')
         } else {
             this._handinToAnalysis()
         }
@@ -310,7 +309,7 @@ class ArticleTabPage extends React.Component {
                         <Loader />
                     </View>
                 }
-                <ConfirmModal ref={ref => this.confirmModalRef = ref} />
+               
             </View>
         );
     }
@@ -319,6 +318,7 @@ class ArticleTabPage extends React.Component {
 
 
 const mapStateToProps = state => ({
+    app: state.app,
     article: state.article,
 });
 

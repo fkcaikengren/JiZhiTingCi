@@ -1,14 +1,38 @@
 import 'react-native'
 import VocaGroupDao from '../../src/features/vocabulary/service/VocaGroupDao'
-
-const vgd = new VocaGroupDao()
+import VocaDao from '../../src/features/vocabulary/service/VocaDao'
+const vgd =  VocaGroupDao.getInstance()
+const vocaDao = VocaDao.getInstance()
 beforeEach(() => {
     //打开数据库
+    vocaDao.open()
     return vgd.open()
 });
 afterEach(()=>{
     //关闭数据库
+    vocaDao.close()
     return vgd.close()
+})
+
+
+test('保存生词本数据', ()=>{
+    const vocaGroups = [
+        {
+            "count": 0,
+            "isDefault": false,
+            "createTime": 1576744097223,
+            "newWords": [{
+                word:'hope',
+                isHidden:false
+            },{
+                word:'miss',
+                isHidden:false
+            }],
+            "id": "157674411022393EG2",
+            "groupName": "默认生词本"
+        }
+    ]
+    vgd.saveVocaGroups(vocaGroups)
 })
 
 it('添加生词本', ()=>{

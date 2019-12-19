@@ -7,7 +7,6 @@ import Toast from 'react-native-easy-toast'
 import {connect} from 'react-redux';
 import BackgroundTimer from 'react-native-background-timer';
 
-import VocaGroupDao from './service/VocaGroupDao'
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';
 import VocaUtil from './common/vocaUtil'
@@ -18,6 +17,7 @@ import * as CConstant from '../../common/constant'
 import styles from './GroupVocaStyle'
 import gstyles from '../../style'
 import AudioService from "../../common/AudioService";
+import VocaGroupService from "./service/VocaGroupService";
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -34,7 +34,7 @@ const SEPARATOR_HEIGHT = 1;     //分割线的高度
 class GroupVocaPage extends Component {
     constructor(props) {
         super(props);
-        this.vgDao = VocaGroupDao.getInstance();
+        this.vgService = new VocaGroupService()
         this.audioService = AudioService.getInstance()
 
         this.state = {
@@ -69,7 +69,7 @@ class GroupVocaPage extends Component {
     _formatData = () => {          //数据预处理
         const {getParam} = this.props.navigation
         const groupName = getParam('groupName')
-        const group = this.vgDao.getGroup(groupName);
+        const group = this.vgService.getGroup(groupName);
         let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
@@ -153,7 +153,7 @@ class GroupVocaPage extends Component {
         const words = this.state.checkedIndex.map((itemIndex, i)=>{
             return this.state.flatData[itemIndex].word
         })
-        const result = this.vgDao.deleteWords(groupName, words)
+        const result = this.vgService.deleteWords(groupName, words)
         if(result.success){
             this.toastRef.show(`成功删除${result.deletedWords.length}个生词`, 1000);
             //刷新

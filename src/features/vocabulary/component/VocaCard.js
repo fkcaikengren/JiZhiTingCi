@@ -8,7 +8,7 @@ import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
 
 import VocaDao from '../service/VocaDao'
-import VocaGroupDao from '../service/VocaGroupDao'
+import VocaGroupService from '../service/VocaGroupService'
 import AudioService from '../../../common/AudioService';
 import * as CConstant from "../../../common/constant";
 
@@ -21,19 +21,16 @@ export default class VocaCard extends Component{
     constructor(props){
         super(props)
         this.audioService = AudioService.getInstance()
-        this.vocaGroupDao = VocaGroupDao.getInstance()
+        this.vgService = new VocaGroupService()
         const {wordInfo} = this.props
         //判断
-        const added = this.vocaGroupDao.isExistInDefault(wordInfo.word)
-
+        const added = this.vgService.isExistInDefault(wordInfo.word)
         this.state = {
             added : added,
             showAll : this.props.showAll,
             wordRoot : null,
             relativeRoots : [],
         }
-        
-
         console.disableYellowBox=true
         
     }
@@ -133,14 +130,14 @@ export default class VocaCard extends Component{
           amPronUrl:  wordInfo.am_pron_url,
           trans:  wordInfo.trans
         }
-        if(this.vocaGroupDao.addWordToDefault(groupWord)){
+        if(this.vgService.addWordToDefault(groupWord)){
           this.setState({added:true})
         }
     }
     
     _removeWord = ()=>{
         const word = this.props.wordInfo.word
-        if(this.vocaGroupDao.removeWordFromDefault(word)){
+        if(this.vgService.removeWordFromDefault(word)){
             this.setState({added:false})
         }
     }

@@ -1,10 +1,12 @@
 
-
-'use strict';
 import React, { Component } from "react";
 import {
-    View, Text, TouchableNativeFeedback, Alert, ScrollView,
-    TextInput, Keyboard
+    View, 
+    Text, 
+    TouchableNativeFeedback,
+    ScrollView,
+    TextInput, 
+    Keyboard
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
@@ -12,19 +14,18 @@ import CardView from 'react-native-cardview'
 import Toast from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
-import VocaGroupDao from './service/VocaGroupDao'
+import VocaGroupService from './service/VocaGroupService'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
 import DashSecondLine from '../../component/DashSecondLine'
-import ConfirmModal from "../../component/ConfirmModal";
-import { COMMAND_GROUP_CREATE, COMMAND_GROUP_DELETE, COMMAND_GROUP_SET_DEFAULT, COMMAND_GROUP_MODIFY_NAME } from "../../common/constant";
-
+import * as VGroupAction from './redux/action/vocaGroupAction' 
+import { connect } from "react-redux";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
 
 
-export default class VocaGroupPage extends Component {
+class VocaGroupPage extends Component {
 
     constructor(props) {
         super(props);
@@ -39,7 +40,7 @@ export default class VocaGroupPage extends Component {
             refresh: true,          //用来刷新
             keyboardSpace: 0
         };
-        this.vgDao = VocaGroupDao.getInstance();
+        this.vgService = new VocaGroupService()
 
         Keyboard.addListener('keyboardDidShow', (frames) => {
             if (!frames.endCoordinates) return;
@@ -158,17 +159,8 @@ export default class VocaGroupPage extends Component {
         } else if (isExist) {
             this.refs.toast.show('重名了，添加失败', 1000);
         } else {
-            const group = this.vgDao.addGroup(this.state.addName)
-            console.log(group)
             this.setState({ addName: '' });
-            //添加到未同步池
-            Storage.save({
-                key: 'notSyncGroups',
-                data: {
-                    command: COMMAND_GROUP_CREATE,
-                    data: group
-                }
-            })
+            this.vgService.addGroup(this.state.addName)
             this.refs.toast.show('添加成功', 500);
         }
     }
@@ -183,19 +175,8 @@ export default class VocaGroupPage extends Component {
         } else if (isExist) {
             this.refs.toast.show('重名了，修改失败', 1000);
         } else {
-            const group = this.vgDao.updateGroupName(this.state.selectedName, this.state.updateName);
+           this.vgService.updateGroupName(this.state.selectedName, this.state.updateName);
             this.setState({ updateName: '', selectedName: '' })
-            //添加到未同步池
-            Storage.save({
-                key: 'notSyncGroups',
-                data: {
-                    command: COMMAND_GROUP_MODIFY_NAME,
-                    data: {
-                        id: group.id,
-                        groupName: group.groupName
-                    }
-                }
-            })
             this.refs.toast.show('修改成功', 500);
         }
     }
@@ -203,61 +184,33 @@ export default class VocaGroupPage extends Component {
     //删除生词本
     _deleteVocaGroup = (deleteName) => {
         //默认生词本不能删除
-        if (this.vgDao.isDefault(deleteName)) {
+        if (this.vgService.isDefault(deleteName)) {
             this.refs.toast.show('无法删除默认生词本', 1000);
         } else {
-            const id = this.vgDao.deleteGroup(deleteName)
+            this.vgService.deleteGroup(deleteName)
             this.refs.toast.show('删除成功', 500);
             this.setState({ refresh: !this.state.refresh })
-            Storage.save({
-                key: 'notSyncGroups',
-                data: {
-                    command: COMMAND_GROUP_DELETE,
-                    data: {
-                        id
-                    }
-                }
-            })
         }
     }
 
     _setDefaultGroup = (item) => {
         if (!item.isDefault) { //不是默认
-            const id = this.vgDao.updateToDefault(item.groupName)
+            this.vgService.updateToDefault(item.groupName)
             this.setState({ refresh: !this.state.refresh })
-            Storage.save({
-                key: 'notSyncGroups',
-                data: {
-                    command: COMMAND_GROUP_SET_DEFAULT,
-                    data: {
-                        id
-                    }
-                }
-            })
         }
     }
 
     // 刷新
     _refreshGroup = () => {
-        const vocaGroups = this.vgDao.getAllGroups();
-        console.log('all groups:')
-        console.log(vocaGroups.length)
-        if (vocaGroups.length == 0) {
-            this.vgDao.addGroup('默认生词本')
-            this.vgDao.updateToDefault('默认生词本')
-        }
+        const vocaGroups = this.vgService.getAllGroups();
         this.setState({ vocaGroups })
     }
 
     _goBack = () => {
+        this.props.syncGroup()
         this.props.navigation.goBack();
-        console.log(this.state.vocaGroups)
-
     }
 
-    syncGroup = async () => {
-        const groups = Storage.getAllDataForKey('notSyncGroups')
-    }
 
     render() {
 
@@ -324,7 +277,7 @@ export default class VocaGroupPage extends Component {
                                                     </TouchableNativeFeedback>
                                                     {/* 删除 */}
                                                     <TouchableNativeFeedback onPress={() => {
-                                                        this.confirmModalRef.show(`删除生词本"${item.groupName}"?`, '取消', '确认', () => null,
+                                                        this.props.app.confirmModal.show(`删除生词本"${item.groupName}"?`, null,
                                                             () => { this._deleteVocaGroup(item.groupName) })
                                                     }}>
                                                         <Text style={{ fontSize: 14, color: 'red', marginRight: 10 }}>删除</Text>
@@ -379,10 +332,21 @@ export default class VocaGroupPage extends Component {
                 {
                     this._createModal(false) //创建修改弹框
                 }
-                {
-                    <ConfirmModal ref={ref => this.confirmModalRef = ref} />
-                }
+             
             </View>
         );
     }
 }
+
+
+const mapStateToProps = state => ({
+    app: state.app,
+});
+
+const mapDispatchToProps = {
+    syncGroup: VGroupAction.syncGroup
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(VocaGroupPage)

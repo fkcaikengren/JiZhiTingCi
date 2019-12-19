@@ -7,7 +7,7 @@ import VocaDao from '../service/VocaDao'
 import gstyles from "../../../style";
 import AliIcon from '../../../component/AliIcon'
 import AudioService from "../../../common/AudioService";
-import VocaGroupDao from "../service/VocaGroupDao";
+import VocaGroupService from '../../vocabulary/service/VocaGroupService'
 import VocaCard from "./VocaCard";
 import * as CConstant from "../../../common/constant";
 const Dimensions = require('Dimensions');
@@ -23,7 +23,7 @@ export default class LookWordBoard extends Component{
             added: false,
         }
         this.vocaDao = VocaDao.getInstance()
-        this.vocaGroupDao = VocaGroupDao.getInstance()
+        this.vgService = new VocaGroupService()
         this.audioService = AudioService.getInstance()
     }
 
@@ -35,7 +35,7 @@ export default class LookWordBoard extends Component{
             const wordInfo = this.vocaDao.lookWordInfo(res[0])
             if(wordInfo){
                 //判断是否存在
-                added = this.vocaGroupDao.isExistInDefault(wordInfo.word)
+                added = this.vgService.isExistInDefault(wordInfo.word)
                 this.setState({isOpen:true, wordInfo, added})
                 this.props.onStateChange(true)
                 return true
@@ -80,14 +80,14 @@ export default class LookWordBoard extends Component{
             amPronUrl:  wordInfo.am_pron_url,
             trans:  wordInfo.trans
         }
-        if(this.vocaGroupDao.addWordToDefault(groupWord)){
+        if(this.vgService.addWordToDefault(groupWord)){
             this.setState({added:true})
         }
     }
 
     _removeWord = ()=>{
         const word = this.state.wordInfo.word
-        if(this.vocaGroupDao.removeWordFromDefault(word)){
+        if(this.vgService.removeWordFromDefault(word)){
             this.setState({added:false})
         }
     }

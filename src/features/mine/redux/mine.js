@@ -1,7 +1,11 @@
 import {
-    LOGIN_BY_CODE_SUCCEED, LOGIN_BY_CODE_FAIL,
-    MODIFY_NICKNAME_SUCCEED, MODIFY_NICKNAME_FAIL,
-    MODIFY_AVATAR_SUCCEED, MODIFY_AVATAR_FAIL
+    LOGIN_BY_CODE_SUCCEED,
+    LOGIN_BY_CODE_FAIL,
+    MODIFY_NICKNAME_SUCCEED, 
+    MODIFY_NICKNAME_FAIL,
+    MODIFY_AVATAR_SUCCEED, 
+    MODIFY_AVATAR_FAIL,
+    CLEAR_TOKEN
 } from "./action/mineAction"
 
 
@@ -34,7 +38,8 @@ export const mine = (state = defaultState, action) => {
             }
         case MODIFY_AVATAR_FAIL:        //修改头像成功
             return state
-
+        case CLEAR_TOKEN:
+            return {...state,token:null}
         default:
             return state
     }

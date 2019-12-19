@@ -28,11 +28,11 @@ export function* createPlan(params) {
         const res = yield Http.post("/plan/create", params)
         const { vocaTasks, plan, articles } = res.data
         //清空先前数据，存储新数据到realm
-        const vtd = VocaTaskDao.getInstance()
+        const vtDao = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
-        vtd.deleteAllTasks()
+        vtDao.deleteAllTasks()
         artDao.deleteAllArticles()
-        vtd.saveVocaTasks(vocaTasks, params.taskWordCount)
+        vtDao.saveVocaTasks(vocaTasks, params.taskWordCount)
         artDao.saveArticles(articles)
         //加载今日数据
         const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)

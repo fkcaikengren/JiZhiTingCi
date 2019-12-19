@@ -32,6 +32,7 @@ import ArticleTabPage from '../features/reading/ArticleTabPage'
 
 
 //我的模块
+import AuthLoadingPage from '../features/mine/AuthLoadingPage'
 import AccountPage from '../features/mine/AccountPage'
 import PasswordPage from '../features/mine/PasswordPage'
 import NicknamePage from '../features/mine/NicknamePage'
@@ -39,7 +40,6 @@ import DownloadManagePage from '../features/mine/DownloadManagePage'
 import GuidePage from '../features/mine/GuidePage'
 import GuideDetailPage from '../features/mine/GuideDetailPage'
 
-import * as Constant from '../features/vocabulary/common/constant'
 import FileTest from "../FileTest";
 
 const article1 = {
@@ -201,6 +201,9 @@ const VocaHomeStackNav = createStackNavigator({
 
 
   //我的页面
+  AuthLoading: {
+    screen: AuthLoadingPage
+  },
   Account: {
     screen: AccountPage
   },

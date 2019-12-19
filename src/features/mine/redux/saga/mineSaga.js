@@ -15,6 +15,7 @@ import {
     MODIFY_AVATAR_START,
     MODIFY_AVATAR_SUCCEED
 } from '../action/mineAction'
+import {loginHandle} from '../../common/userHandler'
 import { USER_DIR } from '../../../../common/constant'
 import { Platform } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -23,14 +24,25 @@ const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
 
 
-// 验证码登录
+
+
+/**验证码登录 */
 function* loginByCode(action) {
     yield put({ type: LOGIN_BY_CODE_START })
     const res = yield Http.post('/user/loginByCode', action.payload)
     if (res.status === 200) {
-        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: res.data })
+        const userState = loginHandle(res.data)
+        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: userState })
     }
 }
+
+
+/**密码登录 */
+/**微信登录 */
+
+
+
+
 
 // 修改昵称
 function* modifyNickname(action) {
@@ -55,16 +67,18 @@ function* modifyPwd(action) {
 
 //修改头像
 function* modifyAvatar(action) {
+    const {fileName,type,data} = action.payload.result
     yield put({ type: MODIFY_AVATAR_START })
     //上传
     const res = yield RNFetchBlob.fetch('POST', 'http://129.211.71.111:9000/m/user/modifyAvatar', {
         Authorization: action.payload.token,
         'Content-Type': 'multipart/form-data',
     }, [
-        { name: 'avatar', filename: action.payload.result.fileName, type: 'image/jpg', data: action.payload.result.data },
+        { name: 'avatar', filename:fileName, type, data },
     ])
     //下载
     const url = JSON.parse(res.data).avatarUrl
+    console.log(url)
     const res2 = yield FileService.getInstance().fetch(url, DocumentDir + USER_DIR + action.payload.result.fileName)
     avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
     yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: url } })

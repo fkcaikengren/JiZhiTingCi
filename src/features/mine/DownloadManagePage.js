@@ -2,20 +2,20 @@ import React, {Component} from 'react';
 import {Platform, View, TouchableOpacity, TouchableWithoutFeedback, Text} from 'react-native';
 import {Header,Button} from 'react-native-elements'
 import RNFetchBlob from 'rn-fetch-blob'
+import { connect } from 'react-redux';
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './DownloadManageStyle'
 import FileService from "../../common/FileService";
 import {VOCABULARY_DIR} from "../../common/constant";
-import ConfirmModal from "../../component/ConfirmModal";
 
 const fs = RNFetchBlob.fs
 const dirs = fs.dirs
 const CacheDir = dirs.CacheDir + '/'
 const DocumentDir = dirs.DocumentDir + '/'
 
-export default class DownloadManagePage extends React.Component {
+class DownloadManagePage extends React.Component {
     constructor(props){
         super(props);
         this.fileService = FileService.getInstance()
@@ -66,11 +66,11 @@ export default class DownloadManagePage extends React.Component {
 
                     <TouchableOpacity activeOpacity={0.9} onPress={()=>{
                         //弹框提示是否清理
-                        this.confirmModalRef.show('清空缓存','取消','确认',()=>null ,()=>{
+                        this.props.app.confirmModal.show('清空缓存',null,()=>{
                             this.fileService.clearCache()
-                                .then(size=>{
-                                    this.setState({cacheSize:size})
-                                })
+                            .then(size=>{
+                                this.setState({cacheSize:size})
+                            })
                         })
                     }}>
                         <View style={[gstyles.r_between, styles.itemView]}>
@@ -87,9 +87,16 @@ export default class DownloadManagePage extends React.Component {
                 <TouchableWithoutFeedback>
                     <Text style={[gstyles.lg_black,styles.clearBtn]}>全部清理</Text>
                 </TouchableWithoutFeedback>
-                <ConfirmModal ref={ref=>this.confirmModalRef = ref} />
             </View>
         );
     }
 }
 
+
+const mapStateToProps = state => ({
+    app: state.app,
+})
+
+const mapDispatchToProps = {
+}
+export default connect(mapStateToProps, mapDispatchToProps)(DownloadManagePage)

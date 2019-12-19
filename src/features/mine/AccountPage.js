@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
+import { Platform, StatusBar, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Header, } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker';
 
@@ -8,6 +8,8 @@ import gstyles from "../../style";
 import styles from './AccountStyle'
 import { connect } from 'react-redux';
 import * as MineAction from './redux/action/mineAction'
+import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
+import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 
 
 class AccountPage extends React.Component {
@@ -21,7 +23,16 @@ class AccountPage extends React.Component {
 
     //退出登录
     _logout = () => {
-        BackHandler.exitApp()
+        this.props.app.confirmModal.show("确认退出登录！",null,()=>{
+            //清空token
+            this.props.clearToken()
+            //清空任务数据
+            VocaTaskDao.getInstance().deleteAllTasks()
+            //清空生词本数据
+            VocaGroupDao.getInstance().deleteAllGroups()
+            //跳转到auth
+            this.props.navigation.navigate('AuthLoading')
+        })
     }
 
     _changeAvatar = () => { //调用相册
@@ -90,7 +101,7 @@ class AccountPage extends React.Component {
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle='dark-content' // or directly
+                    barStyle='dark-content' 
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
@@ -138,7 +149,7 @@ class AccountPage extends React.Component {
                         }, false)
                     }
                     <TouchableOpacity activeOpacity={0.8}
-                    // onPress={}
+                    onPress={this._logout}
                     >
                         <View style={[gstyles.r_center, styles.logout]}>
                             <Text style={[gstyles.lg_black, { color: 'red' }]}>退出登录</Text>
@@ -155,6 +166,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-    modifyAvatar: MineAction.modifyAvatar
+    modifyAvatar: MineAction.modifyAvatar,
+    clearToken: MineAction.clearToken,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

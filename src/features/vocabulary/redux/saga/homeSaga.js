@@ -17,7 +17,10 @@ export function* loadTasks(params) {
     }
 }
 
-/**上传单词任务 */
+/**
+ * @description 上传单词任务 
+ * @param {*} syncObj 需要同步的单词任务
+ */
 export function* syncTask(syncObj) {    //一次只上传一个
     let curUploadedObj = null
     try {
@@ -77,8 +80,9 @@ export function* syncTask(syncObj) {    //一次只上传一个
             const res = yield Http.post("/vocaTask/sync", uploadedTasks)
             if (res.status === 200) { //清空
                 Storage.clearMapForKey('notSyncTasks');
+                yield put({ type: 'UPLOAD_TASK_SUCCEED' })
             }
-            yield put({ type: 'UPLOAD_TASK_SUCCEED' })
+            
         }
     } catch (err) {
         console.log('--- 异常导致未上传， 保存至本地------------')
@@ -94,6 +98,7 @@ export function* syncTask(syncObj) {    //一次只上传一个
     }
 
 }
+
 
 
 /**watch saga */

@@ -1,3 +1,4 @@
+import Section from "../common/Section";
 
 const Realm = require('realm');
 const uuidv4 = require('uuid/v4');
@@ -103,6 +104,40 @@ export default class VocaGroupDao {
             this.realm.close()
             this.realm = null
         }
+    }
+
+    
+
+    /**
+     *  保存生词本数据
+     */
+    saveVocaGroups = (vocaGroups)=>{
+        this.realm.write(()=>{
+            for(let vg of vocaGroups){
+                if (this.getGroup(vg.groupName)) {
+                    throw new Error('生词本名字重复了')
+                } else{
+                    let group = {
+                        id: vg.id,                          //生词本id ()
+                        groupName: vg.groupName,            //生词本名称
+                        count: vg.count,                     //生词数
+                        createTime: vg.createTime,
+                        isDefault: vg.isDefault,
+                        sections: [],                     
+                    }
+                    //分组section
+                    const sectionClass = new Section()
+                    for(let newWord of vg.newWords){
+                        sectionClass.pushWord(newWord.word,newWord.isHidden)
+                    }
+                    group.sections = sectionClass.getSections()
+                    //保存
+                    this.realm.create('VocaGroup', group);
+                }
+                
+            }
+        })
+        
     }
 
     /**
@@ -237,69 +272,67 @@ export default class VocaGroupDao {
      * 添加生词到默认生词本
      * @param groupWord
      * @param groupWord
-     * @returns {boolean} 如果生词已存在，添加失败，返回false; 否则返回true
      */
     addWordToDefault = (groupWord) => {
-        let success = true
-        try {
-            this.realm.write(() => {
-                console.log(`开始添加生词到默认生词本，单词：${groupWord.word}`)
-                //判断groupWord 所在的分组（即判断第一个字母）
-                let isSaved = false
-                let firstChar = groupWord.word[0].toUpperCase()
-                let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
-                //如果默认生词本不存在，创建一个默认生词本
-                if (!defaultGroup) {
-                    let group = {
-                        id: uuidv4(),
-                        groupName: '默认生词本',
-                        count: 0,
-                        createTime: new Date().getTime(),
-                        isDefault: true,            //设置是默认生词本
-                        sections: []
-                    }
-                    defaultGroup = this.realm.create('VocaGroup', group);
-                    console.log(`创建了默认生词本`)
+        let result = {}
+        this.realm.write(() => {
+            console.log(`开始添加生词到默认生词本，单词：${groupWord.word}`)
+            //判断groupWord 所在的分组（即判断第一个字母）
+            let isSaved = false
+            let firstChar = groupWord.word[0].toUpperCase()
+            let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+            result.groupId = defaultGroup.id
+            //如果默认生词本不存在，创建一个默认生词本
+            if (!defaultGroup) {
+                let group = {
+                    id: uuidv4(),
+                    groupName: '默认生词本',
+                    count: 0,
+                    createTime: new Date().getTime(),
+                    isDefault: true,            //设置是默认生词本
+                    sections: []
                 }
-                for (let key in defaultGroup.sections) {
-                    let s = defaultGroup.sections[key];
-                    if (s.section === firstChar) {
-                        console.log(`生词${groupWord.word} 存入生词本 ${defaultGroup.groupName} 的section: ${s.section} 中`)
-                        //如果单词已经存在, 返回false,添加失败
-                        for (let key2 in s.words) {
-                            if (s.words[key2].word === groupWord.word) {
-                                console.log('单词已存在，存入失败')
-                                success = false
-                                //这里的return 是结束realm.write函数
-                                return false
-                            }
+                defaultGroup = this.realm.create('VocaGroup', group);
+                console.log(`创建了默认生词本`)
+            }
+            for (let key in defaultGroup.sections) {
+                let s = defaultGroup.sections[key];
+                if (s.section === firstChar) {
+                    console.log(`生词${groupWord.word} 存入生词本 ${defaultGroup.groupName} 的section: ${s.section} 中`)
+                    //如果单词已经存在, 返回false,添加失败
+                    for (let key2 in s.words) {
+                        if (s.words[key2].word === groupWord.word) {
+                            console.log('单词已存在，存入失败')
+                            success = false
+                            //这里的return 是结束realm.write函数
+                            return false
                         }
-                        s.words.push({ ...groupWord, id: uuidv4() })
-                        defaultGroup.count++;
-                        isSaved = true
-                        console.log('单词存入成功')
-                        break
                     }
-                }
-
-                if (!isSaved) {
-                    console.log(`不存在Section, 创建了一个Section: ${firstChar}`)
-                    //创建分组，并存入
-                    let newSection = {
-                        id: uuidv4(),
-                        section: firstChar,
-                        words: [{ ...groupWord, id: uuidv4() }]
-                    }
-                    defaultGroup.sections.push(newSection);
+                    s.words.push({ ...groupWord, id: uuidv4() })
                     defaultGroup.count++;
+                    isSaved = true
+                    result.addWord = groupWord.word
                     console.log('单词存入成功')
+                    
+                    break
                 }
-            })
-        } catch (e) {
-            console.log(e)
-            success = false
-        }
-        return success
+            }
+
+            if (!isSaved) {
+                console.log(`不存在Section, 创建了一个Section: ${firstChar}`)
+                //创建分组，并存入
+                let newSection = {
+                    id: uuidv4(),
+                    section: firstChar,
+                    words: [{ ...groupWord, id: uuidv4() }]
+                }
+                defaultGroup.sections.push(newSection);
+                defaultGroup.count++;
+                result.addWord = groupWord.word
+                console.log('单词存入成功')
+            }
+        })
+        return result
     }
 
     /**
@@ -338,35 +371,30 @@ export default class VocaGroupDao {
      * @returns {boolean}
      */
     removeWordFromDefault = (word) => {
-        let success = true
-        try {
-            let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
-            if (defaultGroup) {
-                this.realm.write(() => {
-                    let sectionName = word[0].toUpperCase()
-                    let section = defaultGroup.sections.filtered('section = "' + sectionName + '"')[0];
-                    if (section) {
-                        for (let key in section.words) {
-                            let w = section.words[key]
-                            if (w && w.word === word) {
-                                this.realm.delete(w);
-                                defaultGroup.count = defaultGroup.count - 1
-                            }
+        let result = {}
+        let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
+        if (defaultGroup) {
+            result.groupId = defaultGroup.id
+            this.realm.write(() => {
+                let sectionName = word[0].toUpperCase()
+                let section = defaultGroup.sections.filtered('section = "' + sectionName + '"')[0];
+                if (section) {
+                    for (let key in section.words) {
+                        let w = section.words[key]
+                        if (w && w.word === word) {
+                            this.realm.delete(w);
+                            defaultGroup.count = defaultGroup.count - 1
+                            result.deleteWord = word
                         }
-                    } else {
-                        console.log('removeWordFromDefault： Section不存在')
-                        success = false
                     }
-                })
-            } else {
-                console.log('removeWordFromDefault： 生词本不存在')
-                success = false
-            }
-        } catch (e) {
-            console(e)
-            success = false
+                } else {
+                    throw new Error('删除生词失败，Section不存在')
+                }
+            })
+        } else {
+            throw new Error('删除生词失败，生词本不存在')
         }
-        return success
+        return result
     }
 
     /**
@@ -376,9 +404,10 @@ export default class VocaGroupDao {
      * @returns {object} result 结果信息
      */
     deleteWords = (groupName, words) => {
-        let result = { success: true, deletedSections: [], deletedWords: [] }
+        let result = { success: true, groupId: null, deletedSections: [], deletedWords: [] }
         let group = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
         if (group) {
+            result.groupId = group.id
             try {
                 this.realm.write(() => {
                     let delCount = 0

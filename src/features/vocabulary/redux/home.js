@@ -1,5 +1,6 @@
 
 import * as ha from './action/homeAction'
+import * as vga from './action/vocaGroupAction'
 import _util from "../../../common/util";
 import * as Constant from "../common/constant";
 import VocaTaskDao from "../service/VocaTaskDao";
@@ -49,7 +50,7 @@ export const home = (state = defaultState, action) => {
             // console.log(tasks)
             // //保存至本地
             return { ...state, tasks }
-        //上传同步任务
+        //上传单词任务
         case ha.SYNC_TASK:
             return { ...state, isUploading: true }
         case ha.SYNC_TASK_SUCCEED:
@@ -59,6 +60,13 @@ export const home = (state = defaultState, action) => {
         case ha.SYNC_TASK_FAIL:
             console.log('--------上传失败后的 tasks: -------------')
             // console.log(state.tasks)
+            return { ...state, isUploading: false, isUploadFail: true }
+        // 上传生词本数据
+        case vga.SYNC_GROUP:
+            return { ...state, isUploading: true }
+        case ha.SYNC_GROUP_SUCCEED:
+            return { ...state, isUploading: false, isUploadFail: false }
+        case ha.SYNC_GROUP_FAIL:
             return { ...state, isUploading: false, isUploadFail: true }
         case ha.UPDATE_SCORE:
             const { id, taskOrder, score } = action.payload.userArticle
