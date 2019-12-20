@@ -5,10 +5,12 @@ import { CircleLoader } from '../component/Loader'
 import { DURATION } from 'react-native-easy-toast'
 
 const opt = {
-    showLoader:true
+    showLoader:true,
+    handleError:true
 }
 
-export const createHttp = (config = httpBaseConfig,options=opt) => {
+const createHttp = (options=opt,config = httpBaseConfig) => {
+    config.headers.Authorization = store.getState().mine.token
     const instance = axios.create(config);
     //请求拦截处理
     instance.interceptors.request.use(async config => {
@@ -16,7 +18,6 @@ export const createHttp = (config = httpBaseConfig,options=opt) => {
         if(options.showLoader){
             store.getState().app.toast.show(CircleLoader, DURATION.FOREVER)
         }
-        
 
         return config;
     }, function (error) {
@@ -37,3 +38,6 @@ export const createHttp = (config = httpBaseConfig,options=opt) => {
 
     return instance
 }
+
+
+export default createHttp

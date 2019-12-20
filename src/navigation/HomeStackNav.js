@@ -41,6 +41,7 @@ import GuidePage from '../features/mine/GuidePage'
 import GuideDetailPage from '../features/mine/GuideDetailPage'
 
 import FileTest from "../FileTest";
+import SettingPage from '../features/mine/SettingPage';
 
 const article1 = {
   id: 1,
@@ -221,6 +222,9 @@ const VocaHomeStackNav = createStackNavigator({
   },
   GuideDetail: {
     screen: GuideDetailPage
+  },
+  Setting:{
+    screen: SettingPage
   },
 
   //测试

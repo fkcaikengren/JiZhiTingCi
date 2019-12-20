@@ -11,6 +11,7 @@ import gstyles from '../../style'
 import VocaCard from "./component/VocaCard";
 import VocaTaskDao from './service/VocaTaskDao'
 import vocaUtil from './common/vocaUtil'
+import _util from '../../common/util'
 import * as Constant from './common/constant'
 import AudioService from '../../common/AudioService'
 import LookWordBoard from "./component/LookWordBoard";
@@ -32,9 +33,11 @@ class LearnCardPage extends Component {
             showNext: true,
             refresh: false
         }
-
         this.audioService = AudioService.getInstance()
         this.taskDao = VocaTaskDao.getInstance()
+
+        //检查本地时间
+        _util.checkLocalTime()
     }
 
     componentDidMount() {

@@ -92,7 +92,9 @@ class HomeDrawerPanel extends Component {
           titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
           containerStyle={{ width: '100%' }}
           buttonStyle={[styles.btn, gstyles.r_start]}
-          onPress={this.props.closeDrawer}
+          onPress={()=>{
+            this.props.navigation.navigate('Setting')
+          }}
         />
 
       </ScrollView>

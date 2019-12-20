@@ -2,7 +2,7 @@
 
 'use strict';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, Animated, InteractionManager } from 'react-native';
 import { PropTypes } from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { Grid, Col, Row } from 'react-native-easy-grid'
@@ -68,23 +68,24 @@ export default class HomeHeader extends Component {
   }
   renderFixedHeader = () => {
     const { bookName } = this.props.vocaLib.plan
-    const flag = this.props.home.isUploading
+    const isFailed = this.props.home.isUploadFail
     return <View style={[styles.fixedSection, gstyles.r_start]}>
       <View style={[{ flex: 1 }, gstyles.r_start_bottom]}>
         <AliIcon name='wode' size={26} color='#202020' onPress={this.props.openDrawer} />
         {(this.props.home.isUploading || this.props.home.isUploadFail) &&
-          <View style={{ marginLeft: 10 }}>
+          <View style={{ marginLeft: 10,marginBottom:2 }}>
             <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={() => {
               if (this.props.home.isUploadFail) {
                 this.props.toastRef.show('貌似网络出了点问题...')
               }
             }} />
-            {this.props.home.isUploadFail &&
-              <Badge value={flag ? '···' : '!'} status={flag ? 'primary' : 'error'}
+              <Badge 
+                value={isFailed ? '!' : '···'} 
+                status={isFailed ? 'error' : 'primary' }
                 badgeStyle={{ minWidth: 12, height: 12, }}
                 textStyle={{ fontSize: 10 }}
                 containerStyle={{ position: 'absolute', bottom: 0, left: 10 }} />
-            }
+            
           </View>
         }
       </View>
@@ -183,6 +184,7 @@ export default class HomeHeader extends Component {
 
   }
 
+  /**导航到文章管理页面 */
   _navArticleManage = () => {
     InteractionManager.runAfterInteractions(() => {
       this.props.navigation.navigate('ArticleManage', { transition: 'forFadeToBottomAndroid' });

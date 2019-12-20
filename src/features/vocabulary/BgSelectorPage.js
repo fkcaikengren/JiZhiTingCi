@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import {Platform, View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Header, Button} from 'react-native-elements'
+import { DURATION } from 'react-native-easy-toast'
 import {connect} from 'react-redux';
+
 import RNFetchBlob from 'rn-fetch-blob';
 const Dirs = RNFetchBlob.fs.dirs
 const RootPath = Dirs.DocumentDir + '/bgs/'
 
-
+import createHttp from '../../common/http'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon';
+import {CircleLoader} from '../../component/Loader'
 import gstyles from "../../style";
 import styles from './BgSelectorStyle'
+
 
 const Dimensions = require('Dimensions');
 const {width, height} = Dimensions.get('window');
@@ -21,7 +25,7 @@ class BgSelectorPage extends Component {
     constructor(props){
         super(props)
         this.state = {
-            bgPaths: []
+            bgPaths: [],
         }
 
         console.disableYellowBox = true
@@ -33,46 +37,31 @@ class BgSelectorPage extends Component {
 
 
     _init = async ()=>{
-        const bgUrls = ['https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/1.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/2.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/3.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/4.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/5.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/6.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/7.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/8.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/9.jpg',
-            'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/bgs/10.jpg',]
-        const bgPaths = []
-        //判断是否已经缓存过
-        console.log('----path-----')
-        console.log(this.props.vocaPlay.bgPath)
-        const exist = await RNFetchBlob.fs.exists(this.props.vocaPlay.bgPath)
-        console.log('------exists----------')
-        if(!exist){ //不存在，先下载
+        this.props.app.toast.show(CircleLoader, DURATION.FOREVER)
+        const myHttp = createHttp({showLoader:false});
+        const res = await myHttp.get('/appinfo/getPlayBgs')
+        const bgUrls = res.data
+        let bgPaths = await Storage.getAllDataForKey('play-bgs')
+        if(bgPaths.length <= 0){ //不存在，先下载
             for(let url of bgUrls){
+                const fname = url.match(/[^\/]+(\.(jpg)|(png))$/)[0]
+                const path = RootPath + fname
                 const res = await RNFetchBlob.config({
-                    path: RootPath+ url.match(/\d+\.jpg$/)[0]
+                    path: path
                 })
-                    .fetch('GET', url, {
-                    })
-                console.log(res.path())
-                bgPaths.push((res.path()))
-            }
-        }else{ //如果已存在，遍历获取
-            const stat = await RNFetchBlob.fs.lstat(RootPath)
-            // console.log(stat)
-            //遍历
-            console.log('---遍历----')
-            const fileNames = await RNFetchBlob.fs.ls(RootPath)
-            for(let fname of fileNames){
-                console.log(RootPath+fname)
-                bgPaths.push(RootPath+fname)
+                .fetch('GET', url, {
+                })
+                await Storage.save({
+                    key: 'play-bgs',
+                    id: fname,
+                    data: path
+                })
+                bgPaths.push(path)
+                console.log('保存：'+res.path())
             }
         }
-
+        this.props.app.toast.close()
         this.setState({bgPaths})
-
     }
 
 
@@ -151,7 +140,8 @@ class BgSelectorPage extends Component {
     }
 }
 const mapStateToProps = state =>({
-    vocaPlay : state.vocaPlay
+    app: state.app,
+    vocaPlay: state.vocaPlay
 });
 
 const mapDispatchToProps = {

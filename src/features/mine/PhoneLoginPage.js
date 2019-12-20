@@ -29,6 +29,9 @@ class PhoneLoginPage extends Component {
   }
 
   _login = () => {
+    //手动登录进入App首页
+    console.log('---手动登录进入App首页--')
+    IsLoginToHome = true
     //获取登录信息
     let param = { phone: this.state.phone, code: this.state.verifyCode }
     this.props.loginByCode(param)

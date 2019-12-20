@@ -1,6 +1,7 @@
 import * as CConstant from "./constant";
 import {NavigationActions, StackActions} from "react-navigation";
-
+import createHttp from "./http";
+import {store} from '../redux/store'
 
 export default class _util{
 
@@ -35,6 +36,25 @@ export default class _util{
             ]
         });
         navigation.dispatch(resetAction);
+    }
+
+
+    /**
+     * @description 
+     * @return 时间准确返回true,否则返回false
+     */
+    static checkLocalTime = async ()=>{
+        //如果本地时间不对，提示修改手机时间
+        const myHttp = createHttp({showLoader:false})
+        const res = await myHttp.get('/timestamp')
+        const d = res.data.timestamp - Date.now()
+        console.log('时间差：  '+d)
+        if( d >= -10000 && d <= 10000){ //相差在10秒
+            return true
+        }else{
+            store.getState().app.toast.show('手机时间不准确，请调整时间后重试！',3000)
+            return false
+        }
     }
 
 

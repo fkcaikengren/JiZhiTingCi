@@ -24,8 +24,8 @@ class AccountPage extends React.Component {
     //退出登录
     _logout = () => {
         this.props.app.confirmModal.show("确认退出登录！",null,()=>{
-            //清空token
-            this.props.clearToken()
+            //清空token和user
+            this.props.logout()
             //清空任务数据
             VocaTaskDao.getInstance().deleteAllTasks()
             //清空生词本数据
@@ -167,6 +167,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     modifyAvatar: MineAction.modifyAvatar,
-    clearToken: MineAction.clearToken,
+    logout: MineAction.logout,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

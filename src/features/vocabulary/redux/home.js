@@ -3,6 +3,7 @@ import * as ha from './action/homeAction'
 import * as vga from './action/vocaGroupAction'
 import _util from "../../../common/util";
 import * as Constant from "../common/constant";
+import { LOGOUT } from '../../mine/redux/action/mineAction'
 import VocaTaskDao from "../service/VocaTaskDao";
 
 const defaultState = {
@@ -51,22 +52,15 @@ export const home = (state = defaultState, action) => {
             // //保存至本地
             return { ...state, tasks }
         //上传单词任务
-        case ha.SYNC_TASK:
+        case ha.SYNC_TASK_START:
             return { ...state, isUploading: true }
         case ha.SYNC_TASK_SUCCEED:
-            console.log('--------保存后，上传后的tasks:------------------')
+            console.log('--------同步任务成功的 tasks:------------------')
             // console.log(state.tasks)
             return { ...state, isUploading: false, isUploadFail: false }
         case ha.SYNC_TASK_FAIL:
-            console.log('--------上传失败后的 tasks: -------------')
+            console.log('--------同步任务失败的 tasks: -------------')
             // console.log(state.tasks)
-            return { ...state, isUploading: false, isUploadFail: true }
-        // 上传生词本数据
-        case vga.SYNC_GROUP:
-            return { ...state, isUploading: true }
-        case ha.SYNC_GROUP_SUCCEED:
-            return { ...state, isUploading: false, isUploadFail: false }
-        case ha.SYNC_GROUP_FAIL:
             return { ...state, isUploading: false, isUploadFail: true }
         case ha.UPDATE_SCORE:
             const { id, taskOrder, score } = action.payload.userArticle
@@ -86,6 +80,19 @@ export const home = (state = defaultState, action) => {
                 return task
             })
             return { ...state, tasks: newTasks }
+        // 上传生词本数据
+        case vga.SYNC_GROUP_START:
+            console.log('------开始同步生词本-------')
+            return { ...state, isUploading: true }
+        case vga.SYNC_GROUP_SUCCEED:
+            console.log('--------同步生词本成功: -------------')
+            return { ...state, isUploading: false, isUploadFail: false }
+        case vga.SYNC_GROUP_FAIL:
+            console.log('--------同步生词本失败: -------------')
+            return { ...state, isUploading: false, isUploadFail: true }
+        //退出登录
+        case LOGOUT:
+            return defaultState
         default:
             return state
     }

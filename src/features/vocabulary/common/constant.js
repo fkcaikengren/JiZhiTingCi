@@ -6,7 +6,7 @@ export const LEARN_PLAY = 'LEARN_PLAY'          //学习模式的轮播
 export const REVIEW_PLAY = 'REVIEW_PLAY'        //复习模式的轮播
 
 export const LEARN_PLAY_TIMES = 3        //学习模式默认播放3遍
-export const REVIEW_PLAY_TIMES = 10      //复习模式默认播放10遍
+export const REVIEW_PLAY_TIMES = 6      //复习模式默认播放10遍
 
 
 export const DELAY_DAYS_0 = 0       //待学可推迟天数
@@ -68,3 +68,8 @@ export const WORD_TRAN = 'WORD_TRAN'
 export const PRON_TRAN = 'PRON_TRAN'
 export const TRAN_WORD = 'TRAN_WORD'
 export const SEN_WORD = 'SEN_WORD'  
+
+
+//单词发音类型
+export const VOCA_PRON_TYPE_EN = 'VOCA_PRON_TYPE_EN'
+export const VOCA_PRON_TYPE_AM = 'VOCA_PRON_TYPE_AM'

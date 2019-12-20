@@ -5,14 +5,20 @@ import {
     MODIFY_NICKNAME_FAIL,
     MODIFY_AVATAR_SUCCEED, 
     MODIFY_AVATAR_FAIL,
-    CLEAR_TOKEN
+    LOGOUT
 } from "./action/mineAction"
+import { VOCA_PRON_TYPE_AM } from "../../vocabulary/common/constant"
 
 
 const defaultState = {
     token: null,
     user: {},
     avatarSource: null,
+
+    //发音类型
+    vocaPronType: VOCA_PRON_TYPE_AM, 
+    //复习轮播次数
+    reviewPlayTimes: 10             
 }
 
 export const mine = (state = defaultState, action) => {
@@ -38,8 +44,8 @@ export const mine = (state = defaultState, action) => {
             }
         case MODIFY_AVATAR_FAIL:        //修改头像成功
             return state
-        case CLEAR_TOKEN:
-            return {...state,token:null}
+        case LOGOUT:
+            return defaultState
         default:
             return state
     }

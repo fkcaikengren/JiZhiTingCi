@@ -9,9 +9,8 @@ import * as VocaLibAction from './redux/action/vocaLibAction'
 import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
-import Loader from "../../component/Loader";
-import Axios from "axios";
-const Spinner = require('react-native-spinkit');
+import {CountDownLoader} from "../../component/Loader";
+import _util from '../../common/util'
 
 class VocaLibPage extends Component {
 
@@ -19,9 +18,7 @@ class VocaLibPage extends Component {
         super(props)
 
         this.planTimer = null
-        this.state = {
-            timeCount: 5
-        }
+        
     }
 
     componentDidMount() {
@@ -65,7 +62,7 @@ class VocaLibPage extends Component {
             pickerTitleColor: [30, 30, 30, 1],
             pickerConfirmBtnColor: [30, 30, 30, 1],
             pickerToolBarBg: [255, 233, 87, 1],
-            onPickerConfirm: data => {
+            onPickerConfirm: async (data) => {
                 // console.log(data)
                 const sum = parseInt(data[0].replace(/新学(\d+).+/, '$1'))
                 let taskCount = null
@@ -82,30 +79,18 @@ class VocaLibPage extends Component {
                 console.log(taskCount, taskWordCount);
                 //提交计划
                 if (taskCount !== null && taskWordCount !== null) {
-                    //如果网络不畅，提示
-                    //如果本地时间不对，提示修改手机时间
-                    // Axios.get('http://api.k780.com:88/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json')
-                    //     .then(res=>{
-                    //         const d = res.data.result.timestamp - parseInt(new Date().getTime()/1000)
-                    //         if(d <= 10 && d >= -10){
-
-                    //         }else{
-                    //             alert('手机时间不准确，请调整手机时间后重试')
-                    //         }
-                    //     })
-                    //     .catch(e=>{
-                    //         alert('网络出现问题，请重试')
-                    //         console.log(e)
-                    //     })
-                    this.props.changeVocaBook({
-                        bookId: el._id,
-                        totalWordCount: el.count,
-                        taskCount: taskCount,
-                        taskWordCount: taskWordCount,
-                        lastLearnDate: this.props.home.lastLearnDate
-                    })
-                    //开始倒计时
-                    this.planTimer = setTimeout(this._planCountDown, 1000)
+                    const isExacted = await _util.checkLocalTime()
+                    if(isExacted){
+                        this.props.changeVocaBook({
+                            bookId: el._id,
+                            totalWordCount: el.count,
+                            taskCount: taskCount,
+                            taskWordCount: taskWordCount,
+                            lastLearnDate: this.props.home.lastLearnDate
+                        })
+                        //开始倒计时
+                        this.refs.countDownLoader && this.refs.countDownLoader.countDown(7)
+                    }
                 } else {
                     console.error('VocaLibPage: 设置计划时，数据错误！')
                 }
@@ -136,30 +121,12 @@ class VocaLibPage extends Component {
         </View>
     }
 
-    _planCountDown = () => {
-        if (this.planTimer) {
-            clearTimeout(this.planTimer)
-        }
-        if (this.state.timeCount !== 0) {
-            this.setState({ timeCount: this.state.timeCount - 1 })
-        }
-        this.planTimer = setTimeout(this._planCountDown, 1000)
-    }
+    
 
     _renderContent = () => {
         const { books, isLoadPending, loadingType } = this.props.vocaLib
         if (isLoadPending) {
-            return <View style={[gstyles.loadingView]}>
-                <View>
-                    <Spinner
-                        isVisible={true}
-                        size={100}
-                        type={'ThreeBounce'}
-                        color={gstyles.emColor}
-                    />
-                    <Text style={gstyles.md_black}>{`计划生成中 ${this.state.timeCount}..`}</Text>
-                </View>
-            </View>
+            return <CountDownLoader ref="countDownLoader" />
         } else {
             return <FlatList
                 data={books}
@@ -186,7 +153,7 @@ class VocaLibPage extends Component {
                             Picker.hide()
                         }} />}
 
-                    centerComponent={{ text: plan.bookName, style: gstyles.lg_black_bold }}
+                    centerComponent={{ text: '词库', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',

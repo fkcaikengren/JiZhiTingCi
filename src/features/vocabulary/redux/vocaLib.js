@@ -1,6 +1,7 @@
 
 import * as vl from './action/vocaLibAction';
 import { CHANGE_LEARNED_WORD_COUNT } from "./action/vocaLibAction";
+import { LOGOUT } from '../../mine/redux/action/mineAction'
 
 const defaultState = {
 
@@ -49,6 +50,9 @@ export const vocaLib = (state = defaultState, action) => {
             console.log('-------learnedWordCount------')
             console.log(action.payload.learnedWordCount)
             return { ...state, learnedWordCount: action.payload.learnedWordCount }
+        //退出登录
+        case LOGOUT:
+            return defaultState
         default:
             return state
     }

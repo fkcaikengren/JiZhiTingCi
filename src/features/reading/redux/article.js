@@ -1,5 +1,6 @@
 import {  handleActions } from 'redux-actions';
 import * as aAction from './action/articleAction'
+import { LOGOUT } from '../../mine/redux/action/mineAction'
 import {BgThemes} from '../common/readConfig'
 
 
@@ -87,5 +88,6 @@ export const article =  handleActions({
     [aAction.TOGGLE_KEY_WORDS]: (state, action) => ({ ...state, showKeyWords:!state.showKeyWords }),                   
     //改变用户答案
     [aAction.CHANGE_USER_ANSWER_MAP]: (state, action) => ({ ...state, userAnswerMap:action.payload.userAnswerMap }),                    
-
+    //退出登录
+    [LOGOUT]:(state,action)=>defaultState
 }, defaultState);

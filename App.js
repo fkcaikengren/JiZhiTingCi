@@ -9,7 +9,7 @@ const Realm = require('realm')
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import { createStorage } from './src/common/storage';
-import { createHttp } from './src/common/http'
+import createHttp from './src/common/http'
 import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
@@ -24,10 +24,10 @@ Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重
 console.log('copy realm');
 
 
-
-//设置全局变量和拷贝realm (注：这部分代码只在安装App时运行一次)
+// 存储对象
 global.Storage = createStorage()
-global.Http = createHttp()
+// 是否手动登录进入App首页
+global.IsLoginToHome = false 
 
 
 

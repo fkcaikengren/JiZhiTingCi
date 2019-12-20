@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import gstyles from "../style";
 const Spinner = require('react-native-spinkit');
 
@@ -16,22 +16,40 @@ export const CircleLoader = <View style={{
 </View>
 
 
+export class CountDownLoader extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            timeCount: 7
+        }
+    }
 
-export default class Loader extends Component {
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
+    
+    countDown = (num) => {
+        this.setState({ timeCount: num })
+        this.timer = setInterval(()=>{
+            if (this.state.timeCount === 0) { //暂停
+                this.timer && clearTimeout(this.timer);
+            }else{                            //减1                   
+                this.setState({ timeCount: this.state.timeCount - 1 })
+            }
+        },1000)
+    }
 
-    render() {
-        return <View style={[
-            { width: 100, height: 100, backgroundColor: '#30303099', borderRadius: 10 },
-            gstyles.r_center
-        ]}>
+    render(){
+        return <View style={[gstyles.loadingView]}>
+        <View>
             <Spinner
                 isVisible={true}
-                size={60}
-                type={'Circle'}
-                color={gstyles.mainColor}
+                size={100}
+                type={'ThreeBounce'}
+                color={gstyles.emColor}
             />
+            <Text style={gstyles.md_black}>{`计划生成中 ${this.state.timeCount}..`}</Text>
         </View>
-
-
+    </View>
     }
 }

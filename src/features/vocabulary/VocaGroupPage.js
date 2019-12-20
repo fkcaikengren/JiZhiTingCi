@@ -207,8 +207,12 @@ class VocaGroupPage extends Component {
     }
 
     _goBack = () => {
-        this.props.syncGroup()
+        this.props.syncGroup({isByHand:false})
         this.props.navigation.goBack();
+    }
+
+    _syncByhand = ()=>{
+        this.props.syncGroup({isByHand:true})
     }
 
 
@@ -221,7 +225,7 @@ class VocaGroupPage extends Component {
                     barStyle='dark-content' // or directly
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={this._goBack} />}
-                    rightComponent={<AliIcon name='tongbu' size={24} color={gstyles.black} />}
+                    rightComponent={<AliIcon name='tongbu' size={24} color={gstyles.black} onPress={this._syncByhand}/>}
                     centerComponent={{ text: '生词本', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,

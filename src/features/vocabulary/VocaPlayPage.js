@@ -50,7 +50,6 @@ class VocaPlayPage extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.taskDao = VocaTaskDao.getInstance()
         this.vocaDao = VocaDao.getInstance()
 
@@ -60,6 +59,12 @@ class VocaPlayPage extends React.Component {
         if (this.mode === Constant.LEARN_PLAY || this.mode === Constant.REVIEW_PLAY) {  //新学和复习统称学习模式
             this.isStudyMode = true
         }
+        //检查本地时间
+        if(this.isStudyMode){
+            _util.checkLocalTime()
+        }
+
+        //初始化完成遍数
         this.finishedTimes = 0
 
         //播放服务

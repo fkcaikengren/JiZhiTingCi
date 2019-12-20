@@ -21,17 +21,17 @@ export const MODIFY_AVATAR_START = 'MODIFY_AVATAR_START'
 export const MODIFY_AVATAR_SUCCEED = 'MODIFY_AVATAR_SUCCEED'
 export const MODIFY_AVATAR_FAIL = 'MODIFY_AVATAR_FAIL'
 
-export const CLEAR_TOKEN = 'CLEAR_TOKEN'
+export const LOGOUT = 'LOGOUT'
 
 
 const fn = (payload) => {
     return payload
 }
 
-export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, clearToken } = createActions({
+export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout } = createActions({
     [LOGIN_BY_CODE]: fn,
     [MODIFY_NICKNAME]: fn,
     [MODIFY_PASSWORD]: fn,
     [MODIFY_AVATAR]: fn,
-    [CLEAR_TOKEN]: fn,
+    [LOGOUT]: fn,
 })

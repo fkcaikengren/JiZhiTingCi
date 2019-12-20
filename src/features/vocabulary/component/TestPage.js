@@ -11,6 +11,7 @@ import VocaDao from '../service/VocaDao'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
 import vocaUtil from '../common/vocaUtil'
+import _util from '../../../common/util'
 import VocaCard from "./VocaCard";
 import * as Constant from '../common/constant'
 import AudioService from '../../../common/AudioService'
@@ -87,6 +88,9 @@ export default class TestPage extends Component {
 
         this.passedWords = []       //某一轮测试中pass的单词
         this.wordInfos = []         //task所有单词信息（包括passed）
+
+        //检查本地时间
+        _util.checkLocalTime()
     }
 
     componentDidMount() {

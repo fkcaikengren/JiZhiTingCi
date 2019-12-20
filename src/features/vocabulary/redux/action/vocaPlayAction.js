@@ -3,8 +3,8 @@
 import { createActions } from 'redux-actions';
 
 
-export const LOAD_TASK = 'LOAD_TASK';                     //加载任务           
-export const UPDATE_PLAY_TASK = 'UPDATE_PLAY_TASK'        //修改播放任务
+export const LOAD_TASK = 'LOAD_TASK';                           //加载任务           
+export const UPDATE_PLAY_TASK = 'UPDATE_PLAY_TASK'              //修改播放任务
 export const CHANGE_SHOW_WORD_INFOS = 'CHANGE_SHOW_WORD_INFOS'  //改变要显示的单词信息数组         
 
 export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';             //暂停播放
@@ -12,14 +12,14 @@ export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';               // 更新当�
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';                 //控制时间间隔
 export const TOGGLE_WORD = 'TOGGLE_WORD';             //控制英文单词显示
 export const TOGGLE_TRAN = 'TOGGLE_TRAN';             //控制中文释义显示
+export const GET_BGS = 'GET_BGS'                      //获取所有播放背景
 export const CHANGE_BG = 'CHANGE_BG';                 //改变背景
 export const SHOW_BLUR = 'SHOW_BLUR'                  //是否显示模糊效果
 export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
 export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
+
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
-
 export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模式的类型
-
 export const CLEAR_PLAY = 'CLEAR_PLAY'    //清空任务
 
 
@@ -58,6 +58,10 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
     [TOGGLE_TRAN]: (showTran = null) => {
       return { showTran }
     },
+    // 获取所有背景图
+    [GET_BGS]: ()=>{
+
+    },
     //改变背景
     [CHANGE_BG]: (bgPath) => {
       return ({ bgPath })
@@ -70,7 +74,6 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
     [CHANGE_THEME]: (themeId) => {
       return { themeId };
     },
-
     //pass单词
     [PASS_WORD]: (payload) => {
       return payload

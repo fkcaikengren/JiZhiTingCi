@@ -1,11 +1,15 @@
-import { handleActions } from 'redux-actions';
+import {
+    handleActions
+} from 'redux-actions';
 
 import * as vpAction from './action/vocaPlayAction';
-import { Themes } from '../common/vocaConfig'
-import VocaUtil from '../common/vocaUtil';
-import VocaTaskDao from '../service/VocaTaskDao';
+import {
+    Themes
+} from '../common/vocaConfig'
 import * as Constant from '../common/constant'
-
+import {
+    LOGOUT
+} from '../../mine/redux/action/mineAction'
 
 /**
  *  总结：
@@ -43,78 +47,121 @@ const defaultState = {
     isLoadPending: false,
 
     //normal播放模式的类型
-    normalType: Constant.BY_REAL_TASK,  //默认是真实task 构建播放内容
+    normalType: Constant.BY_REAL_TASK, //默认是真实task 构建播放内容
 
 }
 
+export const vocaPlay = (state = defaultState, action) => {
+    switch (action.type) {
+        //加载任务      
+        case vpAction.LOAD_TASK:
+            return {
+                ...state,
+                task: action.payload.task,
+                    curIndex: action.payload.task.curIndex,
+                    showWordInfos: action.payload.showWordInfos,
+            };
+        case vpAction.UPDATE_PLAY_TASK:
+            return {
+                ...state,
+                task: action.payload.task,
+                    curIndex: action.payload.task.curIndex,
+                    showWordInfos: action.payload.showWordInfos,
+            };
+            //暂停、播放
+        case vpAction.CHANGE_PLAY_TIMER:
+            return {
+                ...state, autoPlayTimer: action.payload.autoPlayTimer
+            };
+            //更新当前单词
+        case vpAction.CHANGE_CUR_INDEX:
+            const newTask = {
+                ...state.task,
+                curIndex: action.payload.curIndex,
+                listenTimes: action.payload.listenTimes
+            }
+            return {
+                ...state, task: newTask, curIndex: action.payload.curIndex,
+            };
+            //改变播放间隔
+        case vpAction.CHANGE_INTERVAL:
+            return {
+                ...state, interval: action.payload.interval
+            };
+            //是否显示单词
+        case vpAction.TOGGLE_WORD:
+            if (action.payload.showWord === null) {
+                return {
+                    ...state,
+                    showWord: !state.showWord
+                }
+            } else {
+                return {
+                    ...state,
+                    showWord: action.payload.showWord
+                }
+            }
+        //是否显示翻译
+        case vpAction.TOGGLE_TRAN:
+            if (action.payload.showTran === null) {
+                return {
+                    ...state,
+                    showTran: !state.showTran
+                }
+            } else {
+                return {
+                    ...state,
+                    showTran: action.payload.showTran
+                }
+            }
+        //改变背景
+        case vpAction.CHANGE_BG:
+            return {
+                ...state, bgPath: action.payload.bgPath, showBlur: false
+            };
+            //是否模糊
+        case vpAction.SHOW_BLUR:
+            return {
+                ...state, showBlur: action.payload.showBlur
+            };
 
-export const vocaPlay = handleActions({
+        //改变主题
+        case vpAction.CHANGE_THEME:
+            return {
+                ...state, themeId: action.payload.themeId
+            };
+        // 是否显示任务面板
+        case vpAction.TOGGLE_TASK_MODAL:
+            return {
+                ...state, tasksModalOpened: action.payload.tasksModalOpened
+            };
+        //Pass单词
+        case vpAction.PASS_WORD:
+            return {
+                ...state, ...action.payload
+            };
 
-    //加载任务         
-    [vpAction.LOAD_TASK]: (state, action) => ({
-        ...state,
-        task: action.payload.task,
-        curIndex: action.payload.task.curIndex,
-        showWordInfos: action.payload.showWordInfos,
-    }),
-    [vpAction.UPDATE_PLAY_TASK]: (state, action) => {
-        return {
-            ...state,
-            task: action.payload.task,
-            curIndex: action.payload.task.curIndex,
-            showWordInfos: action.payload.showWordInfos,
-        }
-    },
-    //暂停、播放
-    [vpAction.CHANGE_PLAY_TIMER]: (state, action) => ({ ...state, autoPlayTimer: action.payload.autoPlayTimer }),
-    //更新当前单词
-    [vpAction.CHANGE_CUR_INDEX]: (state, action) => {
-
-        const newTask = { ...state.task, curIndex: action.payload.curIndex, listenTimes: action.payload.listenTimes }
-        return { ...state, task: newTask, curIndex: action.payload.curIndex, }
-
-    },
-    //改变播放间隔
-    [vpAction.CHANGE_INTERVAL]: (state, action) => ({ ...state, interval: action.payload.interval }),
-    //是否显示单词
-    [vpAction.TOGGLE_WORD]: (state, action) => {
-        if (action.payload.showWord === null) {
-            return { ...state, showWord: !state.showWord }
-        } else {
-            return { ...state, showWord: action.payload.showWord }
-        }
-
-    },
-    //是否显示翻译
-    [vpAction.TOGGLE_TRAN]: (state, action) => {
-        if (action.payload.showTran === null) {
-            return { ...state, showTran: !state.showTran }
-        } else {
-            return { ...state, showTran: action.payload.showTran }
-        }
-    },
-    //改变背景
-    [vpAction.CHANGE_BG]: (state, action) => ({ ...state, bgPath: action.payload.bgPath, showBlur: false }),
-    //是否模糊
-    [vpAction.SHOW_BLUR]: (state, action) => ({ ...state, showBlur: action.payload.showBlur }),
-    //改变主题
-    [vpAction.CHANGE_THEME]: (state, action) => ({ ...state, themeId: action.payload.themeId }),
-    [vpAction.TOGGLE_TASK_MODAL]: (state, action) => ({ ...state, tasksModalOpened: action.payload.tasksModalOpened }),
-    //Pass单词
-    [vpAction.PASS_WORD]: (state, action) => ({ ...state, ...action.payload }),
-
-    [vpAction.CHANGE_NORMAL_TYPE]: (state, action) => ({ ...state, normalType: action.payload.normalType }),
-    // 清空任务
-    [vpAction.CLEAR_PLAY]: (state, vpAction) => {
-        return {
-            ...defaultState,
-            bgPath: state.bgPath,
-            interval: state.interval,
-            showTran: state.showTran,
-            showWord: state.showWord,
-            showBlur: state.showBlur,
-        }
+        // 改变normal_type
+        case vpAction.CHANGE_NORMAL_TYPE:
+            return {
+                ...state, normalType: action.payload.normalType
+            };
+        // 清空任务
+        case vpAction.CLEAR_PLAY:
+            return {
+                ...defaultState,
+                bgPath: state.bgPath,
+                    interval: state.interval,
+                    showTran: state.showTran,
+                    showWord: state.showWord,
+                    showBlur: state.showBlur,
+            };
+        //退出登录
+        case LOGOUT:
+            return defaultState;
+        default:
+            return state;
     }
 
+
 }
-    , defaultState);
