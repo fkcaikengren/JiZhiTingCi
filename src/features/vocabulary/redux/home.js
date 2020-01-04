@@ -3,7 +3,7 @@ import * as ha from './action/homeAction'
 import * as vga from './action/vocaGroupAction'
 import _util from "../../../common/util";
 import * as Constant from "../common/constant";
-import { LOGOUT } from '../../mine/redux/action/mineAction'
+import { LOGOUT, CHANGE_CONFIG_REVIEW_PLAY_TIMES } from '../../mine/redux/action/mineAction'
 import VocaTaskDao from "../service/VocaTaskDao";
 
 const defaultState = {
@@ -90,7 +90,30 @@ export const home = (state = defaultState, action) => {
         case vga.SYNC_GROUP_FAIL:
             console.log('--------同步生词本失败: -------------')
             return { ...state, isUploading: false, isUploadFail: true }
-        //退出登录
+        // 修改配置的复习轮播遍数
+        case CHANGE_CONFIG_REVIEW_PLAY_TIMES:
+            const newTasks2 = state.tasks.map((task, index) => {
+                if (task.taskType === Constant.TASK_VOCA_TYPE) {
+                    if (task.status !== Constant.STATUS_0 && task.progress === Constant.IN_REVIEW_PLAY) {
+                        //复习轮播任务
+                        let leftTimes = task.leftTimes >= action.payload.configReviewPlayTimes ?
+                            action.payload.configReviewPlayTimes : task.leftTimes
+                        return {
+                            ...task,
+                            curIndex: 0,
+                            leftTimes,
+                        }
+
+                    } else {
+                        //新学任务 or 复习非轮播任务
+                        return task
+                    }
+                } else {
+                    return task
+                }
+            })
+            return { ...state, tasks: newTasks2 }
+        // 退出登录
         case LOGOUT:
             return defaultState
         default:

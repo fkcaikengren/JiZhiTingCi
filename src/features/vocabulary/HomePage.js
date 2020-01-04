@@ -17,6 +17,8 @@ import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
 import { BY_REAL_TASK } from "./common/constant";
 
+
+
 class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -40,7 +42,7 @@ class HomePage extends Component {
         AppState.addEventListener('change', this._handleAppStateChange);
     }
 
-    
+
     componentWillUnmount() {
         AppState.removeEventListener('change', this._handleAppStateChange);
     }
@@ -137,14 +139,14 @@ class HomePage extends Component {
                     <StatusBar translucent={false} barStyle="dark-content" />
                     <View style={styles.statusBar} />
                     {/*顶部背景和任务列表 */}
-                    <HomeHeader 
-                        navigation={this.props.navigation} 
+                    <HomeHeader
+                        navigation={this.props.navigation}
                         home={this.props.home} vocaLib={this.props.vocaLib}
-                        toastRef={this.props.app.toast} 
+                        toastRef={this.props.app.toast}
                         openDrawer={this._openDrawerPanel}>
-                            <Task 
-                            navigation={this.props.navigation} 
-                            home={this.props.home} 
+                        <Task
+                            navigation={this.props.navigation}
+                            home={this.props.home}
                             updateTask={this.props.updateTask}
                             toastRef={this.props.app.toast} />
                     </HomeHeader>

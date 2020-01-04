@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import { View} from "react-native";
-import {Header} from "react-native-elements";
+import React, { Component } from "react";
+import { View } from "react-native";
+import { Header } from "react-native-elements";
 import VocaCard from "./component/VocaCard";
 import AliIcon from '../../component/AliIcon'
 import gstyles from '../../style'
@@ -8,27 +8,27 @@ import VocaDao from './service/VocaDao'
 
 export default class VocaDetailPage extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            wordInfo:null
+            wordInfo: null
         }
     }
     componentDidMount() {
         const word = this.props.navigation.getParam('word')
         console.log(word)
         const wordInfo = VocaDao.getInstance().getWordInfo(word)
-        this.setState({wordInfo})
+        this.setState({ wordInfo })
     }
 
     render() {
         const word = this.props.navigation.getParam('word')
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <Header
-                    statusBarProps={{ barStyle:'dark-content' }}
+                    statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle='dark-content' // or directly
-                    leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={()=>{
+                    leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={() => {
                         this.props.navigation.goBack();
                     }} />}
                     centerComponent={{ text: word, style: gstyles.lg_black_bold }}
@@ -39,7 +39,7 @@ export default class VocaDetailPage extends Component {
                     }}
                 />
                 {this.state.wordInfo &&
-                    <VocaCard wordInfo={this.state.wordInfo}/>
+                    <VocaCard navigation={this.props.navigation} wordInfo={this.state.wordInfo} />
                 }
             </View>
         );

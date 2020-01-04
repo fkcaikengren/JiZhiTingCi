@@ -514,7 +514,7 @@ export default class TestPage extends Component {
             }}>
             {/* 主体 */}
             {showWordInfos[curIndex] &&
-                <VocaCard wordInfo={showWordInfos[curIndex]} />
+                <VocaCard navigation={this.props.navigation} wordInfo={showWordInfos[curIndex]} />
             }
             {/* 底部 */}
             <View style={[gstyles.modalBottom, gstyles.r_between]}>

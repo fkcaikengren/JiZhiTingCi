@@ -6,7 +6,7 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from "rn-fetch-blob";
 
 import NotificationManage from '../../../modules/NotificationManage'
-import * as Progress from '../../../component/react-native-progress';
+import * as Progress from 'react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import styles from '../VocaPlayStyle'
 import gstyles from '../../../style';

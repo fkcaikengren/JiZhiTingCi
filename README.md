@@ -6,7 +6,7 @@
 
 react-native 版本：**0.59.8**
 
-```
+```shell
 react-native init JiZhiTingCi
 ```
 
@@ -112,26 +112,12 @@ yarn add react-navigation-redux-helpers
 yarn add react-native-vector-icons
 ```
 
-### ~~安装react-native-progress库~~（拷贝源码）
+### 安装react-native-progress库
 
-```
- yarn add react-native-progress
-```
+```js
+//最新版本存在问题
+yarn add react-native-progress@3.6.0
 
-取消依赖，直接拷贝源码，然后修改源码：
-
-```
-修改Circle.js，修改如下
-
-- formatText: PropTypes.func,
-+ formatText: PropTypes.func,
-- formatText: progress => `${Math.round(progress * 100)}%`,
-+ formatText: progress => <Text> {`${Math.round(progress * 100)}%`}</Text>,
-
-
-+{
-+	formatText(progressValue)
-+}
 ```
 
 
@@ -345,7 +331,7 @@ DOMException: Failed to execute 'send' on 'XMLHttpRequest'
 V:\VSCode\English\JiZhiTingCi\node_modules\react-native\Libraries\Core\ExceptionsManager.js:74 Realm failed to connect to the embedded debug server inside the app
 
 'Access to XMLHttpRequest at 'http://localhost:8081/create_session' from origin 'http://192.168.1.21:8081' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.'
-
+ 
 'Must first create RPC session with a valid host'
 
 'Unhandled JS Exception: Must first create RPC session with a valid host'
@@ -779,7 +765,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 //生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "第6次生产环境更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "第7次生产环境更新" --m true
 ```
 
 

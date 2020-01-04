@@ -134,7 +134,7 @@ class PhoneLoginPage extends Component {
           {this.state.codeMode &&
             <View style={{ width: '100%' }}>
               <View style={[gstyles.r_start, styles.phoneInput]}>
-                <AliIcon name="locked" size={24} color={gstyles.gray} style={{ marginBottom: 5 }} />
+                <AliIcon name="anquanzhuye-copy" size={24} color={gstyles.gray} />
                 <TextInput
                   ref={ref => this._inputRef = ref}
                   placeholder="验证码"

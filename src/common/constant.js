@@ -1,8 +1,9 @@
 
 export const DAY_MS = 86400000
-export const BASE_URL = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/'
+export const BASE_URL = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/'
 
-// 二个主目录
+// 主目录
+export const FILE_ROOT_DIR = '/'
 export const VOCABULARY_DIR = 'vocabulary/'
 export const READING_DIR = 'reading/'
 export const USER_DIR = 'user/'

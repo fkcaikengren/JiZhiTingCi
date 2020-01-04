@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar ,FlatList, View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import { StatusBar, FlatList, View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 import VocaDao from './service/VocaDao'
 import VocaGroupDao from './service/VocaGroupDao'
@@ -11,7 +11,7 @@ import VocaCard from './component/VocaCard';
 import LookWordBoard from "./component/LookWordBoard";
 
 const Dimensions = require('Dimensions');
-let {width, height} = Dimensions.get('window');
+let { width, height } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
 
@@ -19,125 +19,129 @@ const StatusBarHeight = StatusBar.currentHeight;
 
 export default class VocaSearchPage extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       searchText: '',
-      data:[],
+      data: [],
       searchWord: '',
-      selectedIndex:null,
-      showClearBtn:false,
+      selectedIndex: null,
+      showClearBtn: false,
     }
     this.vocaDao = VocaDao.getInstance()
     console.disableYellowBox = true;
   }
 
-  componentDidMount(){
+  componentDidMount() {
   }
 
 
-  componentWillUnmount(){
+  componentWillUnmount() {
   }
 
 
-  _keyExtractor = (item, index) => item.word+index;
-  
-  
-  _renderItem = ({item,index})=>{
+  _keyExtractor = (item, index) => item.word + index;
+
+
+  _renderItem = ({ item, index }) => {
     const translation = VocaUtil.transToText(item.trans)
-    return <TouchableOpacity  onPress={()=>{
-      this.setState({searchWord:item.word, selectedIndex:index})
+    return <TouchableOpacity onPress={() => {
+      this.setState({ searchWord: item.word, selectedIndex: index })
     }}>
-      <View  style={styles.item}>
-          <View style={gstyles.r_start}>
-              <Text style={[styles.contentText,{fontSize:16,color:'#404040'}]}>{item.word}</Text>
-              <Text style={[styles.contentText,{fontSize:12,color:'#999999'}]}>{item.enPhonetic}</Text>
-          </View>
-          <Text numberOfLines={1} style={[styles.contentText,{fontSize:12,color:'#606060'}]}>{translation}</Text>
+      <View style={styles.item}>
+        <View style={gstyles.r_start}>
+          <Text style={[styles.contentText, { fontSize: 16, color: '#404040' }]}>{item.word}</Text>
+          <Text style={[styles.contentText, { fontSize: 12, color: '#999999' }]}>{item.enPhonetic}</Text>
+        </View>
+        <Text numberOfLines={1} style={[styles.contentText, { fontSize: 12, color: '#606060' }]}>{translation}</Text>
       </View>
     </TouchableOpacity>
-    
+
 
   }
-  
 
 
-  _changeText = (searchText)=>{
+
+  _changeText = (searchText) => {
     const data = this.vocaDao.searchWord(searchText)
-    const showClearBtn = searchText.length>0?true:false
-    this.setState({searchText, data, showClearBtn})
+    const showClearBtn = searchText.length > 0 ? true : false
+    this.setState({ searchText, data, showClearBtn })
 
   }
 
-  _clear = ()=>{
+  _clear = () => {
     this.setState({
-      searchText:'',
-      searchWord:''
+      searchText: '',
+      searchWord: ''
     });
     this._inputRef.focus()
   }
 
 
-  _onFocus = (e)=>{
-    if(this.state.searchWord !== ''){
-      this.setState({searchWord:''})
+  _onFocus = (e) => {
+    if (this.state.searchWord !== '') {
+      this.setState({ searchWord: '' })
     }
   }
 
-  
+
 
   render() {
 
     return (
-        <View style={{flex: 1}}>
-          <StatusBar translucent={true} />
-          <View style={{width:width, height:StatusBarHeight, backgroundColor:'#EFEFEF'}}></View>
-          {/* 搜索栏 */}
-          <View style={[gstyles.r_around, styles.searchBar]}>
-            <View style={[gstyles.r_between, styles.inputWrapper]}>
-              <View style={gstyles.r_start}>
-                {/* 查找图标 */}
-                <AliIcon name='chazhao1' size={20} color='#666' style={styles.searchIcon}/>
-                {/* 搜索框 */}
-                <TextInput
-                  ref={ref=>this._inputRef = ref}
-                  style={[{height:45,width:'80%'},gstyles.md_black]}
-                  value={this.state.searchText}
-                  placeholder="请输入英文单词"
-                  onChangeText={this._changeText}
-                  clearButtonMode='while-editing'
-                  onFocus={this._onFocus}
-                  autoFocus
-                />
-              </View>
-              {/* 清空图标 */}
-              {this.state.showClearBtn &&
-                <AliIcon name='guanbi' size={16} color='#666' style={styles.clearIcon} 
-                  onPress={this._clear}/>
-              }
+      <View style={{ flex: 1 }}>
+        <StatusBar translucent={true} />
+        <View style={{ width: width, height: StatusBarHeight, backgroundColor: '#EFEFEF' }}></View>
+        {/* 搜索栏 */}
+        <View style={[gstyles.r_around, styles.searchBar]}>
+          <View style={[gstyles.r_between, styles.inputWrapper]}>
+            <View style={gstyles.r_start}>
+              {/* 查找图标 */}
+              <AliIcon name='chazhao1' size={20} color='#666' style={styles.searchIcon} />
+              {/* 搜索框 */}
+              <TextInput
+                ref={ref => this._inputRef = ref}
+                style={[{ height: 45, width: '80%' }, gstyles.md_black]}
+                value={this.state.searchText}
+                placeholder="请输入英文单词"
+                onChangeText={this._changeText}
+                clearButtonMode='while-editing'
+                onFocus={this._onFocus}
+                autoFocus
+              />
             </View>
-            <TouchableWithoutFeedback onPress={()=>{this.props.navigation.goBack()}}>
-              <Text style={[gstyles.md_black,{paddingRight:5}]}>取消</Text>
-            </TouchableWithoutFeedback>
-          
+            {/* 清空图标 */}
+            {this.state.showClearBtn &&
+              <AliIcon name='guanbi' size={16} color='#666' style={styles.clearIcon}
+                onPress={this._clear} />
+            }
           </View>
-          {/* 搜索结果列表 */}
-          {this.state.searchWord === ''&&
-            <FlatList
-                ref= {ref=>this._listRef = ref}
-                data={this.state.data}
-                renderItem={this._renderItem}
-                keyExtractor={this._keyExtractor}
-                extraData={this.state}
-            />
-          }
+          <TouchableWithoutFeedback onPress={() => { this.props.navigation.goBack() }}>
+            <Text style={[gstyles.md_black, { paddingRight: 5 }]}>取消</Text>
+          </TouchableWithoutFeedback>
 
-          {this.state.searchWord !== ''&&
-            <VocaCard lookWord={this.wordBoard.lookWord} wordInfo={this.state.data[this.state.selectedIndex]}/>
-          }
-          <LookWordBoard
-              ref={ref=>this.wordBoard = ref}
+        </View>
+        {/* 搜索结果列表 */}
+        {this.state.searchWord === '' &&
+          <FlatList
+            ref={ref => this._listRef = ref}
+            data={this.state.data}
+            renderItem={this._renderItem}
+            keyExtractor={this._keyExtractor}
+            extraData={this.state}
           />
+        }
+
+        {this.state.searchWord !== '' &&
+          <VocaCard
+            lookWord={this.wordBoard.lookWord}
+            wordInfo={this.state.data[this.state.selectedIndex]}
+            navigation={this.props.navigation}
+          />
+        }
+        <LookWordBoard
+          ref={ref => this.wordBoard = ref}
+        />
       </View>
     );
   }

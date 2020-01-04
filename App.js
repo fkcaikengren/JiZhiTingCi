@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from './src/redux/store'
 import Toast, { DURATION } from 'react-native-easy-toast'
 import ConfirmModal from './src/component/ConfirmModal'
+import CommonModal from './src/component/CommonModal'
 const Realm = require('realm')
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
@@ -17,6 +18,7 @@ import ArticleDao from './src/features/reading/service/ArticleDao';
 import gstyles from './src/style';
 import { connect } from 'react-redux'
 import * as AppAction from './src/redux/action'
+import DictDao from './src/features/vocabulary/service/DictDao';
 
 
 //设置全局变量 (注：这部分代码只在安装App时运行一次)
@@ -24,12 +26,12 @@ Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重
 console.log('copy realm');
 
 
-// 存储对象
+// 存储对象并且存储初始变量
 global.Storage = createStorage()
+
+
 // 是否手动登录进入App首页
-global.IsLoginToHome = false 
-
-
+global.IsLoginToHome = false
 
 
 //开启数据库
@@ -37,6 +39,15 @@ VocaDao.getInstance().open()
 VocaTaskDao.getInstance().open()
 VocaGroupDao.getInstance().open()
 ArticleDao.getInstance().open()
+Storage.load({
+  key: 'dict-downloaded'
+}).then(v => {
+  if (v) {
+    console.log('打开dict.realm')
+    DictDao.getInstance().open()
+  }
+}).catch(e => null)
+
 
 const styles = StyleSheet.create({
   container: {
@@ -48,9 +59,11 @@ const styles = StyleSheet.create({
 
 class Main extends React.Component {
 
+
   componentDidMount() {
     this.props.setToast({ toast: this.refs.toast })
-    this.props.setConfirmModal({confirmModal:this.refs.confirmModal})
+    this.props.setConfirmModal({ confirmModal: this.refs.confirmModal })
+    this.props.setCommonModal({ commonModal: this.refs.commonModal })
   }
 
   render() {
@@ -67,7 +80,8 @@ class Main extends React.Component {
           opacity={0.8}
           textStyle={{ color: '#fff' }}
         />
-        <ConfirmModal ref="confirmModal"/>
+        <ConfirmModal ref="confirmModal" />
+        <CommonModal ref='commonModal' />
       </View>
     )
   }
@@ -82,6 +96,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setToast: AppAction.setToast,
   setConfirmModal: AppAction.setConfirmModal,
+  setCommonModal: AppAction.setCommonModal,
 }
 const MainComp = connect(mapStateToProps, mapDispatchToProps)(Main)
 
@@ -97,7 +112,6 @@ export default class App extends React.Component {
           <MainComp></MainComp>
         </MenuProvider>
       </Provider>
-
     );
   }
 }

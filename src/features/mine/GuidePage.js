@@ -1,50 +1,51 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Text,TouchableWithoutFeedback, ScrollView, Image} from 'react-native';
-import {Header,Button} from 'react-native-elements'
+import React, { Component } from 'react';
+import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image } from 'react-native';
+import { Header, Button } from 'react-native-elements'
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './GuideStyle'
 
 export default class GuidePage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            guides : [
-                {title:'高效记忆单词', intro:'这样记单词，猪都可以记住！',
-                    thumbUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/guide_cover_1.jpg' ,
-                    contentUrl:'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html',
-                    note:'2019-10-10'
+        this.state = {
+            guides: [
+                {
+                    title: '高效记忆单词', intro: '这样记单词，猪都可以记住！',
+                    thumbUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/guide_cover_1.jpg',
+                    contentUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html',
+                    note: '2019-10-10'
                 },
-               
+
             ]
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
     }
 
 
-    render(){
-        return(
-            <View style={[{flex:1, width:'100%'},gstyles.c_start]}>
+    render() {
+        return (
+            <View style={[{ flex: 1, width: '100%' }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle='dark-content' // or directly
                     leftComponent={
-                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
-                        }} /> }
+                        }} />}
 
-                    centerComponent={{ text: '攻略', style: gstyles.lg_black_bold}}
+                    centerComponent={{ text: '攻略', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
                     }}
                 />
 
-                <ScrollView style={{ flex: 1}}
+                <ScrollView style={{ flex: 1 }}
                     pagingEnabled={false}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
@@ -52,31 +53,31 @@ export default class GuidePage extends React.Component {
                     style={gstyles.scrollView}
                     contentContainerStyle={gstyles.scrollViewContent}
                 >
-                {
-                    this.state.guides.map((item,index)=>{
-                        return <TouchableWithoutFeedback onPress={()=>{
-                            this.props.navigation.navigate('GuideDetail',{
-                                title:item.title,
-                                url:item.contentUrl
-                            })
-                        }}>
-                            <View style={[gstyles.r_start, {paddingHorizontal:16, marginTop:20}]}>
-                                <Image style={styles.itemThumb} source={{uri:item.thumbUrl}}/>
-                                <View style={[gstyles.c_start_left,styles.itemContent]}>
-                                    <Text style={[{flex:1},gstyles.xl_black_bold]}>
-                                        {item.title}
-                                    </Text>
-                                    <Text style={[{flex:2,width: '85%'},gstyles.md_lightBlack]}>
-                                        {item.intro}
-                                    </Text>
-                                    <Text style={[{flex:1},gstyles.sm_lightGray]}>
-                                        {item.note}
-                                    </Text>
+                    {
+                        this.state.guides.map((item, index) => {
+                            return <TouchableWithoutFeedback onPress={() => {
+                                this.props.navigation.navigate('GuideDetail', {
+                                    title: item.title,
+                                    url: item.contentUrl
+                                })
+                            }}>
+                                <View style={[gstyles.r_start, { paddingHorizontal: 16, marginTop: 20 }]}>
+                                    <Image style={styles.itemThumb} source={{ uri: item.thumbUrl }} />
+                                    <View style={[gstyles.c_start_left, styles.itemContent]}>
+                                        <Text style={[{ flex: 1 }, gstyles.xl_black_bold]}>
+                                            {item.title}
+                                        </Text>
+                                        <Text style={[{ flex: 2, width: '85%' }, gstyles.md_lightBlack]}>
+                                            {item.intro}
+                                        </Text>
+                                        <Text style={[{ flex: 1 }, gstyles.sm_lightGray]}>
+                                            {item.note}
+                                        </Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    })
-                }
+                            </TouchableWithoutFeedback>
+                        })
+                    }
                 </ScrollView>
 
             </View>

@@ -124,11 +124,13 @@ class LearnCardPage extends Component {
 
                 {showWordInfos.length > 0 && curIndex < task.wordCount &&
                     <VocaCard
+                        navigation={this.props.navigation}
                         wordInfo={showWordInfos[curIndex]}
                         showAll={getParam('showAll', true)}
                         playWord={getParam('playWord', true)}
                         playSentence={getParam('playSentence', true)}
                         lookWord={this.wordBoard.lookWord}
+
                     />
                 }
                 {this.state.showNext &&

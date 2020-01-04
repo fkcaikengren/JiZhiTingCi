@@ -87,12 +87,22 @@ class HomeDrawerPanel extends Component {
           onPress={this.props.closeDrawer}
         />
         <Button type='clear'
+          icon={<AliIcon name='guanyuwomen' size={24} color={gstyles.gray} />}
+          title={'联系我们'}
+          titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
+          containerStyle={{ width: '100%' }}
+          buttonStyle={[styles.btn, gstyles.r_start]}
+          onPress={() => {
+            this.props.navigation.navigate('About')
+          }}
+        />
+        <Button type='clear'
           icon={<AliIcon name='shezhi1' size={24} color={gstyles.gray} />}
           title={'设置'}
           titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
           containerStyle={{ width: '100%' }}
           buttonStyle={[styles.btn, gstyles.r_start]}
-          onPress={()=>{
+          onPress={() => {
             this.props.navigation.navigate('Setting')
           }}
         />

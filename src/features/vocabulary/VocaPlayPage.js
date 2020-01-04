@@ -31,6 +31,7 @@ import NotificationManage from '../../modules/NotificationManage'
 import ShareUtil from '../../modules/ShareUtil'
 import _util from "../../common/util";
 import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
+import { store } from '../../redux/store'
 
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -60,7 +61,7 @@ class VocaPlayPage extends React.Component {
             this.isStudyMode = true
         }
         //检查本地时间
-        if(this.isStudyMode){
+        if (this.isStudyMode) {
             _util.checkLocalTime()
         }
 
@@ -128,7 +129,7 @@ class VocaPlayPage extends React.Component {
             const task = this.props.navigation.getParam('task')
             const showWordInfos = VocaUtil.getShowWordInfos(task.words)
 
-            this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : Constant.REVIEW_PLAY_TIMES
+            this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
             this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
 
             //设置单词、释义可见性
@@ -575,7 +576,7 @@ class VocaPlayPage extends React.Component {
                 {data.length <= 0 &&
                     <View style={[gstyles.c_center, { marginTop: 80 }]}>
                         <AliIcon name={'nodata_icon'} size={80} color={gstyles.black} />
-                        <Text style={gstyles.md_black}>暂无列表，先去学习吧</Text>
+                        <Text style={gstyles.md_black}>你还没有学过的单词列表哦</Text>
                     </View>
                 }
             </View>
@@ -617,7 +618,7 @@ class VocaPlayPage extends React.Component {
             }}>
             {/* 主体 */}
             {this.state.clickIndex !== null && showWordInfos[this.state.clickIndex] &&
-                <VocaCard wordInfo={showWordInfos[this.state.clickIndex]} />
+                <VocaCard wordInfo={showWordInfos[this.state.clickIndex]} navigation={this.props.navigation} />
             }
             <TouchableWithoutFeedback onPress={this._closeVocaModal}>
                 <View style={gstyles.closeBtn}>
@@ -700,7 +701,7 @@ class VocaPlayPage extends React.Component {
         }
 
         const name = VocaUtil.genTaskName(task.taskOrder)
-        this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : Constant.REVIEW_PLAY_TIMES
+        this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
         this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
 
         const contentHeight = height - STATUSBAR_HEIGHT - 260

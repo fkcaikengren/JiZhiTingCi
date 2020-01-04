@@ -153,7 +153,7 @@ export default class VocaPlayService {
 
  //单词、释义到一定遍数后自动显示
 //  if (this.mode === Constant.REVIEW_PLAY) {
-//     const fTimes = Constant.REVIEW_PLAY_TIMES - leftTimes
+//     const fTimes = store.getState().mine.configReviewPlayTimes - leftTimes
 //     if (fTimes === 2) {
 //         this._toggleWord(true)
 //     } else if (fTimes === 4) {

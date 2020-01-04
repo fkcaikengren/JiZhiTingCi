@@ -42,6 +42,8 @@ import GuideDetailPage from '../features/mine/GuideDetailPage'
 
 import FileTest from "../FileTest";
 import SettingPage from '../features/mine/SettingPage';
+import AboutPage from '../features/mine/AboutPage';
+import DictPage from '../features/vocabulary/DictPage';
 
 const article1 = {
   id: 1,
@@ -186,6 +188,10 @@ const VocaHomeStackNav = createStackNavigator({
     screen: VocaDetailPage,
   },
 
+  // 词典页面
+  Dict: {
+    screen: DictPage
+  },
   //解析页面
   Analysis: {
     screen: AnalysisPage,
@@ -214,16 +220,20 @@ const VocaHomeStackNav = createStackNavigator({
   Nickname: {
     screen: NicknamePage
   },
-  DownloadManage: {
-    screen: DownloadManagePage
-  },
+
   Guide: {
     screen: GuidePage
   },
   GuideDetail: {
     screen: GuideDetailPage
   },
-  Setting:{
+  DownloadManage: {
+    screen: DownloadManagePage
+  },
+  About: {
+    screen: AboutPage
+  },
+  Setting: {
     screen: SettingPage
   },
 

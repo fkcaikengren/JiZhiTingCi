@@ -73,19 +73,19 @@ export default class HomeHeader extends Component {
       <View style={[{ flex: 1 }, gstyles.r_start_bottom]}>
         <AliIcon name='wode' size={26} color='#202020' onPress={this.props.openDrawer} />
         {(this.props.home.isUploading || this.props.home.isUploadFail) &&
-          <View style={{ marginLeft: 10,marginBottom:2 }}>
+          <View style={{ marginLeft: 10, marginBottom: 2 }}>
             <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={() => {
               if (this.props.home.isUploadFail) {
                 this.props.toastRef.show('貌似网络出了点问题...')
               }
             }} />
-              <Badge 
-                value={isFailed ? '!' : '···'} 
-                status={isFailed ? 'error' : 'primary' }
-                badgeStyle={{ minWidth: 12, height: 12, }}
-                textStyle={{ fontSize: 10 }}
-                containerStyle={{ position: 'absolute', bottom: 0, left: 10 }} />
-            
+            <Badge
+              value={isFailed ? '!' : '···'}
+              status={isFailed ? 'error' : 'primary'}
+              badgeStyle={{ minWidth: 12, height: 12, }}
+              textStyle={{ fontSize: 10 }}
+              containerStyle={{ position: 'absolute', bottom: 0, left: 10 }} />
+
           </View>
         }
       </View>
@@ -137,7 +137,7 @@ export default class HomeHeader extends Component {
             </Col>
             <Col style={gstyles.c_center}>
               <AliIcon name='yuedu1' size={26} color='#202020' onPress={this._navArticleManage} />
-              <Text style={styles.smDarkFont}>真题</Text>
+              <Text style={styles.smDarkFont}>阅读真题</Text>
             </Col>
           </Row>
         </Grid>

@@ -1,9 +1,10 @@
-import { SET_TOAST,SET_CONFIRM_MODAL } from "./action"
+import { SET_TOAST, SET_CONFIRM_MODAL, SET_COMMON_MODAL } from "./action"
 
 
 const defaultState = {
     toast: null,
     confirmModal: null,
+    commonModal: null,
 }
 export const appReducer = (state = defaultState, action) => {
     switch (action.type) {
@@ -11,6 +12,8 @@ export const appReducer = (state = defaultState, action) => {
             return { ...state, toast: action.payload.toast }
         case SET_CONFIRM_MODAL:
             return { ...state, confirmModal: action.payload.confirmModal }
+        case SET_COMMON_MODAL:
+            return { ...state, commonModal: action.payload.commonModal }
         default:
             return state
     }

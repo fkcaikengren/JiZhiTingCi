@@ -5,7 +5,7 @@ import VocaTaskDao from '../service/VocaTaskDao'
 import { NavigationActions, StackActions } from 'react-navigation'
 import VocaTaskService from "../service/VocaTaskService";
 import ArticleDao from "../../reading/service/ArticleDao";
-
+import { store } from '../../../redux/store'
 
 export default class VocaUtil {
 
@@ -144,10 +144,11 @@ export default class VocaUtil {
         } else {                                       //复习任务
             switch (task.progress) {
                 case Constant.IN_REVIEW_PLAY:        //轮播70 point:
-                    let p = Math.floor(70 / Constant.REVIEW_PLAY_TIMES)
-                    for (let i = Constant.REVIEW_PLAY_TIMES; i >= 0; i--) {
+                    const rplayTimes = store.getState().mine.configReviewPlayTimes
+                    let p = Math.floor(70 / rplayTimes)
+                    for (let i = rplayTimes; i >= 0; i--) {
                         if (task.leftTimes == i) {
-                            num = p * (Constant.REVIEW_PLAY_TIMES - i)
+                            num = p * (rplayTimes - i)
                             break;
                         }
                     }

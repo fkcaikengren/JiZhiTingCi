@@ -5,7 +5,7 @@ import { LOAD_ARTICLE_START, LOAD_ARTICLE_FAIL, LOAD_ARTICLE_SUCCEED, LOAD_ANALY
 const fileService = FileService.getInstance()
 
 //暂时------
-const articlesDir = 'articles'
+const articlesDir = 'article'
 
 
 /**加载文章 */

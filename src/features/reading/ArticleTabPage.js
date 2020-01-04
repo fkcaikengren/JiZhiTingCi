@@ -9,7 +9,8 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-nat
 import ModalBox from 'react-native-modalbox';
 import Swiper from 'react-native-swiper'
 
-import Loader from '../../component/Loader'
+import { CircleLoader } from '../../component/Loader'
+import { DURATION } from 'react-native-easy-toast'
 import styles from './ArticleTabStyle'
 import gstyles from '../../style'
 import ColorRadio from './component/ColorRadio'
@@ -18,7 +19,6 @@ import * as ArticleAction from './redux/action/articleAction'
 import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
-import ReadUtil from './common/readUtil'
 
 
 const questionSize = 10
@@ -46,6 +46,13 @@ class ArticleTabPage extends React.Component {
         this.props.loadArticle(articleInfo);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.article.isWebLoading && !prevProps.article.isWebLoading) {
+            this.props.app.toast.show(CircleLoader, DURATION.FOREVER)
+        } else if (!this.props.article.isWebLoading && prevProps.article.isWebLoading) {
+            this.props.app.toast.close()
+        }
+    }
 
 
     //改变字体大小
@@ -280,6 +287,9 @@ class ArticleTabPage extends React.Component {
                 {
                     this._renderContent()
                 }
+                {
+                    this._createSettingModal()
+                }
                 {/* 答悬浮按钮 */}
                 {!isLoadFail && !(articleInfo.type === Constant.EXTENSIVE_READ) &&
                     <TouchableWithoutFeedback onPress={() => {
@@ -301,15 +311,7 @@ class ArticleTabPage extends React.Component {
                         </View>
                     </TouchableWithoutFeedback>
                 }
-                {
-                    this._createSettingModal()
-                }
-                {this.props.article.isWebLoading &&
-                    <View style={[gstyles.loadingView, { backgroundColor: bgThemes[themeIndex] }]}>
-                        <Loader />
-                    </View>
-                }
-               
+
             </View>
         );
     }

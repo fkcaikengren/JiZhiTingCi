@@ -1,11 +1,12 @@
 import { createActions } from 'redux-actions'
 
+// 登录
 export const LOGIN_BY_CODE = 'LOGIN_BY_CODE'
 export const LOGIN_BY_CODE_START = 'LOGIN_BY_CODE_START'
 export const LOGIN_BY_CODE_SUCCEED = 'LOGIN_BY_CODE_SUCCEED'
 export const LOGIN_BY_CODE_FAIL = 'LOGIN_BY_CODE_FAIL'
 
-
+// 个人中心
 export const MODIFY_NICKNAME = 'MODIFY_NICKNAME'
 export const MODIFY_NICKNAME_START = 'MODIFY_NICKNAME_START'
 export const MODIFY_NICKNAME_SUCCEED = 'MODIFY_NICKNAME_SUCCEED'
@@ -21,17 +22,35 @@ export const MODIFY_AVATAR_START = 'MODIFY_AVATAR_START'
 export const MODIFY_AVATAR_SUCCEED = 'MODIFY_AVATAR_SUCCEED'
 export const MODIFY_AVATAR_FAIL = 'MODIFY_AVATAR_FAIL'
 
+// 退出登录
 export const LOGOUT = 'LOGOUT'
 
+
+// 设置
+export const CHANGE_CONFIG_REVIEW_PLAY_TIMES = 'CHANGE_CONFIG_REVIEW_PLAY_TIMES'
+export const CHANGE_CONFIG_N_TRANS = 'CHANGE_CONFIG_N_TRANS'
+export const CHANGE_CONFIG_M_TRANS = 'CHANGE_CONFIG_M_TRANS'
 
 const fn = (payload) => {
     return payload
 }
 
-export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout } = createActions({
-    [LOGIN_BY_CODE]: fn,
-    [MODIFY_NICKNAME]: fn,
-    [MODIFY_PASSWORD]: fn,
-    [MODIFY_AVATAR]: fn,
-    [LOGOUT]: fn,
-})
+export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout,
+    changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
+        [LOGIN_BY_CODE]: fn,
+        [MODIFY_NICKNAME]: fn,
+        [MODIFY_PASSWORD]: fn,
+        [MODIFY_AVATAR]: fn,
+        [LOGOUT]: fn,
+
+        // 设置
+        [CHANGE_CONFIG_REVIEW_PLAY_TIMES]: (configReviewPlayTimes) => {
+            return { configReviewPlayTimes }
+        },
+        [CHANGE_CONFIG_N_TRANS]: (configShowNTrans) => {
+            return { configShowNTrans }
+        },
+        [CHANGE_CONFIG_M_TRANS]: (configShowMTrans) => {
+            return { configShowMTrans }
+        },
+    })

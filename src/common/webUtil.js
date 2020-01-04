@@ -5,7 +5,7 @@
 export default class WebUtil {
 
     //文章页监听RN
-    static ARTICLE_LISTEN_JAVASCRIPT = 
+    static ARTICLE_LISTEN_JAVASCRIPT =
         `document.addEventListener('message', function (e) {
             //回显
             window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
@@ -46,7 +46,7 @@ export default class WebUtil {
         },true);true;`;
 
 
-    static ANALYSIS_LISTEN_JAVASCRIPT = 
+    static ANALYSIS_LISTEN_JAVASCRIPT =
         `document.addEventListener('message', function (e) {
             //回显
             window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
@@ -73,13 +73,25 @@ export default class WebUtil {
             
         },true);true;`;
 
-   
+    static DICT_LISTEN_JAVASCRIPT =
+        `document.addEventListener('message', function (e) {
+            //回显
+            window.ReactNativeWebView.postMessage(JSON.stringify(e.data));
+            //处理
+            var data = JSON.parse(e.data)
+            try{
+                if(data.command === 'initPage'){                            //初始化页面
+                    document.body.innerHTML = data.payload.contentHtml
+                }
+            }catch(err){
+                window.ReactNativeWebView.postMessage(JSON.stringify({command:'error',payload:{errMsg:err.message}}));
+            }
+            
+        },true);true;`;
 
-
-    
 }
 
 {
-    
+
 
 }

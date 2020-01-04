@@ -1,91 +1,154 @@
-import React, {Component} from 'react';
-import {Platform, View, TouchableOpacity, TouchableWithoutFeedback, Text} from 'react-native';
-import {Header,ButtonGroup} from 'react-native-elements'
+import React, { Component } from 'react';
+import { Platform, View, TouchableOpacity, Text, Switch } from 'react-native';
+import { Header, ButtonGroup } from 'react-native-elements'
 import { connect } from 'react-redux';
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './SettingStyle'
-
+import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from '../vocabulary/common/constant';
+import * as MineAction from './redux/action/mineAction'
 
 class SettingPage extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-          selectedIndex:1
+        const {
+            configVocaPronType,
+            configReviewPlayTimes } = this.props.mine
+        let selectedIndex = 0
+        if (configVocaPronType === VOCA_PRON_TYPE_EN) {
+            this.setState({ selectedIndex: 1 })
+        }
+        this.state = {
+            selectedIndex,
+            times: configReviewPlayTimes
         }
     }
-    componentDidMount(){
 
+    _renderItem = ({ title, rightComponent }) => {
+        return <View style={[gstyles.r_between, styles.itemView]}>
+            <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
+                {title}
+            </Text>
+            {
+                rightComponent
+            }
+        </View>
     }
+
 
     _updateIndex = (selectedIndex) => {
-      this.setState({selectedIndex})
+        this.setState({ selectedIndex })
+    }
+
+    //修改复习轮播遍数
+    _changeReviewPlayTimes = () => {
+        if (this.props.mine.configReviewPlayTimes !== this.state.times) { //发生改变
+            console.log(this.state.times)
+            this.props.changeConfigReviewPlayTimes(this.state.times)
+        }
     }
 
 
-    render(){
+    render() {
         const { selectedIndex } = this.state
-        return(
-            <View style={[{flex:1},gstyles.c_start]}>
+        const { configShowNTrans, configShowMTrans } = this.props.mine
+        return (
+            <View style={[{ flex: 1 }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle='dark-content' 
+                    barStyle='dark-content'
                     leftComponent={
-                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={()=>{
+                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
+                            this._changeReviewPlayTimes()
                             this.props.navigation.goBack();
-                        }} /> }
-                    centerComponent={{ text: '设置', style: gstyles.lg_black_bold}}
+                        }} />}
+                    centerComponent={{ text: '设置', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
                     }}
                 />
+                <View style={{ flex: 1, width: '100%' }}>
+                    {
+                        this._renderItem({
+                            title: '单词发音',
+                            rightComponent: <View style={{ marginRight: 9 }}>
+                                <ButtonGroup
+                                    onPress={this._updateIndex}
+                                    selectedIndex={selectedIndex}
+                                    buttons={['美', '英']}
+                                    containerStyle={{ width: 100, height: 34 }}
+                                    selectedButtonStyle={{ backgroundColor: gstyles.emColor }}
+                                />
+                            </View>
+                        })
+                    }
+                    {
+                        this._renderItem({
+                            title: '复习播放遍数',
+                            rightComponent: <View style={[gstyles.r_center, { marginRight: 20 }]}>
+                                <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                    if (this.state.times >= 6) {
+                                        this.setState({ times: this.state.times - 1 })
+                                    }
+                                }}>
+                                    <View style={[gstyles.r_center, styles.timesBtn, styles.subBtn,]}>
+                                        <Text style={{ fontSize: 26 }}>-</Text>
+                                    </View>
 
-                <View style={{flex:1,width:'100%'}}>
-                  <View style={[gstyles.r_between, styles.itemView]}>
-                      <Text numberOfLines={1} style={[gstyles.md_black_bold, {marginLeft:20}]}>
-                          单词发音
-                      </Text>
-                      <View style={{marginRight:9}}>
-                        <ButtonGroup
-                          onPress={this._updateIndex}
-                          selectedIndex={selectedIndex}
-                          buttons={['美','英']}
-                          containerStyle={{width: 100, height: 34}}
-                          selectedButtonStyle={{backgroundColor:gstyles.emColor}}
-                        />
-                      </View>
-                  </View>
-                  <View style={[gstyles.r_between, styles.itemView]}>
-                      <Text numberOfLines={1} style={[gstyles.md_black_bold, {marginLeft:20}]}>
-                          复习播放遍数
-                      </Text>
-                      {/* 加减器 */}
-                      <View style={[gstyles.r_center,{marginRight:20}]}>
-                        <TouchableOpacity  activeOpacity={0.8}>
-                          <View style={[gstyles.r_center ,styles.timesBtn, styles.subBtn,]}>
-                            <Text style={{fontSize:26}}>-</Text>
-                          </View>
-                          
-                        </TouchableOpacity>
-                        <View style={[gstyles.r_center,styles.times]}>
-                          <Text >10</Text>
-                        </View>
-                        <TouchableOpacity activeOpacity={0.8}>
-                          <View style={[gstyles.r_center, styles.timesBtn, styles.plusBtn]}>
-                            <Text style={{fontSize:20}}>+</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                  </View>
+                                </TouchableOpacity>
+                                <View style={[gstyles.r_center, styles.times]}>
+                                    <Text >{this.state.times}</Text>
+                                </View>
+                                <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                    if (this.state.times <= 19) {
+                                        this.setState({ times: this.state.times + 1 })
+                                    }
+
+                                }}>
+                                    <View style={[gstyles.r_center, styles.timesBtn, styles.plusBtn]}>
+                                        <Text style={{ fontSize: 20 }}>+</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        })
+                    }
+                    {
+                        this._renderItem({
+                            title: '显示普通例句翻译',
+                            rightComponent: <View style={{ marginRight: 12 }}>
+                                <Switch
+                                    value={configShowNTrans}
+                                    onValueChange={(value) => {
+                                        this.props.changeConfigNTrans(value)
+                                    }}
+                                    thumbColor={gstyles.emColor}
+                                    trackColor={{ false: '#DDD', true: gstyles.mainColor }} />
+                            </View>
+                        })
+                    }
+                    {
+                        this._renderItem({
+                            title: '显示影视例句翻译',
+                            rightComponent: <View style={{ marginRight: 12 }}>
+                                <Switch
+                                    value={configShowMTrans}
+                                    onValueChange={(value) => {
+                                        this.props.changeConfigMTrans(value)
+                                    }}
+                                    thumbColor={gstyles.emColor}
+                                    trackColor={{ false: '#DDD', true: gstyles.mainColor }} />
+                            </View>
+                        })
+                    }
+
                 </View>
-                <TouchableWithoutFeedback>
-                  <View style={[gstyles.r_center,styles.version]}>
-                    <Text style={{fontSize:20}}>爱听词 v1.0.0</Text>
-                  </View>
-                </TouchableWithoutFeedback>
+
+                <View style={[gstyles.r_center, styles.version]}>
+                    <Text style={{ fontSize: 20 }}>爱听词 v1.0.0</Text>
+                </View>
             </View>
         );
     }
@@ -94,8 +157,12 @@ class SettingPage extends React.Component {
 
 const mapStateToProps = state => ({
     app: state.app,
+    mine: state.mine,
 })
 
 const mapDispatchToProps = {
+    changeConfigNTrans: MineAction.changeConfigNTrans,
+    changeConfigMTrans: MineAction.changeConfigMTrans,
+    changeConfigReviewPlayTimes: MineAction.changeConfigReviewPlayTimes
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SettingPage)

@@ -2,7 +2,7 @@
 import RNFetchBlob from 'rn-fetch-blob'
 import { Platform } from "react-native";
 import { unzip } from 'react-native-zip-archive'
-import { BASE_URL, VOCABULARY_DIR } from './constant'
+import { BASE_URL, VOCABULARY_DIR, FILE_ROOT_DIR } from './constant'
 import { store } from "../redux/store";
 
 const fs = RNFetchBlob.fs
@@ -44,8 +44,6 @@ export default class FileService {
             })
         //日志打印
         console.log('---file fetch-----')
-        console.log(url)
-        console.log(res.respInfo.status)
         if (res.respInfo.status === 200) {
             return res
         } else {
@@ -62,7 +60,6 @@ export default class FileService {
      * @returns {Promise<string|{uri: string}|null|*|Promise<*>>}
      */
     load = async (primaryDir, filePath) => {
-
         //处理格式
         if (filePath.startsWith('/')) {
             filePath = filePath.substr(1)
@@ -93,7 +90,7 @@ export default class FileService {
                 exist = true
                 realPath = downloadPath
             }
-
+            console.log(url)
             //2.分类型讨论
             if (filePath.match(/\.json$/)) {
                 if (exist) {
@@ -144,57 +141,64 @@ export default class FileService {
      * @param shouldUnzip
      * @returns {Promise<void>}
      */
-    download = async (primaryDir, filePath, progressFunc = null, shouldUnzip = false, ) => {
+    download = ({
+        filePath,
+        primaryDir,
+        progressFunc = (received, total) => { },
+        shouldUnzip = false,
+        afterUnzip = () => { }
+    }) => {
 
         //处理格式
         if (filePath.startsWith('/')) {
             filePath = filePath.substr(1)
         }
 
-        //制定二级目录 (分类、bookCode、类型检测)
-        let secondDir = ''
+        let storeDir = ''
+        //不同存储目录采用不同策略
         switch (primaryDir) {
-            case VOCABULARY_DIR:  //单词目录
+            //文件根目录
+            case FILE_ROOT_DIR:
+                storeDir = DocumentDir
+                break
+            //单词目录
+            case VOCABULARY_DIR:
                 const { bookCode } = store.getState().vocaLib.plan
-                secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
+                const secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
+                storeDir = DocumentDir + primaryDir + secondDir
                 break
 
         }
 
         const url = BASE_URL + filePath
-        const downloadPath = DocumentDir + primaryDir + secondDir + filePath
-        try {
-            const res = await RNFetchBlob.config({
-                path: downloadPath
-            })
-                .fetch('GET', url, {
-                    //headers..
-                })
-                // 显示下载进度
-                .progress((received, total) => {
-                    console.log(`${received}/${total} -->`, received / total)
-                    if (progressFunc) {
-                        progressFunc(received, total)
+        const storePath = storeDir + filePath
+        console.log(url)
+        const task = RNFetchBlob.config({
+            path: storePath
+        }).fetch('GET', url, {
+            //headers..
+        })
+        task.progress(progressFunc)
+            .then(async _ => {
+                //下载完成
+                progressFunc(1, 1)
+                //是否解压
+                if (shouldUnzip) {
+                    try {
+                        const path = await unzip(storePath, storeDir)
+                        // 删除压缩包
+                        await fs.unlink(storePath)
+                        console.log(`unzip completed at ${path}`)
+                        afterUnzip()
+                    } catch (e) {
+                        console.log('下载后，解压失败')
+                        console.log(e)
                     }
-                })
-        } catch (e) {
-            console('下载失败')
-            console.log(e)
-        }
-
-        //是否解压
-        if (shouldUnzip) {
-            try {
-                console.log(downloadPath)
-                const path = await unzip(downloadPath, DocumentDir + primaryDir + secondDir)
-                console.log(`unzip completed at ${path}`)
-                // 删除压缩包
-                await fs.unlink(downloadPath)
-            } catch (e) {
-                console.log('下载后，解压失败')
-                console.log(e)
-            }
-        }
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        return task
     }
 
 

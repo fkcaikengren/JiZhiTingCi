@@ -22,7 +22,13 @@ class AnalysisPage extends React.Component {
         super(props)
     }
 
-
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.article.isWebLoading && !prevProps.article.isWebLoading) {
+            this.props.app.toast.show(CircleLoader, DURATION.FOREVER)
+        } else if (!this.props.article.isWebLoading && prevProps.article.isWebLoading) {
+            this.props.app.toast.close()
+        }
+    }
     //发送给Web, 初始化
     _sendInitMessage = () => {
         const { bgThemes, themeIndex, fontRem, articleText, options, analysisText, rightAnswers, userAnswerMap } = this.props.article
@@ -211,11 +217,6 @@ class AnalysisPage extends React.Component {
                         </View>
                     </TouchableWithoutFeedback>
                 }
-                {isWebLoading &&
-                    <View style={[styles.loadingView, { backgroundColor: bgThemes[themeIndex] }]}>
-                        <Loader />
-                    </View>
-                }
             </View>
         )
     }
@@ -223,6 +224,7 @@ class AnalysisPage extends React.Component {
 
 
 const mapStateToProps = state => ({
+    app: state.app,
     article: state.article,
 });
 
