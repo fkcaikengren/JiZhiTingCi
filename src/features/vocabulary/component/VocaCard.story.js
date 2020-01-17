@@ -22,7 +22,7 @@ vocaDao.open()
       .add('VocaCard', () =>
         <VocaCard
           navigation={this.props.navigation}
-          wordInfo={vocaDao.getWordInfo('current')} />
+          wordInfo={vocaDao.lookWordInfo('current')} />
       )
   })
 

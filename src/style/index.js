@@ -35,6 +35,11 @@ const gstyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    r_between_top: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
     r_between_bottom: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -80,6 +85,33 @@ const gstyles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
+    c_end_left: {
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-start',
+    },
+    c_end_right: {
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+    },
+
+    c_between: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    c_between_left: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+    c_between_right: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+    },
+
 
     noteText: {
         fontSize: 12,
@@ -169,6 +201,25 @@ const gstyles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         alignSelf: 'center'
+    },
+
+    // 导航栏样式
+    tabBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: 40,
+        backgroundColor: '#FFE957'
+    },
+    tabBtn: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    tabText: {
+        paddingHorizontal: 4,
+        paddingBottom: 4,
     },
 
     //灰色

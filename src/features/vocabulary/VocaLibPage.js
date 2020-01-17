@@ -1,30 +1,33 @@
 import React, { Component } from "react";
-import { View, Text, Image, FlatList } from 'react-native';
-import { Header } from 'react-native-elements'
-import Picker from 'react-native-picker';
+import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
+import Picker from 'react-native-picker';
 import * as VocaLibAction from './redux/action/vocaLibAction'
 
-import AliIcon from '../../component/AliIcon';
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
-import {CountDownLoader} from "../../component/Loader";
+import { CountDownLoader } from "../../component/Loader";
 import _util from '../../common/util'
 
 class VocaLibPage extends Component {
 
     constructor(props) {
         super(props)
-
         this.planTimer = null
-        
+
+        this.state = {
+            books: []
+        }
     }
+
 
     componentDidMount() {
-        //加载书籍
-        this.props.loadVocaBooks()
+        this._loadBooks()
     }
+
+
 
     componentWillUnmount() {
         if (this.planTimer) {
@@ -41,8 +44,20 @@ class VocaLibPage extends Component {
         }
     }
 
+    _loadBooks = async () => {
+        //加载书籍
+        const res = await Http.get("/vocaBook/list?type=" + this.props.vocaBookType)
+        console.log('----获取全部单词书-----' + this.props.vocaBookType)
+        console.log(res.data);
+        if (res.status === 200) {
+            this.setState({
+                books: res.data
+            })
+        }
+    }
+
     /**显示选择器 */
-    _show = (el, index) => {
+    _showPicker = (el) => {
         let data = [
             ['新学10/复习50',      //10
                 '新学14/复习70',
@@ -80,7 +95,7 @@ class VocaLibPage extends Component {
                 //提交计划
                 if (taskCount !== null && taskWordCount !== null) {
                     const isExacted = await _util.checkLocalTime()
-                    if(isExacted){
+                    if (isExacted) {
                         this.props.changeVocaBook({
                             bookId: el._id,
                             totalWordCount: el.count,
@@ -105,63 +120,49 @@ class VocaLibPage extends Component {
     }
 
     _renderBook = ({ item, index }) => {
-        return <View style={[styles.c_center, styles.bookView]}
-            onStartShouldSetResponder={(e) => true}
-            onResponderGrant={(e) => this._show(item, index)}
-        >
-            <CardView
-                cardElevation={5}
-                cardMaxElevation={5}
-                style={styles.imgCard}
-            >
-                <Image source={{ uri: item.coverUrl }} style={styles.img} />
-            </CardView>
-            <Text style={styles.bookname}>{item.name}</Text>
-            <Text style={styles.noteText}>共<Text style={[styles.noteText, { color: '#F29F3F' }]}>{item.count}</Text>个单词</Text>
-        </View>
+        return <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+                this._showPicker(item)
+            }}>
+            <View style={[gstyles.r_start, styles.bookView]} >
+                <CardView
+                    cardElevation={5}
+                    cardMaxElevation={5}
+                    style={styles.imgCard}
+                >
+                    <Image source={{ uri: item.coverUrl }} style={styles.img} />
+                </CardView>
+                <View style={[styles.bookContent, gstyles.c_between_left]}>
+                    <View >
+                        <Text style={styles.bookname}>{item.name}</Text>
+                        <Text style={styles.note}>这是一本词汇书，非常有用</Text>
+                    </View>
+                    <Text style={styles.wordCount}>共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{item.count}</Text>个单词</Text>
+
+                </View>
+            </View>
+        </TouchableOpacity>
     }
 
-    
 
-    _renderContent = () => {
-        const { books, isLoadPending, loadingType } = this.props.vocaLib
-        if (isLoadPending) {
-            return <CountDownLoader ref="countDownLoader" />
-        } else {
-            return <FlatList
-                data={books}
-                renderItem={this._renderBook}
-                keyExtractor={item => item._id}
-                ItemSeparatorComponent={() => <View style={{ borderBottomWidth: 1, borderBottomColor: '#A8A8A8' }}></View>}
-                // 水平布局的列的数量
-                numColumns={2}
-            />
-        }
-    }
+
 
     render() {
-        const { plan } = this.props.vocaLib
         //数据
+        const { isLoadPending, loadingType } = this.props.vocaLib
         return (
             <View style={{ flex: 1 }}>
-                <Header
-                    statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle='dark-content' // or directly
-                    leftComponent={
-                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
-                            this.props.navigation.goBack();
-                            Picker.hide()
-                        }} />}
+                {isLoadPending &&
+                    <CountDownLoader ref="countDownLoader" />
+                }
+                {!isLoadPending &&
+                    <FlatList
+                        data={this.state.books}
+                        renderItem={this._renderBook}
+                        keyExtractor={item => item._id}
+                    />
 
-                    centerComponent={{ text: '词库', style: gstyles.lg_black_bold }}
-                    containerStyle={{
-                        backgroundColor: gstyles.mainColor,
-                        justifyContent: 'space-around',
-                    }}
-                />
-
-                {
-                    this._renderContent()
                 }
             </View>
 
@@ -169,15 +170,21 @@ class VocaLibPage extends Component {
         );
     }
 }
+
+VocaLibPage.propTypes = {
+    vocaBookType: PropTypes.number.isRequired,
+}
+
 const mapStateToProps = state => ({
     vocaLib: state.vocaLib,
     home: state.home
 });
 
 const mapDispatchToProps = {
-    loadVocaBooks: VocaLibAction.loadVocaBooks,
+
     changeVocaBook: VocaLibAction.changeVocaBook
 }
+
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaLibPage);

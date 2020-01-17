@@ -1,61 +1,65 @@
 
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-    container:{
-        backgroundColor:'#FDFDFD',
+    container: {
+        backgroundColor: '#FDFDFD',
         flex: 1
     },
-    center:{
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
+
+    iconText: {
+        width: 32,
+        height: 32,
+        backgroundColor: '#1890FF',
+        textAlign: 'center',
+        lineHeight: 32,
+        borderRadius: 50,
     },
-    c_center:{
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    iconText:{
-        width:32,
-        height:32, 
-        backgroundColor:'#1890FF', 
-        textAlign:'center', 
-        lineHeight:32, 
-        borderRadius:50,
-    },
-    planBook:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        backgroundColor:'#FDFDFD',
-        borderRadius:5,
-        marginTop:10,
-        padding:5,
+    planBook: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#FDFDFD',
+        borderRadius: 5,
+        marginTop: 10,
+        padding: 5,
     },
     grid: {
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     bookView: {
-        width:'50%',
-        paddingVertical:10,
+        width: '100%',
+        paddingVertical: 10,
     },
-    imgCard:{
-        marginBottom:10,
+    imgCard: {
+        marginBottom: 10,
+        marginLeft: 15,
+        marginRight: 20,
     },
     img: {
-        width:90,
-        height:120,
+        width: 70,
+        height: 100,
+    },
+    bookContent: {
+        flex: 1,
+        height: 100,
+        // borderWidth: 1,
+        paddingBottom: 4,
     },
     bookname: {
         fontSize: 16,
-        color:'#303030',
-        fontWeight:'500',
+        color: '#303030',
+        fontWeight: '500',
     },
-    noteText:{
-        fontSize: 12,
+    note: {
+        fontSize: 13,
+        marginTop: 10,
+    },
+    wordCount: {
+        fontSize: 14,
+        color: '#444'
     }
 });
 

@@ -1,4 +1,4 @@
-import { take, put, call } from 'redux-saga/effects'
+import { takeLatest, put } from 'redux-saga/effects'
 import VocaTaskDao from '../../service/VocaTaskDao';
 import ArticleDao from "../../../reading/service/ArticleDao";
 import VocaUtil from "../../common/vocaUtil";
@@ -9,45 +9,34 @@ import { CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANG
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
 
 
-/**获取单词书 */
-export function* getVocaBooks() {
-    yield put({ type: LOAD_VOCA_BOOKS_START })
 
-    try {
-        const res = yield Http.get("/vocaBook/list")
-        console.log('----获取全部单词书-----')
-        console.log(res.data);           //返回的是结果对象response，不是一个promise
-        yield put({ type: LOAD_VOCA_BOOKS_SUCCEED, books: res.data })
-    } catch (err) {
-        yield put({ type: LOAD_VOCA_BOOKS_FAIL })
-    }
-}
 
 /**提交单词计划 */
-export function* createPlan(params) {
+export function* createPlan(action) {
+    const { payload } = action
     yield put({ type: CHANGE_VOCA_BOOK_START })
     yield put({ type: LOAD_TASKS_START })
     try {
-        const res = yield Http.post("/plan/create", params)
+        const res = yield Http.post("/plan/create", payload)
         const { vocaTasks, plan, articles } = res.data
         //清空先前数据，存储新数据到realm
         const vtDao = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
         vtDao.deleteAllTasks()
         artDao.deleteAllArticles()
-        vtDao.saveVocaTasks(vocaTasks, params.taskWordCount)
+        vtDao.saveVocaTasks(vocaTasks, payload.taskWordCount)
         artDao.saveArticles(articles)
         //加载今日数据
-        const rawTasks = VocaUtil.loadTodayRawTasks(null, params.taskCount, params.lastLearnDate)
+        const rawTasks = VocaUtil.loadTodayRawTasks(null, payload.taskCount, payload.lastLearnDate)
         if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
             yield put({ type: CLEAR_PLAY })
         }
         yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: rawTasks } })
         yield put({
-            type: CHANGE_VOCA_BOOK_SUCCEED, 
+            type: CHANGE_VOCA_BOOK_SUCCEED,
             plan: plan,
             totalDays: tasks.length + Constant.LEFT_PLUS_DAYS,
-            totalWordCount: params.totalWordCount
+            totalWordCount: payload.totalWordCount
         })
     } catch (err) {
         yield put({ type: CHANGE_VOCA_BOOK_FAIL })
@@ -56,17 +45,7 @@ export function* createPlan(params) {
 }
 
 
-/**修改单词计划 */
 
-
-/**watch saga */
-function* watchVocaLib() {
-    while (true) {
-        yield take(LOAD_VOCA_BOOKS)
-        yield call(getVocaBooks)
-
-        const { type, payload } = yield take(CHANGE_VOCA_BOOK)
-        yield call(createPlan, payload)
-    }
+export function* watchPlan() {
+    yield takeLatest(CHANGE_VOCA_BOOK, createPlan)
 }
-export default watchVocaLib

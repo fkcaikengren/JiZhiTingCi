@@ -1,4 +1,11 @@
 
+// 词汇书类型
+export const TYPE_VOCA_BOOK_WORD = 11       //单词词汇书，
+export const TYPE_VOCA_BOOK_READ = 12       //阅读词汇书，
+export const TYPE_VOCA_BOOK_PHRASE = 13     //短语词汇书，
+export const TYPE_VOCA_BOOK_DIY = 14     // 自定义词汇书
+
+
 export const LEFT_PLUS_DAYS = 14
 
 export const NORMAL_PLAY = 'NORMAL_PLAY'         //普通模式的轮播
@@ -67,7 +74,12 @@ export const NEW_LIST = 'NEW_LIST'
 export const WORD_TRAN = 'WORD_TRAN'
 export const PRON_TRAN = 'PRON_TRAN'
 export const TRAN_WORD = 'TRAN_WORD'
-export const SEN_WORD = 'SEN_WORD'  
+export const SEN_WORD = 'SEN_WORD'
+
+
+//单词卡片的类型
+export const CARD_TYPE_WORD = 'CARD_TYPE_WORD'
+export const CARD_TYPE_PHRASE = 'CARD_TYPE_PHRASE'
 
 
 //单词发音类型

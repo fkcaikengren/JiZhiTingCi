@@ -17,7 +17,7 @@ export default class VocaDetailPage extends Component {
     componentDidMount() {
         const word = this.props.navigation.getParam('word')
         console.log(word)
-        const wordInfo = VocaDao.getInstance().getWordInfo(word)
+        const wordInfo = VocaDao.getInstance().lookWordInfo(word)
         this.setState({ wordInfo })
     }
 

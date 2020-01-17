@@ -11,7 +11,7 @@ import StackViewStyleInterpolator from 'react-navigation-stack/src/views/StackVi
 import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../features/vocabulary/VocaPlayPage';
-import VocaLibPage from '../features/vocabulary/VocaLibPage';
+import VocaLibTabPage from '../features/vocabulary/VocaLibTabPage';
 import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
@@ -120,8 +120,8 @@ const VocaHomeStackNav = createStackNavigator({
     screen: VocaSearchPage,
   },
   // 单词库
-  VocaLib: {
-    screen: VocaLibPage,
+  VocaLibTab: {
+    screen: VocaLibTabPage,
   },
   // 单词列表
   VocaListTab: {

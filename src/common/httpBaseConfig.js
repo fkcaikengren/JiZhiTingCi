@@ -2,7 +2,7 @@
 
 export default httpBaseConfig = {
   baseURL: 'http://129.211.71.111:9000/m',
-  timeout: 10000,
+  timeout: 8000,
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',

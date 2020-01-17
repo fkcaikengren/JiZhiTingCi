@@ -156,7 +156,7 @@ export default class HomeHeader extends Component {
   _navVocaLib = () => {
 
     InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaLib', { transition: 'forFadeToBottomAndroid' });
+      this.props.navigation.navigate('VocaLibTab', { transition: 'forFadeToBottomAndroid' });
     })
 
   }

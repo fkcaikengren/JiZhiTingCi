@@ -5,8 +5,6 @@ import { LOGOUT } from '../../mine/redux/action/mineAction'
 
 const defaultState = {
 
-    //单词书
-    books: [],
     //当前计划
     plan: {
         bookId: "",
@@ -27,10 +25,6 @@ const defaultState = {
 export const vocaLib = (state = defaultState, action) => {
 
     switch (action.type) {
-        case vl.LOAD_VOCA_BOOKS_START:
-            return { ...state };
-        case vl.LOAD_VOCA_BOOKS_SUCCEED:
-            return { ...state, books: action.books };
         case vl.CHANGE_VOCA_BOOK_START:
             return { ...state, isLoadPending: true };
         case vl.CHANGE_VOCA_BOOK_SUCCEED:

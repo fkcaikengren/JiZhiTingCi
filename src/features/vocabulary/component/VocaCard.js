@@ -11,6 +11,7 @@ import VocaOperator from './VocaOperator'
 import VocaDao from '../service/VocaDao'
 import AudioService from '../../../common/AudioService';
 import * as CConstant from "../../../common/constant";
+import { CARD_TYPE_WORD } from '../common/constant';
 
 
 const Dimensions = require('Dimensions');
@@ -25,8 +26,6 @@ export default class VocaCard extends Component {
 
         this.state = {
             showAll: this.props.showAll,
-            wordRoot: null,
-            relativeRoots: [],
         }
         console.disableYellowBox = true
 
@@ -34,11 +33,7 @@ export default class VocaCard extends Component {
 
     componentDidMount() {
         const { wordInfo, playWord, playSentence } = this.props
-        const wordRoot = VocaDao.getInstance().getWordRoot(this.props.wordInfo.root_id)
-        if (wordRoot) {
-            const relativeRoots = VocaDao.getInstance().getWordRoots(wordRoot.relatives, 3, true)
-            this.setState({ wordRoot, relativeRoots })
-        }
+
         //自动发音
         if (playWord) {
             this.audioService.playSound({
@@ -123,10 +118,17 @@ export default class VocaCard extends Component {
 
 
     render() {
-        const { wordInfo } = this.props
+        const { wordInfo, cardType } = this.props
+        const isWordType = (cardType === CARD_TYPE_WORD)
         let sen = ''
-        if (wordInfo.sentence && wordInfo.sentence !== '') {
-            const s = wordInfo.sentence.split(/<em>|<\/em>/)
+        let sentence = ''
+        if (isWordType) {
+            sentence = wordInfo.sentence
+        } else {
+            sentence = wordInfo.sen
+        }
+        if (sentence && sentence !== '') {
+            const s = sentence.split(/<em>|<\/em>/)
             sen = s.map((text, index) => {
                 if (index % 2 === 0) {
                     const words = text.split(' ')
@@ -140,6 +142,7 @@ export default class VocaCard extends Component {
                 }
             })
         }
+
 
         return (
             <ScrollView style={{ flex: 1 }}
@@ -156,44 +159,79 @@ export default class VocaCard extends Component {
                         <Col style={styles.basic}>
                             {/* 单词 */}
                             <Row style={gstyles.r_between}>
-                                <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
+                                <Text style={gstyles.xl_black_bold}>{isWordType ? wordInfo.word : wordInfo.phrase}</Text>
                                 <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
                             </Row>
                             {/* 音标 */}
-                            <Row style={[gstyles.r_start,]}>
-                                <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
-                                <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ marginLeft: 10 }} onPress={() => {
-                                    this.audioService.playSound({
-                                        pDir: CConstant.VOCABULARY_DIR,
-                                        fPath: wordInfo.am_pron_url
-                                    })
-                                }} />
-                            </Row>
+                            {isWordType &&
+                                <Row style={[gstyles.r_start,]}>
+                                    {wordInfo.en_phonetic &&
+                                        <View style={[gstyles.r_start,]}>
+                                            <Text style={styles.grayFont}>{wordInfo.en_phonetic}</Text>
+                                            <AliIcon name='shengyin' size={26} color={'#FA6360'} style={{ marginLeft: 10 }} onPress={() => {
+                                                this.audioService.playSound({
+                                                    pDir: CConstant.VOCABULARY_DIR,
+                                                    fPath: wordInfo.en_pron_url
+                                                })
+                                            }} />
+                                        </View>
+                                    }
+                                    {wordInfo.am_phonetic &&
+                                        <View style={[gstyles.r_start, { marginLeft: 10 }]}>
+                                            <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
+                                            <AliIcon name='shengyin' size={26} color={'#4693DB'} style={{ marginLeft: 10 }} onPress={() => {
+                                                this.audioService.playSound({
+                                                    pDir: CConstant.VOCABULARY_DIR,
+                                                    fPath: wordInfo.am_pron_url
+                                                })
+                                            }} />
+                                        </View>
+                                    }
+                                </Row>
+                            }
+                            {!isWordType && wordInfo.phonetic &&
+                                <Row style={[gstyles.r_start,]}>
+                                    <Text style={styles.grayFont}>{wordInfo.phonetic}</Text>
+                                    <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ marginLeft: 10 }} onPress={() => {
+                                        this.audioService.playSound({
+                                            pDir: CConstant.VOCABULARY_DIR,
+                                            fPath: wordInfo.pron_url
+                                        })
+                                    }} />
+                                </Row>
+                            }
                             {/* 英英释义 */}
-                            <Row style={[gstyles.r_start, styles.marginTop]}>
-                                <Text style={styles.grayFont}>{wordInfo.def}</Text>
-                            </Row>
+                            {isWordType &&
+                                <Row style={[gstyles.r_start, styles.marginTop]}>
+                                    <Text style={styles.grayFont}>{wordInfo.def}</Text>
+                                </Row>
+                            }
                             {/* 例句 */}
-                            <Row style={[gstyles.r_start_top, styles.marginTop]}>
-                                <Text style={[gstyles.lg_black, { flex: 10 }]}>{sen}</Text>
-                                <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ flex: 1, marginLeft: 10 }} onPress={() => {
-                                    this.audioService.playSound({
-                                        pDir: CConstant.VOCABULARY_DIR,
-                                        fPath: wordInfo.sen_pron_url
-                                    })
-                                }} />
-                            </Row>
+                            {sen !== '' &&
+                                <Row style={[gstyles.r_start_top, styles.marginTop]}>
+                                    <Text style={[gstyles.lg_black, { flex: 10 }]}>{sen}</Text>
+                                    <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ flex: 1, marginLeft: 10 }} onPress={() => {
+                                        this.audioService.playSound({
+                                            pDir: CConstant.VOCABULARY_DIR,
+                                            fPath: wordInfo.sen_pron_url
+                                        })
+                                    }} />
+                                </Row>
+                            }
                             {/* 释义 */}
                             {this.state.showAll &&
                                 <Row style={styles.marginTop}>
                                     <Col>
                                         {
-                                            this._genTrans(wordInfo.trans)
+                                            isWordType ? this._genTrans(wordInfo.trans) :
+                                                <Text numberOfLines={1} style={gstyles.md_black}>{wordInfo.tran}</Text>
+
                                         }
                                     </Col>
                                 </Row>
                             }
                         </Col>
+
                         {/* 场景例句 */}
                         {this.state.showAll && wordInfo.examples.length > 0 &&
                             <Col style={styles.carousel}>
@@ -219,6 +257,7 @@ export default class VocaCard extends Component {
 
 VocaCard.propTypes = {
     wordInfo: PropTypes.object.isRequired,
+    cardType: PropTypes.string.isRequired,
     lookWord: PropTypes.func,
     showAll: PropTypes.bool,
     playWord: PropTypes.bool,
@@ -227,11 +266,11 @@ VocaCard.propTypes = {
 }
 
 VocaCard.defaultProps = {
+    cardType: CARD_TYPE_WORD,
     lookWord: (word) => null,
     showAll: true,
     playWord: false,
     playSentence: false,
-
 }
 
 

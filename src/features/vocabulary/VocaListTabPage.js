@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import {  View, Text, TouchableOpacity} from 'react-native';
-import {connect} from 'react-redux';   
+import { View, Text, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
-import {Header} from 'react-native-elements'
+import { Header } from 'react-native-elements'
 import Toast from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
@@ -16,137 +16,140 @@ import gstyles from "../../style";
 
 class VocaListTabPage extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            pageIndex:0,
-            toastRef:null
+            pageIndex: 0,
+            toastRef: null
         }
-         //隐藏黄色警告
-         console.disableYellowBox=true;
+        //隐藏黄色警告
+        console.disableYellowBox = true;
     }
 
-    componentDidMount(){
-        this.setState({toastRef:this.toastRef})
+    componentDidMount() {
+        this.setState({ toastRef: this.toastRef })
     }
 
-    _movePage = (clickIndex)=>{
-        if(this.props.vocaList.onEdit){
+    _movePage = (clickIndex) => {
+        if (this.props.vocaList.onEdit) {
             this.state.toastRef.show('当前处于编辑状态，不可以切换卡片哦')
-        }else{
+        } else {
             console.log(clickIndex - this.state.pageIndex)
-            this.swiperRef.scrollBy(clickIndex - this.state.pageIndex,true)
+            this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
         }
     }
 
-    _onIndexChanged = (index)=>{
-        this.setState({pageIndex:index})
+    _onIndexChanged = (index) => {
+        this.setState({ pageIndex: index })
     }
 
     render() {
-        const editBtn = this.props.vocaList.onEdit?<Text style={gstyles.md_black}>取消</Text>
-        :<AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
-        const selectTextStyle = [{ borderBottomWidth:2, borderBottomColor: gstyles.black },gstyles.sm_black_bold]
+        const editBtn = this.props.vocaList.onEdit ? <Text style={gstyles.md_black}>取消</Text>
+            : <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
+        const selectTextStyle = [{ borderBottomWidth: 2, borderBottomColor: gstyles.black }, gstyles.sm_black_bold]
         const index = this.state.pageIndex
 
         return (
-           
-            <View style={{flex:1}}>
+
+            <View style={{ flex: 1 }}>
                 <Header
-                statusBarProps={{ barStyle:'dark-content' }}
-                barStyle='dark-content' // or directly
-                leftComponent={  <AliIcon name='fanhui' size={24} color={gstyles.black} onPress={()=>{
-                        if(this.props.vocaList.onEdit){
+                    statusBarProps={{ barStyle: 'dark-content' }}
+                    barStyle='dark-content' // or directly
+                    leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={() => {
+                        if (this.props.vocaList.onEdit) {
                             this.state.toastRef.show('当前处于编辑状态，不可以退出哦')
-                        }else{
+                        } else {
                             this.props.navigation.goBack();
                         }
-                    }} /> }
-                rightComponent={ <TouchableOpacity activeOpacity={0.8} onPress={()=>{this.props.toggleEdit()}}>
-                    { editBtn }
+                    }} />}
+                    rightComponent={<TouchableOpacity activeOpacity={0.8} onPress={() => { this.props.toggleEdit() }}>
+                        {editBtn}
                     </TouchableOpacity>
-                }
-                centerComponent={{ text: '单词列表', style: gstyles.lg_black_bold }}
-                containerStyle={{
-                    backgroundColor: gstyles.mainColor,
-                    borderBottomColor: gstyles.mainColor,
-                    justifyContent: 'space-around',
-                }}
+                    }
+                    centerComponent={{ text: '单词列表', style: gstyles.lg_black_bold }}
+                    containerStyle={{
+                        backgroundColor: gstyles.mainColor,
+                        borderBottomColor: gstyles.mainColor,
+                        justifyContent: 'space-around',
+                    }}
                 />
-                <View style={styles.tabBar}>
-                    <View style={styles.tabBtn}
+                {/* 导航按钮 */}
+                <View style={gstyles.tabBar}>
+                    <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e)=>{this._movePage(0)}}
+                        onResponderStart={(e) => { this._movePage(0) }}
                     >
-                        <Text style={[gstyles.sm_gray,styles.tabText, index===0?selectTextStyle:null]}>错词</Text>
+                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 0 ? selectTextStyle : null]}>错词</Text>
                     </View>
-                    <View style={styles.tabBtn}
+                    <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e)=>{this._movePage(1)}}
+                        onResponderStart={(e) => { this._movePage(1) }}
                     >
-                        <Text style={[gstyles.sm_gray,styles.tabText, index===1?selectTextStyle:null]}>PASS</Text>
+                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 1 ? selectTextStyle : null]}>PASS</Text>
                     </View>
-                    <View style={styles.tabBtn}
+                    <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e)=>{this._movePage(2)}}
+                        onResponderStart={(e) => { this._movePage(2) }}
                     >
-                        <Text style={[gstyles.sm_gray,styles.tabText, index===2?selectTextStyle:null]}>已学</Text>
+                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 2 ? selectTextStyle : null]}>已学</Text>
                     </View>
-                    <View style={styles.tabBtn}
+                    <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e)=>{this._movePage(3)}}
+                        onResponderStart={(e) => { this._movePage(3) }}
                     >
-                        <Text style={[gstyles.sm_gray,styles.tabText, index===3?selectTextStyle:null]}>未学</Text>
+                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 3 ? selectTextStyle : null]}>未学</Text>
                     </View>
                 </View>
-               <Swiper
-                    ref={ref=>this.swiperRef = ref}
+                {/* tab页面 */}
+                <Swiper
+                    ref={ref => this.swiperRef = ref}
                     showsPagination={false}
                     loop={false}
                     onIndexChanged={this._onIndexChanged}
                     index={this.state.pageIndex}
                     scrollEnabled={!this.props.vocaList.onEdit}
                     loadMinimal loadMinimalSize={1}
-                    >
+                >
                     <VocaListPage {...this.props} type={Constant.WRONG_LIST}
                         index={0}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef}/>
+                        toastRef={this.state.toastRef} />
                     <VocaListPage {...this.props} type={Constant.PASS_LIST}
                         index={1}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef}/>
+                        toastRef={this.state.toastRef} />
                     <VocaListPage {...this.props} type={Constant.LEARNED_LIST}
                         index={2}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef}/>
+                        toastRef={this.state.toastRef} />
                     <VocaListPage {...this.props} type={Constant.NEW_LIST}
                         index={3}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef}/>
+                        toastRef={this.state.toastRef} />
                 </Swiper>
+
                 <Toast
-                    ref={ref=>this.toastRef = ref}
+                    ref={ref => this.toastRef = ref}
                     position='top'
                     positionValue={120}
                     fadeInDuration={750}
                     fadeOutDuration={1000}
                     opacity={0.8}
-                />  
+                />
             </View>
         );
     }
 }
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
     vocaList: state.vocaList,
     vocaPlay: state.vocaPlay
 });
 
 const mapDispatchToProps = {
     toggleEdit: VocaListAction.toggleEdit,
-    changePlayTimer : VocaPlayAction.changePlayTimer
+    changePlayTimer: VocaPlayAction.changePlayTimer
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps )(VocaListTabPage);
+export default connect(mapStateToProps, mapDispatchToProps)(VocaListTabPage);
