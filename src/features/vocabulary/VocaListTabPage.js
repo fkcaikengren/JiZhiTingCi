@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
 import { Header } from 'react-native-elements'
-import Toast from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
 import * as VocaListAction from './redux/action/vocaListAction'
@@ -20,19 +19,17 @@ class VocaListTabPage extends Component {
         super(props)
         this.state = {
             pageIndex: 0,
-            toastRef: null
         }
         //隐藏黄色警告
         console.disableYellowBox = true;
     }
 
     componentDidMount() {
-        this.setState({ toastRef: this.toastRef })
     }
 
     _movePage = (clickIndex) => {
         if (this.props.vocaList.onEdit) {
-            this.state.toastRef.show('当前处于编辑状态，不可以切换卡片哦')
+            this.props.app.toast.show('当前处于编辑状态，不可以切换卡片哦')
         } else {
             console.log(clickIndex - this.state.pageIndex)
             this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
@@ -57,7 +54,7 @@ class VocaListTabPage extends Component {
                     barStyle='dark-content' // or directly
                     leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={() => {
                         if (this.props.vocaList.onEdit) {
-                            this.state.toastRef.show('当前处于编辑状态，不可以退出哦')
+                            this.props.app.toast.show('当前处于编辑状态，不可以退出哦')
                         } else {
                             this.props.navigation.goBack();
                         }
@@ -113,35 +110,28 @@ class VocaListTabPage extends Component {
                     <VocaListPage {...this.props} type={Constant.WRONG_LIST}
                         index={0}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef} />
+                        toast={this.props.app.toast} />
                     <VocaListPage {...this.props} type={Constant.PASS_LIST}
                         index={1}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef} />
+                        toast={this.props.app.toast} />
                     <VocaListPage {...this.props} type={Constant.LEARNED_LIST}
                         index={2}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef} />
+                        toast={this.props.app.toast} />
                     <VocaListPage {...this.props} type={Constant.NEW_LIST}
                         index={3}
                         pageIndex={this.state.pageIndex}
-                        toastRef={this.state.toastRef} />
+                        toast={this.props.app.toast} />
                 </Swiper>
 
-                <Toast
-                    ref={ref => this.toastRef = ref}
-                    position='top'
-                    positionValue={120}
-                    fadeInDuration={750}
-                    fadeOutDuration={1000}
-                    opacity={0.8}
-                />
             </View>
         );
     }
 }
 
 const mapStateToProps = state => ({
+    app: state.app,
     vocaList: state.vocaList,
     vocaPlay: state.vocaPlay
 });

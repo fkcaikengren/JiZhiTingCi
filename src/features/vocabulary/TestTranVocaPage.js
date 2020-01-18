@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
-import TestPage from "./component/TestPage";
+import TestPage from "./TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
-import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as PlanAction from "./redux/action/planAction";
 
 const styles = StyleSheet.create({
     content: {
@@ -49,11 +49,11 @@ class TestTranVocaPage extends Component {
 
     _renderContent = (state) => {
         const { showWordInfos, curIndex, task } = state
-        const trans = showWordInfos[curIndex] ? JSON.parse(showWordInfos[curIndex].trans) : null
+        const trans = showWordInfos[curIndex] ? showWordInfos[curIndex].trans : null
         const words = vocaUtil.getNotPassedWords(task.words)
         const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
-        let property = ''
-        let translation = ''
+        let property = null
+        let translation = null
         if (trans) {
             let i = 0
             for (let k in trans) {
@@ -64,10 +64,13 @@ class TestTranVocaPage extends Component {
                 }
                 i++
             }
+        } else {
+            translation = showWordInfos[curIndex] ? showWordInfos[curIndex].translation : ''
         }
+        property = property ? property + '.' : ''
         return <View style={styles.content}>
             <Text style={styles.tranFont}>
-                <Text style={{ fontSize: 16 }}>{`${property}. `}</Text>
+                <Text style={{ fontSize: 16 }}>{`${property}`}</Text>
                 {translation}
             </Text>
             <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
@@ -98,7 +101,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
     syncTask: homeAction.syncTask,
-    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
+    changeLearnedWordCount: PlanAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

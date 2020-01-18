@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {
-    Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, Image, TouchableWithoutFeedback,
+    Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, Image,
     findNodeHandle
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { connect } from 'react-redux';
 import ModalBox from 'react-native-modalbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-easy-toast'
 import { PropTypes } from 'prop-types'
 import Modal from 'react-native-modalbox';
 import BackgroundTimer from 'react-native-background-timer';
@@ -127,7 +126,7 @@ class VocaPlayPage extends React.Component {
         if (this.isStudyMode) {
             //加载task 和word
             const task = this.props.navigation.getParam('task')
-            const showWordInfos = VocaUtil.getShowWordInfos(task.words)
+            const showWordInfos = this.vocaDao.getShowWordInfos(task.words)
 
             this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
             this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
@@ -163,7 +162,7 @@ class VocaPlayPage extends React.Component {
                 console.log('-----------------virtual task---------------------')
                 console.log(task)
                 if (task) {
-                    const showWordInfos = VocaUtil.getShowWordInfos(task.words)
+                    const showWordInfos = this.vocaDao.getShowWordInfos(task.words)
                     this.props.loadTask(task, showWordInfos)
                     console.log('---chagne state------')
                     // console.log(this.vocaPlayService.stateRef)
@@ -374,8 +373,7 @@ class VocaPlayPage extends React.Component {
                 showWord = this.state.showWord
                 showTran = this.state.showTran
             }
-            //处理中文翻译
-            const translation = VocaUtil.transToText(item.trans)
+
             //主题
             const Theme = themes[themeId]
             //字幕的样式
@@ -409,7 +407,7 @@ class VocaPlayPage extends React.Component {
                             <View style={styles.item}>
                                 <Text style={[styles.itemEnText, playEnStyle]}>{showWord ? item.word : ''}</Text>
                                 <Text note numberOfLines={1} style={[styles.itemZhText, playZhStyle]}>
-                                    {showTran ? translation : ''}
+                                    {showTran ? item.translation : ''}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -424,7 +422,7 @@ class VocaPlayPage extends React.Component {
                                     //关闭侧滑
                                     this.vocaPlayService.listRef.closePassBtn()
                                     if (task.wordCount <= 3) {
-                                        this.refs.toastRef.show('只剩3个了，不能再pass了哦')
+                                        this.props.app.toast.show('只剩3个了，不能再pass了哦', 1000)
                                     } else {
                                         this._passWord(item.word)
                                     }
@@ -488,7 +486,7 @@ class VocaPlayPage extends React.Component {
             }
             //数据库加载任务
             const task = this.taskDao.getTaskByOrder(item.taskOrder)
-            const showWordInfos = VocaUtil.getShowWordInfos(task.words)
+            const showWordInfos = this.vocaDao.getShowWordInfos(task.words)
             changeNormalType(Constant.BY_REAL_TASK)
             this.disablePass = false
             loadTask(VocaUtil.copyTaskDeep(task, true), showWordInfos)
@@ -559,7 +557,7 @@ class VocaPlayPage extends React.Component {
             }}>
             <View style={[gstyles.c_start, { width: '100%' }]}>
                 <View style={[styles.modalHeader, gstyles.r_center]}>
-                    <Text style={gstyles.lg_black}>{this.props.vocaLib.plan.bookName}</Text>
+                    <Text style={gstyles.lg_black}>{this.props.plan.plan.bookName}</Text>
                 </View>
                 <View style={{ height: 40 }}>
                 </View>
@@ -620,18 +618,18 @@ class VocaPlayPage extends React.Component {
             {this.state.clickIndex !== null && showWordInfos[this.state.clickIndex] &&
                 <VocaCard wordInfo={showWordInfos[this.state.clickIndex]} navigation={this.props.navigation} />
             }
-            <TouchableWithoutFeedback onPress={this._closeVocaModal}>
+            <TouchableOpacity onPress={this._closeVocaModal}>
                 <View style={gstyles.closeBtn}>
                     <AliIcon name='cha' size={20} color={gstyles.black} />
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         </Modal>
     }
 
     _renderController = () => {
         if (this.isStudyMode) {
             return <StudyPlayController  {...this.props}
-                toastRef={this.refs.toastRef}
+                toastRef={this.props.app.toast}
                 playState={this.state}
                 mode={this.mode}
                 autoplay={this.vocaPlayService.autoplay}
@@ -643,44 +641,11 @@ class VocaPlayPage extends React.Component {
             />
         } else {
             return <PlayController {...this.props} autoplay={this.vocaPlayService.autoplay}
-                openTaskListModal={this._openTaskListModal} toastRef={this.refs.toastRef} />
+                openTaskListModal={this._openTaskListModal} toastRef={this.props.app.toast} />
         }
     }
 
-    _renderList = () => {
-        let { task, showWordInfos, curIndex, showWord, showTran } = this.props.vocaPlay
-        if (this.isStudyMode) {
-            task = this.state.task
-            showWordInfos = this.state.showWordInfos
-        }
 
-        //this.isStudyMode?this.state:{ showWord, showTran},      //促使FlatList刷新
-        if (task.taskOrder) {
-            return <SwipeableFlatList
-                ref={comp => {
-                    this.vocaPlayService.listRef = comp
-                }
-                }
-                horizontal={false}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                pagingEnabled={false}
-                // extraData={{showWord, showTran}}
-                keyExtractor={this._keyExtractor}
-                data={showWordInfos}
-                renderItem={this._renderItem}
-                initialNumToRender={16}
-                getItemLayout={this._getItemLayout}
-
-
-                bounceFirstRowOnMount={false}
-                onOpen={this._onOpen}
-                renderQuickActions={(data) => !this.disablePass}
-                maxSwipeDistance={40}
-            />
-        }
-
-    }
 
     _share = () => {
         //    [0, 1, 2, 3, 4, 5, 6] 表示 [QQ,微博，微信，朋友圈，空间，邮件，短信]
@@ -743,21 +708,37 @@ class VocaPlayPage extends React.Component {
                 />
 
                 {/* 内容列表区 */}
-                <TouchableWithoutFeedback onPress={() => {
+                <TouchableOpacity onPress={() => {
                     this.props.showBlur(!this.props.vocaPlay.showBlur)
                 }}>
                     <View style={[styles.content, { height: contentHeight }]}>
-                        {this._renderList()}
+                        {task.taskOrder &&
+                            <SwipeableFlatList
+                                ref={comp => {
+                                    this.vocaPlayService.listRef = comp
+                                }
+                                }
+                                horizontal={false}
+                                showsHorizontalScrollIndicator={false}
+                                showsVerticalScrollIndicator={false}
+                                pagingEnabled={false}
+                                // extraData={{showWord, showTran}}
+                                keyExtractor={this._keyExtractor}
+                                data={showWordInfos}
+                                renderItem={this._renderItem}
+                                initialNumToRender={16}
+                                getItemLayout={this._getItemLayout}
+
+
+                                bounceFirstRowOnMount={false}
+                                onOpen={this._onOpen}
+                                renderQuickActions={(data) => !this.disablePass}
+                                maxSwipeDistance={40}
+                            />
+                        }
                     </View>
-                </TouchableWithoutFeedback>
-                <Toast
-                    ref="toastRef"
-                    position='top'
-                    positionValue={120}
-                    fadeInDuration={750}
-                    fadeOutDuration={1000}
-                    opacity={0.8}
-                />
+                </TouchableOpacity>
+
                 {/* 底部播放控制区 */}
                 {
                     this._renderController()
@@ -775,7 +756,8 @@ class VocaPlayPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    vocaLib: state.vocaLib,
+    app: state.app,
+    plan: state.plan,
     vocaPlay: state.vocaPlay,
 });
 

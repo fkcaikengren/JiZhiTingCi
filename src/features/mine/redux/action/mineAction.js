@@ -27,6 +27,7 @@ export const LOGOUT = 'LOGOUT'
 
 
 // 设置
+export const CHANGE_CONFIG_VOCA_PRON_TYPE = 'CHANGE_CONFIG_VOCA_PRON_TYPE'
 export const CHANGE_CONFIG_REVIEW_PLAY_TIMES = 'CHANGE_CONFIG_REVIEW_PLAY_TIMES'
 export const CHANGE_CONFIG_N_TRANS = 'CHANGE_CONFIG_N_TRANS'
 export const CHANGE_CONFIG_M_TRANS = 'CHANGE_CONFIG_M_TRANS'
@@ -36,7 +37,7 @@ const fn = (payload) => {
 }
 
 export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout,
-    changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
+    changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
         [LOGIN_BY_CODE]: fn,
         [MODIFY_NICKNAME]: fn,
         [MODIFY_PASSWORD]: fn,
@@ -44,6 +45,9 @@ export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout
         [LOGOUT]: fn,
 
         // 设置
+        [CHANGE_CONFIG_VOCA_PRON_TYPE]: (configVocaPronType) => {
+            return { configVocaPronType }
+        },
         [CHANGE_CONFIG_REVIEW_PLAY_TIMES]: (configReviewPlayTimes) => {
             return { configReviewPlayTimes }
         },

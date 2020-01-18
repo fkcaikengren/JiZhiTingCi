@@ -10,12 +10,14 @@ import styles from './LearnCardStyle'
 import gstyles from '../../style'
 import VocaCard from "./component/VocaCard";
 import VocaTaskDao from './service/VocaTaskDao'
-import vocaUtil from './common/vocaUtil'
+
 import _util from '../../common/util'
 import * as Constant from './common/constant'
 import AudioService from '../../common/AudioService'
 import LookWordBoard from "./component/LookWordBoard";
 import { COMMAND_MODIFY_TASK } from "../../common/constant";
+import VocaDao from "./service/VocaDao";
+import VocaUtil from "./common/vocaUtil";
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
 
@@ -49,7 +51,7 @@ class LearnCardPage extends Component {
         }
         let showWordInfos = getParam('showWordInfos')
         if (!showWordInfos) {
-            showWordInfos = vocaUtil.getShowWordInfos(task.words)
+            showWordInfos = VocaDao.getInstance().getShowWordInfos(task.words)
         }
 
         this.setState({ task, showWordInfos })
@@ -73,7 +75,7 @@ class LearnCardPage extends Component {
             //更新任务
             this.props.updateTask(finalTask)
             //完成卡片学习
-            vocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
+            VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
                 task: finalTask,
                 showWordInfos: this.state.showWordInfos,
                 nextRouteName: 'TestSenVoca'
@@ -105,7 +107,7 @@ class LearnCardPage extends Component {
                             const newTask = { ...this.state.task }
                             this.props.updateTask(newTask)
                             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
-                            vocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
+                            VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
                             this.audioService.releaseSound()
                         }} />}
 

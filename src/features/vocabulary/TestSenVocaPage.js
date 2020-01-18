@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
-import TestPage from "./component/TestPage";
+import TestPage from "./TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
 import AudioService from '../../common/AudioService'
-import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as PlanAction from "./redux/action/planAction";
 import * as CConstant from "../../common/constant";
 import gstyles from "../../style";
 
@@ -98,7 +98,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
     syncTask: homeAction.syncTask,
-    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
+    changeLearnedWordCount: PlanAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

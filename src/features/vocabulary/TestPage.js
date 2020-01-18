@@ -6,17 +6,17 @@ import * as Progress from 'react-native-progress';
 import Modal from 'react-native-modalbox';
 import { PropTypes } from 'prop-types';
 
-import VocaTaskDao from '../service/VocaTaskDao';
-import VocaDao from '../service/VocaDao'
-import AliIcon from '../../../component/AliIcon'
-import gstyles from '../../../style'
-import vocaUtil from '../common/vocaUtil'
-import _util from '../../../common/util'
-import VocaCard from "./VocaCard";
-import * as Constant from '../common/constant'
-import AudioService from '../../../common/AudioService'
-import VocaTaskService from "../service/VocaTaskService";
-import { VOCABULARY_DIR, COMMAND_MODIFY_TASK, COMMAND_MODIFY_PASSED } from "../../../common/constant";
+import VocaTaskDao from './service/VocaTaskDao';
+import VocaDao from './service/VocaDao'
+import AliIcon from '../../component/AliIcon'
+import gstyles from '../../style'
+import vocaUtil from './common/vocaUtil'
+import _util from '../../common/util'
+import VocaCard from "./component/VocaCard";
+import * as Constant from './common/constant'
+import AudioService from '../../common/AudioService'
+import VocaTaskService from "./service/VocaTaskService";
+import { VOCABULARY_DIR, COMMAND_MODIFY_TASK, COMMAND_MODIFY_PASSED } from "../../common/constant";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -98,12 +98,11 @@ export default class TestPage extends Component {
         const { getParam } = this.props.navigation
         let task = getParam('task')
 
-
         this.wordInfos = this.vocaDao.getWordInfos(task.words.map((item, i) => item.word))
         const showWords = vocaUtil.getNotPassedWords(task.words)
         let showWordInfos = getParam('showWordInfos')
         if (!showWordInfos) {
-            showWordInfos = vocaUtil.getShowWordInfos(showWords, this.wordInfos)
+            showWordInfos = this.vocaDao.getShowWordInfos(showWords, this.wordInfos)
         }
 
         //初始化 测试数组
@@ -157,10 +156,12 @@ export default class TestPage extends Component {
             this.props.playAudio(amPronUrl)
         } else if (this.props.type === Constant.TRAN_WORD) {
             const trans = showWordInfos[task.curIndex] ?
-                JSON.parse(showWordInfos[task.curIndex].trans) : null
+                showWordInfos[task.curIndex].trans : null
             if (trans) {
                 const transNum = vocaUtil.randomNum(0, Object.keys(trans).length - 1)
                 this.props.setTransNum(transNum)
+            } else {//可能是短语
+                this.props.setTransNum(0)
             }
         }
     }
@@ -461,10 +462,12 @@ export default class TestPage extends Component {
                 this.props.playAudio(amPronUrl)
             } else if (this.props.type === Constant.TRAN_WORD) {
                 const trans = this.state.showWordInfos[nextIndex] ?
-                    JSON.parse(this.state.showWordInfos[nextIndex].trans) : null
+                    this.state.showWordInfos[nextIndex].trans : null
                 if (trans) {
                     const transNum = vocaUtil.randomNum(0, Object.keys(trans).length - 1)
                     this.props.setTransNum(transNum)
+                } else {//可能是短语
+                    this.props.setTransNum(0)
                 }
             }
         }
@@ -644,10 +647,10 @@ export default class TestPage extends Component {
                             switch (this.props.type) {
                                 case Constant.WORD_TRAN:
                                 case Constant.PRON_TRAN:
-                                    const trans = optionIsAnswer ?
-                                        (showWordInfos[option] ? showWordInfos[option].trans : '')
-                                        : (this.wordInfos[option] ? this.wordInfos[option].trans : '')
-                                    showText = vocaUtil.transToText(trans)
+                                    showText = optionIsAnswer ?
+                                        (showWordInfos[option] ? showWordInfos[option].translation : '')
+                                        : (this.wordInfos[option] ? this.wordInfos[option].translation : '')
+
                                     alignStyle = { textAlign: 'left' }
                                     break;
                                 case Constant.TRAN_WORD:

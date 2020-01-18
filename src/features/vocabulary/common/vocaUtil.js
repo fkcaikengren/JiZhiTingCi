@@ -237,50 +237,9 @@ export default class VocaUtil {
         return options
     }
 
-    /**
-     * @description 解析json对象并转换成文本
-     * @static
-     * @memberof VocaUtil
-     */
-    static transToText = (trans) => {
-        if (!trans || trans === '') {
-            return ''
-        }
-        let translation = ''
-        try {
-            const obj = JSON.parse(trans)
-            if (obj) {
-                for (let k in obj) {
-                    translation += `${k}. ${obj[k]} `
-                }
-            }
-        } catch (e) {
-            console.log('Error: vocaUtil.transToText, 格式错误')
-            console.log(e)
-        }
-        return translation
-    }
 
-    /**
-     * 获取没有pass的单词信息
-     * @param {*} words  task的words
-     */
-    static getShowWordInfos(words, wordInfos = null) {
-        if (!words) {
-            return []
-        }
-        const showWordInfos = []
-        if (wordInfos === null) {
-            wordInfos = VocaDao.getInstance().getWordInfos(words.map((item, index) => item.word))
-        }
-        for (let i in words) {
-            //过滤
-            if (words[i].passed === false) {
-                showWordInfos.push(wordInfos[i])
-            }
-        }
-        return showWordInfos
-    }
+
+
 
     static goPageWithoutStack = (navigation, routeName, params = {}) => {
         // 抹掉stack，跳转到指定路由
@@ -515,7 +474,7 @@ export default class VocaUtil {
      * @param storedTask
      * @param taskCount
      * @param lastLearnDate
-     * @returns {*[]|*}
+     * @returns 
      */
     static loadTodayRawTasks = (storedTask, taskCount, lastLearnDate) => {
         const todayTasks = new VocaTaskService().getTodayTasks(storedTask, taskCount, lastLearnDate)

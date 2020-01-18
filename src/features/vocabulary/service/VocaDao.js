@@ -1,4 +1,6 @@
 
+import { store } from '../../../redux/store'
+import { VOCA_PRON_TYPE_EN } from '../common/constant';
 const Realm = require('realm');
 
 export default class VocaDao {
@@ -18,8 +20,7 @@ export default class VocaDao {
     /** 打开数据库 */
     async open() {
         try {
-            console.log('打开voca.realm')
-            if (this.realm === null)
+            if (!this.realm)
                 this.realm = await Realm.open({ path: 'voca.realm' })
         } catch (err) {
             console.log('Error: 打开realm数据库失败, 创建VocaDao对象失败')
@@ -51,10 +52,11 @@ export default class VocaDao {
         const word = searchText.replace(/^(\s*)/, '')
         let wordInfos = []
         const data = []
+        let isPhr = false
         // 英文查询
         if (word[0].match(/[a-zA-Z]/)) {
-
-            if (word.includes(' ')) {//短语
+            isPhr = word.includes(' ')
+            if (isPhr) {//短语
                 wordInfos = this.realm.objects('PhraseInfo').filtered('phrase CONTAINS "' + word + '"');
             } else {            //单词
                 wordInfos = this.realm.objects('WordInfo').filtered('word BEGINSWITH "' + word + '"');
@@ -65,7 +67,7 @@ export default class VocaDao {
             for (let wi of wordInfos) {
                 const trans = wi.trans
                 if (trans.match(new RegExp("[^\u4e00-\u9fa5（）]+" + word + "[^\u4e00-\u9fa5（）]+"))) {
-                    data.push(wi)
+                    data.push(this._adaptVocaInfo(wi, isPhr))
                 }
                 if (data.length >= 8) {
                     console.log('break at 8')
@@ -76,7 +78,7 @@ export default class VocaDao {
         }
         if (data.length === 0) {
             for (let wi of wordInfos) {
-                data.push(wi)
+                data.push(this._adaptVocaInfo(wi, isPhr))
                 if (data.length >= 8) {
                     console.log('break at 8')
                     break;
@@ -87,17 +89,13 @@ export default class VocaDao {
     }
 
     /**
-     * @function 点击查词
+     * @function 查词
      *          通过单词的变形可以查询到原型
      * @param word
      * @param flag 
      * @return 返回一个对象
      */
-    lookWordInfo(word, flag = 1) {
-        if (!word || word.trim() === '') {
-            return null
-        }
-        word = word.trim()
+    _lookWordInfo(word, flag = 1) {
         let wordObj = null
         try {
             //查询单词基本信息
@@ -112,7 +110,7 @@ export default class VocaDao {
                 } else {
                     //首字母小写查询
                     if (flag === 1 && word.match(/^[A-Z]/)) {
-                        wordObj = this.lookWordInfo(word.toLowerCase(), 2)
+                        wordObj = this._lookWordInfo(word.toLowerCase(), 2)
                     }
                 }
 
@@ -125,12 +123,45 @@ export default class VocaDao {
         return wordObj
     }
 
+    /**
+     * @function 点击查词
+     *          通过单词的变形可以查询到原型
+     * @param word
+     * @return 返回一个对象
+     */
+    lookWordInfo(word) {
+        if (!word || word.trim() === '') {
+            return null
+        }
+        word = word.trim()
+        const obj = this._lookWordInfo(word)
 
-
-
+        return this._adaptVocaInfo(obj, false)
+    }
 
     /**
-     * @function 批量查询单词详情
+        * @function 查询单词(短语)详情
+        * @param word
+        * @return 返回一个数组
+        */
+    getWordInfo(word) {
+        if (!word || word.trim() === '') {
+            return null
+        }
+        word = word.trim()
+        const isPhr = word.includes(' ')
+        const queryKey = isPhr ? 'phrase="' : 'word="'
+        const queryField = isPhr ? 'PhraseInfo' : 'WordInfo'
+        let obj = null
+        let wordInfos = this.realm.objects(queryField).filtered(queryKey + word + '"'); //数组
+        if (wordInfos[0]) {
+            obj = wordInfos[0]
+        }
+        return this._adaptVocaInfo(obj, isPhr)
+    }
+
+    /**
+     * @function 批量查询单词(短语)详情
      * @param words
      * @return 返回一个数组
      */
@@ -145,7 +176,12 @@ export default class VocaDao {
             })
         }
         console.log(words)
+        // 词汇类型判断/是否是短语
         const arr = []
+        const isPhr = words[0].includes(' ')
+        const queryKey = isPhr ? 'phrase="' : 'word="'
+        const queryField = isPhr ? 'PhraseInfo' : 'WordInfo'
+
         try {
             const len = words.length
             if (len && len > 0) {
@@ -153,23 +189,25 @@ export default class VocaDao {
                 let str = ''
                 for (let i in words) {
                     if (i == (len - 1)) {
-                        str += 'word="' + words[i] + '"';
+                        str += queryKey + words[i] + '"';
                     } else {
-                        str += 'word="' + words[i] + '" OR ';
+                        str += queryKey + words[i] + '" OR ';
                     }
                 }
-                let wordInfos = this.realm.objects('WordInfo').filtered('(' + str + ')'); //数组
+                let wordInfos = this.realm.objects(queryField).filtered('(' + str + ')'); //数组
                 //排序
                 for (let word of words) {
                     let temp = null
                     for (let wi of wordInfos) {
-                        if (wi.word === word) {
+                        const compareWord = isPhr ? wi.phrase : wi.word
+                        if (compareWord === word) {
                             temp = wi
                             break
                         }
                     }
                     if (temp) {
-                        arr.push(temp)
+                        //构建适配短语和单词的对象
+                        arr.push(this._adaptVocaInfo(temp, isPhr))
                     } else {
                         arr.push({
                             word: word
@@ -186,63 +224,82 @@ export default class VocaDao {
         return arr
     }
 
-
-    /**
-     * @function 批量查询短语详情
-     * @param phrs
-     * @return 返回一个数组
-     */
-    getPhraseInfos(phrs) {
-        //验证
-        if (!phrs || phrs.length < 0)
+    getShowWordInfos(words, wordInfos = null) {
+        if (!words) {
             return []
-        if (typeof phrs === "string") {
-            phrs = phrs.split(',').map((item, i) => {
-                return item.trim()
-            })
         }
-        console.log(phrs)
-        const arr = []
+        const showWordInfos = []
+        if (wordInfos === null) {
+            wordInfos = this.getWordInfos(words.map((item, index) => item.word))
+        }
+        for (let i in words) {
+            //过滤
+            if (words[i].passed === false) {
+                showWordInfos.push(wordInfos[i])
+            }
+        }
+        return showWordInfos
+    }
+
+    // 适配
+    _adaptVocaInfo(obj, isPhr) {
+        if (!obj) {
+            return {} //空对象避免null错误
+        }
+        const isEnPron = store.getState().mine.configVocaPronType === VOCA_PRON_TYPE_EN
+        let transObj = null
         try {
-            const len = phrs.length
-            if (len && len > 0) {
-                //拼接
-                let str = ''
-                for (let i in phrs) {
-                    if (i == (len - 1)) {
-                        str += 'phrase="' + phrs[i] + '"';
-                    } else {
-                        str += 'phrase="' + phrs[i] + '" OR ';
-                    }
-                }
+            transObj = isPhr ? null : JSON.parse(obj.trans)
+        } catch (err) {
+            console.log(obj.trans)
+            console.log("vocaDao: 解析trans失败")
+            console.log(err)
+        }
+        const data = {
+            word: isPhr ? obj.phrase : obj.word,             //单词
+            //默认音标和发音
+            phonetic: isPhr ? obj.phonetic : (isEnPron ? obj.en_phonetic : obj.am_phonetic),
+            pron_url: isPhr ? obj.pron_url : (isEnPron ? obj.en_pron_url : obj.am_pron_url),
+            //美式和英式
+            en_phonetic: isPhr ? null : obj.en_phonetic,
+            en_pron_url: isPhr ? null : obj.en_pron_url,
+            am_phonetic: isPhr ? null : obj.am_phonetic,
+            am_pron_url: isPhr ? null : obj.am_pron_url,
 
-                let phrInfos = this.realm.objects('PhraseInfo').filtered('(' + str + ')'); //数组
-                //排序
-                for (let phr of phrs) {
-                    let temp = null
-                    for (let pi of phrInfos) {
-                        if (pi.phrase === phr) {
-                            temp = pi
-                            break
-                        }
-                    }
-                    if (temp) {
-                        arr.push(temp)
-                    } else {
-                        arr.push({
-                            phrase: phr
-                        })
-                    }
+            def: isPhr ? null : obj.def,                            //英英释义
+            def_pron_url: isPhr ? null : obj.def_pron_url,          //英英释义发音
+            sentence: isPhr ? obj.sen : obj.sentence,               //例句
+            sen_tran: obj.sen_tran,                                 //例句翻译
+            sen_pron_url: obj.sen_pron_url,                         //例句发音
 
+            phrases: isPhr ? [] : obj.phrases,                      //短语 
+            translation: isPhr ? obj.tran : this._transToText(transObj),     //综合翻译
+            trans: transObj,                                                //词性翻译
+            examples: obj.examples,                                         //影视例句
+            transforms: isPhr ? [] : obj.transforms                          //变形
+        }
+        return data
+    }
+
+    // 负责将翻译转为字符串
+    _transToText = (tranObj) => {
+        if (!tranObj || tranObj === '') {
+            return ''
+        }
+        let translation = ''
+        try {
+            if (tranObj) {
+                for (let k in tranObj) {
+                    translation += `${k}. ${tranObj[k]} `
                 }
             }
-
         } catch (e) {
             console.log(e)
-            console.log('VocaDao : getWordInfos() Error')
         }
-        return arr
+        return translation
     }
+
+
 
 
 }

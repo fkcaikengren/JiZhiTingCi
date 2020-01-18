@@ -48,11 +48,11 @@ class VocaOperator extends Component {
         const { wordInfo } = this.props
         const groupWord = {
             word: wordInfo.word,
-            enPhonetic: wordInfo.en_phonetic,
-            enPronUrl: wordInfo.en_pron_url,
-            amPhonetic: wordInfo.am_phonetic,
-            amPronUrl: wordInfo.am_pron_url,
-            trans: wordInfo.trans
+            enPhonetic: wordInfo.en_phonetic ? wordInfo.en_phonetic : wordInfo.phonetic,
+            enPronUrl: wordInfo.en_pron_url ? wordInfo.en_pron_url : wordInfo.pron_url,
+            amPhonetic: wordInfo.am_phonetic ? wordInfo.am_phonetic : wordInfo.phonetic,
+            amPronUrl: wordInfo.am_pron_url ? wordInfo.am_pron_url : wordInfo.pron_url,
+            translation: wordInfo.translation
         }
         if (this.vgService.addWordToDefault(groupWord)) {
             this.setState({ added: true })

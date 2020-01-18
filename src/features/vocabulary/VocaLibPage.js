@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
 import Picker from 'react-native-picker';
-import * as VocaLibAction from './redux/action/vocaLibAction'
+import * as PlanAction from './redux/action/planAction'
 
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
@@ -150,20 +150,18 @@ class VocaLibPage extends Component {
 
     render() {
         //数据
-        const { isLoadPending, loadingType } = this.props.vocaLib
+        const { isLoadPending, loadingType } = this.props.plan
         return (
             <View style={{ flex: 1 }}>
-                {isLoadPending &&
+                <FlatList
+                    data={this.state.books}
+                    renderItem={this._renderBook}
+                    keyExtractor={item => item._id}
+                />
+                {/* {isLoadPending &&
                     <CountDownLoader ref="countDownLoader" />
-                }
-                {!isLoadPending &&
-                    <FlatList
-                        data={this.state.books}
-                        renderItem={this._renderBook}
-                        keyExtractor={item => item._id}
-                    />
+                } */}
 
-                }
             </View>
 
 
@@ -176,13 +174,13 @@ VocaLibPage.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    vocaLib: state.vocaLib,
+    plan: state.plan,
     home: state.home
 });
 
 const mapDispatchToProps = {
 
-    changeVocaBook: VocaLibAction.changeVocaBook
+    changeVocaBook: PlanAction.changeVocaBook
 }
 
 

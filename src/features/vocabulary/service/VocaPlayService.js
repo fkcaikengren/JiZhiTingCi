@@ -99,7 +99,7 @@ export default class VocaPlayService {
             //3.播放单词音频
             this.audioService.playSound({
                 pDir: CConstant.VOCABULARY_DIR,
-                fPath: showWordInfos[curIndex].am_pron_url
+                fPath: showWordInfos[curIndex].pron_url
             })
 
             //4.循环回调

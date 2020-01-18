@@ -17,7 +17,7 @@ export default class DictDao {
     /** 打开数据库 */
     async open() {
         try {
-            if (!this.isOpen()) {
+            if (!this.realm) {
                 this.realm = await Realm.open({ path: 'dict.realm' })
             }
         } catch (err) {

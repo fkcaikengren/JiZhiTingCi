@@ -1,6 +1,6 @@
 
-import * as vl from './action/vocaLibAction';
-import { CHANGE_LEARNED_WORD_COUNT } from "./action/vocaLibAction";
+import * as vl from './action/planAction';
+import { CHANGE_LEARNED_WORD_COUNT } from "./action/planAction";
 import { LOGOUT } from '../../mine/redux/action/mineAction'
 
 const defaultState = {
@@ -22,9 +22,10 @@ const defaultState = {
 }
 
 
-export const vocaLib = (state = defaultState, action) => {
+export const plan = (state = defaultState, action) => {
 
     switch (action.type) {
+        // 选择词汇书
         case vl.CHANGE_VOCA_BOOK_START:
             return { ...state, isLoadPending: true };
         case vl.CHANGE_VOCA_BOOK_SUCCEED:

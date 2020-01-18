@@ -16,8 +16,8 @@ export default class VocaDetailPage extends Component {
     }
     componentDidMount() {
         const word = this.props.navigation.getParam('word')
-        console.log(word)
-        const wordInfo = VocaDao.getInstance().lookWordInfo(word)
+
+        const wordInfo = VocaDao.getInstance().getWordInfo(word)
         this.setState({ wordInfo })
     }
 
@@ -39,7 +39,10 @@ export default class VocaDetailPage extends Component {
                     }}
                 />
                 {this.state.wordInfo &&
-                    <VocaCard navigation={this.props.navigation} wordInfo={this.state.wordInfo} />
+                    <VocaCard
+                        navigation={this.props.navigation}
+                        wordInfo={this.state.wordInfo}
+                        showAll={true} />
                 }
             </View>
         );

@@ -21,8 +21,8 @@ export default class TogglePane extends Component {
     if (content) {
       content = null
     } else {
-      const wordInfo = this.vocaDao.lookWordInfo(this.props.word)
-      content = VocaUtil.transToText(wordInfo.trans)
+      const wordInfo = this.vocaDao.getWordInfo(this.props.word)
+      content = wordInfo ? wordInfo.translation : null
     }
     this.setState({ content })
   }

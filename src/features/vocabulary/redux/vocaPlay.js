@@ -1,15 +1,8 @@
-import {
-    handleActions
-} from 'redux-actions';
 
 import * as vpAction from './action/vocaPlayAction';
-import {
-    Themes
-} from '../common/vocaConfig'
+import { Themes } from '../common/vocaConfig'
 import * as Constant from '../common/constant'
-import {
-    LOGOUT
-} from '../../mine/redux/action/mineAction'
+import { LOGOUT } from '../../mine/redux/action/mineAction'
 
 /**
  *  总结：
@@ -58,22 +51,22 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state,
                 task: action.payload.task,
-                    curIndex: action.payload.task.curIndex,
-                    showWordInfos: action.payload.showWordInfos,
+                curIndex: action.payload.task.curIndex,
+                showWordInfos: action.payload.showWordInfos,
             };
         case vpAction.UPDATE_PLAY_TASK:
             return {
                 ...state,
                 task: action.payload.task,
-                    curIndex: action.payload.task.curIndex,
-                    showWordInfos: action.payload.showWordInfos,
+                curIndex: action.payload.task.curIndex,
+                showWordInfos: action.payload.showWordInfos,
             };
-            //暂停、播放
+        //暂停、播放
         case vpAction.CHANGE_PLAY_TIMER:
             return {
                 ...state, autoPlayTimer: action.payload.autoPlayTimer
             };
-            //更新当前单词
+        //更新当前单词
         case vpAction.CHANGE_CUR_INDEX:
             const newTask = {
                 ...state.task,
@@ -83,12 +76,12 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state, task: newTask, curIndex: action.payload.curIndex,
             };
-            //改变播放间隔
+        //改变播放间隔
         case vpAction.CHANGE_INTERVAL:
             return {
                 ...state, interval: action.payload.interval
             };
-            //是否显示单词
+        //是否显示单词
         case vpAction.TOGGLE_WORD:
             if (action.payload.showWord === null) {
                 return {
@@ -119,7 +112,7 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state, bgPath: action.payload.bgPath, showBlur: false
             };
-            //是否模糊
+        //是否模糊
         case vpAction.SHOW_BLUR:
             return {
                 ...state, showBlur: action.payload.showBlur
@@ -151,10 +144,10 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...defaultState,
                 bgPath: state.bgPath,
-                    interval: state.interval,
-                    showTran: state.showTran,
-                    showWord: state.showWord,
-                    showBlur: state.showBlur,
+                interval: state.interval,
+                showTran: state.showTran,
+                showWord: state.showWord,
+                showBlur: state.showBlur,
             };
         //退出登录
         case LOGOUT:

@@ -9,7 +9,7 @@ import AliIcon from '../../component/AliIcon'
 import VocaUtil from './common/vocaUtil';
 import VocaCard from './component/VocaCard';
 import LookWordBoard from "./component/LookWordBoard";
-import { CARD_TYPE_WORD, CARD_TYPE_PHRASE } from './common/constant';
+
 
 const Dimensions = require('Dimensions');
 let { width, height } = Dimensions.get('window');
@@ -26,7 +26,6 @@ export default class VocaSearchPage extends Component {
       searchText: '',
       data: [],
       searchWord: '',
-      cardType: CARD_TYPE_WORD,
       selectedIndex: null,
       showClearBtn: false,
     }
@@ -45,18 +44,16 @@ export default class VocaSearchPage extends Component {
 
 
   _renderItem = ({ item, index }) => {
-    // 判断是单词or短语
-    const isPhrase = this.state.cardType === CARD_TYPE_PHRASE
-    const translation = isPhrase ? item.tran : VocaUtil.transToText(item.trans)
+
     return <TouchableOpacity onPress={() => {
-      this.setState({ searchWord: isPhrase ? item.phrase : item.word, selectedIndex: index })
+      this.setState({ searchWord: item.word, selectedIndex: index })
     }}>
       <View style={styles.item}>
         <View style={gstyles.r_start}>
-          <Text style={[styles.contentText, { fontSize: 16, color: '#404040' }]}>{isPhrase ? item.phrase : item.word}</Text>
-          <Text style={[styles.contentText, { fontSize: 12, color: '#999999' }]}>{isPhrase ? item.phonetic : item.enPhonetic}</Text>
+          <Text style={[styles.contentText, { fontSize: 16, color: '#404040' }]}>{item.word}</Text>
+          <Text style={[styles.contentText, { fontSize: 12, color: '#999999' }]}>{item.phonetic}</Text>
         </View>
-        <Text numberOfLines={1} style={[styles.contentText, { fontSize: 12, color: '#606060' }]}>{translation}</Text>
+        <Text numberOfLines={1} style={[styles.contentText, { fontSize: 12, color: '#606060' }]}>{item.translation}</Text>
       </View>
     </TouchableOpacity>
 
@@ -66,15 +63,9 @@ export default class VocaSearchPage extends Component {
 
 
   _changeText = (searchText) => {
-    let cardType = this.state.cardType
-    if (searchText.replace(/^(\s*)/, '').includes(' ')) {
-      cardType = CARD_TYPE_PHRASE
-    } else {
-      cardType = CARD_TYPE_WORD
-    }
     const data = this.vocaDao.searchWord(searchText)
     const showClearBtn = searchText.length > 0 ? true : false
-    this.setState({ searchText, data, cardType, showClearBtn })
+    this.setState({ searchText, data, showClearBtn })
   }
 
   _clear = () => {
@@ -111,7 +102,7 @@ export default class VocaSearchPage extends Component {
                 ref={ref => this._inputRef = ref}
                 style={[{ height: 45, width: '80%' }, gstyles.md_black]}
                 value={this.state.searchText}
-                placeholder="请输入英文单词"
+                placeholder="请输入英文/中文"
                 onChangeText={this._changeText}
                 clearButtonMode='while-editing'
                 onFocus={this._onFocus}
@@ -143,7 +134,7 @@ export default class VocaSearchPage extends Component {
         {this.state.searchWord !== '' &&
           <VocaCard
             lookWord={this.wordBoard.lookWord}
-            cardType={this.state.cardType}
+
             wordInfo={this.state.data[this.state.selectedIndex]}
             navigation={this.props.navigation}
           />

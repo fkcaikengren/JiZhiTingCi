@@ -11,7 +11,7 @@ import Task from './component/Task'
 import HomeFooter from './component/HomeFooter'
 import VocaTaskService from './service/VocaTaskService'
 import * as HomeAction from './redux/action/homeAction'
-import * as VocaLibAction from './redux/action/vocaLibAction'
+import * as PlanAction from './redux/action/planAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
@@ -54,7 +54,7 @@ class HomePage extends Component {
         if (nextProps.vocaPlay.autoPlayTimer === autoPlayTimer
             && nextProps.vocaPlay.bgPath === bgPath
             && nextProps.home === this.props.home
-            && nextProps.vocaLib === this.props.vocaLib) {
+            && nextProps.plan === this.props.plan) {
             return false
         }
         return true
@@ -73,7 +73,7 @@ class HomePage extends Component {
 
     _init = () => {
         const { tasks, lastLearnDate } = this.props.home
-        const { plan } = this.props.vocaLib
+        const { plan } = this.props.plan
         const today = _util.getDayTime(0)
         console.log(today)
         if ((lastLearnDate && (today !== lastLearnDate)) || IsLoginToHome) {  //任务过期(每天第一次打开App)
@@ -112,7 +112,7 @@ class HomePage extends Component {
 
         const { task } = this.props.vocaPlay
         const DrawerPanel = <HomeDrawerPanel navigation={this.props.navigation}
-            plan={this.props.vocaLib.plan} closeDrawer={this._closeDrawerPanel} />
+            plan={this.props.plan.plan} closeDrawer={this._closeDrawerPanel} />
 
         return (
             <Drawer
@@ -141,7 +141,7 @@ class HomePage extends Component {
                     {/*顶部背景和任务列表 */}
                     <HomeHeader
                         navigation={this.props.navigation}
-                        home={this.props.home} vocaLib={this.props.vocaLib}
+                        home={this.props.home} plan={this.props.plan}
                         toastRef={this.props.app.toast}
                         openDrawer={this._openDrawerPanel}>
                         <Task
@@ -163,7 +163,7 @@ class HomePage extends Component {
 const mapStateToProps = state => ({
     app: state.app,
     home: state.home,
-    vocaLib: state.vocaLib,
+    plan: state.plan,
     vocaPlay: state.vocaPlay,
 })
 
@@ -172,7 +172,7 @@ const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
     syncTask: HomeAction.syncTask,
     updateTask: HomeAction.updateTask,
-    changeLeftDays: VocaLibAction.changeLeftDays,
+    changeLeftDays: PlanAction.changeLeftDays,
     changePlayTimer: VocaPlayAction.changePlayTimer,
     clearPlay: VocaPlayAction.clearPlay,
 }

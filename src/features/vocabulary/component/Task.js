@@ -14,7 +14,10 @@ import gstyles from '../../../style'
 export default class Task extends Component {
 
   static propTypes = {
-    tasks: PropTypes.array,
+    navigation: PropTypes.object,
+    updateTask: PropTypes.func,
+    home: PropTypes.object,
+    toastRef: PropTypes.object,
   };
   constructor(props) {
     super(props);
@@ -29,7 +32,7 @@ export default class Task extends Component {
   }
 
   _navVocaLib = () => {
-    this.props.navigation.navigate('VocaLib')
+    this.props.navigation.navigate('plan')
   }
 
   render() {

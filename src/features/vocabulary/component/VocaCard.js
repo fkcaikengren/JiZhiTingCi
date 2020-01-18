@@ -38,7 +38,7 @@ export default class VocaCard extends Component {
         if (playWord) {
             this.audioService.playSound({
                 pDir: CConstant.VOCABULARY_DIR,
-                fPath: wordInfo.am_pron_url
+                fPath: wordInfo.pron_url
             }, null, () => {
                 if (playSentence) {
                     this.audioService.playSound({
@@ -77,7 +77,7 @@ export default class VocaCard extends Component {
 
                 this.audioService.playSound({
                     pDir: CConstant.VOCABULARY_DIR,
-                    fPath: nextProps.wordInfo.am_pron_url
+                    fPath: nextProps.wordInfo.pron_url
                 }, null, () => {
                     if (playSentence) {
                         this.audioService.playSound({
@@ -97,8 +97,10 @@ export default class VocaCard extends Component {
         return true
     }
 
-    _genTrans = (transStr) => {
-        const trans = JSON.parse(transStr)
+    _genTrans = (wordInfo) => {
+        const { trans, translation } = wordInfo
+        console.log(trans)
+        console.log(translation)
         const comps = []
         if (trans) {
             for (let k in trans)
@@ -106,8 +108,11 @@ export default class VocaCard extends Component {
                     <Text numberOfLines={1} style={[{ width: 40 }, gstyles.md_black]}>{k + '.'}</Text>
                     <Text numberOfLines={1} style={gstyles.md_black}>{trans[k]}</Text>
                 </View>)
+            return comps
+        } else {
+            return <Text numberOfLines={1} style={gstyles.md_black}>{translation}</Text>
         }
-        return comps
+
     }
 
 
@@ -118,18 +123,12 @@ export default class VocaCard extends Component {
 
 
     render() {
-        const { wordInfo, cardType } = this.props
-        const isWordType = (cardType === CARD_TYPE_WORD)
-        let sen = ''
+        const { wordInfo } = this.props
+        hasEnAmPhonetic = (wordInfo.en_phonetic !== null || wordInfo.am_phonetic !== null)
         let sentence = ''
-        if (isWordType) {
-            sentence = wordInfo.sentence
-        } else {
-            sentence = wordInfo.sen
-        }
-        if (sentence && sentence !== '') {
-            const s = sentence.split(/<em>|<\/em>/)
-            sen = s.map((text, index) => {
+        if (wordInfo.sentence && wordInfo.sentence !== '') {
+            const s = wordInfo.sentence.split(/<em>|<\/em>/)
+            sentence = s.map((text, index) => {
                 if (index % 2 === 0) {
                     const words = text.split(' ')
                     return words.map((word, i) => <Text
@@ -159,11 +158,11 @@ export default class VocaCard extends Component {
                         <Col style={styles.basic}>
                             {/* 单词 */}
                             <Row style={gstyles.r_between}>
-                                <Text style={gstyles.xl_black_bold}>{isWordType ? wordInfo.word : wordInfo.phrase}</Text>
+                                <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
                                 <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
                             </Row>
                             {/* 音标 */}
-                            {isWordType &&
+                            {hasEnAmPhonetic &&
                                 <Row style={[gstyles.r_start,]}>
                                     {wordInfo.en_phonetic &&
                                         <View style={[gstyles.r_start,]}>
@@ -189,7 +188,7 @@ export default class VocaCard extends Component {
                                     }
                                 </Row>
                             }
-                            {!isWordType && wordInfo.phonetic &&
+                            {!hasEnAmPhonetic && wordInfo.phonetic &&
                                 <Row style={[gstyles.r_start,]}>
                                     <Text style={styles.grayFont}>{wordInfo.phonetic}</Text>
                                     <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ marginLeft: 10 }} onPress={() => {
@@ -201,31 +200,36 @@ export default class VocaCard extends Component {
                                 </Row>
                             }
                             {/* 英英释义 */}
-                            {isWordType &&
+                            {wordInfo.def && wordInfo.def !== '' &&
                                 <Row style={[gstyles.r_start, styles.marginTop]}>
                                     <Text style={styles.grayFont}>{wordInfo.def}</Text>
                                 </Row>
                             }
                             {/* 例句 */}
-                            {sen !== '' &&
-                                <Row style={[gstyles.r_start_top, styles.marginTop]}>
-                                    <Text style={[gstyles.lg_black, { flex: 10 }]}>{sen}</Text>
-                                    <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ flex: 1, marginLeft: 10 }} onPress={() => {
-                                        this.audioService.playSound({
-                                            pDir: CConstant.VOCABULARY_DIR,
-                                            fPath: wordInfo.sen_pron_url
-                                        })
-                                    }} />
-                                </Row>
+                            {sentence !== '' &&
+                                <Col>
+                                    <Row style={[gstyles.r_start_top, styles.marginTop]}>
+                                        <Text style={[gstyles.lg_black, { flex: 10 }]}>{sentence}</Text>
+                                        <AliIcon name='shengyin' size={26} color={gstyles.secColor} style={{ flex: 1, marginLeft: 10 }} onPress={() => {
+                                            this.audioService.playSound({
+                                                pDir: CConstant.VOCABULARY_DIR,
+                                                fPath: wordInfo.sen_pron_url
+                                            })
+                                        }} />
+                                    </Row>
+                                    <Row style={[gstyles.r_start_top,]}>
+                                        <Text style={[styles.grayFont, { flex: 10 }]}>{wordInfo.sen_tran}</Text>
+                                    </Row>
+                                </Col>
                             }
+
                             {/* 释义 */}
                             {this.state.showAll &&
-                                <Row style={styles.marginTop}>
-                                    <Col>
+                                <Row style={[gstyles.c_start_left, styles.marginTop]}>
+                                    <Text style={styles.grayFont}>[中文释义]</Text>
+                                    <Col style={{ marginTop: 5 }}>
                                         {
-                                            isWordType ? this._genTrans(wordInfo.trans) :
-                                                <Text numberOfLines={1} style={gstyles.md_black}>{wordInfo.tran}</Text>
-
+                                            this._genTrans(wordInfo)
                                         }
                                     </Col>
                                 </Row>
@@ -233,7 +237,7 @@ export default class VocaCard extends Component {
                         </Col>
 
                         {/* 场景例句 */}
-                        {this.state.showAll && wordInfo.examples.length > 0 &&
+                        {this.state.showAll && wordInfo.examples && wordInfo.examples.length > 0 &&
                             <Col style={styles.carousel}>
                                 <ExampleCarousel lookWord={this.props.lookWord} examples={wordInfo.examples} />
                             </Col>
@@ -257,7 +261,6 @@ export default class VocaCard extends Component {
 
 VocaCard.propTypes = {
     wordInfo: PropTypes.object.isRequired,
-    cardType: PropTypes.string.isRequired,
     lookWord: PropTypes.func,
     showAll: PropTypes.bool,
     playWord: PropTypes.bool,
@@ -266,7 +269,6 @@ VocaCard.propTypes = {
 }
 
 VocaCard.defaultProps = {
-    cardType: CARD_TYPE_WORD,
     lookWord: (word) => null,
     showAll: true,
     playWord: false,

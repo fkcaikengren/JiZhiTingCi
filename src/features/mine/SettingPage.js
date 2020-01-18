@@ -17,7 +17,7 @@ class SettingPage extends React.Component {
             configReviewPlayTimes } = this.props.mine
         let selectedIndex = 0
         if (configVocaPronType === VOCA_PRON_TYPE_EN) {
-            this.setState({ selectedIndex: 1 })
+            selectedIndex = 1
         }
         this.state = {
             selectedIndex,
@@ -38,6 +38,11 @@ class SettingPage extends React.Component {
 
 
     _updateIndex = (selectedIndex) => {
+        if (selectedIndex === 0) {
+            this.props.changeConfigVocaPronType(VOCA_PRON_TYPE_AM)
+        } else {
+            this.props.changeConfigVocaPronType(VOCA_PRON_TYPE_EN)
+        }
         this.setState({ selectedIndex })
     }
 
@@ -161,6 +166,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
+    changeConfigVocaPronType: MineAction.changeConfigVocaPronType,
     changeConfigNTrans: MineAction.changeConfigNTrans,
     changeConfigMTrans: MineAction.changeConfigMTrans,
     changeConfigReviewPlayTimes: MineAction.changeConfigReviewPlayTimes

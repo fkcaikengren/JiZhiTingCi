@@ -206,7 +206,35 @@ ip: 129.211.71.111
 
 --------------------------------------------------1月7日---------------------------------------------------
 
+1. 适配短语学习（修改vocaPlay, test）
+	1.1
+	删除vocaUtil的方法：transToText, getShowWordInfos  【ok】
+	改：vocaPlay 【ok】
+	改：test	【ok】
+	改：card  【ok】
+	改：search  【ok】
+	改:	list	【ok】
+	改：groupVoca 【ok】
 	
-		
+	1.2
+	修改toast
+	vocaPlay页面 【ok】
+	GroupVoca页面 【ok】
+	VocaList页面 【ok】
+	...
+	
+	1.3
+	卡片的图片加深色蒙层
+
+
+2. App端完成 攻略、联系、报错、分享等接口
+
+
+
+
+
+
+3. 微信登录、微信支付
+4. 支付宝支付
 	
 	

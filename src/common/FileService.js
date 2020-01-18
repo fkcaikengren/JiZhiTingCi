@@ -69,7 +69,7 @@ export default class FileService {
         let secondDir = ''
         switch (primaryDir) {
             case VOCABULARY_DIR:  //单词目录
-                const { bookCode } = store.getState().vocaLib.plan
+                const { bookCode } = store.getState().plan.plan
                 secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
                 break
         }
@@ -163,7 +163,7 @@ export default class FileService {
                 break
             //单词目录
             case VOCABULARY_DIR:
-                const { bookCode } = store.getState().vocaLib.plan
+                const { bookCode } = store.getState().plan.plan
                 const secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
                 storeDir = DocumentDir + primaryDir + secondDir
                 break

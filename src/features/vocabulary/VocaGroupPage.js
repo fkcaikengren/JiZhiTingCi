@@ -1,24 +1,23 @@
 
 import React, { Component } from "react";
 import {
-    View, 
-    Text, 
+    View,
+    Text,
     TouchableNativeFeedback,
     ScrollView,
-    TextInput, 
+    TextInput,
     Keyboard
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 import CardView from 'react-native-cardview'
-import Toast from 'react-native-easy-toast'
 
 import AliIcon from '../../component/AliIcon';
 import VocaGroupService from './service/VocaGroupService'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
 import DashSecondLine from '../../component/DashSecondLine'
-import * as VGroupAction from './redux/action/vocaGroupAction' 
+import * as VGroupAction from './redux/action/vocaGroupAction'
 import { connect } from "react-redux";
 
 const Dimensions = require('Dimensions');
@@ -155,13 +154,13 @@ class VocaGroupPage extends Component {
         let isExist = this._isNameExist(this.state.addName);
         //添加生词本
         if (this.state.addName === '') {
-            this.refs.toast.show('名称不能为空，添加失败', 1000);
+            this.props.app.toast.show('名称不能为空，添加失败', 1000);
         } else if (isExist) {
-            this.refs.toast.show('重名了，添加失败', 1000);
+            this.props.app.toast.show('重名了，添加失败', 1000);
         } else {
             this.setState({ addName: '' });
             this.vgService.addGroup(this.state.addName)
-            this.refs.toast.show('添加成功', 500);
+            this.props.app.toast.show('添加成功', 500);
         }
     }
 
@@ -171,13 +170,13 @@ class VocaGroupPage extends Component {
         let isExist = this._isNameExist(this.state.updateName);
         //添加生词本
         if (this.state.updateName === '') {
-            this.refs.toast.show('名称不能为空，修改失败', 1000);
+            this.props.app.toast.show('名称不能为空，修改失败', 1000);
         } else if (isExist) {
-            this.refs.toast.show('重名了，修改失败', 1000);
+            this.props.app.toast.show('重名了，修改失败', 1000);
         } else {
-           this.vgService.updateGroupName(this.state.selectedName, this.state.updateName);
+            this.vgService.updateGroupName(this.state.selectedName, this.state.updateName);
             this.setState({ updateName: '', selectedName: '' })
-            this.refs.toast.show('修改成功', 500);
+            this.props.app.toast.show('修改成功', 500);
         }
     }
 
@@ -185,10 +184,10 @@ class VocaGroupPage extends Component {
     _deleteVocaGroup = (deleteName) => {
         //默认生词本不能删除
         if (this.vgService.isDefault(deleteName)) {
-            this.refs.toast.show('无法删除默认生词本', 1000);
+            this.props.app.toast.show('无法删除默认生词本', 1000);
         } else {
             this.vgService.deleteGroup(deleteName)
-            this.refs.toast.show('删除成功', 500);
+            this.props.app.toast.show('删除成功', 500);
             this.setState({ refresh: !this.state.refresh })
         }
     }
@@ -207,12 +206,12 @@ class VocaGroupPage extends Component {
     }
 
     _goBack = () => {
-        this.props.syncGroup({isByHand:false})
+        this.props.syncGroup({ isByHand: false })
         this.props.navigation.goBack();
     }
 
-    _syncByhand = ()=>{
-        this.props.syncGroup({isByHand:true})
+    _syncByhand = () => {
+        this.props.syncGroup({ isByHand: true })
     }
 
 
@@ -225,7 +224,7 @@ class VocaGroupPage extends Component {
                     barStyle='dark-content' // or directly
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={this._goBack} />}
-                    rightComponent={<AliIcon name='tongbu' size={24} color={gstyles.black} onPress={this._syncByhand}/>}
+                    rightComponent={<AliIcon name='tongbu' size={24} color={gstyles.black} onPress={this._syncByhand} />}
                     centerComponent={{ text: '生词本', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
@@ -270,7 +269,7 @@ class VocaGroupPage extends Component {
                                             <View style={[gstyles.r_center, { flex: 1 }]}>
                                                 <View style={[gstyles.r_center, { flex: 1, justifyContent: 'flex-end' }]}>
                                                     {/* 设置为默认生词本 */}
-                                                    <AliIcon name={item.isDefault ? 'pingfen' : 'malingshuxiangmuicon-'} color={item.isDefault ? '#F29F3F' : '#888'} size={26} onPress={()=>{
+                                                    <AliIcon name={item.isDefault ? 'pingfen' : 'malingshuxiangmuicon-'} color={item.isDefault ? '#F29F3F' : '#888'} size={26} onPress={() => {
                                                         this._setDefaultGroup(item)
                                                     }} />
                                                     {/* 修改 */}
@@ -322,21 +321,14 @@ class VocaGroupPage extends Component {
                         </Button>
                     </View>
                 </CardView>
-                <Toast
-                    ref="toast"
-                    position='top'
-                    positionValue={200}
-                    fadeInDuration={750}
-                    fadeOutDuration={1000}
-                    opacity={0.8}
-                />
+
                 {
                     this._createModal(true) //创建添加弹框
                 }
                 {
                     this._createModal(false) //创建修改弹框
                 }
-             
+
             </View>
         );
     }
@@ -353,4 +345,4 @@ const mapDispatchToProps = {
 
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(VocaGroupPage)
+export default connect(mapStateToProps, mapDispatchToProps)(VocaGroupPage)

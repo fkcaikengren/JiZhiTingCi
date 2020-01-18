@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
-import TestPage from "./component/TestPage";
+import TestPage from "./TestPage";
 import * as Constant from './common/constant'
 import AudioService from '../../common/AudioService'
-import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as PlanAction from "./redux/action/planAction";
 import * as CConstant from "../../common/constant";
 import vocaUtil from "./common/vocaUtil";
 
@@ -58,18 +58,18 @@ class TestPronTranPage extends Component {
         this.setState({ isPlaying: false })
     }
 
-    _playAudio = (amPronUrl) => {
+    _playAudio = (pronUrl) => {
         // this.setState({isPlaying})
         //播放单词音频
         AudioService.getInstance().playSound({
             pDir: CConstant.VOCABULARY_DIR,
-            fPath: amPronUrl
+            fPath: pronUrl
         }, this._startPlay, this._finishPlay, this._failPlay)
     }
 
     _renderContent = (state) => {
         const { showWordInfos, curIndex, task } = state
-        const amPronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].am_pron_url : null
+        const pronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].pron_url : null
         const words = vocaUtil.getNotPassedWords(task.words)
         const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
         return <View style={styles.content}>
@@ -79,7 +79,7 @@ class TestPronTranPage extends Component {
                     onPress={() => {
                         AudioService.getInstance().playSound({
                             pDir: CConstant.VOCABULARY_DIR,
-                            fPath: amPronUrl
+                            fPath: pronUrl
                         }, this._startPlay, this._finishPlay, this._failPlay)
                     }} />
             }
@@ -88,7 +88,7 @@ class TestPronTranPage extends Component {
                 <TouchableWithoutFeedback onPress={() => {
                     AudioService.getInstance().playSound({
                         pDir: CConstant.VOCABULARY_DIR,
-                        fPath: amPronUrl
+                        fPath: pronUrl
                     })
                 }}>
                     <Image source={require('../../image/audio.gif')} style={styles.img} />
@@ -121,7 +121,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
     syncTask: homeAction.syncTask,
-    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
+    changeLearnedWordCount: PlanAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask,
 }
 

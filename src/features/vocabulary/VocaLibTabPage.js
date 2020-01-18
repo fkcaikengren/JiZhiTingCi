@@ -18,17 +18,7 @@ class VocaLibTabPage extends Component {
         }
     }
 
-
-
-
-
     _movePage = (clickIndex) => {
-        // if (this.props.vocaList.onEdit) {
-        //     this.state.toastRef.show('当前处于编辑状态，不可以切换卡片哦')
-        // } else {
-        //     console.log(clickIndex - this.state.pageIndex)
-        //     this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
-        // }
         this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
     }
     _onIndexChanged = (index) => {

@@ -54,8 +54,8 @@ export default class LookWordBoard extends Component {
         this.props.onStateChange(true)
     }
 
-    _genTrans = (transStr) => {
-        const trans = JSON.parse(transStr)
+    _genTrans = (trans) => {
+
         const comps = []
         if (trans) {
             for (let k in trans)
@@ -87,24 +87,32 @@ export default class LookWordBoard extends Component {
                 </View>
                 {/*y音标*/}
                 <View style={[{ width: '100%', marginTop: 10 }, gstyles.r_start]}>
-                    <Text style={gstyles.sm_gray}>美</Text>
-                    <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
-                    <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
-                        this.audioService.playSound({
-                            pDir: CConstant.VOCABULARY_DIR,
-                            fPath: wordInfo.am_pron_url
-                        })
+                    {wordInfo.am_phonetic &&
+                        <View style={gstyles.r_start}>
+                            <Text style={gstyles.sm_gray}>美</Text>
+                            <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
+                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
+                                this.audioService.playSound({
+                                    pDir: CConstant.VOCABULARY_DIR,
+                                    fPath: wordInfo.am_pron_url
+                                })
 
-                    }} />
-                    <Text style={[gstyles.sm_gray, { marginLeft: 10 }]}>英</Text>
-                    <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
-                    <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
-                        this.audioService.playSound({
-                            pDir: CConstant.VOCABULARY_DIR,
-                            fPath: wordInfo.en_pron_url
-                        })
+                            }} />
+                        </View>
+                    }
+                    {wordInfo.en_phonetic &&
+                        <View style={gstyles.r_start}>
+                            <Text style={[gstyles.sm_gray, { marginLeft: 10 }]}>英</Text>
+                            <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
+                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
+                                this.audioService.playSound({
+                                    pDir: CConstant.VOCABULARY_DIR,
+                                    fPath: wordInfo.en_pron_url
+                                })
 
-                    }} />
+                            }} />
+                        </View>
+                    }
                 </View>
                 {/*  释义*/}
                 <View style={{ width: '100%', marginTop: 10 }}>

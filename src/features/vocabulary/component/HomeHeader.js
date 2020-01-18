@@ -28,7 +28,7 @@ export default class HomeHeader extends Component {
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.home === this.props.home && nextProps.vocaLib === this.props.vocaLib
+    if (nextProps.home === this.props.home && nextProps.plan === this.props.plan
       && nextProps.toastRef == this.props.toastRef) {
       return false
     }
@@ -67,7 +67,7 @@ export default class HomeHeader extends Component {
     return <View style={{ width: width, height: TITLE_HEIGHT, backgroundColor: '#FFE957' }}></View>
   }
   renderFixedHeader = () => {
-    const { bookName } = this.props.vocaLib.plan
+    const { bookName } = this.props.plan.plan
     const isFailed = this.props.home.isUploadFail
     return <View style={[styles.fixedSection, gstyles.r_start]}>
       <View style={[{ flex: 1 }, gstyles.r_start_bottom]}>
@@ -101,7 +101,7 @@ export default class HomeHeader extends Component {
 
   //头部
   renderHeader = () => {
-    const { totalDays, totalWordCount, learnedWordCount, leftDays } = this.props.vocaLib
+    const { totalDays, totalWordCount, learnedWordCount, leftDays } = this.props.plan
     return (
       <View style={[styles.headerView]}>
 

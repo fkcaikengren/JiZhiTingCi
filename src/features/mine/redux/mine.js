@@ -8,9 +8,10 @@ import {
     LOGOUT,
     CHANGE_CONFIG_REVIEW_PLAY_TIMES,
     CHANGE_CONFIG_N_TRANS,
-    CHANGE_CONFIG_M_TRANS
+    CHANGE_CONFIG_M_TRANS,
+    CHANGE_CONFIG_VOCA_PRON_TYPE
 } from "./action/mineAction"
-import { VOCA_PRON_TYPE_AM } from "../../vocabulary/common/constant"
+import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
 
 
 const defaultState = {
@@ -19,7 +20,7 @@ const defaultState = {
     avatarSource: null,
 
     //发音类型
-    configVocaPronType: VOCA_PRON_TYPE_AM,
+    configVocaPronType: VOCA_PRON_TYPE_EN,
     //复习轮播次数
     configReviewPlayTimes: 10,
     configShowNTrans: true,
@@ -50,6 +51,8 @@ export const mine = (state = defaultState, action) => {
         case MODIFY_AVATAR_FAIL:        //修改头像成功
             return state
         //设置
+        case CHANGE_CONFIG_VOCA_PRON_TYPE:
+            return { ...state, configVocaPronType: action.payload.configVocaPronType }
         case CHANGE_CONFIG_REVIEW_PLAY_TIMES:
             return { ...state, configReviewPlayTimes: action.payload.configReviewPlayTimes }
         case CHANGE_CONFIG_N_TRANS:

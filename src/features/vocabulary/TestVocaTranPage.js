@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 import * as homeAction from './redux/action/homeAction'
 import * as vocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon'
-import TestPage from "./component/TestPage";
+import TestPage from "./TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
 import AudioService from '../../common/AudioService'
-import * as VocaLibAction from "./redux/action/vocaLibAction";
+import * as PlanAction from "./redux/action/planAction";
 import * as CConstant from "../../common/constant";
 
 const styles = StyleSheet.create({
@@ -51,23 +51,26 @@ class TestVocaTranPage extends Component {
         const { showWordInfos, curIndex, task } = state
         const words = vocaUtil.getNotPassedWords(task.words)
         const word = showWordInfos[curIndex] ? showWordInfos[curIndex].word : ''
-        const amPronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].am_pron_url : ''
-        const phonetic = showWordInfos[curIndex] ? showWordInfos[curIndex].am_phonetic : ''
+        const pronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].pron_url : null
+        const phonetic = showWordInfos[curIndex] ? showWordInfos[curIndex].phonetic : null
         const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+        const pronTypeText = (this.props.mine.configVocaPronType === Constant.VOCA_PRON_TYPE_EN) ? '英' : '美'
         return <View style={styles.content}>
             <View style={{}}>
                 <Text style={styles.wordFont}>{word}</Text>
             </View>
-            <View style={styles.phoneticView}>
-                <Text>{'[美]' + phonetic}</Text>
-                <AliIcon name='shengyin' size={26} color='#555' style={{ marginLeft: 5 }} onPress={() => {
-                    AudioService.getInstance().playSound({
-                        pDir: CConstant.VOCABULARY_DIR,
-                        fPath: amPronUrl
-                    })
+            {phonetic &&
+                <View style={styles.phoneticView}>
+                    <Text>{`${pronTypeText} ${phonetic}`}</Text>
+                    <AliIcon name='shengyin' size={26} color='#555' style={{ marginLeft: 5 }} onPress={() => {
+                        AudioService.getInstance().playSound({
+                            pDir: CConstant.VOCABULARY_DIR,
+                            fPath: pronUrl
+                        })
 
-                }} />
-            </View>
+                    }} />
+                </View>
+            }
             <Text style={styles.wrongText}>{`答错${testWrongNum}次`}</Text>
         </View>
     }
@@ -88,13 +91,14 @@ class TestVocaTranPage extends Component {
 
 const mapStateToProps = state => ({
     home: state.home,
-    vocaPlay: state.vocaPlay
+    vocaPlay: state.vocaPlay,
+    mine: state.mine
 })
 
 const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
     syncTask: homeAction.syncTask,
-    changeLearnedWordCount: VocaLibAction.changeLearnedWordCount,
+    changeLearnedWordCount: PlanAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask
 }
 

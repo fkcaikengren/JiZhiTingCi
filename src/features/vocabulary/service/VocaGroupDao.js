@@ -53,7 +53,7 @@ const GroupWordSchema = {
         enPronUrl: 'string?',
         amPhonetic: 'string?',
         amPronUrl: 'string?',
-        trans: 'string?'
+        translation: 'string?'
     }
 };
 
@@ -106,38 +106,38 @@ export default class VocaGroupDao {
         }
     }
 
-    
+
 
     /**
      *  保存生词本数据
      */
-    saveVocaGroups = (vocaGroups)=>{
-        this.realm.write(()=>{
-            for(let vg of vocaGroups){
+    saveVocaGroups = (vocaGroups) => {
+        this.realm.write(() => {
+            for (let vg of vocaGroups) {
                 if (this.getGroup(vg.groupName)) {
                     throw new Error('生词本名字重复了')
-                } else{
+                } else {
                     let group = {
                         id: vg.id,                          //生词本id ()
                         groupName: vg.groupName,            //生词本名称
                         count: vg.count,                     //生词数
                         createTime: vg.createTime,
                         isDefault: vg.isDefault,
-                        sections: [],                     
+                        sections: [],
                     }
                     //分组section
                     const sectionClass = new Section()
-                    for(let newWord of vg.newWords){
-                        sectionClass.pushWord(newWord.word,newWord.isHidden)
+                    for (let newWord of vg.newWords) {
+                        sectionClass.pushWord(newWord.word, newWord.isHidden)
                     }
                     group.sections = sectionClass.getSections()
                     //保存
                     this.realm.create('VocaGroup', group);
                 }
-                
+
             }
         })
-        
+
     }
 
     /**
@@ -313,7 +313,7 @@ export default class VocaGroupDao {
                     isSaved = true
                     result.addWord = groupWord.word
                     console.log('单词存入成功')
-                    
+
                     break
                 }
             }
