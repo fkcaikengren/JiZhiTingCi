@@ -136,7 +136,10 @@ class VocaLibPage extends Component {
                 <View style={[styles.bookContent, gstyles.c_between_left]}>
                     <View >
                         <Text style={styles.bookname}>{item.name}</Text>
-                        <Text style={styles.note}>这是一本词汇书，非常有用</Text>
+                        <Text style={styles.note}>{item.desc}</Text>
+                        {item.price > 0 &&
+                            <Text style={styles.price}>{`￥${item.price.toFixed(2)}`}</Text>
+                        }
                     </View>
                     <Text style={styles.wordCount}>共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{item.count}</Text>个单词</Text>
 

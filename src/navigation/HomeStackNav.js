@@ -12,6 +12,7 @@ import HomePage from '../features/vocabulary/HomePage';
 import VocaSearchPage from '../features/vocabulary/VocaSearchPage';
 import VocaPlayPage from '../features/vocabulary/VocaPlayPage';
 import VocaLibTabPage from '../features/vocabulary/VocaLibTabPage';
+import VocaLibPayPage from '../features/vocabulary/VocaLibPayPage';
 import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
@@ -119,9 +120,13 @@ const VocaHomeStackNav = createStackNavigator({
   VocaSearch: {
     screen: VocaSearchPage,
   },
-  // 单词库
+  // 词库页面
   VocaLibTab: {
     screen: VocaLibTabPage,
+  },
+  // 词库支付页面
+  VocaLibPay: {
+    screen: VocaLibPayPage,
   },
   // 单词列表
   VocaListTab: {
@@ -243,7 +248,7 @@ const VocaHomeStackNav = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Home', //VocaLibPay
   headerMode: 'none',
   initialRouteParams: {
     // articleInfo:article2

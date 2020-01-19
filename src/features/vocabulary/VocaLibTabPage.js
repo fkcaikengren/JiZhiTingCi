@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Picker from 'react-native-picker';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
-import { Header } from 'react-native-elements'
+import { Header, Badge } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import VocaLibPage from "./VocaLibPage";
@@ -58,13 +58,29 @@ class VocaLibTabPage extends Component {
                         onStartShouldSetResponder={() => true}
                         onResponderStart={(e) => { this._movePage(1) }}
                     >
-                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 1 ? selectTextStyle : null]}>阅读词汇</Text>
+                        <View>
+                            <Text style={[gstyles.sm_gray, gstyles.tabText, index === 1 ? selectTextStyle : null]}>阅读词汇</Text>
+                            <Badge
+                                status="error"
+                                value="推荐"
+                                textStyle={{ fontSize: 8, fontWeight: "bold" }}
+                                containerStyle={{ position: 'absolute', top: -8, right: -18 }}
+                            />
+                        </View>
                     </View>
                     <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
                         onResponderStart={(e) => { this._movePage(2) }}
                     >
-                        <Text style={[gstyles.sm_gray, gstyles.tabText, index === 2 ? selectTextStyle : null]}>短语</Text>
+                        <View>
+                            <Text style={[gstyles.sm_gray, gstyles.tabText, index === 2 ? selectTextStyle : null]}>词组</Text>
+                            <Badge
+                                status="error"
+                                value="付费"
+                                textStyle={{ fontSize: 8, fontWeight: "bold" }}
+                                containerStyle={{ position: 'absolute', top: -8, right: -18 }}
+                            />
+                        </View>
                     </View>
                 </View>
                 {/* 词库页面 */}

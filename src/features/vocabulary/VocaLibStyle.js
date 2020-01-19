@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     bookView: {
         width: '100%',
-        paddingVertical: 10,
+        paddingVertical: 15,
     },
     imgCard: {
         marginBottom: 10,
@@ -55,7 +55,12 @@ const styles = StyleSheet.create({
     },
     note: {
         fontSize: 13,
-        marginTop: 10,
+        marginTop: 6,
+    },
+    price: {
+        fontSize: 14,
+        color: 'red',
+        marginTop: 6,
     },
     wordCount: {
         fontSize: 14,
