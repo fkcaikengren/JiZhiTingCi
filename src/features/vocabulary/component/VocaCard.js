@@ -11,7 +11,6 @@ import VocaOperator from './VocaOperator'
 import VocaDao from '../service/VocaDao'
 import AudioService from '../../../common/AudioService';
 import * as CConstant from "../../../common/constant";
-import { CARD_TYPE_WORD } from '../common/constant';
 
 
 const Dimensions = require('Dimensions');
@@ -99,8 +98,7 @@ export default class VocaCard extends Component {
 
     _genTrans = (wordInfo) => {
         const { trans, translation } = wordInfo
-        console.log(trans)
-        console.log(translation)
+
         const comps = []
         if (trans) {
             for (let k in trans)
@@ -125,7 +123,7 @@ export default class VocaCard extends Component {
     render() {
         const { wordInfo } = this.props
         hasEnAmPhonetic = (wordInfo.en_phonetic !== null || wordInfo.am_phonetic !== null)
-        let sentence = ''
+        let sentence = null
         if (wordInfo.sentence && wordInfo.sentence !== '') {
             const s = wordInfo.sentence.split(/<em>|<\/em>/)
             sentence = s.map((text, index) => {
@@ -200,13 +198,13 @@ export default class VocaCard extends Component {
                                 </Row>
                             }
                             {/* 英英释义 */}
-                            {wordInfo.def && wordInfo.def !== '' &&
+                            {wordInfo.def !== null && wordInfo.def !== '' &&
                                 <Row style={[gstyles.r_start, styles.marginTop]}>
                                     <Text style={styles.grayFont}>{wordInfo.def}</Text>
                                 </Row>
                             }
                             {/* 例句 */}
-                            {sentence !== '' &&
+                            {sentence &&
                                 <Col>
                                     <Row style={[gstyles.r_start_top, styles.marginTop]}>
                                         <Text style={[gstyles.lg_black, { flex: 10 }]}>{sentence}</Text>

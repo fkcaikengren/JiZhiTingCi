@@ -39,6 +39,7 @@ export function* createPlan(action) {
             totalWordCount: payload.totalWordCount
         })
     } catch (err) {
+        console.log(err)
         yield put({ type: CHANGE_VOCA_BOOK_FAIL })
         yield put({ type: LOAD_TASKS_FAIL })
     }

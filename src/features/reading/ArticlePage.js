@@ -179,14 +179,14 @@ export default class ArticlePage extends React.Component {
 
     // 首次发送
     _sendInitMessage = () => {
-        const { articleText, keywords, bgThemes, themeIndex, fontRem } = this.props.article
+        const { articleText, keyWords, bgThemes, themeIndex, fontRem } = this.props.article
         //发送文本给Web
         this.webref.postMessage(
             //文本，关键字
             JSON.stringify({
                 command: 'initPage', payload: {
                     text: articleText,
-                    keywords: keywords,
+                    keywords: keyWords,
                     color: bgThemes[themeIndex],
                     size: fontRem + 'rem'
                 }

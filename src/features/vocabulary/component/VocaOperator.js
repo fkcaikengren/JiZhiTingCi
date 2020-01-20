@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { Button } from 'react-native-elements'
+import { CheckBox, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 
 import AliIcon from '../../../component/AliIcon'
@@ -10,6 +10,8 @@ import FileService from "../../../common/FileService";
 import { FILE_ROOT_DIR } from "../../../common/constant";
 import * as Progress from 'react-native-progress'
 import DictDao from "../service/DictDao";
+import { TYPE_ERR_CODE_VOCA } from "../common/constant";
+import ErrorTemplate from "../../../component/ErrorTemplate";
 
 const styles = StyleSheet.create({
     errBtn: {
@@ -27,8 +29,14 @@ const styles = StyleSheet.create({
         color: '#888',
         borderBottomWidth: 1,
         borderColor: '#888',
-        marginRight: 4,
-    }
+        marginBottom: 3,
+        marginRight: 18,
+    },
+    checkDot: {
+        margin: 0,
+        padding: 0,
+    },
+
 })
 
 class VocaOperator extends Component {
@@ -176,29 +184,47 @@ class VocaOperator extends Component {
         }
     }
 
+
+
+
     render() {
 
 
         return <View style={gstyles.r_end}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+                ErrorTemplate.show({
+                    commonModal: this.props.app.commonModal,
+                    title: this.props.wordInfo.word,
+                    modalHeight: 400,
+                    errorTypes: ["单词或音标", "英英释义或普通例句", "中文释义", "影视例句"],
+                    params: {
+                        userId: this.props.mine.user._id,
+                        type: TYPE_ERR_CODE_VOCA,
+                        object: this.props.wordInfo.word,
+                    },
+                    onSucceed: () => {
+                        this.props.app.toast.show("提交成功", 1000)
+                    }
+                })
+            }}>
                 <Text style={styles.errBtn}>报错</Text>
             </TouchableOpacity>
-
-            {this.state.added && //从生词本移除
-                <AliIcon name='pingfen' size={22} color={gstyles.secColor}
-                    style={{ marginRight: 16 }}
-                    onPress={this._removeWord} />
-            }
-            {!this.state.added && //添加到生词本
-                <AliIcon name='malingshuxiangmuicon-' size={22} color='#888'
-                    style={{ marginRight: 16 }}
-                    onPress={this._addWord} />
-            }
             <TouchableOpacity onPress={this._openDict}>
                 <Text style={styles.dictBtn}>
                     词典
                 </Text>
             </TouchableOpacity>
+            {this.state.added && //从生词本移除
+                <AliIcon name='pingfen' size={22} color={gstyles.secColor}
+                    style={{ marginRight: 12 }}
+                    onPress={this._removeWord} />
+            }
+            {!this.state.added && //添加到生词本
+                <AliIcon name='malingshuxiangmuicon-' size={22} color='#888'
+                    style={{ marginRight: 12 }}
+                    onPress={this._addWord} />
+            }
+
         </View>
     }
 }
@@ -206,6 +232,7 @@ class VocaOperator extends Component {
 
 const mapStateToProps = state => ({
     app: state.app,
+    mine: state.mine,
 });
 
 const mapDispatchToProps = {

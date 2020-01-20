@@ -13,15 +13,23 @@ export default class AboutPage extends React.Component {
         //QQ群
         //关于我们介绍
         this.state = {
-            public: '爱听词',
-            qqs: ['3480439815', '9480439800'],
-            about: '爱听词是奇思妙听科技有限公司旗下一款英语单词App,旨在xxxx。 其他产品：爱听书'
+            public: "",
+            qqs: [],
+            about: ""
         }
     }
 
     componentDidMount() {
+        // 加载数据
+        this._init()
     }
 
+    _init = async () => {
+        const res = await Http.get("/appinfo/getContack")
+        if (res.status === 200) {
+            this.setState(res.data)
+        }
+    }
 
     render() {
         return (
@@ -71,6 +79,10 @@ export default class AboutPage extends React.Component {
                         <Text style={{ fontSize: 15, color: '#333', marginTop: 20 }}>
                             {this.state.about}
                         </Text>
+                    </View>
+                    <View style={[gstyles.c_center, { width: "100%", marginVertical: 20 }]}>
+                        <Text>Copyright©2020</Text>
+                        <Text>奇思妙听科技 版权所有</Text>
                     </View>
                 </ScrollView>
 

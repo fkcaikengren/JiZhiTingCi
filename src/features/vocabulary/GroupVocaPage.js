@@ -221,7 +221,7 @@ class GroupVocaPage extends Component {
 
     render() {
         const groupName = this.props.navigation.getParam('groupName')
-        const delIconColor = this.state.checked ? '#F2753F' : '#999'
+        const delIconColor = this.state.checked ? gstyles.emColor : '#999'
         const playIconColor = this.state.checked ? gstyles.mainColor : '#999'
         const editBtn = this.state.onEdit ? <Text style={gstyles.md_black}>取消</Text>
             : <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
@@ -352,7 +352,7 @@ class GroupVocaPage extends Component {
                             iconType='ionicon'
                             checkedIcon='ios-checkmark-circle'
                             uncheckedIcon='ios-radio-button-off'
-                            checkedColor='#F29F3F'
+                            checkedColor={gstyles.secColor}
                         />
                     }
                     <View key={'w' + index} style={[gstyles.c_center, { width: bodyWidth }]}>

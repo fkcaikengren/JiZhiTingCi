@@ -1,20 +1,38 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, } from 'react-native';
+import { Text, View, StyleSheet, Keyboard } from 'react-native';
 import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
 import gstyles from '../style';
+
+const Dimensions = require('Dimensions');
+const { width, height } = Dimensions.get('window');
 
 const defaultState = {
     isOpen: false,
     renderContent: _ => null,
     modalStyle: {},
-    contentState: {},
+    contentState: {
+        keyboardSpace: 0,
+    },
+    position: "center",
+    heightOfModal: 0,
 }
 
 export default class CommonModal extends React.Component {
     constructor(props) {
         super(props)
         this.state = defaultState
+    }
+
+    componentDidMount() {
+        Keyboard.addListener('keyboardDidShow', (frames) => {
+            if (!frames.endCoordinates) return;
+            this.setContentState({ keyboardSpace: frames.endCoordinates.height });
+
+        });
+        Keyboard.addListener('keyboardDidHide', (frames) => {
+            this.setContentState({ keyboardSpace: 0 });
+        });
     }
 
     setContentState = (contentState) => {
@@ -24,29 +42,46 @@ export default class CommonModal extends React.Component {
             }
         })
     }
-    show = ({ renderContent, modalStyle }) => {
-        this.setState({ isOpen: true, renderContent, modalStyle });
+
+    getContentState = () => {
+        return this.state.contentState
+    }
+    show = ({ renderContent, modalStyle, position = "center", heightOfModal = 0 }) => {
+        this.setState({ isOpen: true, renderContent, modalStyle, position, heightOfModal });
     }
 
     hide = () => {
         this.setState(defaultState);
     }
 
+
     render() {
-        return <Modal style={[gstyles.c_start, this.state.modalStyle]}
+        const { heightOfModal } = this.state
+        let preModalStyle = null
+        const isListenKeyBoard = (heightOfModal > 0)
+        if (isListenKeyBoard) {
+            preModalStyle = {
+                position: "absolute",
+                top: this.state.contentState.keyboardSpace ? -10 - this.state.contentState.keyboardSpace : -(height / 2) + (heightOfModal / 2),
+            }
+
+        }
+
+        return <Modal style={[gstyles.c_start, preModalStyle, this.state.modalStyle]}
             isOpen={this.state.isOpen}
             onOpened={() => { this.setState({ isOpen: true, }) }}
             onClosed={() => { this.setState({ isOpen: false, }) }}
             backdrop={true}
-            backdropPressToClose={true}
+            backdropPressToClose={false}
             swipeToClose={false}
-            position={'center'}
+            position={isListenKeyBoard ? "bottom" : this.state.position}
             animationDuration={1}
         >
             {this.state.renderContent(this.state.contentState)}
         </Modal>
     }
 }
+
 
 
 const styles = StyleSheet.create({

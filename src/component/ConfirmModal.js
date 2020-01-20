@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
-import { Text, View, StyleSheet,} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, } from 'react-native';
 import Modal from 'react-native-modalbox';
-import {Button} from 'react-native-elements'
+import { Button } from 'react-native-elements'
 
 import DashSecondLine from './DashSecondLine'
 import gstyles from '../style'
 
 
 export default class ConfirmModal extends Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
         this.defaultState = {
-            isOpen : false,
-            title : '',
+            isOpen: false,
+            title: '',
             cancelText: '取消',
             confirmText: '确认',
             onCancel: null,
@@ -25,64 +25,64 @@ export default class ConfirmModal extends Component {
     }
 
 
-    show = (title,onCancel=null,onConfirm=null,cancelText="取消",confirmText="确定")=>{
-        this.setState({isOpen:true, title,cancelText,confirmText,onCancel,onConfirm})
+    show = (title, onCancel = null, onConfirm = null, cancelText = "取消", confirmText = "确定") => {
+        this.setState({ isOpen: true, title, cancelText, confirmText, onCancel, onConfirm })
     }
 
-    _onCancel = ()=>{
+    _onCancel = () => {
         this.setState(this.defaultState);
-        if(this.state.onCancel){
+        if (this.state.onCancel) {
             this.state.onCancel()
         }
     }
 
-    _onConfirm = ()=>{
+    _onConfirm = () => {
         this.setState(this.defaultState);
-        if(this.state.onConfirm){
+        if (this.state.onConfirm) {
             this.state.onConfirm()
         }
     }
 
-    _openModal = ()=>{
-        this.setState({isOpen:true});
+    _openModal = () => {
+        this.setState({ isOpen: true });
     }
 
-    _closeModal = ()=>{
-        this.setState({isOpen:false});
+    _closeModal = () => {
+        this.setState({ isOpen: false });
     }
 
     render() {
-        return <Modal style={[styles.modal,gstyles.c_start ]}
-            isOpen={this.state.isOpen} 
+        return <Modal style={[styles.modal, gstyles.c_start]}
+            isOpen={this.state.isOpen}
             onOpened={this._openModal}
             onClosed={this._closeModal}
             backdrop={true}
-            backdropPressToClose={true}
+            backdropPressToClose={false}
             swipeToClose={false}
             position={'center'}
             animationDuration={1}
         >
-        <View style={[gstyles.c_center,{height:'69%',paddingHorizontal:10}]}>
-            <Text style={[gstyles.lg_black_bold]}>
-                {this.state.title}
-            </Text>
-        </View>
-        <DashSecondLine backgroundColor='#AAA' len={20} width={'100%'}/>
-        <View style={[styles.modalBtnGroup,gstyles.r_around]}>
-            <Button type='clear' onPress={this._onCancel}
-            title={this.state.cancelText}
-            titleStyle={gstyles.lg_gray}
-            containerStyle={{flex:1}}>
-            </Button>
-            <View style={{width:1,height:30,backgroundColor:'#AAA'}}/>
-            <Button type='clear' onPress={this._onConfirm}
-            title={this.state.confirmText}
-            titleStyle={[gstyles.lg_black,{color:gstyles.secColor}]}
-            containerStyle={{flex:1}} >
-            </Button>
-        </View>
-    </Modal>
-       
+            <View style={[gstyles.c_center, { height: '69%', paddingHorizontal: 10 }]}>
+                <Text style={[gstyles.lg_black_bold]}>
+                    {this.state.title}
+                </Text>
+            </View>
+            <DashSecondLine backgroundColor='#AAA' len={20} width={'100%'} />
+            <View style={[styles.modalBtnGroup, gstyles.r_around]}>
+                <Button type='clear' onPress={this._onCancel}
+                    title={this.state.cancelText}
+                    titleStyle={gstyles.lg_gray}
+                    containerStyle={{ flex: 1 }}>
+                </Button>
+                <View style={{ width: 1, height: 30, backgroundColor: '#AAA' }} />
+                <Button type='clear' onPress={this._onConfirm}
+                    title={this.state.confirmText}
+                    titleStyle={[gstyles.lg_black, { color: gstyles.secColor }]}
+                    containerStyle={{ flex: 1 }} >
+                </Button>
+            </View>
+        </Modal>
+
     }
 
 }
@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
         width: '70%',
         height: 150,
         backgroundColor: "#FFF",
-        borderRadius:12,
+        borderRadius: 12,
     },
-    modalBtnGroup:{
-        flex:1,
-        height:'30%',
+    modalBtnGroup: {
+        flex: 1,
+        height: '30%',
     },
     dashLine: {
         flexDirection: 'row',

@@ -224,6 +224,11 @@ export default class VocaDao {
         return arr
     }
 
+    /**
+     * @function 获取未pass的单词信息
+     * @param {*} words 
+     * @param {*} wordInfos 
+     */
     getShowWordInfos(words, wordInfos = null) {
         if (!words) {
             return []
@@ -239,6 +244,18 @@ export default class VocaDao {
             }
         }
         return showWordInfos
+    }
+
+
+    getTransforms(word) {
+        if (!word) {
+            return []
+        }
+        const transforms = this.realm.objects("WordTransform").filtered('proto="' + word + '"');
+        const arr = transforms.map((item, i) => {
+            return item.transform
+        })
+        return arr
     }
 
     // 适配

@@ -2,15 +2,15 @@
 
 
 import React, { Component } from 'react';
-import { Platform, StatusBar, View, Text, Easing, TouchableWithoutFeedback } from 'react-native';
+import { Platform, View, Text, Easing, TouchableNativeFeedback, TextInput, } from 'react-native';
 import { connect } from 'react-redux';
 import { Header, Slider } from 'react-native-elements'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 import ModalBox from 'react-native-modalbox';
 import Swiper from 'react-native-swiper'
+import { DURATION } from 'react-native-easy-toast'
 
 import { CircleLoader } from '../../component/Loader'
-import { DURATION } from 'react-native-easy-toast'
 import styles from './ArticleTabStyle'
 import gstyles from '../../style'
 import ColorRadio from './component/ColorRadio'
@@ -19,9 +19,11 @@ import * as ArticleAction from './redux/action/articleAction'
 import ArticlePage from './ArticlePage';
 import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
-
+import { TYPE_ERR_CODE_ARTICLE } from '../vocabulary/common/constant';
+import ErrorTemplate from '../../component/ErrorTemplate';
 
 const questionSize = 10
+
 
 /**
  *Created by Jacy on 19/08/09.
@@ -34,8 +36,8 @@ class ArticleTabPage extends React.Component {
             pageIndex: 0,
             showKeyWords: true,
             showSettingModal: false,
-        }
 
+        }
         //隐藏黄色警告
         console.disableYellowBox = true;
     }
@@ -44,6 +46,7 @@ class ArticleTabPage extends React.Component {
         const articleInfo = this.props.navigation.getParam('articleInfo')
         console.log('---页面初始化后，加载文章----')
         this.props.loadArticle(articleInfo);
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -190,6 +193,9 @@ class ArticleTabPage extends React.Component {
         }
     }
 
+
+
+
     _renderContent = () => {
         const { isLoadPending, isLoadFail } = this.props.article
         //路由参数
@@ -244,9 +250,9 @@ class ArticleTabPage extends React.Component {
                     rightComponent={isLoadFail ? null :
                         <View style={[gstyles.r_start]}>
                             {articleInfo.type !== Constant.EXTENSIVE_READ &&
-                                <TouchableWithoutFeedback onPress={this._handin}>
+                                <TouchableNativeFeedback onPress={this._handin}>
                                     <Text style={styles.handinBtn}>交卷</Text>
-                                </TouchableWithoutFeedback>
+                                </TouchableNativeFeedback>
                             }
 
                             <Menu renderer={renderers.Popover} rendererProps={{ placement: 'bottom' }}>
@@ -266,7 +272,23 @@ class ArticleTabPage extends React.Component {
                                         <Text style={styles.menuOptionText}>分享</Text>
                                     </MenuOption>
 
-                                    <MenuOption onSelect={() => alert(`纠错`)}
+                                    <MenuOption onSelect={() => {
+                                        ErrorTemplate.show({
+                                            commonModal: this.props.app.commonModal,
+                                            title: "我要纠错",
+                                            modalHeight: 400,
+                                            errorTypes: ["文章存在错别词", "答案错误", "题目错误", "解析错误", "其他"],
+                                            params: {
+                                                userId: this.props.mine.user._id,
+                                                type: TYPE_ERR_CODE_ARTICLE,
+                                                object: this.props.article.articleId,
+                                            },
+                                            onSucceed: () => {
+                                                this.props.app.toast.show("提交成功", 1000)
+                                            }
+                                        })
+
+                                    }}
                                         style={[styles.menuOptionView, { borderBottomWidth: 0 }]}>
                                         <Text style={styles.menuOptionText}>纠错</Text>
                                     </MenuOption>
@@ -292,7 +314,7 @@ class ArticleTabPage extends React.Component {
                 }
                 {/* 答悬浮按钮 */}
                 {!isLoadFail && !(articleInfo.type === Constant.EXTENSIVE_READ) &&
-                    <TouchableWithoutFeedback onPress={() => {
+                    <TouchableNativeFeedback onPress={() => {
                         //先加载数据再跳转
                         this.props.loadAnalysis(articleInfo);
                         //跳转
@@ -309,7 +331,7 @@ class ArticleTabPage extends React.Component {
                                 <Text style={styles.floatText}>析</Text>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableNativeFeedback>
                 }
 
             </View>
@@ -321,6 +343,7 @@ class ArticleTabPage extends React.Component {
 
 const mapStateToProps = state => ({
     app: state.app,
+    mine: state.mine,
     article: state.article,
 });
 

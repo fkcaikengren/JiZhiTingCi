@@ -77,11 +77,12 @@ export const TRAN_WORD = 'TRAN_WORD'
 export const SEN_WORD = 'SEN_WORD'
 
 
-//单词卡片的类型
-export const CARD_TYPE_WORD = 'CARD_TYPE_WORD'
-export const CARD_TYPE_PHRASE = 'CARD_TYPE_PHRASE'
-
 
 //单词发音类型
 export const VOCA_PRON_TYPE_EN = 'VOCA_PRON_TYPE_EN'
 export const VOCA_PRON_TYPE_AM = 'VOCA_PRON_TYPE_AM'
+
+
+//手动报错：错误类型
+export const TYPE_ERR_CODE_VOCA = 0
+export const TYPE_ERR_CODE_ARTICLE = 1

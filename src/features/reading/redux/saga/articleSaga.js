@@ -14,7 +14,6 @@ export function* loadArticle(articleInfo) {
     try {
         console.log(articleInfo.articleUrl)
         const articleText = yield fileService.load(VOCABULARY_DIR, articlesDir + articleInfo.articleUrl)
-        const keywords = articleInfo.keyWords
         let options = []
         if (articleInfo.optionUrl !== null) {
             options = yield fileService.load(VOCABULARY_DIR, articlesDir + articleInfo.optionUrl)
@@ -24,7 +23,7 @@ export function* loadArticle(articleInfo) {
             yield put({ type: LOAD_ARTICLE_FAIL })
         } else {
             console.log(articleText.substring(0, 20))
-            yield put({ type: LOAD_ARTICLE_SUCCEED, articleText, keywords, options })
+            yield put({ type: LOAD_ARTICLE_SUCCEED, articleId: articleInfo.id, articleText, keyWords: articleInfo.keyWords, options })
         }
 
     } catch (err) {

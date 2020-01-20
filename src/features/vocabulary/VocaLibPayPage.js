@@ -2,17 +2,43 @@ import React, { Component } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import CardView from 'react-native-cardview'
+import { connect } from 'react-redux';
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import libStyles from './VocaLibStyle'
 import styles from './VocaLibPayStyle'
 
 
-export default class VocaLibPayPage extends Component {
+class VocaLibPayPage extends Component {
     constructor(props) {
         super(props)
         this.state = {
         }
+    }
+
+    _renderPay = (contentState) => {
+        return <View style={[gstyles.c_center, { width: "100%", position: "absolute", bottom: 0, left: 0, backgroundColor: "#FFF" }]}>
+            <View style={gstyles.c_center}>
+                <Text style={gstyles.md_black}>爱听词</Text>
+                <Text style={{ fontSize: 30, color: gstyles.emColor, marginVertical: 20 }}>6.00元</Text>
+            </View>
+            <View style={[{ width: "90%", height: 60, borderTopWidth: 1, borderColor: "#EEE" }, gstyles.r_between]}>
+                <View style={gstyles.r_start}>
+                    <AliIcon name='weixinzhifu' size={32} color='#0AAF36'></AliIcon>
+                    <Text style={[gstyles.md_black, { marginLeft: 20 }]}>微信支付</Text>
+                </View>
+
+                <AliIcon name='youjiantou' size={26} color='#AAA'></AliIcon>
+            </View>
+            <View style={[{ width: "90%", height: 60, borderTopWidth: 1, borderColor: "#EEE" }, gstyles.r_between]}>
+                <View style={gstyles.r_start}>
+                    <AliIcon name='zhifubao-copy' size={31} color='#01A3DC'></AliIcon>
+                    <Text style={[gstyles.md_black, { marginLeft: 20 }]}>支付宝支付</Text>
+                </View>
+                <AliIcon name='youjiantou' size={26} color='#AAA'></AliIcon>
+            </View>
+        </View>
+
     }
 
 
@@ -75,7 +101,7 @@ export default class VocaLibPayPage extends Component {
                     {/* 特点一 */}
                     <View style={[gstyles.c_start_left, styles.featureView]}>
                         <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='kaoshi' size={18} color='red'></AliIcon>
+                            <AliIcon name='kaoshi' size={18} color={gstyles.emColor}></AliIcon>
                             <Text style={styles.tabFont}>高分必备</Text>
                         </View>
                         <View style={[gstyles.c_start_left, styles.featureBox]}>
@@ -100,7 +126,7 @@ export default class VocaLibPayPage extends Component {
                     </View>
                     <View style={[gstyles.c_start_left, styles.featureView]}>
                         <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='yingshi' size={18} color='red'></AliIcon>
+                            <AliIcon name='yingshi' size={18} color={gstyles.emColor}></AliIcon>
                             <Text style={styles.tabFont}>影视例句</Text>
                         </View>
                         <View style={[gstyles.c_start_left, styles.featureBox]}>
@@ -112,7 +138,7 @@ export default class VocaLibPayPage extends Component {
                     </View>
                     <View style={[gstyles.c_start_left, styles.featureView]}>
                         <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='zhineng' size={18} color='red'></AliIcon>
+                            <AliIcon name='zhineng' size={18} color={gstyles.emColor}></AliIcon>
                             <Text style={styles.tabFont}>滚动复习</Text>
                         </View>
                         <View style={[gstyles.c_start_left, styles.featureBox]}>
@@ -132,12 +158,33 @@ export default class VocaLibPayPage extends Component {
                     <Button
                         title="立即支付"
                         buttonStyle={styles.payBtn}
+                        onPress={() => {
+                            this.props.app.commonModal.show({
+                                renderContent: this._renderPay,
+                                modalStyle: {
+                                    width: '100%',
+                                    height: 240,
+                                    backgroundColor: "#FFF",
+                                },
+                                position: "bottom"
+                            })
+                        }}
                     />
                 </View>
+
+
+
             </View >
-
-
         );
     }
 }
 
+const mapStateToProps = state => ({
+    app: state.app
+});
+
+const mapDispatchToProps = {
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(VocaLibPayPage);

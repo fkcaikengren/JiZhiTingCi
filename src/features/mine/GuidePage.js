@@ -10,21 +10,23 @@ export default class GuidePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            guides: [
-                {
-                    title: '高效记忆单词', intro: '这样记单词，猪都可以记住！',
-                    thumbUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/guide_cover_1.jpg',
-                    contentUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html',
-                    note: '2019-10-10'
-                },
-
-            ]
+            guides: []
         }
     }
 
     componentDidMount() {
+        this._init()
     }
 
+    _init = async () => {
+        const res = await Http.get("/guide/list")
+        if (res.status === 200) {
+            this.setState({
+                guides: res.data
+            })
+        }
+
+    }
 
     render() {
         return (
