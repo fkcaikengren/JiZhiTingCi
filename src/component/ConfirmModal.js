@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         width: '70%',
         height: 150,
         backgroundColor: "#FFF",
-        borderRadius: 12,
+        borderRadius: 10,
     },
     modalBtnGroup: {
         flex: 1,

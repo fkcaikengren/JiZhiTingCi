@@ -23,13 +23,17 @@ class AccountPage extends React.Component {
 
     //退出登录
     _logout = () => {
-        this.props.app.confirmModal.show("确认退出登录！",null,()=>{
+        this.props.app.confirmModal.show("确认退出登录！", null, () => {
+            //同步数据
+            Storage.clearMapForKey('notSyncTasks')
+            Storage.clearMapForKey('notSyncGroups')
             //清空token和user
             this.props.logout()
             //清空任务数据
             VocaTaskDao.getInstance().deleteAllTasks()
             //清空生词本数据
             VocaGroupDao.getInstance().deleteAllGroups()
+
             //跳转到auth
             this.props.navigation.navigate('AuthLoading')
         })
@@ -101,7 +105,7 @@ class AccountPage extends React.Component {
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle='dark-content' 
+                    barStyle='dark-content'
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
@@ -149,7 +153,7 @@ class AccountPage extends React.Component {
                         }, false)
                     }
                     <TouchableOpacity activeOpacity={0.8}
-                    onPress={this._logout}
+                        onPress={this._logout}
                     >
                         <View style={[gstyles.r_center, styles.logout]}>
                             <Text style={[gstyles.lg_black, { color: 'red' }]}>退出登录</Text>

@@ -133,14 +133,14 @@ export default class VocaSearchPage extends Component {
 
         {this.state.searchWord !== '' &&
           <VocaCard
-            lookWord={this.wordBoard.lookWord}
-
-            wordInfo={this.state.data[this.state.selectedIndex]}
             navigation={this.props.navigation}
+            lookWord={this.wordBoard.lookWord}
+            wordInfo={this.state.data[this.state.selectedIndex]}
           />
         }
         <LookWordBoard
           ref={ref => this.wordBoard = ref}
+          navigation={this.props.navigation}
         />
       </View>
     );

@@ -1,17 +1,15 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { CheckBox, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 
 import AliIcon from '../../../component/AliIcon'
 import VocaGroupService from '../service/VocaGroupService'
 import gstyles from "../../../style";
-import FileService from "../../../common/FileService";
 import { FILE_ROOT_DIR } from "../../../common/constant";
-import * as Progress from 'react-native-progress'
 import DictDao from "../service/DictDao";
 import { TYPE_ERR_CODE_VOCA } from "../common/constant";
 import ErrorTemplate from "../../../component/ErrorTemplate";
+import DownloadTemplate from "../../../component/DownloadTemplate";
 
 const styles = StyleSheet.create({
     errBtn: {
@@ -74,41 +72,12 @@ class VocaOperator extends Component {
         }
     }
 
-    _renderProgress = (contentState) => {
-        let progress = contentState.progress || 0.000
-        return <View style={[{ flex: 1, width: '100%' }, gstyles.c_center]}>
-            <View style={[{ flex: 1 }, gstyles.c_center]}>
-                <Progress.Circle
-                    size={100}
-                    color={gstyles.secColor}
-                    borderColor={gstyles.secColor}
-                    progress={progress}
-                    showsText={true}
-                    textStyle={{ fontSize: 24, color: gstyles.secColor }}
-                    formatText={_progress => (_progress * 100).toFixed(1) + '%'} />
-                <Text style={[gstyles.md_gray, { marginTop: 15 }]}>{contentState.showText}</Text>
-            </View>
-            <TouchableOpacity style={{ width: '100%', }} activeOpacity={0.8} onPress={contentState.onPress}>
-                <View style={[gstyles.c_center, {
-                    width: '100%',
-                    height: 55,
-                    backgroundColor: gstyles.secColor,
-                    borderBottomLeftRadius: 12,
-                    borderBottomRightRadius: 12,
-                }]}>
-                    <Text style={[gstyles.md_white]}>{contentState.btnText}</Text>
-                </View>
-            </TouchableOpacity>
-
-        </View >
-    }
-
 
     _openDict = async () => {
         let isDictdownloaded = false
         try {
             isDictdownloaded = await Storage.load({
-                key: 'dict-downloaded'
+                key: 'dictDownloaded'
             })
         } catch (err) {
             console.log(err)
@@ -121,64 +90,23 @@ class VocaOperator extends Component {
         } else {
             //提示是否下载词典
             this.props.app.confirmModal.show('下载离线词典？', null, () => {
-                let downloadTask = null
-                this.props.app.commonModal.show({
-                    renderContent: this._renderProgress,
-                    modalStyle: {
-                        width: '70%',
-                        height: 240,
-                        backgroundColor: "#FFF",
-                        borderRadius: 12,
-                    },
-                })
-                this.props.app.commonModal.setContentState({
-                    progress: 0,
-                    showText: '离线词典下载中...(220M)',
-                    btnText: '取消下载',
-                    onPress: () => {
-                        if (downloadTask) {
-                            downloadTask.cancel(err => {
-                                this.props.app.commonModal.hide()
-                            })
-                        }
-                    }
-                })
-                downloadTask = new FileService().download({
+                //开始下载
+                DownloadTemplate.show({
+                    commonModal: this.props.app.commonModal,
+                    title: '离线词典下载中...(150M)',
+                    modalHeight: 240,
                     primaryDir: FILE_ROOT_DIR,
                     filePath: '/resources/dict.zip',
-                    progressFunc: (received, total) => {
-                        const progress = (received / total)
-                        console.log(`${received}/${total} -->`, progress)
-                        this.props.app.commonModal.setContentState({
-                            progress,
-                        })
-                        if (progress >= 1) {
-                            this.props.app.commonModal.setContentState({
-                                progress,
-                                showText: '解压中...',
-                                btnText: '请稍等',
-                                onPress: () => {
-                                    this.props.app.toast.show('解压中...请稍等几秒钟', 3000)
-                                }
-                            })
-                        }
+                    onUnzipPress: () => {
+                        this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
                     },
-                    afterUnzip: () => {
-                        this.props.app.commonModal.setContentState({
-                            showText: '已完成',
-                            btnText: '确定',
-                            onPress: () => {
-                                Storage.save({
-                                    key: 'dict-downloaded',
-                                    data: true
-                                })
-                                DictDao.getInstance().open()
-                                this.props.app.commonModal.hide()
-                            }
+                    onFinishPress: () => {
+                        Storage.save({
+                            key: 'dictDownloaded',
+                            data: true
                         })
-
-                    },
-                    shouldUnzip: true,
+                        DictDao.getInstance().open()
+                    }
                 })
             })
         }

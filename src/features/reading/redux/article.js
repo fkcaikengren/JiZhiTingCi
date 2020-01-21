@@ -41,6 +41,7 @@ export const article = handleActions({
     }),
     [aAction.LOAD_ARTICLE_SUCCEED]: (state, action) => ({
         ...state,
+        articleId: action.articleId,
         articleText: action.articleText,
         keyWords: action.keyWords,
         options: action.options,

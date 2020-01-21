@@ -8,7 +8,7 @@ const defaultState = {
     //当前计划
     plan: {
         bookId: "",
-        name: "",
+        bookName: "",
         taskCount: 0,
         taskWordCount: 0,
     },
@@ -29,14 +29,14 @@ export const plan = (state = defaultState, action) => {
         case vl.CHANGE_VOCA_BOOK_START:
             return { ...state, isLoadPending: true };
         case vl.CHANGE_VOCA_BOOK_SUCCEED:
-            const { plan, totalWordCount, totalDays } = action
+            const { plan, totalWordCount, totalDays, leftDays } = action.payload
             return {
                 ...state,
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
                 totalWordCount: totalWordCount,
                 totalDays: totalDays,
-                leftDays: totalDays,
+                leftDays: leftDays,
                 isLoadPending: false,
             };
         case vl.CHANGE_LEFT_DAYS:

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+    borderRadius: 5,
   },
   origin: {
     position: 'absolute',
@@ -152,7 +153,7 @@ export default class ExampleCarousel extends Component {
                 })
               }}>
                 <LinearGradient
-                  colors={["#000000ee", "#00000011"]} style={styles.linearGradient}
+                  colors={["#000000ee", "#00000055", "#00000011"]} style={styles.linearGradient}
                   start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
                 />
               </TouchableNativeFeedback>

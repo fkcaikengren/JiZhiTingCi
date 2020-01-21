@@ -13,30 +13,33 @@ import { CLEAR_PLAY } from '../action/vocaPlayAction';
 
 /**提交单词计划 */
 export function* createPlan(action) {
-    const { payload } = action
+    const { plan, totalWordCount } = action.payload
     yield put({ type: CHANGE_VOCA_BOOK_START })
     yield put({ type: LOAD_TASKS_START })
     try {
-        const res = yield Http.post("/plan/create", payload)
-        const { vocaTasks, plan, articles } = res.data
+        const res = yield Http.post("/plan/create", plan)
+        const { vocaTasks, articles } = res.data
         //清空先前数据，存储新数据到realm
         const vtDao = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
         vtDao.deleteAllTasks()
         artDao.deleteAllArticles()
-        vtDao.saveVocaTasks(vocaTasks, payload.taskWordCount)
+        vtDao.saveVocaTasks(vocaTasks, plan.taskWordCount)
         artDao.saveArticles(articles)
         //加载今日数据
-        const rawTasks = VocaUtil.loadTodayRawTasks(null, payload.taskCount, payload.lastLearnDate)
+        const rawTasks = VocaUtil.loadTodayRawTasks(null, plan.taskCount, plan.lastLearnDate)
         if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
             yield put({ type: CLEAR_PLAY })
         }
         yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: rawTasks } })
         yield put({
             type: CHANGE_VOCA_BOOK_SUCCEED,
-            plan: plan,
-            totalDays: tasks.length + Constant.LEFT_PLUS_DAYS,
-            totalWordCount: payload.totalWordCount
+            payload: {
+                plan,
+                totalWordCount,
+                totalDays: vocaTasks.length + Constant.LEFT_PLUS_DAYS,
+                leftDays: vocaTasks.length + Constant.LEFT_PLUS_DAYS,
+            }
         })
     } catch (err) {
         console.log(err)

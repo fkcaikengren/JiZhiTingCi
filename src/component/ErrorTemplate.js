@@ -130,7 +130,7 @@ export default class ErrorTemplate {
                 backgroundColor: "#FFF",
                 borderRadius: 10,
             },
-            heightOfModal: modalHeight,
+            heightForListenKeyBoard: modalHeight,
         })
     }
 }

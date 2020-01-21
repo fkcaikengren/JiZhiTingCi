@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, View, Text, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { StatusBar, View, Text, FlatList, TouchableNativeFeedback } from 'react-native';
 import { Header, CheckBox, Button } from 'react-native-elements'
 import { sortBy } from 'lodash'
 import CardView from 'react-native-cardview'
@@ -40,6 +40,7 @@ class GroupVocaPage extends Component {
         this.state = {
             onEdit: false,
             checked: false,
+            isSelectAll: true,
             checkedIndex: [], //选中的索引
             flatData: [],
             sideSections: [],
@@ -117,7 +118,7 @@ class GroupVocaPage extends Component {
 
     // 取消check
     _cancleCheck = () => {
-        this.setState({ checkedIndex: [], checked: false })
+        this.setState({ checkedIndex: [], checked: false, isSelectAll: true })
     }
 
     //多选
@@ -142,6 +143,34 @@ class GroupVocaPage extends Component {
         this.setState({ checkedIndex, checked })
     }
 
+    // 全选
+    _selectAll = () => {
+        if (this.state.isSelectAll) {
+
+            const checkedIndex = []
+            let i = 0
+            for (let item of this.state.flatData) {
+                if (item.type === 'word') {
+                    checkedIndex.push(i)
+                }
+                i++
+            }
+            this.setState({
+                checkedIndex,
+                checked: true,
+                isSelectAll: !this.state.isSelectAll
+            })
+        } else {
+            this.setState({
+                checkedIndex: [],
+                checked: false,
+                isSelectAll: !this.state.isSelectAll
+            })
+
+        }
+
+    }
+
 
     //切换编辑状态
     _toggleEdit = () => {
@@ -155,6 +184,7 @@ class GroupVocaPage extends Component {
         const words = this.state.checkedIndex.map((itemIndex, i) => {
             return this.state.flatData[itemIndex].word
         })
+        console.log(words)
         const result = this.vgService.deleteWords(groupName, words)
         if (result.success) {
             this.props.app.toast.show(`成功删除${result.deletedWords.length}个生词`, 1000);
@@ -223,8 +253,21 @@ class GroupVocaPage extends Component {
         const groupName = this.props.navigation.getParam('groupName')
         const delIconColor = this.state.checked ? gstyles.emColor : '#999'
         const playIconColor = this.state.checked ? gstyles.mainColor : '#999'
-        const editBtn = this.state.onEdit ? <Text style={gstyles.md_black}>取消</Text>
-            : <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
+        const editBtn = this.state.onEdit ?
+            <View style={gstyles.r_start}>
+                <TouchableNativeFeedback onPress={this._selectAll}>
+                    <Text style={[gstyles.md_black, { marginRight: 10 }]}>{this.state.isSelectAll ? "全选" : "全不选"}</Text>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback onPress={this._toggleEdit}>
+                    <Text style={gstyles.md_black}>取消</Text>
+                </TouchableNativeFeedback>
+            </View>
+            :
+            <TouchableNativeFeedback onPress={this._toggleEdit}>
+                <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
+            </TouchableNativeFeedback>
+
         return (
             <View style={styles.container}>
                 <StatusBar translucent={true} />
@@ -235,13 +278,9 @@ class GroupVocaPage extends Component {
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack()
                         }} />}
-                    centerComponent={{ text: groupName, style: gstyles.lg_black_bold }}
+                    centerComponent={{ text: groupName, style: [gstyles.lg_black_bold, { width: '70%', textAlign: 'center' }] }}
                     rightComponent={
-                        <TouchableWithoutFeedback onPress={this._toggleEdit}>
-                            {
-                                editBtn
-                            }
-                        </TouchableWithoutFeedback>
+                        editBtn
                     }
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,

@@ -166,15 +166,17 @@ export default class VocaDao {
      * @return 返回一个数组
      */
     getWordInfos(words) {
-
+        console.log("---1---")
+        console.log(words)
         //验证
-        if (!words || words.length < 0)
+        if (!words || words.length === 0)
             return []
         if (typeof words === "string") {
             words = words.split(',').map((item, i) => {
                 return item.trim()
             })
         }
+        console.log("---2---")
         console.log(words)
         // 词汇类型判断/是否是短语
         const arr = []

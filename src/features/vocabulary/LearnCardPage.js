@@ -146,6 +146,7 @@ class LearnCardPage extends Component {
 
                 <LookWordBoard
                     ref={ref => this.wordBoard = ref}
+                    navigation={this.props.navigation}
                     onStateChange={(isOpen) => this.setState({ showNext: !isOpen })}
                 />
             </View>

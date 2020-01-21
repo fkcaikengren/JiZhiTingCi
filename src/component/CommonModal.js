@@ -15,7 +15,7 @@ const defaultState = {
         keyboardSpace: 0,
     },
     position: "center",
-    heightOfModal: 0,
+    heightForListenKeyBoard: 0,
 }
 
 export default class CommonModal extends React.Component {
@@ -46,8 +46,8 @@ export default class CommonModal extends React.Component {
     getContentState = () => {
         return this.state.contentState
     }
-    show = ({ renderContent, modalStyle, position = "center", heightOfModal = 0 }) => {
-        this.setState({ isOpen: true, renderContent, modalStyle, position, heightOfModal });
+    show = ({ renderContent, modalStyle, position = "center", heightForListenKeyBoard = 0 }) => {
+        this.setState({ isOpen: true, renderContent, modalStyle, position, heightForListenKeyBoard });
     }
 
     hide = () => {
@@ -56,13 +56,13 @@ export default class CommonModal extends React.Component {
 
 
     render() {
-        const { heightOfModal } = this.state
+        const { heightForListenKeyBoard } = this.state
         let preModalStyle = null
-        const isListenKeyBoard = (heightOfModal > 0)
+        const isListenKeyBoard = (heightForListenKeyBoard > 0)
         if (isListenKeyBoard) {
             preModalStyle = {
                 position: "absolute",
-                top: this.state.contentState.keyboardSpace ? -10 - this.state.contentState.keyboardSpace : -(height / 2) + (heightOfModal / 2),
+                top: this.state.contentState.keyboardSpace ? -10 - this.state.contentState.keyboardSpace : -(height / 2) + (heightForListenKeyBoard / 2),
             }
 
         }

@@ -81,10 +81,12 @@ export default class LookWordBoard extends Component {
         } else {
             return <View style={[gstyles.c_start, styles.content]}>
                 {/*单词*/}
-                <View style={[{ width: '100%' }, gstyles.r_between]}>
-                    <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
-                    <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
-                </View>
+                {wordInfo.word &&
+                    <View style={[{ width: '100%' }, gstyles.r_between]}>
+                        <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
+                        <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
+                    </View>
+                }
                 {/*y音标*/}
                 <View style={[{ width: '100%', marginTop: 10 }, gstyles.r_start]}>
                     {wordInfo.am_phonetic &&
@@ -96,7 +98,6 @@ export default class LookWordBoard extends Component {
                                     pDir: CConstant.VOCABULARY_DIR,
                                     fPath: wordInfo.am_pron_url
                                 })
-
                             }} />
                         </View>
                     }
@@ -179,7 +180,8 @@ const styles = StyleSheet.create({
 })
 
 LookWordBoard.propTypes = {
-    onStateChange: PropTypes.func,
+    navigation: PropTypes.object.isRequired,
+    onStateChange: PropTypes.func,   //打开与关闭的回调
 
 }
 

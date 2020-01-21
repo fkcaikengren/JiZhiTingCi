@@ -253,6 +253,7 @@ export default class ArticlePage extends React.Component {
                 }
                 <LookWordBoard
                     ref={ref => this.wordBoard = ref}
+                    navigation={this.props.navigation}
                     onStateChange={(isOpen) => {
                         if (!isOpen) {
                             //发送文本给Web

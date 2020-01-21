@@ -97,10 +97,13 @@ class VocaLibPage extends Component {
                     const isExacted = await _util.checkLocalTime()
                     if (isExacted) {
                         this.props.changeVocaBook({
-                            bookId: el._id,
+                            plan: {
+                                bookId: el._id,
+                                bookName: el.name,
+                                taskCount: taskCount,
+                                taskWordCount: taskWordCount,
+                            },
                             totalWordCount: el.count,
-                            taskCount: taskCount,
-                            taskWordCount: taskWordCount,
                             lastLearnDate: this.props.home.lastLearnDate
                         })
                         //开始倒计时

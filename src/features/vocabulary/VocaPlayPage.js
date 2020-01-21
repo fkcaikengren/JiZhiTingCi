@@ -31,11 +31,14 @@ import ShareUtil from '../../modules/ShareUtil'
 import _util from "../../common/util";
 import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
 import { store } from '../../redux/store'
+import LookWordBoard from './component/LookWordBoard';
 
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
+
+
 
 
 /**
@@ -93,7 +96,6 @@ class VocaPlayPage extends React.Component {
             isTasksModalOpened: false,
             isVocaModalOpen: false,
             clickIndex: null,
-
             //blur处理
             viewRef: null,
         }
@@ -608,7 +610,7 @@ class VocaPlayPage extends React.Component {
             onClosed={this._closeVocaModal}
             onOpened={this._openVocaModal}
             backdrop={true}
-            backdropPressToClose={true}
+            backdropPressToClose={false}
             swipeToClose={false}
             position={"bottom"}
             ref={ref => {
@@ -616,13 +618,18 @@ class VocaPlayPage extends React.Component {
             }}>
             {/* 主体 */}
             {this.state.clickIndex !== null && showWordInfos[this.state.clickIndex] &&
-                <VocaCard wordInfo={showWordInfos[this.state.clickIndex]} navigation={this.props.navigation} />
+                <VocaCard
+                    navigation={this.props.navigation}
+                    lookWord={this.wordBoard.lookWord}
+                    wordInfo={showWordInfos[this.state.clickIndex]} />
             }
-            <TouchableOpacity onPress={this._closeVocaModal}>
-                <View style={gstyles.closeBtn}>
-                    <AliIcon name='cha' size={20} color={gstyles.black} />
-                </View>
-            </TouchableOpacity>
+            <View
+                style={gstyles.closeBtn}
+                onStartShouldSetResponder={() => true}
+                onResponderStart={(e) => { this._closeVocaModal() }}
+            >
+                <AliIcon name='cha' size={20} color={gstyles.black} />
+            </View>
         </Modal>
     }
 
@@ -749,7 +756,10 @@ class VocaPlayPage extends React.Component {
                 {
                     this._createVocaModal()
                 }
-
+                <LookWordBoard
+                    ref={ref => this.wordBoard = ref}
+                    navigation={this.props.navigation}
+                />
             </View>
         );
     }

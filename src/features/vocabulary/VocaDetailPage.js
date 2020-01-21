@@ -5,6 +5,9 @@ import VocaCard from "./component/VocaCard";
 import AliIcon from '../../component/AliIcon'
 import gstyles from '../../style'
 import VocaDao from './service/VocaDao'
+import LookWordBoard from "./component/LookWordBoard";
+
+
 
 export default class VocaDetailPage extends Component {
 
@@ -41,9 +44,14 @@ export default class VocaDetailPage extends Component {
                 {this.state.wordInfo &&
                     <VocaCard
                         navigation={this.props.navigation}
+                        lookWord={this.wordBoard.lookWord}
                         wordInfo={this.state.wordInfo}
-                        showAll={true} />
+                    />
                 }
+                <LookWordBoard
+                    ref={ref => this.wordBoard = ref}
+                    navigation={this.props.navigation}
+                />
             </View>
         );
     }

@@ -10,6 +10,8 @@ import { Badge } from 'react-native-elements'
 
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
+import DownloadTemplate from '../../../component/DownloadTemplate';
+import { VOCABULARY_DIR } from '../../../common/constant';
 
 
 const Dimensions = require('Dimensions');
@@ -25,16 +27,6 @@ export default class HomeHeader extends Component {
       shift: new Animated.Value(0),
     };
   }
-
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.home === this.props.home && nextProps.plan === this.props.plan
-      && nextProps.toastRef == this.props.toastRef) {
-      return false
-    }
-    return true
-  }
-
 
   render() {
     const translateY = this.state.shift.interpolate({
@@ -76,7 +68,7 @@ export default class HomeHeader extends Component {
           <View style={{ marginLeft: 10, marginBottom: 2 }}>
             <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={() => {
               if (this.props.home.isUploadFail) {
-                this.props.toastRef.show('貌似网络出了点问题...')
+                this.props.app.toast.show('貌似网络出了点问题...')
               }
             }} />
             <Badge
@@ -92,6 +84,24 @@ export default class HomeHeader extends Component {
 
       <View style={[{ flex: 2 }, gstyles.r_center]}>
         <Text style={[gstyles.md_black, { fontWeight: '700' }]}>{bookName ? bookName : '爱听词'}</Text>
+        <AliIcon name='-huancunguanli' size={20} color='#303030' style={{ marginLeft: 10 }} onPress={() => {
+          // 离线下载词库资源
+          this.props.app.confirmModal.show('下载离线包(40M)？', null, () => {
+            //开始下载
+            DownloadTemplate.show({
+              commonModal: this.props.app.commonModal,
+              title: '离线包下载中...(40M)',
+              modalHeight: 240,
+              primaryDir: VOCABULARY_DIR,
+              filePath: '/resources/test.zip',
+              onUnzipPress: () => {
+                this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
+              },
+              onFinishPress: () => {
+              }
+            })
+          })
+        }} />
       </View>
       <View style={[{ flex: 1 }, gstyles.r_end]}>
         <AliIcon name='chazhao' size={24} color='#202020' onPress={this._navVocaSearch} />

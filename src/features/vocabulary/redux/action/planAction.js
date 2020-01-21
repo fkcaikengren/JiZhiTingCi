@@ -19,8 +19,8 @@ export const { changeVocaBook, changeLearnedWordCount, changeLeftDays } = create
 
     //修改单词书
     //bookCode,totalWordCount, taskCount, taskWordCount, lastLearnDate
-    [CHANGE_VOCA_BOOK]: (data) => {
-        return data;
+    [CHANGE_VOCA_BOOK]: (payload) => {
+        return payload;
     },
     [CHANGE_LEARNED_WORD_COUNT]: (learnedWordCount) => {
         return { learnedWordCount }

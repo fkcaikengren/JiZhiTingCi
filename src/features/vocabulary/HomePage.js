@@ -141,8 +141,9 @@ class HomePage extends Component {
                     {/*顶部背景和任务列表 */}
                     <HomeHeader
                         navigation={this.props.navigation}
-                        home={this.props.home} plan={this.props.plan}
-                        toastRef={this.props.app.toast}
+                        home={this.props.home}
+                        plan={this.props.plan}
+                        app={this.props.app}
                         openDrawer={this._openDrawerPanel}>
                         <Task
                             navigation={this.props.navigation}

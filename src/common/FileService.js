@@ -6,9 +6,8 @@ import { BASE_URL, VOCABULARY_DIR, FILE_ROOT_DIR } from './constant'
 import { store } from "../redux/store";
 
 const fs = RNFetchBlob.fs
-const dirs = fs.dirs
-const CacheDir = dirs.CacheDir + '/'
-const DocumentDir = dirs.DocumentDir + '/'
+const CacheDir = fs.dirs.CacheDir + '/'
+const DocumentDir = fs.dirs.DocumentDir + '/'
 
 export default class FileService {
     constructor() {
@@ -38,10 +37,9 @@ export default class FileService {
         const res = await RNFetchBlob.config({
             fileCache: true,
             path: path
+        }).fetch('GET', url, {
+            //headers..
         })
-            .fetch('GET', url, {
-                //headers..
-            })
         //日志打印
         console.log('---file fetch-----')
         if (res.respInfo.status === 200) {
@@ -57,7 +55,7 @@ export default class FileService {
      *  加载文件
      * @param primaryDir 一级目录
      * @param filePath  文件路径
-     * @returns {Promise<string|{uri: string}|null|*|Promise<*>>}
+     * @returns 
      */
     load = async (primaryDir, filePath) => {
         //处理格式
@@ -143,10 +141,10 @@ export default class FileService {
      */
     download = ({
         filePath,
-        primaryDir,
+        primaryDir, //存储主目录
         progressFunc = (received, total) => { },
         shouldUnzip = false,
-        afterUnzip = () => { }
+        afterUnzip = null,
     }) => {
 
         //处理格式
@@ -189,7 +187,8 @@ export default class FileService {
                         // 删除压缩包
                         await fs.unlink(storePath)
                         console.log(`unzip completed at ${path}`)
-                        afterUnzip()
+                        if (afterUnzip)
+                            afterUnzip()
                     } catch (e) {
                         console.log('下载后，解压失败')
                         console.log(e)
