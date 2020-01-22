@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@0x5e/react-native-alipay@^0.2.6":
+  version "0.2.6"
+  resolved "https://registry.npm.taobao.org/@0x5e/react-native-alipay/download/@0x5e/react-native-alipay-0.2.6.tgz#40b5cec506f88f2da9ff45460b1050b1e3f8e682"
+  integrity sha1-QLXOxQb4jy2p/0VGCxBQseP45oI=
+  dependencies:
+    buffer "^5.0.8"
+    jsrsasign "^8.0.4"
+
 "@babel/code-frame@7.5.5", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.5.5"
   resolved "https://registry.npm.taobao.org/@babel/code-frame/download/@babel/code-frame-7.5.5.tgz#bc0782f6d69f7b7d49531219699b988f669a8f9d"
@@ -3096,7 +3104,7 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.2.1:
+buffer@^5.0.8, buffer@^5.2.1:
   version "5.4.3"
   resolved "https://registry.npm.taobao.org/buffer/download/buffer-5.4.3.tgz#3fbc9c69eb713d323e3fc1a895eee0710c072115"
   integrity sha1-P7ycaetxPTI+P8Gole7gcQwHIRU=
@@ -7080,6 +7088,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jsrsasign@^8.0.4:
+  version "8.0.12"
+  resolved "https://registry.npm.taobao.org/jsrsasign/download/jsrsasign-8.0.12.tgz#22abb9656d34a30b9530436720835e89c2e5c316"
+  integrity sha1-Iqu5ZW00owuVMENnIINeicLlwxY=
+
 just-curry-it@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npm.taobao.org/just-curry-it/download/just-curry-it-3.1.0.tgz#ab59daed308a58b847ada166edd0a2d40766fbc5"
@@ -9643,11 +9656,6 @@ react-native-parallax-scroll-view@^0.21.3:
   integrity sha1-2VatIkzjsKJyW4BXS8v2iLvtoU4=
   dependencies:
     prop-types "^15.6.0"
-
-react-native-picker@^4.3.7:
-  version "4.3.7"
-  resolved "https://registry.npm.taobao.org/react-native-picker/download/react-native-picker-4.3.7.tgz#9842e8c62ff0d8b676e9514d9f9172413c0518a8"
-  integrity sha1-mELoxi/w2LZ26VFNn5FyQTwFGKg=
 
 react-native-popup-menu@^0.15.6:
   version "0.15.6"

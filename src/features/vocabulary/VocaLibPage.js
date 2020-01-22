@@ -3,7 +3,6 @@ import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
-import Picker from 'react-native-picker';
 import * as PlanAction from './redux/action/planAction'
 
 import styles from './VocaLibStyle'
@@ -65,61 +64,26 @@ class VocaLibPage extends Component {
                 '新学26/复习130',
                 '新学36/复习180',]
         ];
-        let selectedValue = [15];
-        Picker.init({
-            pickerTextEllipsisLen: 10,
-            pickerData: data,
-            selectedValue: selectedValue,
-            pickerCancelBtnText: '取消',
-            pickerTitleText: el.name,
-            pickerConfirmBtnText: '确定',
-            pickerCancelBtnColor: [30, 30, 30, 1],
-            pickerTitleColor: [30, 30, 30, 1],
-            pickerConfirmBtnColor: [30, 30, 30, 1],
-            pickerToolBarBg: [255, 233, 87, 1],
-            onPickerConfirm: async (data) => {
-                // console.log(data)
-                const sum = parseInt(data[0].replace(/新学(\d+).+/, '$1'))
-                let taskCount = null
-                let taskWordCount = null
-                if (sum <= 19) {
-                    taskCount = 1 //1
-                } else if (sum <= 34) {
-                    taskCount = 2 //2
-                } else if (sum <= 54) {
-                    taskCount = 3 //3
-                }
-                taskWordCount = sum / taskCount
-                console.log('制定计划，单词书编号为：' + el._id)
-                console.log(taskCount, taskWordCount);
-                //提交计划
-                if (taskCount !== null && taskWordCount !== null) {
-                    const isExacted = await _util.checkLocalTime()
-                    if (isExacted) {
-                        this.props.changeVocaBook({
-                            plan: {
-                                bookId: el._id,
-                                bookName: el.name,
-                                taskCount: taskCount,
-                                taskWordCount: taskWordCount,
-                            },
-                            totalWordCount: el.count,
-                            lastLearnDate: this.props.home.lastLearnDate
-                        })
-                        //开始倒计时
-                        this.refs.countDownLoader && this.refs.countDownLoader.countDown(7)
-                    }
-                } else {
-                    console.error('VocaLibPage: 设置计划时，数据错误！')
-                }
-            },
-            onPickerCancel: data => {
-                console.log(data);
-            },
-            onPickerSelect: data => {
+        //提交计划
+        if (taskCount !== null && taskWordCount !== null) {
+            const isExacted = true
+            // await _util.checkLocalTime()
+            if (isExacted) {
+                this.props.changeVocaBook({
+                    plan: {
+                        bookId: el._id,
+                        bookName: el.name,
+                        taskCount: taskCount,
+                        taskWordCount: taskWordCount,
+                    },
+                    totalWordCount: el.count,
+                    lastLearnDate: this.props.home.lastLearnDate
+                })
+                //开始倒计时
+                this.refs.countDownLoader && this.refs.countDownLoader.countDown(7)
             }
-        });
-        Picker.show();
+        }
+
     }
 
     _renderBook = ({ item, index }) => {

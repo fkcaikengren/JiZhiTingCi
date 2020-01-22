@@ -124,25 +124,6 @@ yarn add react-native-progress@3.6.0
 
 
 
-### 安装react-native-picker
-
-```
-yarn add react-native-picker
-```
-
-link
-
-```
-react-native link react-native-picker
-```
-
-```js
-//修改：
-import androidx.annotation.Nullable;
-```
-
-
-
 ### 安装 react-native-check-box
 
 ```
@@ -211,7 +192,7 @@ yarn add redux-devtools --dev
 
 
 
-### ~~安装redux-promise~~ (使用redux-saga替换)
+### 安装redux-saga
 
 ```
 yarn add redux-saga
@@ -400,7 +381,7 @@ yarn add react-native-swiper
 
 
 
-### ~~安装react-native-shadow~~(使用react-native-cardview替换)
+### 安装react-native-cardview
 
 ```jsx
 yarn add react-native-cardview
@@ -694,15 +675,11 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
-### 4.打包时，react-native-picker:verifyReleaseResources FAILED
-
-参考：https://github.com/beefe/react-native-picker/issues/374
-
-解决：修改编译版本
 
 
 
-### 5.node12使用npm i出现  node-gyp 相关问题
+
+### 4.node12使用npm i出现  node-gyp 相关问题
 
 1）can't find python 
 
@@ -718,9 +695,21 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
+### 5.集成AlipaySDK 出错
 
+```js
+//错误描述
+Task :app:transformClassesWithDexBuilderForDebug
+Caused by: com.android.builder.dexing.DexArchiveBuilderException: Error while dexing.
 
+```
 
+**分析**
+出现了重复的包utdid。阿里支付和阿里百川的类冲突，建议在阿里支付中使用无utdid的sdk
+
+1. 把原来的libs/alipaySdk-15.5.9-20181123210601.arr换成
+   **alipaySdk-15.6.8-20191021122455-noUtdid.arr**
+2. 修改build.gradle文件
 
 
 
@@ -730,23 +719,31 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
-## 集成统计、第三方登录、社会化分享
-
-### 集成Umeng
 
 
+### 集成Umeng（分析、推送、分享）
 
 
 
+### 集成支付宝支付
+
+
+
+### 集成微信登录、支付
 
 
 
 
 
 
-## 部署、打包发布、热更新
 
-### 安装react-native-code-push
+
+
+
+
+# 发布
+
+### 安装react-native-code-push（热更新）
 
 ```
 yarn add react-native-code-push

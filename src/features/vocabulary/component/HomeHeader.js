@@ -84,7 +84,7 @@ export default class HomeHeader extends Component {
 
       <View style={[{ flex: 2 }, gstyles.r_center]}>
         <Text style={[gstyles.md_black, { fontWeight: '700' }]}>{bookName ? bookName : '爱听词'}</Text>
-        <AliIcon name='-huancunguanli' size={20} color='#303030' style={{ marginLeft: 10 }} onPress={() => {
+        <AliIcon name='xiazai1' size={18} color='#303030' style={{ marginLeft: 10 }} onPress={() => {
           // 离线下载词库资源
           this.props.app.confirmModal.show('下载离线包(40M)？', null, () => {
             //开始下载

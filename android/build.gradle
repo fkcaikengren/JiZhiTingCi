@@ -47,7 +47,11 @@ allprojects {
 
         //友盟的仓库
         maven { url 'https://dl.bintray.com/umsdk/release' }
-
+        
+        // 支付宝仓库
+        flatDir {
+            dirs "$rootDir/../node_modules/@0x5e/react-native-alipay/android/libs"
+        }
 
     }
 }

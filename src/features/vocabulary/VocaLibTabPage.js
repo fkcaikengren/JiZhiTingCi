@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from 'react-native';
-import Picker from 'react-native-picker';
+
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
 import { Header, Badge } from 'react-native-elements'
@@ -36,7 +36,7 @@ class VocaLibTabPage extends Component {
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
-                            Picker.hide()
+
                         }} />}
 
                     centerComponent={{ text: '词库', style: gstyles.lg_black_bold }}

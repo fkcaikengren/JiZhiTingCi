@@ -173,9 +173,9 @@ android {
 }
 
 dependencies {
+    implementation project(':@0x5e_react-native-alipay')
     implementation project(':react-native-zip-archive')
     implementation project(':react-native-webview')
-    implementation project(':react-native-picker')
     implementation project(':react-native-image-picker')
     implementation project(':@react-native-community_blur')
     implementation project(':rn-fetch-blob')

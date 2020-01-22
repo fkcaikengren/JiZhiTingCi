@@ -8,6 +8,7 @@
     "storybook": "start-storybook -p 7007"
   },
   "dependencies": {
+    "@0x5e/react-native-alipay": "^0.2.6",
     "@react-native-community/async-storage": "^1.4.2",
     "@react-native-community/blur": "^3.3.1",
     "add": "^2.0.6",
@@ -30,7 +31,6 @@
     "react-native-linear-gradient": "^2.5.4",
     "react-native-modalbox": "^1.7.1",
     "react-native-parallax-scroll-view": "^0.21.3",
-    "react-native-picker": "^4.3.7",
     "react-native-popup-menu": "^0.15.6",
     "react-native-progress": "3.6.0",
     "react-native-sound": "^0.10.12",

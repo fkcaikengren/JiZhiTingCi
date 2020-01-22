@@ -4,11 +4,16 @@ import android.app.Application;
 import android.util.Log;
 import android.webkit.WebView;
 
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
+
+
+import com.um.UmengConfig;
+import com.um.UmengReactPackage;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 import com.ali.feedback.FeedbackPackage;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
-import com.beefe.picker.PickerViewPackage;
+import com.reactlibrary.AlipayPackage;
+
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -27,10 +32,8 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.rnziparchive.RNZipArchivePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.um.UmengConfig;
-import com.um.UmengReactPackage;
-import com.umeng.message.IUmengRegisterCallback;
-import com.umeng.message.PushAgent;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import com.zmxv.RNSound.RNSoundPackage;
 
@@ -60,16 +63,16 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
+         new UmengReactPackage(),
+            new NotificationPackage(),
+            new AlipayPackage(),
             new MainReactPackage(),
             new RNZipArchivePackage(),
             new FeedbackPackage(),
             new RNCWebViewPackage(),
-            new PickerViewPackage(),
             new ImagePickerPackage(),
             new BlurViewPackage(),
             new RNFetchBlobPackage(),
-            new UmengReactPackage(),
-            new NotificationPackage(),
             new RNGestureHandlerPackage(),
             new RNCardViewPackage(),
             new SplashScreenReactPackage(),

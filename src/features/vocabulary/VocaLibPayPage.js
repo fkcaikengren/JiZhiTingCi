@@ -7,6 +7,7 @@ import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import libStyles from './VocaLibStyle'
 import styles from './VocaLibPayStyle'
+import PayTemplate from "../../component/PayTemplate";
 
 
 class VocaLibPayPage extends Component {
@@ -16,30 +17,7 @@ class VocaLibPayPage extends Component {
         }
     }
 
-    _renderPay = (contentState) => {
-        return <View style={[gstyles.c_center, { width: "100%", position: "absolute", bottom: 0, left: 0, backgroundColor: "#FFF" }]}>
-            <View style={gstyles.c_center}>
-                <Text style={gstyles.md_black}>爱听词</Text>
-                <Text style={{ fontSize: 30, color: gstyles.emColor, marginVertical: 20 }}>6.00元</Text>
-            </View>
-            <View style={[{ width: "90%", height: 60, borderTopWidth: 1, borderColor: "#EEE" }, gstyles.r_between]}>
-                <View style={gstyles.r_start}>
-                    <AliIcon name='weixinzhifu' size={32} color='#0AAF36'></AliIcon>
-                    <Text style={[gstyles.md_black, { marginLeft: 20 }]}>微信支付</Text>
-                </View>
 
-                <AliIcon name='youjiantou' size={26} color='#AAA'></AliIcon>
-            </View>
-            <View style={[{ width: "90%", height: 60, borderTopWidth: 1, borderColor: "#EEE" }, gstyles.r_between]}>
-                <View style={gstyles.r_start}>
-                    <AliIcon name='zhifubao-copy' size={31} color='#01A3DC'></AliIcon>
-                    <Text style={[gstyles.md_black, { marginLeft: 20 }]}>支付宝支付</Text>
-                </View>
-                <AliIcon name='youjiantou' size={26} color='#AAA'></AliIcon>
-            </View>
-        </View>
-
-    }
 
 
     render() {
@@ -159,21 +137,12 @@ class VocaLibPayPage extends Component {
                         title="立即支付"
                         buttonStyle={styles.payBtn}
                         onPress={() => {
-                            this.props.app.commonModal.show({
-                                renderContent: this._renderPay,
-                                modalStyle: {
-                                    width: '100%',
-                                    height: 240,
-                                    backgroundColor: "#FFF",
-                                },
-                                position: "bottom"
+                            PayTemplate.show({
+                                commonModal: this.props.app.commonModal
                             })
                         }}
                     />
                 </View>
-
-
-
             </View >
         );
     }
