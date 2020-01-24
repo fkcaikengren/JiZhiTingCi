@@ -9,9 +9,7 @@ import { CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANG
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
 
 
-
-
-/**提交单词计划 */
+/** 提交单词计划 */
 export function* createPlan(action) {
     const { plan, totalWordCount } = action.payload
     yield put({ type: CHANGE_VOCA_BOOK_START })

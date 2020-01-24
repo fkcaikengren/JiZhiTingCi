@@ -1,12 +1,39 @@
 import React, { Component } from "react";
-import { TextInput, View, Text, StatusBar } from 'react-native'
+import { TextInput, StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Button, Input } from 'react-native-elements'
 import SplashScreen from 'react-native-splash-screen'
 import AliIcon from '../../component/AliIcon'
-import styles from './PhoneLoginStyle'
 import gstyles from "../../style";
 import * as MineAction from './redux/action/mineAction'
+const Dimensions = require('Dimensions');
+let { width, height } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+
+  backBtn: {
+    height: 50,
+    width: 50,
+    position: 'absolute',
+    left: 25,
+    top: 40,
+    backgroundColor: '#EFEFEF',
+    borderRadius: 50,
+  },
+
+  phoneInput: {
+    width: '100%',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: gstyles.gray,
+    borderRadius: 100,
+    height: 50,
+    paddingLeft: 20,
+  }
+
+
+
+})
+
 
 
 class PhoneLoginPage extends Component {
@@ -36,11 +63,6 @@ class PhoneLoginPage extends Component {
     let param = { phone: this.state.phone, code: this.state.verifyCode }
     this.props.loginByCode(param)
   };
-
-
-
-
-
 
   // 更改手机号码
   _changePhone = (phone) => {
@@ -77,12 +99,20 @@ class PhoneLoginPage extends Component {
       this.props.navigation.navigate('AuthLoading'); //副作用
     }
     return (
-      <View style={styles.container}>
+      <View style={[gstyles.c_center, { flex: 1, backgroundColor: '#FFF' }]}>
         <StatusBar translucent={false} barStyle="dark-content" />
+        <TouchableOpacity
+          style={[gstyles.c_center, styles.backBtn]}
+          onPress={() => {
+            this.props.navigation.goBack()
+          }} >
+          <AliIcon name='fanhui' size={26} color={gstyles.black} />
+        </TouchableOpacity>
+
         {/* 手机登录层 */}
-        <View style={styles.phoneLoginView}>
+        <View style={[gstyles.c_center, { width: width - 60, paddingBottom: 30 }]}>
           {/* logo */}
-          <View style={[gstyles.r_center, styles.logo]}>
+          <View style={[gstyles.r_center, { width: '100%', paddingBottom: 50 }]}>
             <Text style={{ fontSize: 36, color: '#202020' }}>爱听词</Text>
           </View>
           {/* 如果是输入手机号模式  */}
@@ -101,13 +131,7 @@ class PhoneLoginPage extends Component {
                 />
               </View>
               {/* 登录按钮 */}
-              <View style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                marginTop: 20,
-              }}>
+              <View style={[gstyles.c_center, { width: '100%', marginTop: 20, }]}>
                 <Button
                   disabled={!this.state.isPhoneRight}
                   title="发送验证码"
@@ -122,7 +146,7 @@ class PhoneLoginPage extends Component {
                   disabled={!this.state.isPhoneRight}
                   title="密码登录"
                   titleStyle={{ fontSize: 14, color: '#202020' }}
-                  containerStyle={{ alignSelf: 'flex-end' }}
+                  containerStyle={{ alignSelf: 'flex-end', marginTop: 10 }}
                 />
               </View>
             </View>
@@ -146,19 +170,13 @@ class PhoneLoginPage extends Component {
                 />
               </View>
               {/* 登录按钮 */}
-              <View style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                marginTop: 20,
-              }}>
+              <View style={[gstyles.c_center, { width: '100%', marginTop: 20, }]}>
                 <Button
                   disabled={!this.state.isPhoneRight}
-                  disabledStyle={{ backgroundColor: '#FFE95799' }}
+                  disabledStyle={{ backgroundColor: gstyles.mainColor }}
                   title="登录"
                   titleStyle={gstyles.md_black}
-                  buttonStyle={{ height: gstyles.mdHeight, backgroundColor: '#FFE957', borderRadius: 100 }}
+                  buttonStyle={{ height: gstyles.mdHeight, backgroundColor: gstyles.mainColor, borderRadius: 100 }}
                   containerStyle={{ width: '100%' }}
                   onPress={this._login}
                 />
@@ -178,25 +196,6 @@ class PhoneLoginPage extends Component {
 
         </View>
 
-        {/* 其他登录方式 */}
-        {
-          <View style={[gstyles.c_center, styles.otherLoginView]}>
-            <View style={gstyles.r_center}>
-              <View style={styles.line} />
-              <Text>其他登录方式</Text>
-              <View style={styles.line} />
-            </View>
-
-            <View style={[gstyles.r_center, { marginTop: 20 }]}>
-              <View style={[styles.otherLoginBtn, { backgroundColor: '#30DE76' }]}>
-                <AliIcon name='weixin' size={22} color='#FFF'></AliIcon>
-              </View>
-              <View style={[styles.otherLoginBtn, { backgroundColor: '#3EC6FB' }]}>
-                <AliIcon name='qq' size={22} color='#FFF'></AliIcon>
-              </View>
-            </View>
-          </View>
-        }
       </View>
     );
   }

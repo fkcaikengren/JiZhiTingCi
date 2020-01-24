@@ -30,7 +30,7 @@ console.log('copy realm');
 global.Storage = createStorage()
 
 
-// 是否手动登录进入App首页
+// 是否手动登录进入App首页 (=>是否需要加载当天任务)
 global.IsLoginToHome = false
 
 

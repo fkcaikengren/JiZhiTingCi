@@ -1,10 +1,16 @@
 import { createActions } from 'redux-actions'
 
-// 登录
+// 验证码登录
 export const LOGIN_BY_CODE = 'LOGIN_BY_CODE'
 export const LOGIN_BY_CODE_START = 'LOGIN_BY_CODE_START'
 export const LOGIN_BY_CODE_SUCCEED = 'LOGIN_BY_CODE_SUCCEED'
 export const LOGIN_BY_CODE_FAIL = 'LOGIN_BY_CODE_FAIL'
+
+// 微信登录
+export const LOGIN_BY_WX = 'LOGIN_BY_WX'
+export const LOGIN_BY_WX_START = 'LOGIN_BY_WX_START'
+export const LOGIN_BY_WX_SUCCEED = 'LOGIN_BY_WX_SUCCEED'
+export const LOGIN_BY_WX_FAIL = 'LOGIN_BY_WX_FAIL'
 
 // 个人中心
 export const MODIFY_NICKNAME = 'MODIFY_NICKNAME'
@@ -36,9 +42,12 @@ const fn = (payload) => {
     return payload
 }
 
-export const { loginByCode, modifyNickname, modifyPassword, modifyAvatar, logout,
+export const { loginByCode, loginByWx,
+    modifyNickname, modifyPassword, modifyAvatar, logout,
     changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
         [LOGIN_BY_CODE]: fn,
+        [LOGIN_BY_WX]: fn,
+
         [MODIFY_NICKNAME]: fn,
         [MODIFY_PASSWORD]: fn,
         [MODIFY_AVATAR]: fn,

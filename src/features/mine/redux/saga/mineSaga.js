@@ -4,9 +4,15 @@ import {
     LOGIN_BY_CODE,
     LOGIN_BY_CODE_START,
     LOGIN_BY_CODE_SUCCEED,
+
+    LOGIN_BY_WX,
+    LOGIN_BY_WX_START,
+    LOGIN_BY_WX_SUCCEED,
+
     MODIFY_NICKNAME,
     MODIFY_NICKNAME_START,
     MODIFY_NICKNAME_SUCCEED,
+
     MODIFY_PASSWORD,
     MODIFY_PASSWORD_START,
     MODIFY_PASSWORD_SUCCEED,
@@ -15,11 +21,13 @@ import {
     MODIFY_AVATAR_START,
     MODIFY_AVATAR_SUCCEED
 } from '../action/mineAction'
-import {loginHandle} from '../../common/userHandler'
+import { SAVE_PLAN } from '../../../vocabulary/redux/action/planAction'
+import { loginHandle } from '../../common/userHandler'
 import { USER_DIR } from '../../../../common/constant'
 import { Platform } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
 import FileService from '../../../../common/FileService'
+
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
 
@@ -31,16 +39,33 @@ function* loginByCode(action) {
     yield put({ type: LOGIN_BY_CODE_START })
     const res = yield Http.post('/user/loginByCode', action.payload)
     if (res.status === 200) {
-        const userState = loginHandle(res.data)
-        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: userState })
+        const { credential, user, plan } = loginHandle(res.data)
+        yield put({ type: SAVE_PLAN, payload: { plan } })                           //保存计划
+        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
     }
 }
 
 
 /**密码登录 */
+
+
+
 /**微信登录 */
+function* loginByWX(action) {
+    console.log('微信登录。。开始')
+    yield put({ type: LOGIN_BY_WX_START })
+    const res = yield Http.post('/user/loginByWX', action.payload)
+    if (res.status === 200) {
+        console.log(res.data)
+        const { credential, user, plan } = loginHandle(res.data)
+        yield put({ type: SAVE_PLAN, payload: { plan } })                           //保存计划
+        yield put({ type: LOGIN_BY_WX_SUCCEED, payload: { credential, user } }) //保存user
+    }
+}
 
 
+
+/**QQ登录 */
 
 
 
@@ -67,14 +92,14 @@ function* modifyPwd(action) {
 
 //修改头像
 function* modifyAvatar(action) {
-    const {fileName,type,data} = action.payload.result
+    const { fileName, type, data } = action.payload.result
     yield put({ type: MODIFY_AVATAR_START })
     //上传
     const res = yield RNFetchBlob.fetch('POST', 'http://129.211.71.111:9000/m/user/modifyAvatar', {
         Authorization: action.payload.token,
         'Content-Type': 'multipart/form-data',
     }, [
-        { name: 'avatar', filename:fileName, type, data },
+        { name: 'avatar', filename: fileName, type, data },
     ])
     //下载
     const url = JSON.parse(res.data).avatarUrl
@@ -87,7 +112,10 @@ function* modifyAvatar(action) {
 
 export function* watchLoginByCode() {
     yield takeLatest(LOGIN_BY_CODE, loginByCode)
+}
 
+export function* watchLoginByWX() {
+    yield takeLatest(LOGIN_BY_WX, loginByWX)
 }
 
 

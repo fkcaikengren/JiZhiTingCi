@@ -1,12 +1,7 @@
 
 import React, { Component } from "react";
 import {
-    View,
-    Text,
-    TouchableNativeFeedback,
-    ScrollView,
-    TextInput,
-    Keyboard
+    View, Text, TouchableNativeFeedback, ScrollView,
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import Modal from 'react-native-modalbox';

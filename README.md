@@ -727,13 +727,33 @@ Caused by: com.android.builder.dexing.DexArchiveBuilderException: Error while de
 
 ### 集成支付宝支付
 
+```bash
+yarn add @0x5e/react-native-alipay
+```
+
+解决冲突utdid类冲突，用alipaySdk-15.6.8-20191021122455-noUtdid.arr替换android/libs下的arr文件
+
+需要修改：@0x5e/react-native-alipay/android/build.gradle：
+
+```js
+//compile(name: 'alipaySdk-15.5.9-20181123210601', ext: 'aar')
+compile(name: 'alipaySdk-15.6.8-20191021122455-noUtdid', ext: 'aar')
+```
+
 
 
 ### 集成微信登录、支付
 
+```bash
+yarn add react-native-wechat
+```
 
+迁移至androidx，需修改 WeChatModule ：
 
-
+```js
+//import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+```
 
 
 

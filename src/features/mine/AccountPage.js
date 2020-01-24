@@ -24,15 +24,15 @@ class AccountPage extends React.Component {
     //退出登录
     _logout = () => {
         this.props.app.confirmModal.show("确认退出登录！", null, () => {
-            //同步数据
+            //1.同步数据
+
+            //2.清空Storage 
             Storage.clearMapForKey('notSyncTasks')
             Storage.clearMapForKey('notSyncGroups')
-            //清空token和user
-            this.props.logout()
-            //清空任务数据
-            VocaTaskDao.getInstance().deleteAllTasks()
-            //清空生词本数据
-            VocaGroupDao.getInstance().deleteAllGroups()
+            this.props.logout() //清空token和user
+            //3.清空realm 
+            VocaTaskDao.getInstance().deleteAllTasks() //清空任务数据
+            VocaGroupDao.getInstance().deleteAllGroups() //清空生词本数据
 
             //跳转到auth
             this.props.navigation.navigate('AuthLoading')

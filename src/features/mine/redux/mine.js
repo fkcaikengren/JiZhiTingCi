@@ -1,10 +1,12 @@
 import {
     LOGIN_BY_CODE_SUCCEED,
-    LOGIN_BY_CODE_FAIL,
+    LOGIN_BY_WX_SUCCEED,
+
     MODIFY_NICKNAME_SUCCEED,
     MODIFY_NICKNAME_FAIL,
     MODIFY_AVATAR_SUCCEED,
     MODIFY_AVATAR_FAIL,
+
     LOGOUT,
     CHANGE_CONFIG_REVIEW_PLAY_TIMES,
     CHANGE_CONFIG_N_TRANS,
@@ -15,7 +17,7 @@ import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/co
 
 
 const defaultState = {
-    token: null,
+    credential: {},
     user: {},
     avatarSource: null,
 
@@ -29,11 +31,18 @@ const defaultState = {
 
 export const mine = (state = defaultState, action) => {
     switch (action.type) {
-        case LOGIN_BY_CODE_SUCCEED: //登录成功
-            const { token, user } = action.payload
-            return { ...state, token, user }
-        case LOGIN_BY_CODE_FAIL:    //登录失败
-            return { ...state, }
+        case LOGIN_BY_CODE_SUCCEED: {//验证码登录成功
+            console.log('验证码登录成功')
+            const { credential, user } = action.payload
+            return { ...state, credential, user }
+        }
+        case LOGIN_BY_WX_SUCCEED: {  //微信登录成功
+            console.log('----微信登录成功')
+            const { credential, user } = action.payload
+            return { ...state, credential, user }
+        }
+
+
         case MODIFY_NICKNAME_SUCCEED:   //修改昵称成功
             return { ...state, user: { ...state.user, nickname: action.payload.nickname } }
         case MODIFY_NICKNAME_FAIL:      //修改昵称失败

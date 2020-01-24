@@ -13,6 +13,7 @@ import com.umeng.message.PushAgent;
 import com.ali.feedback.FeedbackPackage;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.reactlibrary.AlipayPackage;
+import com.theweflex.react.WeChatPackage; 
 
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
@@ -65,8 +66,8 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
          new UmengReactPackage(),
             new NotificationPackage(),
-            new AlipayPackage(),
             new MainReactPackage(),
+              
             new RNZipArchivePackage(),
             new FeedbackPackage(),
             new RNCWebViewPackage(),
@@ -84,7 +85,9 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNSpinkitPackage(),
-            new BackgroundTimerPackage()
+            new BackgroundTimerPackage(),
+            new AlipayPackage(),
+            new WeChatPackage()
       );
     }
 

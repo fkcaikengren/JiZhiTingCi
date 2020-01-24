@@ -18,3 +18,7 @@
 
 
 -keep class com.alipay.** { *; }
+
+-keep class com.tencent.mm.sdk.** {
+   *;
+}

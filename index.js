@@ -4,6 +4,9 @@ import codePush from "react-native-code-push";
 import App from './App';
 import { name as appName } from './app.json';
 
+
+
+
 //android 开启动画
 // if(Platform.OS === "android" ){
 //     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
