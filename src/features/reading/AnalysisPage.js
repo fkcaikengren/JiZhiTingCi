@@ -24,9 +24,9 @@ class AnalysisPage extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.article.isWebLoading && !prevProps.article.isWebLoading) {
-            this.props.app.toast.show(CircleLoader, DURATION.FOREVER)
+            this.props.app.loader.show("加载中...", DURATION.FOREVER)
         } else if (!this.props.article.isWebLoading && prevProps.article.isWebLoading) {
-            this.props.app.toast.close()
+            this.props.app.loader.close()
         }
     }
     //发送给Web, 初始化

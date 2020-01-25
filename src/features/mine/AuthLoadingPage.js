@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { connect } from "react-redux";
+import SplashScreen from 'react-native-splash-screen'
 import createHttp from '../../common/http'
 
 class AuthLoadingPage extends Component {
@@ -11,6 +12,7 @@ class AuthLoadingPage extends Component {
     }
 
     componentDidMount() {
+
         //debug模式下，此时redux-persist的数据未加载，所以定时
         // this._bootstrap()
         setTimeout(this._bootstrap, 1000)
@@ -18,13 +20,18 @@ class AuthLoadingPage extends Component {
 
     // token验证登录状态
     _bootstrap = async () => {
+
+        //隐藏启动页
+        SplashScreen.hide();
+        //创建Http
         global.Http = createHttp()
+
         const { accessToken, expiresIn, refreshToken } = this.props.mine.credential
         //判断是否过期
         console.log(Date.now())
         console.log(expiresIn)
         if (accessToken && expiresIn && Date.now() < expiresIn) {
-            console.log('token未过期，进入App')
+            console.log('直接进入App')
             // 直接进入App
             this.props.navigation.navigate('HomeStack')
         } else {

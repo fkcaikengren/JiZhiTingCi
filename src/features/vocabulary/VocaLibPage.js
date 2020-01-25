@@ -7,7 +7,6 @@ import * as PlanAction from './redux/action/planAction'
 
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
-import { CountDownLoader } from "../../component/Loader";
 import _util from '../../common/util'
 
 class VocaLibPage extends Component {
@@ -79,8 +78,6 @@ class VocaLibPage extends Component {
                     totalWordCount: el.count,
                     lastLearnDate: this.props.home.lastLearnDate
                 })
-                //开始倒计时
-                this.refs.countDownLoader && this.refs.countDownLoader.countDown(7)
             }
         }
 
@@ -128,9 +125,7 @@ class VocaLibPage extends Component {
                     renderItem={this._renderBook}
                     keyExtractor={item => item._id}
                 />
-                {/* {isLoadPending &&
-                    <CountDownLoader ref="countDownLoader" />
-                } */}
+
 
             </View>
 

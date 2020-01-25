@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { TextInput, StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Button, Input } from 'react-native-elements'
-import SplashScreen from 'react-native-splash-screen'
 import AliIcon from '../../component/AliIcon'
 import gstyles from "../../style";
 import * as MineAction from './redux/action/mineAction'
@@ -51,17 +50,16 @@ class PhoneLoginPage extends Component {
   }
 
   componentDidMount() {
-    //隐藏启动页
-    SplashScreen.hide();
+
   }
 
   _login = () => {
-    //手动登录进入App首页
-    console.log('---手动登录进入App首页--')
-    IsLoginToHome = true
     //获取登录信息
-    let param = { phone: this.state.phone, code: this.state.verifyCode }
-    this.props.loginByCode(param)
+    const params = { phone: this.state.phone, code: this.state.verifyCode }
+    this.props.loginByCode({
+      params,
+      navigation: this.props.navigation
+    })
   };
 
   // 更改手机号码

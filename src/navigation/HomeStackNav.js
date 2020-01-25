@@ -248,7 +248,7 @@ const VocaHomeStackNav = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'VocaLibPay', //VocaLibPay
+  initialRouteName: 'Home', //VocaLibPay
   headerMode: 'none',
   initialRouteParams: {
     // articleInfo:article2

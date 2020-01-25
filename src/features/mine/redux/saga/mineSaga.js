@@ -37,10 +37,12 @@ const DocumentDir = fs.dirs.DocumentDir + '/'
 /**验证码登录 */
 function* loginByCode(action) {
     yield put({ type: LOGIN_BY_CODE_START })
-    const res = yield Http.post('/user/loginByCode', action.payload)
+    const res = yield Http.post('/user/loginByCode', action.payload.params)
     if (res.status === 200) {
-        const { credential, user, plan } = loginHandle(res.data)
-        yield put({ type: SAVE_PLAN, payload: { plan } })                           //保存计划
+        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        if (plan) { //保存计划
+            yield put({ type: SAVE_PLAN, payload: { plan } })
+        }
         yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
     }
 }
@@ -52,13 +54,13 @@ function* loginByCode(action) {
 
 /**微信登录 */
 function* loginByWX(action) {
-    console.log('微信登录。。开始')
     yield put({ type: LOGIN_BY_WX_START })
-    const res = yield Http.post('/user/loginByWX', action.payload)
+    const res = yield Http.post('/user/loginByWX', action.payload.params)
     if (res.status === 200) {
-        console.log(res.data)
-        const { credential, user, plan } = loginHandle(res.data)
-        yield put({ type: SAVE_PLAN, payload: { plan } })                           //保存计划
+        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        if (plan) { //保存计划
+            yield put({ type: SAVE_PLAN, payload: { plan } })
+        }
         yield put({ type: LOGIN_BY_WX_SUCCEED, payload: { credential, user } }) //保存user
     }
 }
@@ -96,14 +98,13 @@ function* modifyAvatar(action) {
     yield put({ type: MODIFY_AVATAR_START })
     //上传
     const res = yield RNFetchBlob.fetch('POST', 'http://129.211.71.111:9000/m/user/modifyAvatar', {
-        Authorization: action.payload.token,
+        Authorization: action.payload.accessToken,
         'Content-Type': 'multipart/form-data',
     }, [
         { name: 'avatar', filename: fileName, type, data },
     ])
     //下载
     const url = JSON.parse(res.data).avatarUrl
-    console.log(url)
     const res2 = yield FileService.getInstance().fetch(url, DocumentDir + USER_DIR + action.payload.result.fileName)
     avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
     yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: url } })

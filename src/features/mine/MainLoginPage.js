@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, StatusBar, ImageBackground, Image, View, Text, TouchableOpacity } from 'react-native'
-import SplashScreen from 'react-native-splash-screen'
 import CardView from 'react-native-cardview'
 
 import AliIcon from '../../component/AliIcon'
@@ -37,8 +36,7 @@ class MainLoginPage extends Component {
     }
 
     componentDidMount() {
-        //隐藏启动页
-        SplashScreen.hide();
+
     }
 
     render() {
@@ -65,7 +63,10 @@ class MainLoginPage extends Component {
                         onResponderStart={async (e) => {
                             const code = await WXService.getInstance().getCode()
                             if (code) {
-                                this.props.loginByWx({ code })
+                                this.props.loginByWx({
+                                    params: { code },
+                                    navigation: this.props.navigation
+                                })
                             }
                         }}
                     >

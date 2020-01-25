@@ -52,7 +52,7 @@ export default class FileService {
     }
 
     /**
-     *  加载文件
+     *  加载文件,主要针对Voca资源操作
      * @param primaryDir 一级目录
      * @param filePath  文件路径
      * @returns 

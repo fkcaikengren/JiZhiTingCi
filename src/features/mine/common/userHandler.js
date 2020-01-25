@@ -1,11 +1,18 @@
-import VocaGroupDao from "../../vocabulary/service/VocaGroupDao"
-import VocaTaskDao from "../../vocabulary/service/VocaTaskDao"
 
 
-export const loginHandle = (data) => {
-    console.log('---login handle---')
+export const loginHandle = (data, navigation) => {
+    //1.标记登录进入App首页
+    console.log('---通过登录进入App首页--')
+    IsLoginToHome = true
+
+
+    //2.进入首页
     const { credential, user } = data
-    //token,user基本信息保存到redux
+    navigation.navigate("Home", {
+        loginUserInfo: user
+    })
+
+    //3.返回数据（保存到redux）
     const mineState = {
         credential: credential,
         user: {
@@ -21,21 +28,6 @@ export const loginHandle = (data) => {
         },
         plan: user.plan,
     }
-
-    // 保存vocaGroups
-    if (user.vocaGroups && user.vocaGroups.length > 0) {
-        const vgDao = VocaGroupDao.getInstance()
-        vgDao.deleteAllGroups()
-        vgDao.saveVocaGroups(user.vocaGroups)
-    }
-
-    // 保存vocaTasks
-    if (user.plan && user.vocaTasks && user.vocaTasks.length > 0) {
-        const vtDao = VocaTaskDao.getInstance()
-        vtDao.deleteAllTasks()
-        vtDao.saveVocaTasks(user.vocaTasks, user.plan.taskWordCount)
-    }
-
     return mineState
 }
 

@@ -4,6 +4,7 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store'
 import Toast, { DURATION } from 'react-native-easy-toast'
+import Loader from './src/component/Loader'
 import ConfirmModal from './src/component/ConfirmModal'
 import CommonModal from './src/component/CommonModal'
 const Realm = require('realm')
@@ -62,6 +63,7 @@ class Main extends React.Component {
 
   componentDidMount() {
     this.props.setToast({ toast: this.refs.toast })
+    this.props.setLoader({ loader: this.refs.loader })
     this.props.setConfirmModal({ confirmModal: this.refs.confirmModal })
     this.props.setCommonModal({ commonModal: this.refs.commonModal })
   }
@@ -72,14 +74,15 @@ class Main extends React.Component {
         <AppWithNavigationState />
         <Toast
           ref="toast"
-          style={{ backgroundColor: '#303030' }}
+          style={{ backgroundColor: '#101010' }}
           position='top'
-          positionValue={200}
+          positionValue={80}
           fadeInDuration={100}
           fadeOutDuration={100}
-          opacity={0.8}
+          opacity={0.9}
           textStyle={{ color: '#fff' }}
         />
+        <Loader ref="loader" />
         <ConfirmModal ref="confirmModal" />
         <CommonModal ref='commonModal' />
       </View>
@@ -95,6 +98,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setToast: AppAction.setToast,
+  setLoader: AppAction.setLoader,
   setConfirmModal: AppAction.setConfirmModal,
   setCommonModal: AppAction.setCommonModal,
 }

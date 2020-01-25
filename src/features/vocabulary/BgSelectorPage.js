@@ -11,7 +11,6 @@ const RootPath = Dirs.DocumentDir + '/bgs/'
 import createHttp from '../../common/http'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon';
-import { CircleLoader } from '../../component/Loader'
 import gstyles from "../../style";
 import styles from './BgSelectorStyle'
 
@@ -37,7 +36,7 @@ class BgSelectorPage extends Component {
 
 
     _init = async () => {
-        this.props.app.toast.show(CircleLoader, DURATION.FOREVER)
+        this.props.app.loader.show("加载中...", DURATION.FOREVER)
         const myHttp = createHttp({ showLoader: false });
         const res = await myHttp.get('/appinfo/getPlayBgs')
         const bgUrls = res.data
@@ -60,7 +59,7 @@ class BgSelectorPage extends Component {
                 console.log('保存：' + res.path())
             }
         }
-        this.props.app.toast.close()
+        this.props.app.loader.close()
         this.setState({ bgPaths })
     }
 

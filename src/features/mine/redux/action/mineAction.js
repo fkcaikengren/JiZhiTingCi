@@ -28,6 +28,8 @@ export const MODIFY_AVATAR_START = 'MODIFY_AVATAR_START'
 export const MODIFY_AVATAR_SUCCEED = 'MODIFY_AVATAR_SUCCEED'
 export const MODIFY_AVATAR_FAIL = 'MODIFY_AVATAR_FAIL'
 
+export const SET_AVATAR_SOURCE = 'SET_AVATAR_SOURCE'
+
 // 退出登录
 export const LOGOUT = 'LOGOUT'
 
@@ -43,7 +45,7 @@ const fn = (payload) => {
 }
 
 export const { loginByCode, loginByWx,
-    modifyNickname, modifyPassword, modifyAvatar, logout,
+    modifyNickname, modifyPassword, modifyAvatar, setAvatarSource, logout,
     changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
         [LOGIN_BY_CODE]: fn,
         [LOGIN_BY_WX]: fn,
@@ -51,6 +53,9 @@ export const { loginByCode, loginByWx,
         [MODIFY_NICKNAME]: fn,
         [MODIFY_PASSWORD]: fn,
         [MODIFY_AVATAR]: fn,
+        [SET_AVATAR_SOURCE]: fn,
+
+        // 退出登录
         [LOGOUT]: fn,
 
         // 设置

@@ -6,12 +6,8 @@ import gstyles from '../style';
 import AliIcon from './AliIcon';
 import _util from '../common/util';
 import AliPayService from '../common/AliPayService';
+import { store } from '../redux/store'
 
-
-
-const alipay = async () => {
-
-}
 
 
 
@@ -47,10 +43,17 @@ export default class PayTemplate {
                             body: "Mac pro 12",
                             productCode: "VOCABOOK_123456"
                         }
+                        // 微信支付
                         const res = await Http.post('/vocaBook/getOrderInfoByWX', params)
-                        console.log(res)
                         if (res.status === 200) {
-                            await WXService.getInstance().payByWX(res.data)
+                            await WXService.getInstance().payByWX(res.data, () => {
+                                hide()
+                                store.getState().app.toast.show('支付失败！请稍后重试', 2000)
+                            }, () => {
+                                hide()
+                                // 获取单词数据，进入计划页面
+                            })
+
                         }
                     }}>
                     <View style={gstyles.r_start}>
@@ -65,15 +68,20 @@ export default class PayTemplate {
                     onStartShouldSetResponder={() => true}
                     onResponderStart={async (e) => {
                         // 获取订单信息
-                        const res = await Http.post('/vocaBook/getOrderInfo', {
+                        const res = await Http.post('/vocaBook/getOrderInfoByAli', {
                             productName: "四级词组(乱序)",
                             totalAmount: 0.01,
                             body: "vocaBook 1",
                             productCode: "VOCABOOK_123456"
                         })
-                        // APP支付
+                        // 支付宝支付
                         if (res.status === 200) {
-                            AliPayService.getInstance().payByAli(res.data)
+                            await AliPayService.getInstance().payByAli(res.data, () => {
+                                hide()
+                                store.getState().app.toast.show('支付失败！请稍后重试', 2000)
+                            }, () => {
+                                hide()
+                            })
                         }
                     }}
                 >

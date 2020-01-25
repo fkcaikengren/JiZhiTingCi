@@ -2,54 +2,43 @@ import React, { Component } from 'react';
 import { View, Text } from "react-native";
 import gstyles from "../style";
 const Spinner = require('react-native-spinkit');
+import Toast, { DURATION } from 'react-native-easy-toast'
 
-
-export const CircleLoader = <View style={{
-    padding: 10
-}}>
-    <Spinner
-        isVisible={true}
-        size={50}
-        type={'Circle'}
-        color={gstyles.mainColor}
-    />
-</View>
-
-
-export class CountDownLoader extends Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            timeCount: 7
-        }
+export default class Loader extends React.Component {
+    constructor(props) {
+        super(props);
     }
 
-    componentWillUnmount() {
-        this.timer && clearTimeout(this.timer);
-    }
-    
-    countDown = (num) => {
-        this.setState({ timeCount: num })
-        this.timer = setInterval(()=>{
-            if (this.state.timeCount === 0) { //暂停
-                this.timer && clearTimeout(this.timer);
-            }else{                            //减1                   
-                this.setState({ timeCount: this.state.timeCount - 1 })
-            }
-        },1000)
-    }
-
-    render(){
-        return <View style={[gstyles.loadingView]}>
-        <View>
+    show = (showText = null, duration = 3000) => {
+        const CircleLoader = <View style={[gstyles.c_center, { width: 80, height: 80 }]}>
             <Spinner
                 isVisible={true}
-                size={100}
-                type={'ThreeBounce'}
-                color={gstyles.emColor}
+                size={50}
+                type={'Circle'}
+                color={gstyles.mainColor}
             />
-            <Text style={gstyles.md_black}>{`计划生成中 ${this.state.timeCount}..`}</Text>
+            {showText &&
+                <Text style={{ marginTop: 4, fontSize: 14, color: gstyles.mainColor }}>{showText}</Text>
+            }
         </View>
-    </View>
+        this.refs.toast.show(CircleLoader, duration)
+    }
+    close = () => {
+        this.refs.toast.close()
+    }
+
+    render() {
+        return (
+            <Toast
+                ref="toast"
+                style={{ backgroundColor: '#303030' }}
+                position='top'
+                positionValue={240}
+                fadeInDuration={1}
+                fadeOutDuration={1}
+                opacity={0.8}
+                textStyle={{ color: '#fff' }}
+            />
+        );
     }
 }

@@ -1,16 +1,47 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Header, } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker';
-
+import GroupItem from './component/GroupItem';
 import AliIcon from '../../component/AliIcon';
-import gstyles from "../../style";
-import styles from './AccountStyle'
 import { connect } from 'react-redux';
 import * as MineAction from './redux/action/mineAction'
 import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
 import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
+import gstyles from "../../style";
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#EFEFEF',
+    },
+    mainView: {
+        marginTop: 16,
+        borderTopColor: '#DFDFDF',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#DFDFDF',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+
+    },
+
+
+    logout: {
+        height: 50,
+        marginTop: 10,
+        backgroundColor: '#FDFDFD',
+        borderTopColor: '#DFDFDF',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#DFDFDF',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+
+    },
+    imgStyle: {
+        width: 40,
+        height: 40,
+        borderRadius: 50,
+    },
+
+});
 
 class AccountPage extends React.Component {
     constructor(props) {
@@ -58,7 +89,7 @@ class AccountPage extends React.Component {
             } else {
                 //modifyAvatar
                 this.props.modifyAvatar({
-                    token: this.props.mine.token,
+                    ...this.props.mine.credential,
                     result: result
                 })
                 // const source = { uri: result.uri };
@@ -69,37 +100,21 @@ class AccountPage extends React.Component {
         });
     }
 
-    // Item
-    _renderItem = (title, rightPart = null, onPress = () => null, hasBorderLine = true) => {
-        const isText = (typeof rightPart === 'string')
-        const borderLine = hasBorderLine ? null : { borderBottomWidth: 0 }
-        return <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={onPress}
-        >
-            <View style={styles.itemWrapper}>
-                <View style={[gstyles.r_start, styles.itemView, borderLine]}>
-                    <View style={[{ flex: 1 }, gstyles.r_start]}>
-                        <Text numberOfLines={1} style={gstyles.lg_black}>{title}</Text>
-                    </View>
-                    <View style={gstyles.r_start}>
-                        {isText &&
-                            <Text numberOfLines={1} style={gstyles.lg_gray}>{rightPart}</Text>
-                        }
-                        {!isText &&
-                            rightPart
-                        }
-                        <AliIcon name='youjiantou' size={26} color={gstyles.gray}
-                            style={{ marginLeft: 10, marginRight: 10 }} />
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
-    }
+
 
     render() {
         const { user, avatarSource } = this.props.mine
         const source = avatarSource ? avatarSource : require('../../image/bg.jpg')
+        let sex = '未填写'
+        switch (user.sex) {
+            case 0:
+                sex = '女'
+                break
+            case 1:
+                sex = '男'
+                break
+        }
+
         return (
             <View style={styles.container}>
                 {/* 头部 */}
@@ -119,39 +134,58 @@ class AccountPage extends React.Component {
                 />
 
                 <View style={styles.mainView}>
-                    {/* 头像 */}
-                    {
-                        this._renderItem('头像',
-                            <Image style={styles.imgStyle}
-                                source={source} />,
-                            this._changeAvatar)
-                    }
-                    {/* 昵称 */}
-                    {
-                        this._renderItem('昵称', user.nickname, () => {
+                    <GroupItem
+                        title='头像'
+                        rightComponent={<Image style={styles.imgStyle} source={source} />}
+                        onPress={this._changeAvatar}
+                    />
+                    <GroupItem
+                        title='昵称'
+                        rightComponent={user.nickname}
+                        onPress={() => {
                             this.props.navigation.navigate('Nickname', {
                                 nickname: user.nickname
                             })
-                        })
-                    }
+                        }}
+                    />
+                    <GroupItem
+                        title='性别'
+                        rightComponent={sex}
+                        onPress={() => {
 
-                    {/* {
-                        this._renderItem('绑定微信', <AliIcon name='weixin' size={26} color='#30DE76' />)
-                    }
-                    {
-                        this._renderItem('绑定QQ', <AliIcon name='qq' size={26} color='#3EC6FB' />)
-                    } */}
-                    {/* 手机号 */}
-                    {
-                        this._renderItem('手机', user.phone ? user.phone :
-                            <AliIcon name='shouji' size={26} color={gstyles.gray} />)
-                    }
-                    {/* 密码 */}
-                    {
-                        this._renderItem('修改密码', null, () => {
+                        }}
+                    />
+                    <GroupItem
+                        title='绑定微信'
+                        rightComponent={<AliIcon name='weixin' size={26} color={user.wechat ? '#30DE76' : gstyles.gray} />}
+                        onPress={() => {
+
+                        }}
+                    />
+                    <GroupItem
+                        title='绑定QQ'
+                        rightComponent={<AliIcon name='qq' size={26} color={user.qq ? '#3EC6FB' : gstyles.gray} />}
+                        onPress={() => {
+
+                        }}
+                    />
+                    <GroupItem
+                        title='绑定手机'
+                        rightComponent={user.phone ? user.phone :
+                            <AliIcon name='shouji' size={26} color={gstyles.gray} />}
+                        onPress={() => {
+
+                        }}
+                    />
+                    <GroupItem
+                        title='修改密码'
+                        hasBorderLine={false}
+                        onPress={() => {
                             this.props.navigation.navigate('Password')
-                        }, false)
-                    }
+                        }}
+                    />
+
+
                     <TouchableOpacity activeOpacity={0.8}
                         onPress={this._logout}
                     >

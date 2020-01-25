@@ -20,6 +20,7 @@ const STATUSBAR_HEIGHT = StatusBar.currentHeight
 class HomeDrawerPanel extends Component {
   render() {
     const { user, avatarSource } = this.props.mine
+    const source = avatarSource ? avatarSource : require('../../../image/bg.jpg')
     const { nickname } = user
     return (
       <ScrollView style={styles.panel}
@@ -36,7 +37,7 @@ class HomeDrawerPanel extends Component {
             style={[styles.header, gstyles.r_between]}
           >
             <View style={gstyles.r_start}>
-              <Image style={styles.headerIcon} source={avatarSource} />
+              <Image style={styles.headerIcon} source={source} />
               <Text style={[gstyles.xl_black, { marginLeft: 10 }]}>{nickname}</Text>
             </View>
             <AliIcon name='youjiantou' size={30} color='#202020' style={{ marginRight: 10 }} />

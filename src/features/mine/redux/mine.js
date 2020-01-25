@@ -11,7 +11,8 @@ import {
     CHANGE_CONFIG_REVIEW_PLAY_TIMES,
     CHANGE_CONFIG_N_TRANS,
     CHANGE_CONFIG_M_TRANS,
-    CHANGE_CONFIG_VOCA_PRON_TYPE
+    CHANGE_CONFIG_VOCA_PRON_TYPE,
+    SET_AVATAR_SOURCE
 } from "./action/mineAction"
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
 
@@ -59,6 +60,8 @@ export const mine = (state = defaultState, action) => {
             }
         case MODIFY_AVATAR_FAIL:        //修改头像成功
             return state
+        case SET_AVATAR_SOURCE:     //设置头像source
+            return { ...state, avatarSource: action.payload.avatarSource }
         //设置
         case CHANGE_CONFIG_VOCA_PRON_TYPE:
             return { ...state, configVocaPronType: action.payload.configVocaPronType }

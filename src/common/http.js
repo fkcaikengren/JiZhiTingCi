@@ -1,7 +1,6 @@
 import axios from 'axios';
 import httpBaseConfig from './httpBaseConfig';
 import { store } from '../redux/store'
-import { CircleLoader } from '../component/Loader'
 import { DURATION } from 'react-native-easy-toast'
 
 const opt = {
@@ -10,13 +9,15 @@ const opt = {
 }
 
 const createHttp = (options = opt, config = httpBaseConfig) => {
-    config.headers.Authorization = store.getState().mine.token
+    config.headers.Authorization = store.getState().mine.credential.accessToken
     const instance = axios.create(config);
+
+
     //请求拦截处理
     instance.interceptors.request.use(async config => {
         //显示加载
         if (options.showLoader) {
-            store.getState().app.toast.show(CircleLoader, DURATION.FOREVER)
+            store.getState().app.loader.show("加载中...", DURATION.FOREVER)
         }
 
         return config;
@@ -29,7 +30,7 @@ const createHttp = (options = opt, config = httpBaseConfig) => {
         console.log(res.data)
         //隐藏加载
         if (options.showLoader) {
-            store.getState().app.toast.close()
+            store.getState().app.loader.close()
         }
 
         return res;
