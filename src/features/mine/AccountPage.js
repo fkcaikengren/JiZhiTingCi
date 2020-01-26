@@ -9,6 +9,7 @@ import * as MineAction from './redux/action/mineAction'
 import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
 import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 import gstyles from "../../style";
+import WXService from '../../common/WXService';
 
 const styles = StyleSheet.create({
     container: {
@@ -23,7 +24,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
 
     },
-
 
     logout: {
         height: 50,
@@ -41,6 +41,14 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
 
+    sexItem: {
+        width: 200,
+        height: 50,
+        lineHeight: 50,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: '#AAA',
+        textAlign: "center"
+    }
 });
 
 class AccountPage extends React.Component {
@@ -52,7 +60,7 @@ class AccountPage extends React.Component {
     }
 
 
-    //退出登录
+    // 退出登录
     _logout = () => {
         this.props.app.confirmModal.show("确认退出登录！", null, () => {
             //1.同步数据
@@ -70,6 +78,7 @@ class AccountPage extends React.Component {
         })
     }
 
+    // 修改头像
     _changeAvatar = () => { //调用相册
         const options = {
             title: '选择图片',
@@ -92,19 +101,51 @@ class AccountPage extends React.Component {
                     ...this.props.mine.credential,
                     result: result
                 })
-                // const source = { uri: result.uri };
-                // this.setState({
-                //     avatarSource: source,
-                // });
+
             }
         });
     }
 
 
 
+    _renderSexSelector = ({ commonModal }) => {
+        return () => {
+            const {
+                hide
+            } = commonModal
+            return <View style={[gstyles.c_start, { flex: 1, width: "100%" }]}>
+                <View style={{ position: "absolute", top: 5, right: 5 }}>
+                    <AliIcon name='guanbi' size={26} color='#555' onPress={() => {
+                        hide()
+                    }} />
+                </View>
+                <Text style={[gstyles.lg_black, { marginTop: 40, marginBottom: 30 }]}>性别</Text>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                        this.props.modifySex({ sex: 0 })
+                        hide()
+                    }}
+                >
+                    <Text style={[gstyles.md_black, styles.sexItem]}>女</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                        this.props.modifySex({ sex: 1 })
+                        hide()
+                    }}
+                >
+                    <Text style={[gstyles.md_black, styles.sexItem]}>男</Text>
+                </TouchableOpacity>
+
+
+            </View>
+        }
+    }
+
     render() {
         const { user, avatarSource } = this.props.mine
-        const source = avatarSource ? avatarSource : require('../../image/bg.jpg')
         let sex = '未填写'
         switch (user.sex) {
             case 0:
@@ -136,7 +177,7 @@ class AccountPage extends React.Component {
                 <View style={styles.mainView}>
                     <GroupItem
                         title='头像'
-                        rightComponent={<Image style={styles.imgStyle} source={source} />}
+                        rightComponent={<Image style={styles.imgStyle} source={avatarSource} />}
                         onPress={this._changeAvatar}
                     />
                     <GroupItem
@@ -152,14 +193,30 @@ class AccountPage extends React.Component {
                         title='性别'
                         rightComponent={sex}
                         onPress={() => {
-
+                            this.props.app.commonModal.show({
+                                renderContent: this._renderSexSelector({ commonModal: this.props.app.commonModal }),
+                                modalStyle: {
+                                    width: 300,
+                                    height: 240,
+                                    borderRadius: 10,
+                                    backgroundColor: "#FFF",
+                                },
+                            })
                         }}
                     />
                     <GroupItem
                         title='绑定微信'
                         rightComponent={<AliIcon name='weixin' size={26} color={user.wechat ? '#30DE76' : gstyles.gray} />}
-                        onPress={() => {
-
+                        onPress={async () => {
+                            if (user.wechat) {
+                                this.props.app.confirmModal.show("已绑定微信，是否换绑？", null, async () => {
+                                    const code = await WXService.getInstance().getCode()
+                                    this.props.modifyWechat({ code })
+                                })
+                            } else {
+                                const code = await WXService.getInstance().getCode()
+                                this.props.modifyWechat({ code })
+                            }
                         }}
                     />
                     <GroupItem
@@ -174,7 +231,7 @@ class AccountPage extends React.Component {
                         rightComponent={user.phone ? user.phone :
                             <AliIcon name='shouji' size={26} color={gstyles.gray} />}
                         onPress={() => {
-
+                            this.props.navigation.navigate("Phone")
                         }}
                     />
                     <GroupItem
@@ -204,7 +261,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
+    modifySex: MineAction.modifySex,
     modifyAvatar: MineAction.modifyAvatar,
+    modifyWechat: MineAction.modifyWechat,
     logout: MineAction.logout,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

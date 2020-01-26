@@ -5,7 +5,7 @@ import { watchPlan } from '../features/vocabulary/redux/saga/planSaga'
 import { watchLoadArticle, watchLoadAnalysis } from '../features/reading/redux/saga/articleSaga'
 import {
     watchLoginByCode, watchLoginByWX,
-    watchModifyNickname, watchModifyPwd, watchModifyAvatar
+    watchModifyNickname, watchModifySex, watchModifyPwd, watchModifyAvatar, watchModifyWechat, watchModifyPhone
 }
     from '../features/mine/redux/saga/mineSaga'
 import { watchSyncGroup } from '../features/vocabulary/redux/saga/vocaGroupSaga'
@@ -26,8 +26,13 @@ function* rootSaga() {
         call(watchLoginByWX),
         call(watchLoginByCode),
         call(watchModifyNickname),
+        call(watchModifySex),
         call(watchModifyPwd),
         call(watchModifyAvatar),
+
+        call(watchModifyWechat),
+        call(watchModifyPhone),
+
     ])
 }
 

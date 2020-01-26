@@ -45,6 +45,8 @@ import FileTest from "../FileTest";
 import SettingPage from '../features/mine/SettingPage';
 import AboutPage from '../features/mine/AboutPage';
 import DictPage from '../features/vocabulary/DictPage';
+import PhonePage from '../features/mine/PhonePage';
+import VocaPlanPage from '../features/vocabulary/VocaPlanPage';
 
 const article1 = {
   id: 1,
@@ -119,6 +121,10 @@ const VocaHomeStackNav = createStackNavigator({
   // 查词页面
   VocaSearch: {
     screen: VocaSearchPage,
+  },
+  // 计划页面
+  VocaPlan: {
+    screen: VocaPlanPage
   },
   // 词库页面
   VocaLibTab: {
@@ -225,7 +231,11 @@ const VocaHomeStackNav = createStackNavigator({
   Nickname: {
     screen: NicknamePage
   },
+  Phone: {
+    screen: PhonePage
+  },
 
+  // 首页侧面板
   Guide: {
     screen: GuidePage
   },
@@ -248,7 +258,7 @@ const VocaHomeStackNav = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'Home', //VocaLibPay
+  initialRouteName: 'VocaPlan', //VocaLibPay,
   headerMode: 'none',
   initialRouteParams: {
     // articleInfo:article2

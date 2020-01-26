@@ -486,6 +486,19 @@ react-native link react-native-image-picker
 
 
 
+### 滚筒选择器react-native-wheel-picker
+
+```js
+yarn add react-native-wheel-picker
+//手动link
+
+//修改：把WheelCurvedPicker.android.js
+- propTypes:{} 
++ static propTypes = {}
+```
+
+
+
 ### 虚化背景@react-native-community/blur
 
 ```js

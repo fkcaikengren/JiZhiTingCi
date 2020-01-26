@@ -179,6 +179,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@gregfrench_react-native-wheel-picker')
     implementation project(':@0x5e_react-native-alipay')
     implementation project(':react-native-zip-archive')
     implementation project(':react-native-webview')

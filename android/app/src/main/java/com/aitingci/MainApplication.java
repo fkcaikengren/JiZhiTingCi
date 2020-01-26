@@ -14,9 +14,9 @@ import com.ali.feedback.FeedbackPackage;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.reactlibrary.AlipayPackage;
 import com.theweflex.react.WeChatPackage; 
-
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
+import com.zyu.ReactNativeWheelPickerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -67,6 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
          new UmengReactPackage(),
             new NotificationPackage(),
             new MainReactPackage(),
+            new ReactNativeWheelPickerPackage(),
               
             new RNZipArchivePackage(),
             new FeedbackPackage(),

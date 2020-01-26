@@ -1,13 +1,44 @@
 import React, { Component } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-elements'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
-import * as PlanAction from './redux/action/planAction'
 
+import Picker from '@gregfrench/react-native-wheel-picker'
+import * as PlanAction from './redux/action/planAction'
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
 import _util from '../../common/util'
+import AliIcon from "../../component/AliIcon";
+import { LEFT_PLUS_DAYS } from "./common/constant";
+
+const PickerItem = Picker.Item;
+const planOptions = [{
+    value: '新学10 复习50',
+    learnCount: 10,
+    reviewCount: 50,
+},
+{
+    value: '新学14 复习70',
+    learnCount: 14,
+    reviewCount: 70,
+},
+{
+    value: '新学20 复习100',
+    learnCount: 20,
+    reviewCount: 100,
+},
+{
+    value: '新学26 复习130',
+    learnCount: 26,
+    reviewCount: 130,
+},
+{
+    value: '新学36 复习180',
+    learnCount: 36,
+    reviewCount: 180,
+},]
 
 class VocaLibPage extends Component {
 
@@ -20,12 +51,9 @@ class VocaLibPage extends Component {
         }
     }
 
-
     componentDidMount() {
         this._loadBooks()
     }
-
-
 
     componentWillUnmount() {
         if (this.planTimer) {
@@ -54,15 +82,65 @@ class VocaLibPage extends Component {
         }
     }
 
-    /**显示选择器 */
-    _showPicker = (el) => {
-        let data = [
-            ['新学10/复习50',      //10
-                '新学14/复习70',
-                '新学20/复习100',
-                '新学26/复习130',
-                '新学36/复习180',]
-        ];
+
+    _renderPlanSelector = ({ commonModal, book }) => {
+        return () => {
+            const {
+                getContentState,
+                setContentState,
+                hide
+            } = commonModal
+            const { itemList, selectedItem } = getContentState()
+            const { learnCount, reviewCount } = itemList[selectedItem]
+            return <View style={[gstyles.c_start, { flex: 1, width: "100%" }]}>
+                <View style={{ position: "absolute", top: 5, right: 5 }}>
+                    <AliIcon name='guanbi' size={26} color='#555' onPress={() => {
+                        hide()
+                    }} />
+                </View>
+                <Text style={[gstyles.lg_black_bold, { marginTop: 40 }]}>
+                    {book.name}
+                </Text>
+                <Text style={[gstyles.md_black, { marginTop: 10 }]}>
+                    每日新学<Text style={styles.emFont}>{learnCount}</Text>词, 复习<Text style={styles.emFont}>{reviewCount}</Text>词
+                </Text>
+                <Text style={[gstyles.md_black, { marginTop: 5 }]}>
+                    完成需要<Text style={styles.emFont}>{Math.ceil(book.count / learnCount) + LEFT_PLUS_DAYS}</Text>天
+                    </Text>
+                <Picker style={{ width: "100%", height: 200, marginTop: 10, }}
+                    selectedValue={selectedItem}
+                    itemStyle={{ color: "#202020", fontSize: 20 }}
+                    onValueChange={(index) => {
+                        setContentState({
+                            selectedItem: index,
+                        })
+                    }}>
+                    {itemList.map((item, i) => (
+                        <PickerItem label={item.value} value={i} key={"plan" + item.value} />
+                    ))}
+                </Picker>
+                <Button
+                    title="确定"
+                    titleStyle={gstyles.lg_black}
+                    containerStyle={{ width: 150, height: 60, marginTop: 10 }}
+                    buttonStyle={{
+                        backgroundColor: gstyles.mainColor,
+                        borderRadius: 50,
+                    }}
+                    onPress={async () => {
+                        await this._putPlan({})
+                    }}
+                />
+
+
+            </View>
+
+
+        }
+    }
+
+    /**确认提交计划 */
+    _putPlan = async (book) => {
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
             const isExacted = true
@@ -70,12 +148,12 @@ class VocaLibPage extends Component {
             if (isExacted) {
                 this.props.changeVocaBook({
                     plan: {
-                        bookId: el._id,
-                        bookName: el.name,
+                        bookId: book._id,
+                        bookName: book.name,
                         taskCount: taskCount,
                         taskWordCount: taskWordCount,
                     },
-                    totalWordCount: el.count,
+                    totalWordCount: book.count,
                     lastLearnDate: this.props.home.lastLearnDate
                 })
             }
@@ -87,7 +165,23 @@ class VocaLibPage extends Component {
         return <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
-                this._showPicker(item)
+                const {
+                    setContentState,
+                    show
+                } = this.props.app.commonModal
+                setContentState({
+                    selectedItem: 2,
+                    itemList: planOptions
+                })
+                show({
+                    renderContent: this._renderPlanSelector({ commonModal: this.props.app.commonModal, book: item }),
+                    modalStyle: {
+                        width: 300,
+                        height: 440,
+                        borderRadius: 10,
+                        backgroundColor: "#FFF",
+                    },
+                })
             }}>
             <View style={[gstyles.r_start, styles.bookView]} >
                 <CardView
@@ -139,6 +233,7 @@ VocaLibPage.propTypes = {
 }
 
 const mapStateToProps = state => ({
+    app: state.app,
     plan: state.plan,
     home: state.home
 });

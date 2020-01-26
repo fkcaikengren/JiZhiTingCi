@@ -51,9 +51,9 @@ export default class Task extends Component {
                   color: '#303030',
                   fontWeight: '500'
                 }}
-                containerStyle={{ width: '80%' }}
+                containerStyle={{ width: '70%', height: 60 }}
                 buttonStyle={{
-                  backgroundColor: '#FFE957',
+                  backgroundColor: gstyles.mainColor,
                   borderRadius: 50,
                 }}
                 onPress={this._navVocaLib}

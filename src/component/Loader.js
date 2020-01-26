@@ -34,8 +34,8 @@ export default class Loader extends React.Component {
                 style={{ backgroundColor: '#303030' }}
                 position='top'
                 positionValue={240}
-                fadeInDuration={1}
-                fadeOutDuration={1}
+                fadeInDuration={0}
+                fadeOutDuration={0}
                 opacity={0.8}
                 textStyle={{ color: '#fff' }}
             />

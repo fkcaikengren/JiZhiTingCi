@@ -1,34 +1,10 @@
 
 import { StyleSheet } from 'react-native'
+import gstyles from '../../style';
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#FDFDFD',
-        flex: 1
-    },
 
-    iconText: {
-        width: 32,
-        height: 32,
-        backgroundColor: '#1890FF',
-        textAlign: 'center',
-        lineHeight: 32,
-        borderRadius: 50,
-    },
-    planBook: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#FDFDFD',
-        borderRadius: 5,
-        marginTop: 10,
-        padding: 5,
-    },
-    grid: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
     bookView: {
         width: '100%',
         paddingVertical: 15,
@@ -65,6 +41,11 @@ const styles = StyleSheet.create({
     wordCount: {
         fontSize: 14,
         color: '#444'
+    },
+
+    emFont: {
+        fontSize: 16,
+        color: gstyles.emColor,
     }
 });
 

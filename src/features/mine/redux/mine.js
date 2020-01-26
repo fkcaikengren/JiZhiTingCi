@@ -12,7 +12,16 @@ import {
     CHANGE_CONFIG_N_TRANS,
     CHANGE_CONFIG_M_TRANS,
     CHANGE_CONFIG_VOCA_PRON_TYPE,
-    SET_AVATAR_SOURCE
+
+    SET_AVATAR_SOURCE,
+    MODIFY_SEX_SUCCEED,
+    MODIFY_SEX_FAIL,
+    MODIFY_PASSWORD_SUCCEED,
+    MODIFY_PASSWORD_FAIL,
+    MODIFY_WECHAT_SUCCEED,
+    MODIFY_WECHAT_FAIL,
+    MODIFY_PHONE_SUCCEED,
+    MODIFY_PHONE_FAIL
 } from "./action/mineAction"
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
 
@@ -42,15 +51,17 @@ export const mine = (state = defaultState, action) => {
             const { credential, user } = action.payload
             return { ...state, credential, user }
         }
-
-
         case MODIFY_NICKNAME_SUCCEED:   //修改昵称成功
             return { ...state, user: { ...state.user, nickname: action.payload.nickname } }
         case MODIFY_NICKNAME_FAIL:      //修改昵称失败
             return state
-        case MODIFY_NICKNAME_SUCCEED:   //修改密码成功
+        case MODIFY_SEX_SUCCEED:        //修改性别成功
+            return { ...state, user: { ...state.user, sex: action.payload.sex } }
+        case MODIFY_SEX_FAIL:           //修改性别失败
             return state
-        case MODIFY_NICKNAME_FAIL:      //修改密码失败
+        case MODIFY_PASSWORD_SUCCEED:   //修改密码成功
+            return state
+        case MODIFY_PASSWORD_FAIL:      //修改密码失败
             return state
         case MODIFY_AVATAR_SUCCEED:     //修改头像成功
             return {
@@ -60,7 +71,18 @@ export const mine = (state = defaultState, action) => {
             }
         case MODIFY_AVATAR_FAIL:        //修改头像成功
             return state
-        case SET_AVATAR_SOURCE:     //设置头像source
+
+        case MODIFY_WECHAT_SUCCEED:        //绑定微信成功
+            return { ...state, user: { ...state.user, wechat: action.payload.wechat } }
+        case MODIFY_WECHAT_FAIL:           //绑定微信失败
+            return state
+        case MODIFY_PHONE_SUCCEED:        //绑定手机成功
+            return { ...state, user: { ...state.user, phone: action.payload.phone } }
+        case MODIFY_PHONE_FAIL:           //绑定手机失败
+            return state
+
+
+        case SET_AVATAR_SOURCE:         //设置头像source
             return { ...state, avatarSource: action.payload.avatarSource }
         //设置
         case CHANGE_CONFIG_VOCA_PRON_TYPE:

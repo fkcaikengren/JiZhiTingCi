@@ -22,6 +22,9 @@ import { USER_DIR } from '../../common/constant';
 import RNFetchBlob from 'rn-fetch-blob'
 import FileService from '../../common/FileService';
 import * as MineAction from '../mine/redux/action/mineAction';
+import VocaGroupDao from './service/VocaGroupDao';
+import VocaTaskDao from './service/VocaTaskDao';
+const uuidv4 = require('uuid/v4');
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
 
@@ -78,7 +81,6 @@ class HomePage extends Component {
 
 
     _init = async () => {
-
         //1. 登录进入首页
         if (IsLoginToHome) {
             this.props.app.loader.show("同步数据...", DURATION.FOREVER)
@@ -88,8 +90,17 @@ class HomePage extends Component {
                 const { avatarUrl, vocaGroups, vocaTasks } = loginUserInfo
                 //保存头像
                 if (avatarUrl) {
-                    const res = await FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + 'avatar.jpg')
+                    let extname = ".jpg"
+                    if (avatarUrl.endsWith(".png")) {
+                        extname = ".png"
+                    } else if (avatarUrl.endsWith(".jpeg")) {
+                        extname = ".jpeg"
+                    } else if (avatarUrl.endsWith(".gif")) {
+                        extname = ".gif"
+                    }
+                    const res = await FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + extname)
                     const avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
+                    console.log(avatarSource)
                     this.props.setAvatarSource({ avatarSource })
                 }
                 // 保存vocaGroups

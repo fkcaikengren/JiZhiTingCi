@@ -1,32 +1,48 @@
 
+import { Platform } from 'react-native'
+import RNFetchBlob from 'rn-fetch-blob'
+import { DURATION } from 'react-native-easy-toast'
 import { put, call, takeLatest } from 'redux-saga/effects'
-import {
-    LOGIN_BY_CODE,
-    LOGIN_BY_CODE_START,
-    LOGIN_BY_CODE_SUCCEED,
-
-    LOGIN_BY_WX,
-    LOGIN_BY_WX_START,
-    LOGIN_BY_WX_SUCCEED,
-
-    MODIFY_NICKNAME,
-    MODIFY_NICKNAME_START,
-    MODIFY_NICKNAME_SUCCEED,
-
-    MODIFY_PASSWORD,
-    MODIFY_PASSWORD_START,
-    MODIFY_PASSWORD_SUCCEED,
-
-    MODIFY_AVATAR,
-    MODIFY_AVATAR_START,
-    MODIFY_AVATAR_SUCCEED
-} from '../action/mineAction'
 import { SAVE_PLAN } from '../../../vocabulary/redux/action/planAction'
 import { loginHandle } from '../../common/userHandler'
 import { USER_DIR } from '../../../../common/constant'
-import { Platform } from 'react-native'
-import RNFetchBlob from 'rn-fetch-blob'
 import FileService from '../../../../common/FileService'
+import { store } from '../../../../redux/store'
+const uuidv4 = require('uuid/v4');
+import {
+    // 验证码登录
+    LOGIN_BY_CODE,
+    LOGIN_BY_CODE_START,
+    LOGIN_BY_CODE_SUCCEED,
+    // 微信登录
+    LOGIN_BY_WX,
+    LOGIN_BY_WX_START,
+    LOGIN_BY_WX_SUCCEED,
+    // 昵称
+    MODIFY_NICKNAME,
+    MODIFY_NICKNAME_START,
+    MODIFY_NICKNAME_SUCCEED,
+    // 性别
+    MODIFY_SEX,
+    MODIFY_SEX_START,
+    MODIFY_SEX_SUCCEED,
+
+    // 密码
+    MODIFY_PASSWORD,
+    MODIFY_PASSWORD_START,
+    MODIFY_PASSWORD_SUCCEED,
+    // 头像
+    MODIFY_AVATAR,
+    MODIFY_AVATAR_START,
+    MODIFY_AVATAR_SUCCEED,
+    MODIFY_PHONE_START,
+    MODIFY_PHONE_SUCCEED,
+    MODIFY_WECHAT_START,
+    MODIFY_WECHAT_SUCCEED,
+    MODIFY_PHONE,
+    MODIFY_WECHAT,
+    MODIFY_AVATAR_FAIL
+} from '../action/mineAction'
 
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
@@ -77,7 +93,17 @@ function* modifyNickname(action) {
     const res = yield Http.post('/user/modifyNickname', { nickname: action.payload.nickname })
     if (res.status === 200) {
         yield put({ type: MODIFY_NICKNAME_SUCCEED, payload: res.data })
-        action.payload.cb() //回调
+    }
+    action.payload.cb() //回调
+}
+
+// 修改性别
+function* modifySex(action) {
+    yield put({ type: MODIFY_SEX_START })
+    const res = yield Http.post('/user/modifySex', { sex: action.payload.sex })
+    if (res.status === 200) {
+        yield put({ type: MODIFY_SEX_SUCCEED, payload: res.data })
+
     }
 }
 
@@ -94,6 +120,7 @@ function* modifyPwd(action) {
 
 //修改头像
 function* modifyAvatar(action) {
+    store.getState().app.loader.show("上传中...", DURATION.FOREVER)
     const { fileName, type, data } = action.payload.result
     yield put({ type: MODIFY_AVATAR_START })
     //上传
@@ -103,12 +130,46 @@ function* modifyAvatar(action) {
     }, [
         { name: 'avatar', filename: fileName, type, data },
     ])
+
     //下载
-    const url = JSON.parse(res.data).avatarUrl
-    const res2 = yield FileService.getInstance().fetch(url, DocumentDir + USER_DIR + action.payload.result.fileName)
-    avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
-    yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: url } })
+    const { avatarUrl } = JSON.parse(res.data)
+    const res2 = yield FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + action.payload.result.fileName)
+    if (res2) {
+        avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
+        yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: avatarUrl } })
+    } else {
+        yield put({ type: MODIFY_AVATAR_FAIL })
+    }
+    store.getState().app.loader.close()
 }
+
+
+// 绑定微信
+function* modifyWechat(action) {
+    yield put({ type: MODIFY_WECHAT_START })
+    const res = yield Http.post('/user/modifyWechat', { code: action.payload.code })
+    if (res.status === 200) {
+        yield put({ type: MODIFY_WECHAT_SUCCEED, payload: res.data })
+    }
+}
+
+// 绑定QQ
+
+
+// 绑定手机
+function* modifyPhone(action) {
+    const { phone, code } = action.payload
+    yield put({ type: MODIFY_PHONE_START })
+    const res = yield Http.post('/user/modifyPhone', {
+        phone: phone,
+        code: code
+    })
+    if (res.status === 200) {
+        yield put({ type: MODIFY_PHONE_SUCCEED, payload: res.data })
+        action.payload.cb() //回调
+    }
+}
+
 
 
 export function* watchLoginByCode() {
@@ -123,6 +184,9 @@ export function* watchLoginByWX() {
 export function* watchModifyNickname() {
     yield takeLatest(MODIFY_NICKNAME, modifyNickname)
 }
+export function* watchModifySex() {
+    yield takeLatest(MODIFY_SEX, modifySex)
+}
 
 export function* watchModifyPwd() {
     yield takeLatest(MODIFY_PASSWORD, modifyPwd)
@@ -131,4 +195,12 @@ export function* watchModifyPwd() {
 export function* watchModifyAvatar() {
     yield takeLatest(MODIFY_AVATAR, modifyAvatar)
 
+}
+
+
+export function* watchModifyWechat() {
+    yield takeLatest(MODIFY_WECHAT, modifyWechat)
+}
+export function* watchModifyPhone() {
+    yield takeLatest(MODIFY_PHONE, modifyPhone)
 }

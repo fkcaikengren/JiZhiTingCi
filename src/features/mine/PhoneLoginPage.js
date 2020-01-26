@@ -93,9 +93,7 @@ class PhoneLoginPage extends Component {
   }
 
   render() {
-    if (this.props.mine.token) {
-      this.props.navigation.navigate('AuthLoading'); //副作用
-    }
+
     return (
       <View style={[gstyles.c_center, { flex: 1, backgroundColor: '#FFF' }]}>
         <StatusBar translucent={false} barStyle="dark-content" />
@@ -134,7 +132,7 @@ class PhoneLoginPage extends Component {
                   disabled={!this.state.isPhoneRight}
                   title="发送验证码"
                   titleStyle={gstyles.md_black}
-                  buttonStyle={{ height: gstyles.mdHeight, backgroundColor: '#FFE957', borderRadius: 100 }}
+                  buttonStyle={{ height: gstyles.mdHeight, backgroundColor: gstyles.mainColor, borderRadius: 100 }}
                   containerStyle={{ width: '100%' }}
                   onPress={this._requestVerifyCode}
                 />

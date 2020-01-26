@@ -974,6 +974,11 @@
   resolved "https://registry.npm.taobao.org/@emotion/weak-memoize/download/@emotion/weak-memoize-0.2.4.tgz?cache=0&sync_timestamp=1568724807046&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40emotion%2Fweak-memoize%2Fdownload%2F%40emotion%2Fweak-memoize-0.2.4.tgz#622a72bebd1e3f48d921563b4b60a762295a81fc"
   integrity sha1-Yipyvr0eP0jZIVY7S2CnYilagfw=
 
+"@gregfrench/react-native-wheel-picker@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.npm.taobao.org/@gregfrench/react-native-wheel-picker/download/@gregfrench/react-native-wheel-picker-1.2.3.tgz#56a6f3365485697c15067270c15f2feb07251836"
+  integrity sha1-VqbzNlSFaXwVBnJwwV8v6wclGDY=
+
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.npm.taobao.org/@jest/console/download/@jest/console-24.9.0.tgz?cache=0&sync_timestamp=1566444475503&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40jest%2Fconsole%2Fdownload%2F%40jest%2Fconsole-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"

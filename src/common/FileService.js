@@ -33,20 +33,23 @@ export default class FileService {
      */
 
     fetch = async (url, path) => {
-        //后台下载
-        const res = await RNFetchBlob.config({
-            fileCache: true,
-            path: path
-        }).fetch('GET', url, {
-            //headers..
-        })
-        //日志打印
-        console.log('---file fetch-----')
-        if (res.respInfo.status === 200) {
-            return res
-        } else {
-            await fs.unlink(path)
-            console.log('--not found and remove file--')
+        try {
+            const res = await RNFetchBlob.config({
+                fileCache: true,
+                path: path
+            }).fetch('GET', url, {
+                //headers..
+            })
+            if (res.respInfo.status === 200) {
+                return res
+            } else {
+                await fs.unlink(path)
+                console.log('--not found and remove file--')
+                return null
+            }
+        } catch (err) {
+            console.log("fetch 出错")
+            console.log(err)
             return null
         }
     }
@@ -107,7 +110,7 @@ export default class FileService {
                     const res = await this.fetch(url, realPath)
                     return fs.readFile(realPath)
                 }
-            } else if (filePath.match(/(\.jpg|\.png|\.gif)$/)) {
+            } else if (filePath.match(/(\.jpg|\.png|\.gif|\.jpeg)$/)) {
                 if (exist) {
                     return { uri: Platform.OS === 'android' ? 'file://' + realPath : '' + realPath }
                 } else {
