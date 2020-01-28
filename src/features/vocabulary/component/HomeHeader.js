@@ -111,7 +111,8 @@ export default class HomeHeader extends Component {
 
   //头部
   renderHeader = () => {
-    const { totalDays, totalWordCount, learnedWordCount, leftDays } = this.props.plan
+    const { plan, learnedWordCount, leftDays } = this.props.plan
+    const { totalDays, totalWordCount } = plan
     return (
       <View style={[styles.headerView]}>
 
@@ -133,9 +134,9 @@ export default class HomeHeader extends Component {
           </Row>
           {/* 底部功能按钮 */}
           <Row style={styles.headerBottom}>
-            <Col style={gstyles.c_center} onPress={this._navVocaLib}>
+            <Col style={gstyles.c_center} onPress={this._navVocaPlan}>
               <AliIcon name='ciyun' size={26} color='#202020' />
-              <Text style={styles.smDarkFont}>词库</Text>
+              <Text style={styles.smDarkFont}>学习计划</Text>
             </Col>
             <Col style={gstyles.c_center} onPress={this._navVocaList}>
               <AliIcon name='liebiao1' size={26} color='#202020' />
@@ -162,11 +163,10 @@ export default class HomeHeader extends Component {
   }
 
 
-  /**导航到词库页面 */
-  _navVocaLib = () => {
-
+  /**导航到学习计划页面 */
+  _navVocaPlan = () => {
     InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaLibTab', { transition: 'forFadeToBottomAndroid' });
+      this.props.navigation.navigate('VocaPlan', { transition: 'forFadeToBottomAndroid' });
     })
 
   }

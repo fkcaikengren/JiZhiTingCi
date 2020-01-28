@@ -59,9 +59,10 @@ export const MODIFY_PHONE_FAIL = 'MODIFY_PHONE_FAIL'
 
 // 设置头像
 export const SET_AVATAR_SOURCE = 'SET_AVATAR_SOURCE'
-
 // 退出登录
 export const LOGOUT = 'LOGOUT'
+// 修改token
+export const MODIFY_CREDENTIAL = 'MODIFY_CREDENTIAL'
 
 
 // 设置

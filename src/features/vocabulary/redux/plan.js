@@ -1,18 +1,20 @@
 
-import * as vl from './action/planAction';
+import * as pa from './action/planAction';
 import { LOGOUT } from '../../mine/redux/action/mineAction'
 
 const defaultState = {
 
     //当前计划
     plan: {
-        bookId: "",
-        bookName: "",
+        bookId: null,
+        bookName: null,
         taskCount: 0,
-        taskWordCount: 0,
+        taskWordCount: 0,       //每日新学词数
+        reviewWordCount: 0,      //每日复习词数
+        totalWordCount: 0,      //总单词数
+        totalDays: 0,           //总天数
+        lastLearnDate: null      //上次学习时间
     },
-    totalWordCount: 0,     //总单词数
-    totalDays: 0,           //总天数
     learnedWordCount: 0,   // 已学单词数
     leftDays: 0,           // 剩余学习天数
 
@@ -25,26 +27,30 @@ export const plan = (state = defaultState, action) => {
 
     switch (action.type) {
         // 保存计划
-        case vl.SAVE_PLAN:
+        case pa.SAVE_PLAN:
             return { ...state, plan: action.payload.plan };
-        // 选择词汇书(制定计划)
-        case vl.CHANGE_VOCA_BOOK_START:
+        // 更换词汇书
+        case pa.CHANGE_VOCA_BOOK_START:
             return { ...state, isLoadPending: true };
 
-        case vl.CHANGE_VOCA_BOOK_SUCCEED:
-            const { plan, totalWordCount, totalDays, leftDays } = action.payload
+        case pa.CHANGE_VOCA_BOOK_SUCCEED:
+            const { plan } = action.payload
             return {
                 ...state,
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
-                totalWordCount: totalWordCount,
-                totalDays: totalDays,
-                leftDays: leftDays,
+                leftDays: plan.totalDays,
                 isLoadPending: false,
             };
-        case vl.CHANGE_LEFT_DAYS:
+
+        case pa.MODIFY_LAST_LEARN_DATE:
+            return {
+                ...state,
+                plan: { ...state.plan, lastLearnDate: action.payload.lastLearnDate },
+            }
+        case pa.CHANGE_LEFT_DAYS:
             return { ...state, leftDays: action.payload.leftDays }
-        case vl.CHANGE_LEARNED_WORD_COUNT:
+        case pa.CHANGE_LEARNED_WORD_COUNT:
             console.log('-------learnedWordCount------')
             console.log(action.payload.learnedWordCount)
             return { ...state, learnedWordCount: action.payload.learnedWordCount }

@@ -21,7 +21,8 @@ import {
     MODIFY_WECHAT_SUCCEED,
     MODIFY_WECHAT_FAIL,
     MODIFY_PHONE_SUCCEED,
-    MODIFY_PHONE_FAIL
+    MODIFY_PHONE_FAIL,
+    MODIFY_CREDENTIAL
 } from "./action/mineAction"
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
 
@@ -84,6 +85,9 @@ export const mine = (state = defaultState, action) => {
 
         case SET_AVATAR_SOURCE:         //设置头像source
             return { ...state, avatarSource: action.payload.avatarSource }
+        case MODIFY_CREDENTIAL:
+            console.log("--------------mine.js 修改token-------------------")
+            return { ...state, credential: action.payload.credential }
         //设置
         case CHANGE_CONFIG_VOCA_PRON_TYPE:
             return { ...state, configVocaPronType: action.payload.configVocaPronType }
@@ -96,6 +100,7 @@ export const mine = (state = defaultState, action) => {
 
         // 退出登录
         case LOGOUT:
+            console.log("--------------mine.js 退出登录-------------------")
             return defaultState
         default:
             return state

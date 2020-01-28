@@ -5,13 +5,15 @@ import VocaUtil from "../../common/vocaUtil";
 import * as Constant from "../../common/constant";
 import { store } from "../../../../redux/store";
 import { LOAD_TASKS_SUCCEED, LOAD_TASKS_FAIL, LOAD_TASKS_START } from '../action/homeAction';
-import { CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START, LOAD_VOCA_BOOKS_FAIL, LOAD_VOCA_BOOKS_SUCCEED, LOAD_VOCA_BOOKS_START } from '../action/planAction';
+import {
+    CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START, LOAD_VOCA_BOOKS_FAIL, LOAD_VOCA_BOOKS_SUCCEED, LOAD_VOCA_BOOKS_START,
+} from '../action/planAction';
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
 
 
 /** 提交单词计划 */
 export function* createPlan(action) {
-    const { plan, totalWordCount } = action.payload
+    const { plan } = action.payload
     yield put({ type: CHANGE_VOCA_BOOK_START })
     yield put({ type: LOAD_TASKS_START })
     try {
@@ -33,10 +35,7 @@ export function* createPlan(action) {
         yield put({
             type: CHANGE_VOCA_BOOK_SUCCEED,
             payload: {
-                plan,
-                totalWordCount,
-                totalDays: vocaTasks.length + Constant.LEFT_PLUS_DAYS,
-                leftDays: vocaTasks.length + Constant.LEFT_PLUS_DAYS,
+                plan
             }
         })
     } catch (err) {
@@ -45,6 +44,8 @@ export function* createPlan(action) {
         yield put({ type: LOAD_TASKS_FAIL })
     }
 }
+
+
 
 
 

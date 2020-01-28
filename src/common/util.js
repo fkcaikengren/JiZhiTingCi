@@ -45,7 +45,7 @@ export default class _util {
      */
     static checkLocalTime = async () => {
         //如果本地时间不对，提示修改手机时间
-        const myHttp = createHttp({ showLoader: false })
+        const myHttp = createHttp(null, { shouldRefreshToken: true })
         const res = await myHttp.get('/timestamp')
         const d = res.data.timestamp - Date.now()
         console.log('时间差：  ' + d)

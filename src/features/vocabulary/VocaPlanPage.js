@@ -48,6 +48,15 @@ class VocaPlanPage extends React.Component {
 
 
     render() {
+        const {
+            bookId,
+            bookName,
+            taskCount,
+            taskWordCount,
+            reviewWordCount,
+            totalWordCount,
+            totalDays,
+        } = this.props.plan.plan
         return (
             <View style={{ flex: 1 }}>
                 <Header
@@ -56,9 +65,7 @@ class VocaPlanPage extends React.Component {
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
-
                         }} />}
-
                     centerComponent={{ text: '学习计划', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
@@ -67,19 +74,29 @@ class VocaPlanPage extends React.Component {
                     }}
                 />
                 <View style={[gstyles.c_start, { width: '100%', marginTop: 60 }]} >
-                    <CardView
-                        cardElevation={5}
-                        cardMaxElevation={5}
-                        style={{ marginBottom: 20 }}
-                    >
-                        <Image source={{ uri: "https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/liuji.jpg" }} style={styles.img} />
-                    </CardView>
-                    <Text style={gstyles.lg_black_bold}>六级高频词汇</Text>
-                    <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学15词，复习75词</Text>
-                    <Text style={styles.wordCount}>(共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>2058</Text>个单词)</Text>
+                    {bookId &&
+                        <View style={[gstyles.c_start]}>
+                            <CardView
+                                cardElevation={5}
+                                cardMaxElevation={5}
+                                style={{ marginBottom: 20 }}
+                            >
+                                <Image source={{ uri: "https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/liuji.jpg" }} style={styles.img} />
+                            </CardView>
+                            <Text style={gstyles.lg_black_bold}>{bookName}</Text>
+                            <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount}词，复习{reviewWordCount}词</Text>
+                            <Text style={styles.wordCount}>(共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{totalWordCount}</Text>个单词)</Text>
 
+                        </View>
+                    }
+                    {!bookId &&
+                        <View style={[gstyles.c_start, { marginTop: 50 }]}>
+                            <AliIcon name='no-data' size={100} color='#AAA'></AliIcon>
+                            <Text style={{ fontSize: 16, color: '#AAA', marginTop: 15 }}>无学习计划</Text>
+                        </View>
+                    }
                     <Button
-                        title="更换单词书"
+                        title={bookId ? "更换单词书" : "选择单词书"}
                         titleStyle={gstyles.lg_black}
                         containerStyle={{ width: 200, height: 60, marginTop: 40 }}
                         buttonStyle={{
@@ -99,6 +116,7 @@ class VocaPlanPage extends React.Component {
 
 const mapStateToProps = state => ({
     app: state.app,
+    plan: state.plan
 });
 
 const mapDispatchToProps = {

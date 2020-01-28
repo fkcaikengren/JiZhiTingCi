@@ -1,14 +1,17 @@
+import { store } from "../../../redux/store"
+import { LOGOUT } from "../redux/action/mineAction"
+import VocaTaskDao from "../../vocabulary/service/VocaTaskDao"
+import VocaGroupDao from "../../vocabulary/service/VocaGroupDao"
 
 
 export const loginHandle = (data, navigation) => {
+    const { credential, user } = data
     //1.标记登录进入App首页
     console.log('---通过登录进入App首页--')
     IsLoginToHome = true
 
-
-    //2.进入首页
-    const { credential, user } = data
-    navigation.navigate("Home", {
+    //2.重新认证加载
+    navigation.navigate("AuthLoading", {
         loginUserInfo: user
     })
 
@@ -32,5 +35,16 @@ export const loginHandle = (data, navigation) => {
 }
 
 export const logoutHandle = () => {
+    //#TODO 上传数据
+    //1.清空Storage 
+    Storage.clearMapForKey('notSyncTasks')
+    Storage.clearMapForKey('notSyncGroups')
+    //2.清空token和user
+    store.dispatch({ type: LOGOUT })
+    //3.清空realm 
+    VocaTaskDao.getInstance().deleteAllTasks() //清空任务数据
+    VocaGroupDao.getInstance().deleteAllGroups() //清空生词本数据
 
+    //跳转登录页面
+    Navigate("LoginStack")
 }

@@ -6,10 +6,9 @@ import GroupItem from './component/GroupItem';
 import AliIcon from '../../component/AliIcon';
 import { connect } from 'react-redux';
 import * as MineAction from './redux/action/mineAction'
-import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
-import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 import gstyles from "../../style";
 import WXService from '../../common/WXService';
+import { logoutHandle } from './common/userHandler';
 
 const styles = StyleSheet.create({
     container: {
@@ -63,18 +62,8 @@ class AccountPage extends React.Component {
     // 退出登录
     _logout = () => {
         this.props.app.confirmModal.show("确认退出登录！", null, () => {
-            //1.同步数据
-
-            //2.清空Storage 
-            Storage.clearMapForKey('notSyncTasks')
-            Storage.clearMapForKey('notSyncGroups')
-            this.props.logout() //清空token和user
-            //3.清空realm 
-            VocaTaskDao.getInstance().deleteAllTasks() //清空任务数据
-            VocaGroupDao.getInstance().deleteAllGroups() //清空生词本数据
-
-            //跳转到auth
-            this.props.navigation.navigate('AuthLoading')
+            //退出登录处理
+            logoutHandle()
         })
     }
 
@@ -264,6 +253,5 @@ const mapDispatchToProps = {
     modifySex: MineAction.modifySex,
     modifyAvatar: MineAction.modifyAvatar,
     modifyWechat: MineAction.modifyWechat,
-    logout: MineAction.logout,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

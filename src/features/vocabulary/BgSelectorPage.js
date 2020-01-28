@@ -37,7 +37,7 @@ class BgSelectorPage extends Component {
 
     _init = async () => {
         this.props.app.loader.show("加载中...", DURATION.FOREVER)
-        const myHttp = createHttp({ showLoader: false });
+        const myHttp = createHttp(null, { shouldRefreshToken: true });
         const res = await myHttp.get('/appinfo/getPlayBgs')
         const bgUrls = res.data
         let bgPaths = await Storage.getAllDataForKey('playBgs')

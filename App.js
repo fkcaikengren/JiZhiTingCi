@@ -11,7 +11,6 @@ const Realm = require('realm')
 
 import AppWithNavigationState from './src/navigation/AppWithNavigationState';
 import { createStorage } from './src/common/storage';
-import createHttp from './src/common/http'
 import VocaDao from './src/features/vocabulary/service/VocaDao';
 import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
@@ -21,18 +20,16 @@ import { connect } from 'react-redux'
 import * as AppAction from './src/redux/action'
 import DictDao from './src/features/vocabulary/service/DictDao';
 
-
 //设置全局变量 (注：这部分代码只在安装App时运行一次)
 Realm.copyBundledRealmFiles(); //拷贝时，如果realm已经存在则不会重新拷贝
 console.log('copy realm');
 
-
 // 存储对象并且存储初始变量
 global.Storage = createStorage()
-
-
 // 是否手动登录进入App首页 (=>是否需要加载当天任务)
 global.IsLoginToHome = false
+// 定义全局的navigate
+global.Navigate = _ => null
 
 
 //开启数据库

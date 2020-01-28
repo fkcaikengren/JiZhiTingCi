@@ -1,8 +1,22 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Platform, NetInfo, View } from 'react-native'
 import { connect } from "react-redux";
 import SplashScreen from 'react-native-splash-screen'
-import createHttp from '../../common/http'
+import { DURATION } from 'react-native-easy-toast'
+import RNFetchBlob from 'rn-fetch-blob'
+const uuidv4 = require('uuid/v4');
+import createHttp from '../../common/http';
+import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
+import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
+import FileService from '../../common/FileService';
+import { USER_DIR } from '../../common/constant';
+import * as MineAction from '../mine/redux/action/mineAction';
+import { store } from '../../redux/store';
+import { logoutHandle } from './common/userHandler';
+import httpBaseConfig from '../../common/httpBaseConfig';
+const fs = RNFetchBlob.fs
+const DocumentDir = fs.dirs.DocumentDir + '/'
+
 
 class AuthLoadingPage extends Component {
 
@@ -12,7 +26,8 @@ class AuthLoadingPage extends Component {
     }
 
     componentDidMount() {
-
+        // 全局路由函数
+        Navigate = this.props.navigation.navigate
         //debug模式下，此时redux-persist的数据未加载，所以定时
         // this._bootstrap()
         setTimeout(this._bootstrap, 1000)
@@ -20,14 +35,52 @@ class AuthLoadingPage extends Component {
 
     // token验证登录状态
     _bootstrap = async () => {
-
         //隐藏启动页
         SplashScreen.hide();
-        //创建Http
-        global.Http = createHttp()
 
-        const { accessToken, expiresIn, refreshToken } = this.props.mine.credential
+        //1. 登录进入首页
+        if (IsLoginToHome) {
+            this.props.app.loader.show("同步数据...", DURATION.FOREVER)
+            const loginUserInfo = this.props.navigation.getParam("loginUserInfo")
+            if (loginUserInfo) {
+                const { avatarUrl, vocaGroups, vocaTasks } = loginUserInfo
+                //保存头像
+                if (avatarUrl) {
+                    let extname = ".jpg"
+                    if (avatarUrl.endsWith(".png")) {
+                        extname = ".png"
+                    } else if (avatarUrl.endsWith(".jpeg")) {
+                        extname = ".jpeg"
+                    } else if (avatarUrl.endsWith(".gif")) {
+                        extname = ".gif"
+                    }
+                    const res = await FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + extname)
+                    const avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
+                    console.log(avatarSource)
+                    this.props.setAvatarSource({ avatarSource })
+                }
+                // 保存vocaGroups
+                if (vocaGroups && vocaGroups.length > 0) {
+                    const vgDao = VocaGroupDao.getInstance()
+                    vgDao.deleteAllGroups()
+                    vgDao.saveVocaGroups(vocaGroups)
+                }
+
+                // 保存vocaTasks
+                if (vocaTasks && vocaTasks.length > 0) {
+                    const vtDao = VocaTaskDao.getInstance()
+                    vtDao.deleteAllTasks()
+                    vtDao.saveVocaTasks(vocaTasks, 10) //plan.taskWordCount 暂时用10
+                }
+            }
+            this.props.app.loader.close()
+        }
+
+
+        // 定义全局请求对象
+        global.Http = createHttp(null, { showLoader: true, shouldRefreshToken: true })
         //判断是否过期
+        const { accessToken, expiresIn, refreshToken } = this.props.mine.credential
         console.log(Date.now())
         console.log(expiresIn)
         if (accessToken && expiresIn && Date.now() < expiresIn) {
@@ -35,12 +88,29 @@ class AuthLoadingPage extends Component {
             // 直接进入App
             this.props.navigation.navigate('HomeStack')
         } else {
-
-            console.log('token过期，重新登录')
-            //刷新token,如果失败跳转至登录页面
-            // 未登录
-            this.props.navigation.navigate('LoginStack')
+            if (!refreshToken || refreshToken === "") { //安装后第一次打开App
+                this.props.navigation.navigate('LoginStack')
+                return
+            }
+            NetInfo.isConnected.fetch().done(async (isConnected) => {
+                if (isConnected) { //网络正常
+                    const tokenHttp = createHttp()
+                    const tokenRes = await tokenHttp.post("/refreshToken", { refreshToken })
+                    if (tokenRes.status === 200) {
+                        console.log("--------------auth 刷新token-------------------")
+                        const credential = tokenRes.data
+                        //修改Http的Authorization
+                        Http.defaults.headers.common['Authorization'] = credential.accessToken
+                        //修改redux
+                        store.dispatch({ type: MineAction.MODIFY_CREDENTIAL, payload: { credential } })
+                        this.props.navigation.navigate('HomeStack')
+                    }
+                } else {   //无网络
+                    logoutHandle()
+                }
+            })
         }
+
 
     };
 
@@ -57,6 +127,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
+    setAvatarSource: MineAction.setAvatarSource,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthLoadingPage)

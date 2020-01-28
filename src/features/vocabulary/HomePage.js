@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar, View, AppState } from 'react-native';
 import { connect } from 'react-redux'
-import SplashScreen from 'react-native-splash-screen'
 import Drawer from 'react-native-drawer'
-import { DURATION } from 'react-native-easy-toast'
 
 import styles from './HomeStyle'
 import HomeDrawerPanel from './component/HomeDrawerPanel'
@@ -17,16 +15,8 @@ import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
 import { BY_REAL_TASK } from "./common/constant";
-import { USER_DIR } from '../../common/constant';
 
-import RNFetchBlob from 'rn-fetch-blob'
-import FileService from '../../common/FileService';
-import * as MineAction from '../mine/redux/action/mineAction';
-import VocaGroupDao from './service/VocaGroupDao';
-import VocaTaskDao from './service/VocaTaskDao';
-const uuidv4 = require('uuid/v4');
-const fs = RNFetchBlob.fs
-const DocumentDir = fs.dirs.DocumentDir + '/'
+
 
 
 class HomePage extends Component {
@@ -42,12 +32,12 @@ class HomePage extends Component {
 
 
     componentDidMount() {
-        SplashScreen.hide();        //隐藏启动页
-        this._init()            //加载任务
-        //上传数据
-        this.props.syncTask(null)
 
-        //监听App状态
+        // 加载任务
+        this._init()
+        // 上传数据
+        this.props.syncTask(null)
+        // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
     }
 
@@ -81,47 +71,9 @@ class HomePage extends Component {
 
 
     _init = async () => {
-        //1. 登录进入首页
-        if (IsLoginToHome) {
-            this.props.app.loader.show("同步数据...", DURATION.FOREVER)
-            const loginUserInfo = this.props.navigation.getParam("loginUserInfo")
-
-            if (loginUserInfo) {
-                const { avatarUrl, vocaGroups, vocaTasks } = loginUserInfo
-                //保存头像
-                if (avatarUrl) {
-                    let extname = ".jpg"
-                    if (avatarUrl.endsWith(".png")) {
-                        extname = ".png"
-                    } else if (avatarUrl.endsWith(".jpeg")) {
-                        extname = ".jpeg"
-                    } else if (avatarUrl.endsWith(".gif")) {
-                        extname = ".gif"
-                    }
-                    const res = await FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + extname)
-                    const avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
-                    console.log(avatarSource)
-                    this.props.setAvatarSource({ avatarSource })
-                }
-                // 保存vocaGroups
-                if (vocaGroups && vocaGroups.length > 0) {
-                    const vgDao = VocaGroupDao.getInstance()
-                    vgDao.deleteAllGroups()
-                    vgDao.saveVocaGroups(vocaGroups)
-                }
-
-                // 保存vocaTasks
-                if (vocaTasks && vocaTasks.length > 0) {
-                    const vtDao = VocaTaskDao.getInstance()
-                    vtDao.deleteAllTasks()
-                    vtDao.saveVocaTasks(vocaTasks, 10) //plan.taskWordCount 暂时用10
-                }
-            }
-            this.props.app.loader.close()
-        }
-
-        //2. 加载今日数据
-        const { tasks, lastLearnDate } = this.props.home
+        // 加载今日数据
+        const { tasks } = this.props.home
+        const { lastLearnDate } = this.props.plan
         const { plan } = this.props.plan
         const today = _util.getDayTime(0)
         console.log(today)
@@ -219,7 +171,6 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = {
-    setAvatarSource: MineAction.setAvatarSource,
     loadTasks: HomeAction.loadTasks,
     syncTask: HomeAction.syncTask,
     updateTask: HomeAction.updateTask,

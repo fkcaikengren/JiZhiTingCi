@@ -18,26 +18,31 @@ const planOptions = [{
     value: '新学10 复习50',
     learnCount: 10,
     reviewCount: 50,
+    taskCount: 1,
 },
 {
     value: '新学14 复习70',
     learnCount: 14,
     reviewCount: 70,
+    taskCount: 1,
 },
 {
     value: '新学20 复习100',
     learnCount: 20,
     reviewCount: 100,
+    taskCount: 2,
 },
 {
     value: '新学26 复习130',
     learnCount: 26,
     reviewCount: 130,
+    taskCount: 2,
 },
 {
     value: '新学36 复习180',
     learnCount: 36,
     reviewCount: 180,
+    taskCount: 3,
 },]
 
 class VocaLibPage extends Component {
@@ -91,7 +96,8 @@ class VocaLibPage extends Component {
                 hide
             } = commonModal
             const { itemList, selectedItem } = getContentState()
-            const { learnCount, reviewCount } = itemList[selectedItem]
+            const { learnCount, reviewCount, taskCount } = itemList[selectedItem]
+            const totalDays = Math.ceil(book.count / learnCount) + LEFT_PLUS_DAYS
             return <View style={[gstyles.c_start, { flex: 1, width: "100%" }]}>
                 <View style={{ position: "absolute", top: 5, right: 5 }}>
                     <AliIcon name='guanbi' size={26} color='#555' onPress={() => {
@@ -105,7 +111,7 @@ class VocaLibPage extends Component {
                     每日新学<Text style={styles.emFont}>{learnCount}</Text>词, 复习<Text style={styles.emFont}>{reviewCount}</Text>词
                 </Text>
                 <Text style={[gstyles.md_black, { marginTop: 5 }]}>
-                    完成需要<Text style={styles.emFont}>{Math.ceil(book.count / learnCount) + LEFT_PLUS_DAYS}</Text>天
+                    完成需要<Text style={styles.emFont}>{totalDays}</Text>天
                     </Text>
                 <Picker style={{ width: "100%", height: 200, marginTop: 10, }}
                     selectedValue={selectedItem}
@@ -127,8 +133,14 @@ class VocaLibPage extends Component {
                         backgroundColor: gstyles.mainColor,
                         borderRadius: 50,
                     }}
-                    onPress={async () => {
-                        await this._putPlan({})
+                    onPress={() => {
+                        this._putPlan({
+                            bookId: book._id,
+                            taskCount: taskCount,
+                            taskWordCount: learnCount,
+                            reviewWordCount: reviewCount,
+                            totalDays
+                        })
                     }}
                 />
 
@@ -140,7 +152,7 @@ class VocaLibPage extends Component {
     }
 
     /**确认提交计划 */
-    _putPlan = async (book) => {
+    _putPlan = ({ bookId, taskCount, taskWordCount, reviewWordCount, totalDays }) => {
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
             const isExacted = true
@@ -148,13 +160,17 @@ class VocaLibPage extends Component {
             if (isExacted) {
                 this.props.changeVocaBook({
                     plan: {
-                        bookId: book._id,
-                        bookName: book.name,
-                        taskCount: taskCount,
-                        taskWordCount: taskWordCount,
+                        bookId,
+                        bookName: "测试单词书", //no
+                        taskCount,
+                        taskWordCount,
+                        reviewWordCount,
+                        totalWordCount: 10000,//no
+                        totalDays,
+                        lastLearnDate: null,
                     },
-                    totalWordCount: book.count,
-                    lastLearnDate: this.props.home.lastLearnDate
+
+
                 })
             }
         }

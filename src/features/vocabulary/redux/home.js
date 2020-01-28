@@ -9,11 +9,8 @@ import VocaTaskDao from "../service/VocaTaskDao";
 const defaultState = {
     //任务数组
     tasks: [],
-    //上一次学习
-    lastLearnDate: null,
     //状态
     isLoadPending: false,
-
     //上传同步的状态
     isUploading: false,
     //上传同步失败
@@ -28,13 +25,12 @@ export const home = (state = defaultState, action) => {
         case ha.LOAD_TASKS_START:
             return { ...state, isLoadPending: true }
         case ha.LOAD_TASKS_SUCCEED:
-            console.log('----------加载完后设置lastLearnDate :------')
-            console.log(_util.getDayTime(0))
+
             return {
                 ...state, tasks: action.payload.tasks,
                 isLoadPending: false,
                 isUploadFail: false,
-                lastLearnDate: _util.getDayTime(0)
+
             };
         //更新任务
         case ha.UPDATE_TASK:

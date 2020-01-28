@@ -4,7 +4,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { DURATION } from 'react-native-easy-toast'
 import { put, call, takeLatest } from 'redux-saga/effects'
 import { SAVE_PLAN } from '../../../vocabulary/redux/action/planAction'
-import { loginHandle } from '../../common/userHandler'
+import { loginHandle, logoutHandle } from '../../common/userHandler'
 import { USER_DIR } from '../../../../common/constant'
 import FileService from '../../../../common/FileService'
 import { store } from '../../../../redux/store'
@@ -120,7 +120,7 @@ function* modifyPwd(action) {
 
 //修改头像
 function* modifyAvatar(action) {
-    store.getState().app.loader.show("上传中...", DURATION.FOREVER)
+    store.getState().app.loader.show("上传中", DURATION.FOREVER)
     const { fileName, type, data } = action.payload.result
     yield put({ type: MODIFY_AVATAR_START })
     //上传
@@ -130,14 +130,23 @@ function* modifyAvatar(action) {
     }, [
         { name: 'avatar', filename: fileName, type, data },
     ])
-
-    //下载
-    const { avatarUrl } = JSON.parse(res.data)
-    const res2 = yield FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + action.payload.result.fileName)
-    if (res2) {
-        avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
-        yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: avatarUrl } })
+    if (res.respInfo.status === 200) {
+        //下载
+        const { avatarUrl } = JSON.parse(res.data)
+        const res2 = yield FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + action.payload.result.fileName)
+        if (res2) {
+            avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res2.path() : '' + res2.path() }
+            yield put({ type: MODIFY_AVATAR_SUCCEED, payload: { avatarSource, avatarUrl: avatarUrl } })
+        } else {
+            yield put({ type: MODIFY_AVATAR_FAIL })
+        }
+    } else if (res.respInfo.status === 401) {
+        // 退出登录
+        logoutHandle()
+        yield put({ type: MODIFY_AVATAR_FAIL })
     } else {
+        // 失败
+        store.getState().app.toast.show("上传头像失败")
         yield put({ type: MODIFY_AVATAR_FAIL })
     }
     store.getState().app.loader.close()
