@@ -62,7 +62,7 @@ export default class ArticleDao {
     /**
      * 关闭数据库
      */
-    close = () => {
+    close() {
         if (this.realm && !this.realm.isClosed) {
             this.realm.close()
             this.realm = null
@@ -73,7 +73,7 @@ export default class ArticleDao {
      * 保存文章数据
      * @param articls
      */
-    saveArticles = (articls) => {
+    saveArticles(articls) {
         try {
             this.realm.write(() => {
                 for (let art of articls) {
@@ -92,7 +92,7 @@ export default class ArticleDao {
 
 
     /**自定义修改 */
-    modify = (fn) => {
+    modify(fn) {
         this.realm.write(fn)
     }
 
@@ -100,7 +100,7 @@ export default class ArticleDao {
      *  查询全部文章
      * @returns {Realm.Results<any> | never}
      */
-    getAllArticles = () => {
+    getAllArticles() {
         return this.realm.objects('Article')
     }
 
@@ -109,7 +109,7 @@ export default class ArticleDao {
      * @param id
      * @returns {*} 获取失败，返回null, 否则返回article
      */
-    getArticleById = (id) => {
+    getArticleById(id) {
         const res = this.realm.objects('Article').filtered('id=' + id);
         return res.length ? null : res
     }
@@ -119,7 +119,7 @@ export default class ArticleDao {
      * @param userArticles 用户的文章数组
      * @returns {Array}
      */
-    getArticles = (userArticles) => {
+    getArticles(userArticles) {
         console.log('---获取articles by userArticles------如下：')
         console.log(userArticles)
         let arr = []
@@ -166,7 +166,7 @@ export default class ArticleDao {
     /**
      *  清空所有任务，清空数据库
      */
-    deleteAllArticles = () => {
+    deleteAllArticles() {
         this.realm.write(() => {
             this.realm.deleteAll();
         })

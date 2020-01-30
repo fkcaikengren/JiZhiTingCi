@@ -166,7 +166,6 @@ export default class VocaDao {
      * @return 返回一个数组
      */
     getWordInfos(words) {
-        console.log("---1---")
         console.log(words)
         //验证
         if (!words || words.length === 0)

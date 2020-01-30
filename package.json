@@ -66,6 +66,8 @@
     "@storybook/react-native-server": "^5.1.9",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "emotion-theming": "^10.0.14",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",

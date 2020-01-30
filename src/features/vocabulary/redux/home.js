@@ -60,7 +60,7 @@ export const home = (state = defaultState, action) => {
             return { ...state, isUploading: false, isUploadFail: true }
         case ha.UPDATE_SCORE:
             const { id, taskOrder, score } = action.payload.userArticle
-            VocaTaskDao.getInstance().modifyArticle(action.payload.userArticle)
+            VocaTaskDao.getInstance().modifyTaskArticle(action.payload.userArticle)
             const newTasks = state.tasks.map((task, i) => {
                 if (task.taskType === Constant.TASK_ARTICLE_TYPE && task.id === id) {
                     task.score = score

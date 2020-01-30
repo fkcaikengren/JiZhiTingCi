@@ -35,7 +35,8 @@ export const loginHandle = (data, navigation) => {
 }
 
 export const logoutHandle = () => {
-    //#TODO 上传数据
+
+    // todo: 上传数据
     //1.清空Storage 
     Storage.clearMapForKey('notSyncTasks')
     Storage.clearMapForKey('notSyncGroups')

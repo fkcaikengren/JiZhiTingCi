@@ -1,38 +1,75 @@
 
 import * as Constant from './constant'
-import VocaDao from '../service/VocaDao'
+// import VocaDao from '../service/VocaDao'
 import VocaTaskDao from '../service/VocaTaskDao'
-import { NavigationActions, StackActions } from 'react-navigation'
+// import { NavigationActions, StackActions } from 'react-navigation'
 import VocaTaskService from "../service/VocaTaskService";
 import ArticleDao from "../../reading/service/ArticleDao";
-import { store } from '../../../redux/store'
+// import { store } from '../../../redux/store'
 
 export default class VocaUtil {
 
 
+    /**
+     * 浅拷贝VocaTask数组
+     * @param  tasks 
+     */
     static copyTasks(tasks) {
         const copyTasks = []
         for (let task of tasks) {
-            copyTasks.push({ ...task })
+            copyTasks.push({
+                taskOrder: task.taskOrder,
+                status: task.status,
+                vocaTaskDate: task.vocaTaskDate,
+                progress: task.progress,
+                curIndex: task.curIndex,
+                leftTimes: task.leftTimes,
+                delayDays: task.delayDays,
+                createTime: task.createTime,
+                wordCount: task.wordCount,
+                listenTimes: task.listenTimes,
+                testTimes: task.testTimes,
+                taskWords: task.taskWords,
+                taskArticles: task.taskArticles
+            })
         }
         return copyTasks
     }
 
     /**
-     *   深拷贝VocaTask
-     * @param task Realm数据库中的task
+     *  深拷贝VocaTask
+     * @param task 
      * @returns  新的task
      * */
-    static copyTaskDeep(task, testWrongNumIsZero = false) {
+    static copyTaskDeep(task, setTestWrongNumZero = false) {
         let copyTask = {
-            ...task,
-            words: [],
+            taskOrder: task.taskOrder,
+            status: task.status,
+            vocaTaskDate: task.vocaTaskDate,
+            progress: task.progress,
+            curIndex: task.curIndex,
+            leftTimes: task.leftTimes,
+            delayDays: task.delayDays,
+            createTime: task.createTime,
+            wordCount: task.wordCount,
+            listenTimes: task.listenTimes,
+            testTimes: task.testTimes,
+            taskWords: [],
+            taskArticles: []
         }
-        let ws = task.words
-        for (let i in ws) {
-            copyTask.words.push({
-                ...ws[i],
-                testWrongNum: testWrongNumIsZero ? 0 : ws[i].testWrongNum,
+        for (let tw of task.taskWords) {
+            copyTask.taskWords.push({
+                word: tw.word,
+                passed: tw.passed,
+                wrongNum: tw.wrongNum,
+                testWrongNum: setTestWrongNumZero ? 0 : tw.testWrongNum,
+            })
+        }
+        for (let ta of task.taskArticles) {
+            copyTask.taskArticles.push({
+                id: ta.id,
+                taskOrder: ta.taskOrder,
+                score: ta.score
             })
         }
         return copyTask
@@ -44,29 +81,30 @@ export default class VocaUtil {
      * @param articles
      * @returns {Array}
      */
-    static copyArticlesKW(articles) {
-        const arr = []
-        for (let article of articles) {
-            //查询keyWords的变形词并修改
-            const keyWords = JSON.parse(article.keyWords)
-            let kwords = [...keyWords]
-            for (let word of keyWords) {
-                const transformArr = VocaDao.getInstance().getTransforms(word)
-                console.log('-----------' + word + '的transforms-------------')
-                console.log(transformArr)
-                kwords = kwords.concat(transformArr)
-            }
+    // todo: 取消注释
+    // static copyArticlesKW(articles) {
+    //     const arr = []
+    //     for (let article of articles) {
+    //         //查询keyWords的变形词并修改
+    //         const keyWords = JSON.parse(article.keyWords)
+    //         let kwords = [...keyWords]
+    //         for (let word of keyWords) {
+    //             const transformArr = VocaDao.getInstance().getTransforms(word)
+    //             console.log('-----------' + word + '的transforms-------------')
+    //             console.log(transformArr)
+    //             kwords = kwords.concat(transformArr)
+    //         }
 
-            const copyArticle = {
-                ...article,
-                taskType: Constant.TASK_ARTICLE_TYPE,
-                keyWords: kwords,
+    //         const copyArticle = {
+    //             ...article,
+    //             taskType: Constant.TASK_ARTICLE_TYPE,
+    //             keyWords: kwords,
 
-            }
-            arr.push(copyArticle)
-        }
-        return arr
-    }
+    //         }
+    //         arr.push(copyArticle)
+    //     }
+    //     return arr
+    // }
 
 
 
@@ -107,67 +145,68 @@ export default class VocaUtil {
      * @param task
      * @returns {number} 返回一个0-100的数字
      */
-    static calculateProcess = (task) => {
-        let num = 0
-        if (task.status === Constant.STATUS_0) {  //新学任务
-            switch (task.progress) {
-                case Constant.IN_LEARN_PLAY:        //轮播10 point:
-                    let p = Math.floor(10 / Constant.LEARN_PLAY_TIMES)
-                    for (let i = Constant.LEARN_PLAY_TIMES; i >= 0; i--) {
-                        if (task.leftTimes == i) {
-                            num = p * (Constant.LEARN_PLAY_TIMES - i)
-                            break;
-                        }
-                    }
-                    break
-                case Constant.IN_LEARN_CARD:        //卡片30 point
-                    num = Math.floor((task.curIndex / task.wordCount) * 30) + 10
-                    break
-                case Constant.IN_LEARN_TEST_1:      //1测 30 point
-                    num = Math.floor((task.curIndex / task.wordCount) * 30) + 40
-                    break
-                case Constant.IN_LEARN_RETEST_1:
-                    num = 70
-                    break
-                case Constant.IN_LEARN_TEST_2:      //2测 25 point
-                    num = Math.floor((task.curIndex / task.wordCount) * 25) + 70
-                    break
-                case Constant.IN_LEARN_RETEST_2:
-                    num = 95
-                    break
-                case Constant.IN_LEARN_FINISH:    //完成
-                    num = 100
-                    break
-                default:
-                    break;
-            }
-        } else {                                       //复习任务
-            switch (task.progress) {
-                case Constant.IN_REVIEW_PLAY:        //轮播70 point:
-                    const rplayTimes = store.getState().mine.configReviewPlayTimes
-                    let p = Math.floor(70 / rplayTimes)
-                    for (let i = rplayTimes; i >= 0; i--) {
-                        if (task.leftTimes == i) {
-                            num = p * (rplayTimes - i)
-                            break;
-                        }
-                    }
-                    break
-                case Constant.IN_REVIEW_TEST:       //复习测试 25point
-                    num = Math.floor((task.curIndex / task.wordCount) * 25) + 70
-                    break
-                case Constant.IN_REVIEW_RETEST:       //复习测试 25point
-                    num = 95
-                    break
-                case Constant.IN_REVIEW_FINISH:    //复习完成
-                    num = 100
-                    break
-                default:
-                    break;
-            }
-        }
-        return num;
-    }
+    //todo: 取消注释
+    // static calculateProcess(task) {
+    //     let num = 0
+    //     if (task.status === Constant.STATUS_0) {  //新学任务
+    //         switch (task.progress) {
+    //             case Constant.IN_LEARN_PLAY:        //轮播10 point:
+    //                 let p = Math.floor(10 / Constant.LEARN_PLAY_TIMES)
+    //                 for (let i = Constant.LEARN_PLAY_TIMES; i >= 0; i--) {
+    //                     if (task.leftTimes == i) {
+    //                         num = p * (Constant.LEARN_PLAY_TIMES - i)
+    //                         break;
+    //                     }
+    //                 }
+    //                 break
+    //             case Constant.IN_LEARN_CARD:        //卡片30 point
+    //                 num = Math.floor((task.curIndex / task.wordCount) * 30) + 10
+    //                 break
+    //             case Constant.IN_LEARN_TEST_1:      //1测 30 point
+    //                 num = Math.floor((task.curIndex / task.wordCount) * 30) + 40
+    //                 break
+    //             case Constant.IN_LEARN_RETEST_1:
+    //                 num = 70
+    //                 break
+    //             case Constant.IN_LEARN_TEST_2:      //2测 25 point
+    //                 num = Math.floor((task.curIndex / task.wordCount) * 25) + 70
+    //                 break
+    //             case Constant.IN_LEARN_RETEST_2:
+    //                 num = 95
+    //                 break
+    //             case Constant.IN_LEARN_FINISH:    //完成
+    //                 num = 100
+    //                 break
+    //             default:
+    //                 break;
+    //         }
+    //     } else {                                       //复习任务
+    //         switch (task.progress) {
+    //             case Constant.IN_REVIEW_PLAY:        //轮播70 point:
+    //                 const rplayTimes = store.getState().mine.configReviewPlayTimes
+    //                 let p = Math.floor(70 / rplayTimes)
+    //                 for (let i = rplayTimes; i >= 0; i--) {
+    //                     if (task.leftTimes == i) {
+    //                         num = p * (rplayTimes - i)
+    //                         break;
+    //                     }
+    //                 }
+    //                 break
+    //             case Constant.IN_REVIEW_TEST:       //复习测试 25point
+    //                 num = Math.floor((task.curIndex / task.wordCount) * 25) + 70
+    //                 break
+    //             case Constant.IN_REVIEW_RETEST:       //复习测试 25point
+    //                 num = 95
+    //                 break
+    //             case Constant.IN_REVIEW_FINISH:    //复习完成
+    //                 num = 100
+    //                 break
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    //     return num;
+    // }
 
 
     /**
@@ -175,7 +214,7 @@ export default class VocaUtil {
      * @param taskOrder
      * @returns {string}
      */
-    static genTaskName = (taskOrder) => {
+    static genTaskName(taskOrder) {
         if (taskOrder === Constant.VIRTUAL_TASK_ORDER) {
             return '爱听词'
         }
@@ -200,7 +239,7 @@ export default class VocaUtil {
      * @description 生成一个minNum到maxMum间的随机数 (含头含尾)
      * @memberof VocaUtil
      */
-    static randomNum = (minNum, maxNum) => {
+    static randomNum(minNum, maxNum) {
         if ((typeof minNum !== "number") || (typeof maxNum !== "number")) {
             throw new Error('参数类型错误，minNum, maxNum 应该是number')
         }
@@ -211,7 +250,7 @@ export default class VocaUtil {
      * @description 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
      * @memberof VocaUtil
      */
-    static randomArr = (minNum, maxNum, numArr, word, wordInfos) => {
+    static randomArr(minNum, maxNum, numArr, word, wordInfos) {
         //判断错误
         if ((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof numArr !== "object")) {
             throw new Error('参数类型错误，minNum, maxNum must be number, numArr must be object ')
@@ -240,19 +279,19 @@ export default class VocaUtil {
 
 
 
+    // todo:取消注释
+    // static goPageWithoutStack(navigation, routeName, params = {}) {
+    //     // 抹掉stack，跳转到指定路由
+    //     const resetAction = StackActions.reset({
+    //         index: 0,
+    //         actions: [
+    //             NavigationActions.navigate({ routeName, params })
+    //         ]
+    //     });
+    //     navigation.dispatch(resetAction);
+    // }
 
-    static goPageWithoutStack = (navigation, routeName, params = {}) => {
-        // 抹掉stack，跳转到指定路由
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName, params })
-            ]
-        });
-        navigation.dispatch(resetAction);
-    }
-
-    static getNotPassedWords = (words) => {
+    static getNotPassedWords(words) {
 
         return words.filter((item, i) => {
             if (item.passed === true) {
@@ -264,7 +303,7 @@ export default class VocaUtil {
     }
 
     /** 计算剩余次数 */
-    static getLeftCount = (testArr) => {
+    static getLeftCount(testArr) {
         let count = 0
         for (let value of testArr) {
             if (value === true) {
@@ -284,7 +323,7 @@ export default class VocaUtil {
      * @param shouldFilter 是否过滤（）
      * @returns {words,showInfos} 默认shouldFilter=false，返回 {words,showInfos}；当shouldFilter=false,返回pass的单词
      */
-    static passWordInTask = (words, word, taskOrder, showWordInfos, shouldFilter = true) => {
+    static passWordInTask(words, word, taskOrder, showWordInfos, shouldFilter = true) {
         // 修改realm数据库的 pass
         let res = null
         const taskDao = VocaTaskDao.getInstance()
@@ -292,7 +331,7 @@ export default class VocaUtil {
             const newWords = []
             for (let i in words) {
                 if (words[i].word === word) { //pass
-                    taskDao.modifyWord({ word: word, passed: true })
+                    taskDao.modifyTaskWord({ word: word, passed: true })
                     taskDao.modify(() => {
                         const task = taskDao.getTaskByOrder(taskOrder)
                         task.wordCount = task.wordCount - 1
@@ -316,7 +355,7 @@ export default class VocaUtil {
         } else {
             for (let w of words) {
                 if (w.word === word) { //pass
-                    taskDao.modifyWord({ word: word, passed: true })
+                    taskDao.modifyTaskWord({ word: word, passed: true })
                     taskDao.modify(() => {
                         const task = taskDao.getTaskByOrder(taskOrder)
                         task.wordCount = task.wordCount - 1
@@ -337,7 +376,7 @@ export default class VocaUtil {
      * @param word 要pass的单词
      * @returns {task, curIndex, showWordInfos}
      */
-    static passWordInState = (state, word) => {
+    static passWordInState(state, word) {
         const beforeCount = state.task.wordCount
         let index = state.curIndex
         const task = state.task
@@ -361,7 +400,7 @@ export default class VocaUtil {
 
 
     //获取单词在wordInfos中的下标
-    static getIndexInWordInfos = (curWord, wordInfos) => {
+    static getIndexInWordInfos(curWord, wordInfos) {
         for (let i in wordInfos) {
             if (wordInfos[i].word === curWord) {
                 return i
@@ -370,7 +409,7 @@ export default class VocaUtil {
     }
 
     //统计单词（未passed）的错误平均数
-    static calculateWrongAvg = (words, ) => {
+    static calculateWrongAvg(words, ) {
         let count = 0
         let sum = 0
         for (let w of words) {
@@ -386,7 +425,7 @@ export default class VocaUtil {
      * 构建一个虚拟Task 
      * words 是task的words
     */
-    static genVirtualTask = (words) => {
+    static genVirtualTask(words) {
         let copyTask = {
             taskOrder: Constant.VIRTUAL_TASK_ORDER,
             curIndex: 0,
@@ -423,7 +462,7 @@ export default class VocaUtil {
      * @param vocaTasks
      * @returns {string}
      */
-    static getUserArticles = (vocaTasks) => {
+    static getUserArticles(vocaTasks) {
         const myArticles = []
         for (let task of vocaTasks) {
             const artiles = JSON.parse(task.articles)
@@ -441,7 +480,7 @@ export default class VocaUtil {
      * @param rawTasks 全部任务（文章+单词）
      * @returns {*} 返回实际存储的单词任务
      */
-    static filterRawTasks = (rawTasks) => {
+    static filterRawTasks(rawTasks) {
         let isFirst = false
         let storedTasks = rawTasks.filter((task, index) => {
             if (task.taskType === Constant.TASK_ARTICLE_TYPE) {
@@ -476,7 +515,7 @@ export default class VocaUtil {
      * @param lastLearnDate
      * @returns 
      */
-    static loadTodayRawTasks = (storedTask, taskCount, lastLearnDate) => {
+    static loadTodayRawTasks(storedTask, taskCount, lastLearnDate) {
         const todayTasks = new VocaTaskService().getTodayTasks(storedTask, taskCount, lastLearnDate)
 
         const tasks = todayTasks.filter((task, i) => {
@@ -493,14 +532,13 @@ export default class VocaUtil {
         return todayTasks
     }
 
-
     /**
      * 新学任务数据迁移至1复任务
      * @param reviewTask 1复任务
      * @param newTask  新学任务
      * @returns
      * */
-    static updateNewTaskToReviewTask = (reviewTask, newTask) => {
+    static updateNewTaskToReviewTask(reviewTask, newTask) {
         const ws = newTask.words.map((w, i) => {
             return { ...w, testWrongNum: 0 }
         })
