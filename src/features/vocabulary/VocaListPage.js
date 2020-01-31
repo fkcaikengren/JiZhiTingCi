@@ -128,7 +128,7 @@ export default class VocaListPage extends Component {
   _lookDetail = (index) => {
     //导航到详情页
     this.props.navigation.navigate('VocaDetail', {
-      word: this.state.data[index].content.word
+      word: this.state.data[index].word
     })
   }
 
@@ -150,7 +150,7 @@ export default class VocaListPage extends Component {
           return false
         }
       })
-      const words = data.map((item, index) => item.content)
+      const words = data.map((item, index) => item.word)
       if (words.length < Constant.MIN_PLAY_NUMBER) {
         this.props.toast.show('当前选择不足5个，不可以播放哦')
       } else {
@@ -195,8 +195,8 @@ export default class VocaListPage extends Component {
   }
 
   _keyExtractor = (item, index) => {
-    if (item.content) {
-      return item.content.word + index
+    if (item.word) {
+      return item.word + index
     } else {
       return item.title + index.toString()
     }

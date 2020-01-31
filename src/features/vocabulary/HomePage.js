@@ -77,24 +77,22 @@ class HomePage extends Component {
         const { plan } = this.props.plan
         const today = _util.getDayTime(0)
         console.log(today)
-        if ((lastLearnDate && (today !== lastLearnDate)) || IsLoginToHome) {  //任务过期(每天第一次打开App)
-            const storedTasks = VocaUtil.filterRawTasks(tasks)
+        if ((lastLearnDate && (today !== lastLearnDate)) || IsLoginToHome) {  //任务过期or登录进入
 
-            //统计
-            this.props.changeLeftDays(this.vts.countLeftDays())
-            //判断是否清空VocaPlay
+            // #todo:判断是否清空VocaPlay
             const { task, normalType } = this.props.vocaPlay
             if (normalType === BY_REAL_TASK) {
-                for (let st of storedTasks) {
-                    if (st.taskOrder && st.taskOrder === task.taskOrder) {
+                for (let t of tasks) {
+                    if (t.taskOrder && t.taskOrder === task.taskOrder) {
                         this.props.clearPlay()
                         break
                     }
                 }
             }
             //获取今日任务
-            console.log('---------重新 加载今日任务------------')
-            this.props.loadTasks(storedTasks, plan.taskCount, lastLearnDate)
+            this.props.loadTasks()
+            //统计剩余天数
+            this.props.changeLeftDays(this.vts.countLeftDays(plan.taskCount, plan.taskWordCount))
         }
     }
 

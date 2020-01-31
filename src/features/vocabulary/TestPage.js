@@ -200,6 +200,16 @@ export default class TestPage extends Component {
         this._countDown()
     }
 
+    /** 计算剩余次数 */
+    _getLeftCount(testArr) {
+        let count = 0
+        for (let value of testArr) {
+            if (value === true) {
+                count++
+            }
+        }
+        return count
+    }
 
     /*
      产生选项和答案
@@ -351,7 +361,7 @@ export default class TestPage extends Component {
                             break;
                         }
                     }
-                    leftCount = vocaUtil.getLeftCount(nextState.testArr)
+                    leftCount = this._getLeftCount(nextState.testArr)
                 } else {//结束
                     isQuit = true
                 }
@@ -367,7 +377,7 @@ export default class TestPage extends Component {
                     if (firstIndex !== null) { //还存在测试的单词
                         nextIndex = firstIndex
                         curCount = 1
-                        leftCount = vocaUtil.getLeftCount(nextState.testArr)
+                        leftCount = this._getLeftCount(nextState.testArr)
                     } else {
                         //跳转
                         isQuit = true

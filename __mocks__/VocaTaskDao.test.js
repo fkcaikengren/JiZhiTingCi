@@ -8,24 +8,18 @@ vtd.open()
 setTimeout(() => {
 
     /** 测试：保存单词书单词 */
-    saveBookWords_test()
+    // saveBookWords_test()
     function saveBookWords_test() {
         vtd.saveBookWords(createPlanData.words)
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /**测试：获取单词书单词 */
+    getBookWordsByWordId_test()
+    function getBookWordsByWordId_test() {
+        const res = vtd.getBookWordsByWordId(2078, 2079)
+        console.log(res)
+    }
 
 
 

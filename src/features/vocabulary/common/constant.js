@@ -54,7 +54,7 @@ export const IN_CASUAL_PLAY = 'IN_CASUAL_PLAY'
 // normalType 的两种取值
 export const BY_REAL_TASK = 'BY_REAL_TASK'
 export const BY_VIRTUAL_TASK = 'BY_VIRTUAL_TASK'
-export const VIRTUAL_TASK_ORDER = 100000
+export const VIRTUAL_TASK_ORDER = 1000000
 
 //最小播放数量
 export const MIN_PLAY_NUMBER = 5

@@ -300,7 +300,7 @@ export default class VocaDao {
     }
 
     // 负责将翻译转为字符串
-    _transToText = (tranObj) => {
+    _transToText(tranObj) {
         if (!tranObj || tranObj === '') {
             return ''
         }
@@ -316,8 +316,5 @@ export default class VocaDao {
         }
         return translation
     }
-
-
-
 
 }

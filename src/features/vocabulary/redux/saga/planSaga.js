@@ -9,29 +9,42 @@ import {
     CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START, LOAD_VOCA_BOOKS_FAIL, LOAD_VOCA_BOOKS_SUCCEED, LOAD_VOCA_BOOKS_START,
 } from '../action/planAction';
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
+import VocaTaskService from '../../service/VocaTaskService';
+import ArticleService from '../../../reading/service/ArticleService';
 
 
 /** 提交单词计划 */
 export function* createPlan(action) {
-    const { plan } = action.payload
     yield put({ type: CHANGE_VOCA_BOOK_START })
     yield put({ type: LOAD_TASKS_START })
     try {
-        const res = yield Http.post("/plan/create", plan)
-        const { vocaTasks, articles } = res.data
+        const res = yield Http.post("/plan/create", action.payload.plan)
+        const { plan, words, articles } = res.data
         //清空先前数据，存储新数据到realm
-        const vtDao = VocaTaskDao.getInstance()
+        const vtd = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
-        vtDao.deleteAllTasks()
+        vtd.deleteAllTasks()
         artDao.deleteAllArticles()
-        vtDao.saveVocaTasks(vocaTasks, plan.taskWordCount)
+        vtd.saveBookWords(words)
         artDao.saveArticles(articles)
-        //加载今日数据
-        const rawTasks = VocaUtil.loadTodayRawTasks(null, plan.taskCount, plan.lastLearnDate)
+
+
+
+        //加载今日数据 
+        const tasks = new VocaTaskService().getTodayTasks(null, plan.taskCount, plan.taskWordCount)
+        //构建文章任务
+        const newLearnTasks = tasks.filter((item, i) => item.status === Constant.STATUS_0)
+        const artService = new ArticleService()
+        let articleTasks = []
+        for (let nTask of newLearnTasks) {
+            articleTasks = articleTasks.concat(artService.getArticlesInfo(nTask.taskArticles))
+            console.log(articleTasks)
+        }
+
         if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
             yield put({ type: CLEAR_PLAY })
         }
-        yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: rawTasks } })
+        yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
         yield put({
             type: CHANGE_VOCA_BOOK_SUCCEED,
             payload: {

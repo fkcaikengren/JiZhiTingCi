@@ -17,13 +17,14 @@ export const SYNC_TASK_FAIL = 'SYNC_TASK_FAIL'
 //修改阅读得分
 export const UPDATE_SCORE = 'UPDATE_SCORE'
 
+const fn = (payload) => {
+    return payload
+}
 
 //驼峰式命名，不可以更改(与变量名必须对应)
 export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
     //加载任务
-    [LOAD_TASKS]: (storedTasks, taskCount, lastLearnDate) => {
-        return { storedTasks, taskCount, lastLearnDate }
-    },
+    [LOAD_TASKS]: fn,
 
     //更新任务
     [UPDATE_TASK]: (task) => {
@@ -31,9 +32,7 @@ export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
     },
 
     //上传同步任务
-    [SYNC_TASK]: (syncObj) => {
-        return syncObj
-    },
+    [SYNC_TASK]: fn,
 
     // 更新分数
     [UPDATE_SCORE]: (userArticle) => {

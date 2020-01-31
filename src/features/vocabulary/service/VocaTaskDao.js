@@ -52,9 +52,8 @@ const TaskArticleSchema = {
     name: 'TaskArticle',
     primaryKey: 'id',
     properties: {
-        id: 'string',                               //文章id
-        taskOrder: "int?",                          //任务主键
-        score: { type: 'int', optional: true, default: 0 }, //得分
+        id: 'string',                                          //文章id
+        score: { type: 'int', optional: true, default: 0 },     //得分
     }
 };
 
@@ -68,6 +67,7 @@ const BookWordSchema = {
         learned: { type: 'bool', optional: true, default: false },
     }
 };
+
 
 export default class VocaTaskDao {
 
@@ -158,38 +158,6 @@ export default class VocaTaskDao {
         return success
     }
 
-
-    /**
-     * 获取最后一个VocaTask的TaskOrder
-     * @returns 返回TaskOrder，当无VocaTask数据时返回0
-     */
-    getLastTaskOrder() {
-        const vocaTasks = this.realm.objects('VocaTask')
-        if (vocaTasks.length > 0) {
-            const resultTasks = vocaTasks.sorted('taskOrder', true); //降序
-            return resultTasks[0].taskOrder
-        } else {
-            return 0
-        }
-    }
-
-
-    /**
-     * 获取已学的单词
-     * @returns {Realm.Results<any>}查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
-     */
-    getLearnedWords() {
-        return this.realm.objects('BookWord').filtered('learned = true')
-    }
-
-
-    /**
-     * 获取未学的单词
-     * @returns {Realm.Results<any>}查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
-     */
-    getNotLearnedWords() {
-        return this.realm.objects('BookWord').filtered('learned = false')
-    }
 
     /**
      * 批量修改对象数据
@@ -321,6 +289,50 @@ export default class VocaTaskDao {
     }
 
 
+
+
+    /**
+     * 获取最后一个VocaTask的TaskOrder
+     * @returns 返回TaskOrder，当无VocaTask数据时返回0
+     */
+    getLastTaskOrder() {
+        const vocaTasks = this.realm.objects('VocaTask')
+        if (vocaTasks.length > 0) {
+            const resultTasks = vocaTasks.sorted('taskOrder', true); //降序
+            return resultTasks[0].taskOrder
+        } else {
+            return 0
+        }
+    }
+
+
+    /**
+     * 获取已学的单词
+     * @returns {Realm.Results<any>}查询到数据返回Realm.Results, 否则返回Realm.List{} （length为0）
+     */
+    getLearnedBookWords() {
+        return this.realm.objects('BookWord').filtered('learned = true') || []
+    }
+
+
+    /**
+     * 获取未学的单词
+     * @returns {Realm.Results<any>}
+     */
+    getNotLearnedBookWords() {
+        return this.realm.objects('BookWord').filtered('learned = false') || []
+    }
+
+    /**
+     * 获取两个wordId之间的单词
+     * @param {*} startWordId 起始wordId
+     * @param {*} endWordId 结束wordId
+     * @returns {Realm.Results<any>}
+     */
+    getBookWordsByWordId(startWordId, endWordId) {
+        return this.realm.objects('BookWord').filtered('wordId >= ' + startWordId + ' AND wordId <= ' + endWordId)
+    }
+
     /**
      * 根据日期获取任务
      * @param nth 0表示今天，-n表示前n天，n表示后n天
@@ -331,6 +343,9 @@ export default class VocaTaskDao {
         let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = ' + today + 'SORT(taskOrder ASC)')
         return vocaTasks;
     }
+
+
+
 
 
     /**
@@ -345,20 +360,26 @@ export default class VocaTaskDao {
      * @return  {Realm.Results<any>}
      */
     getLearnedTasks() {
-        return this.realm.objects('VocaTask').filtered('status > 0')
+        return this.realm.objects('VocaTask').filtered('status > 0 SORT(taskOrder ASC)')
+    }
+
+    /**
+     * 获取新学任务
+     * @returns {Realm.Results<any>}
+     */
+    getNewLearnTasks() {
+        return this.realm.objects('VocaTask').filtered('status = 0 SORT(taskOrder ASC)')
     }
 
 
-    /*-------------------------------------todo:------------------------------------*/
+    /** 根据错词频数查询单词 */
+    getWordsEqWrongNum(num) {
+        return this.realm.objects('TaskWord').filtered('wrongNum = ' + num)
 
-
-    /**
-     * 获取未学任务 todo:
-     * @returns {Realm.Results<any>}
-     */
-    getNotLearnedTasks() {
-        let vocaTasks = this.realm.objects('VocaTask').filtered('status = 0')
-        return vocaTasks;
+    }
+    /** 查询错误频数大于num 的所有单词*/
+    getWordsGEWrongNum(num) {
+        return this.realm.objects('TaskWord').filtered('wrongNum >= ' + num)
     }
 
 
@@ -368,26 +389,15 @@ export default class VocaTaskDao {
      * @returns {any} 如果不存在，返回undefined
      */
     getTaskByOrder(taskOrder) {
-        let vocaTask = this.realm.objects('VocaTask').filtered('taskOrder = "' + taskOrder + '"')[0]
-        // console.log(vocaTask)
-        return vocaTask;
-    }
-
-    /** 根据错词频数查询单词 */
-    getWordsEqWrongNum(num) {
-        let words = this.realm.objects('TaskWord').filtered('wrongNum = "' + num + '"')
-        // console.log(words)
-        return words;
-    }
-    /** 查询错误频数大于num 的所有单词*/
-    getWordsGEWrongNum(num) {
-        let words = this.realm.objects('TaskWord').filtered('wrongNum >= "' + num + '"')
-        // console.log(words)
-        return words;
+        return this.realm.objects('VocaTask').filtered('taskOrder = ' + taskOrder)[0]
     }
 
 
-    /** 查询出某个单词 */
+    /**
+     * 查询出某个单词 
+     * @param {*} word 单词
+     * @returns 任务的单词信息
+     */
     getWord(word) {
         return this.realm.objects('TaskWord').filtered('word = "' + word + '"')
     }

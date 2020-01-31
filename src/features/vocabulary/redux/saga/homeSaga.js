@@ -1,23 +1,23 @@
-import { take, put, call } from 'redux-saga/effects'
+import { take, put, call, takeLatest } from 'redux-saga/effects'
 import VocaUtil from "../../common/vocaUtil";
 import VocaTaskDao from "../../service/VocaTaskDao";
 import { COMMAND_MODIFY_TASK } from '../../../../common/constant';
 import {
-    SYNC_TASK, LOAD_TASKS_START, LOAD_TASKS_SUCCEED, LOAD_TASKS_FAIL, SYNC_TASK_START, SYNC_TASK_SUCCEED, SYNC_TASK_FAIL, LOAD_TASKS
+    LOAD_TASKS, LOAD_TASKS_START, LOAD_TASKS_SUCCEED, LOAD_TASKS_FAIL, SYNC_TASK, SYNC_TASK_START, SYNC_TASK_SUCCEED, SYNC_TASK_FAIL,
 } from '../action/homeAction';
 import createHttp from '../../../../common/http'
 import _util from '../../../../common/util';
 import { MODIFY_LAST_LEARN_DATE } from '../action/planAction';
+import VocaTaskService from '../../service/VocaTaskService';
 
 
 /** 加载今日任务 */
-export function* loadTasks(params) {
-    const { storedTasks, taskCount, lastLearnDate } = params
+export function* loadTasks(action) {
+    const { lastLearnDate, taskCount, taskWordCount } = action.payload
     yield put({ type: LOAD_TASKS_START })
     try {
-        const rawTasks = VocaUtil.loadTodayRawTasks(storedTasks, taskCount, lastLearnDate)
-        yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: rawTasks } })
-
+        const tasks = new VocaTaskService().getTodayTasks(lastLearnDate, taskCount, taskWordCount)
+        yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks } })
         //加载成功后，修改上次学习日期lastLearnDate
         yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
     } catch (err) {
@@ -111,15 +111,8 @@ export function* syncTask(syncObj) {    //一次只上传一个
 
 /**watch saga */
 export function* watchLoadTasks() {
-    while (true) {
-        const action = yield take([LOAD_TASKS])
-        yield call(loadTasks, action.payload)
-    }
+    takeLatest(LOAD_TASKS, loadTasks)
 }
 export function* watchSyncTask() {
-    while (true) {
-        const { type, payload } = yield take([SYNC_TASK])
-
-        yield call(syncTask, payload)
-    }
+    takeLatest(SYNC_TASK, syncTask)
 }

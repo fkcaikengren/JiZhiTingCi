@@ -13,8 +13,9 @@ const ArticleSchema = {
         analysisUrl: "string?",
         name: "string?",
         note: "string?",
-        keyWords: "string?",
         type: "string?",
+        startWordId: "int?",
+        endWordId: "int?"
     }
 };
 
@@ -42,7 +43,6 @@ export default class ArticleDao {
         try {
             if (!this.realm) {
                 this.realm = await Realm.open({ path: 'Article.realm', schema: [ArticleSchema] })
-                // console.log(this.realm)
             }
         } catch (err) {
             console.log('ArticleDao: 创建Article.realm数据库失败')
@@ -78,7 +78,6 @@ export default class ArticleDao {
             this.realm.write(() => {
                 for (let art of articls) {
                     art.id = art._id
-                    art.keyWords = JSON.stringify(art.keyWords.map((item, i) => item.word))
                     this.realm.create('Article', art);
                 }
             })
@@ -90,77 +89,63 @@ export default class ArticleDao {
     }
 
 
-
-    /**自定义修改 */
+    /**
+     * 自定义修改
+     */
     modify(fn) {
         this.realm.write(fn)
     }
 
     /**
-     *  查询全部文章
-     * @returns {Realm.Results<any> | never}
-     */
+    *  查询全部文章
+    * @returns {Realm.Results<any>}
+    */
     getAllArticles() {
-        return this.realm.objects('Article')
+        return this.realm.objects('Article') || []
     }
 
-    /**
-     *  根据id获取文章
-     * @param id
-     * @returns {*} 获取失败，返回null, 否则返回article
-     */
-    getArticleById(id) {
-        const res = this.realm.objects('Article').filtered('id=' + id);
-        return res.length ? null : res
+    getTodayArticles(startId, endId) {
+        return this.realm.objects('Article').filtered('endWordId >= ' + startId + ' AND endWordId <= ' + endId)
     }
+
 
     /**
      *  根据id批量获取文章
-     * @param userArticles 用户的文章数组
+     * @param userArticles 用户的文章数组 
      * @returns {Array}
      */
-    getArticles(userArticles) {
-        console.log('---获取articles by userArticles------如下：')
-        console.log(userArticles)
+    getArticlesById(ids) {
+        if (!ids) {
+            return []
+        }
         let arr = []
-        if (userArticles) {
-            try {
-                const len = userArticles.length
-                if (len && len > 0) {
-                    //拼接
-                    let str = ""
-                    for (let i in userArticles) {
-                        if (i == (len - 1)) {
-                            str += "id='" + userArticles[i].id + "'"
-                        } else {
-                            str += "id='" + userArticles[i].id + "'" + " OR "
-                        }
+        try {
+            const len = ids.length
+            if (len && len > 0) {
+                //拼接
+                let str = ''
+                for (let i in ids) {
+                    if (i == (len - 1)) {
+                        str += 'id="' + ids[i] + '"'
+                    } else {
+                        str += 'id="' + ids[i] + '" OR '
                     }
-                    let articles = this.realm.objects('Article').filtered(str); //数组
-                    //排序
-                    arr = _.sortedUniqBy(articles, function (art) {
-                        return art.id;
-                    });
-                    //赋值score
-                    for (let a of arr) {
-                        for (let ua of userArticles) {
-                            if (a.id === ua.id) {
-                                a.score = ua.score
-                                a.taskOrder = ua.taskOrder
-                                break
-                            }
-                        }
-                    }
-                    console.log(arr)
                 }
+                let articles = this.realm.objects('Article').filtered(str); //数组
+                //排序
+                arr = _.sortedUniqBy(articles, function (art) {
+                    return art.id;
+                });
 
-            } catch (e) {
-                console.log(e)
-                console.log('ArticleDao : getArticles() Error')
             }
+
+        } catch (e) {
+            console.log(e)
+            console.log('ArticleDao :  根据id批量获取articles失败')
         }
         return arr
     }
+
 
 
     /**
@@ -173,4 +158,3 @@ export default class ArticleDao {
     }
 
 }
-

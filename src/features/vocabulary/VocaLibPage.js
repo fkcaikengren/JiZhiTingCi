@@ -161,15 +161,11 @@ class VocaLibPage extends Component {
                 this.props.changeVocaBook({
                     plan: {
                         bookId,
-                        bookName: "测试单词书", //no
                         taskCount,
                         taskWordCount,
                         reviewWordCount,
-                        totalWordCount: 10000,//no
                         totalDays,
-                        lastLearnDate: null,
                     },
-
 
                 })
             }

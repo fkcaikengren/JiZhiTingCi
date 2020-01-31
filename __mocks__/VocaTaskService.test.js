@@ -1,10 +1,12 @@
 import VocaTaskService from "../src/features/vocabulary/service/VocaTaskService"
 import _util from "../src/common/util"
 import * as Constant from '../src/features/vocabulary/common/constant'
+import VocaDao from "../src/features/vocabulary/service/VocaDao";
 const fs = require("fs");
 
 const createPlanData = require('./mock_data/createPlan.json')
 const vts = new VocaTaskService()
+VocaDao.getInstance().open()
 
 // 测试代码
 setTimeout(() => {
@@ -22,7 +24,7 @@ setTimeout(() => {
     function getTodayTasks_test() {
         vts.vtd.saveBookWords(createPlanData.words)
         const result = vts.getTodayTasks(null, 1, 10)
-        console.log(result)
+        console.log(result[0])
     }
 
 
@@ -42,7 +44,7 @@ setTimeout(() => {
         let lastLearnDate = null
         for (let i = 0; i < n; i++) {
             //step1.加载今日任务,修改lastLearnDate
-            todayTasks = vts.getTodayTasks(lastLearnDate, 2, 13, i)
+            todayTasks = vts.getTodayTasks(lastLearnDate, 2, 12, i)
             lastLearnDate = _util.getDayTime(i)
             if (todayTasks && todayTasks.length <= 0) {
                 break
@@ -100,11 +102,11 @@ setTimeout(() => {
         let n = 10000;      //10000表示无穷大
         let todayTasks = null
         let lastLearnDate = null
-        let x = 100
-        let y = 1000
+        let x = 30
+        let y = 60
         for (let i = 0; i < n; i++) {
             //step1.加载今日任务,修改lastLearnDate
-            todayTasks = vts.getTodayTasks(lastLearnDate, 1, 10, i)
+            todayTasks = vts.getTodayTasks(lastLearnDate, 2, 10, i)
             lastLearnDate = _util.getDayTime(i)
             if (todayTasks && todayTasks.length <= 0) {
                 break
@@ -170,12 +172,13 @@ setTimeout(() => {
         vts.vtd.saveBookWords(createPlanData.words)
 
         //开始测试--------------------------------
-        let n = 210;      //10000表示无穷大
+        let n = 1000;      //10000表示无穷大
         let todayTasks = null
         let lastLearnDate = null
-        let x = 209
-        let y = 1000
-        for (let i = 0; i < n; i++) {
+        let x = 89
+        let y = 200
+        let count = 0
+        for (let i = 0; i < n; i++ , count++) {
             //step1.加载今日任务,修改lastLearnDate
             todayTasks = vts.getTodayTasks(lastLearnDate, 1, 10, i)
             lastLearnDate = _util.getDayTime(i)
@@ -224,6 +227,7 @@ setTimeout(() => {
             //step3. 存储修改的任务
             vts.vtd.modifyTasks(todayTasks)
         }
+        vts.getTodayTasks(lastLearnDate, 2, 11, count)
         console.log('完成学习测试！！')
 
     }
@@ -236,19 +240,18 @@ setTimeout(() => {
      *  中断天数n取值: -2, -10, -13, -14 -20
      *  学习过程的取值：正常学习、异常学习
      */
-    // mockBreakStudy_test()
+    mockBreakStudy_test()
     function mockBreakStudy_test() {
         //获取数据
         vts.vtd.saveBookWords(createPlanData.words)
-
         //开始测试--------------------------------
         const firstDay = -60 //从前50天开始
-        let n = -10;
+        let n = -15;
         let todayTasks = null
         let lastLearnDate = null
         let x = -20
         let y = 10000
-        const taskCount = 1
+        const taskCount = 2
         for (let i = firstDay; i <= n; i++) {
             //step1.加载今日任务,修改lastLearnDate
             todayTasks = vts.getTodayTasks(lastLearnDate, taskCount, 10, i)
@@ -298,6 +301,23 @@ setTimeout(() => {
         console.log(result)
 
     }
+
+
+    /** 测试：获取已学单词列表 */
+    // getLearnedList_test()
+    function getLearnedList_test() {
+        console.log(vts.getLearnedList())
+    }
+
+
+
+    /** 测试：获取未学单词列表 */
+    // getNewList_test()
+    function getNewList_test() {
+        console.log(vts.getNewList())
+    }
+
+
 
 
     /** 测试： 统计剩余天数 */

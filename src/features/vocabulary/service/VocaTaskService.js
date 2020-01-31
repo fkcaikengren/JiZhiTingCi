@@ -5,8 +5,8 @@ import VocaUtil from '../common/vocaUtil'
 import VocaTaskDao from "./VocaTaskDao";
 import _ from 'lodash'
 import * as CConstant from "../../../common/constant";
-// import { store } from '../../../redux/store'
-// todo: 把10 改为 store的配置复习遍数
+import { store } from '../../../redux/store'
+import ArticleDao from '../../reading/service/ArticleDao';
 
 /**
     在dao层进行进一步的数据格式处理, 同时把数据完全拷贝出来
@@ -16,6 +16,9 @@ export default class VocaTaskService {
     constructor() {
         this.vtd = VocaTaskDao.getInstance()
         this.vtd.open()
+
+        this.artDao = ArticleDao.getInstance()
+        this.artDao.open()
     }
     /**
      * 关闭数据库
@@ -76,13 +79,14 @@ export default class VocaTaskService {
             let copyTask = VocaUtil.copyTaskDeep(task, true)
             copyTask.taskType = Constant.TASK_VOCA_TYPE  //标记为单词任务
             copyTasks.push(copyTask)
-            //生成1复任务
             if (copyTask.status === Constant.STATUS_0) {
+
+                //生成1复任务
                 const reviewTask = VocaUtil.copyTaskDeep(copyTask, true);
+                reviewTask.taskType = Constant.TASK_VOCA_TYPE  //标记为单词任务
                 reviewTask.status = Constant.STATUS_1
                 reviewTask.progress = Constant.IN_REVIEW_PLAY
-                // reviewTask.leftTimes = store.getState().mine.configReviewPlayTimes
-                reviewTask.leftTimes = 10       //todo:不要写死
+                reviewTask.leftTimes = store.getState().mine.configReviewPlayTimes
                 reviewTasks.push(reviewTask)
             }
 
@@ -110,7 +114,7 @@ export default class VocaTaskService {
         //1. 生成taskOrder
         let taskOrder = this.vtd.getLastTaskOrder() + 1
         //2. 包装未学的单词
-        const bookWords = this.vtd.getNotLearnedWords()
+        const bookWords = this.vtd.getNotLearnedBookWords()
         const bWordsLength = bookWords.length
         let isEnd = false
         if (bWordsLength > 0) { //如果存在未学单词
@@ -120,6 +124,7 @@ export default class VocaTaskService {
                 if (isEnd) {
                     break
                 }
+                // 2.1获取任务单词
                 const taskWords = []
                 for (let i = 0; i < taskWordCount; i++) {
                     //当单词数组长度不够
@@ -127,17 +132,31 @@ export default class VocaTaskService {
                         isEnd = true
                         break
                     }
-                    taskWords.push({
-                        word: bookWords[(tc * taskWordCount) + i].word
-                    })
-                    wordIds.push(bookWords[(tc * taskWordCount) + i].wordId)
+
+                    const { word, wordId } = bookWords[(tc * taskWordCount) + i]
+                    taskWords.push({ word, wordId })
+                    wordIds.push(wordId)
                 }
+                //2.2获取今日任务的文章
+                let taskArticles = []
+                if (taskWords.length > 0) {
+                    console.log(`${taskWords[0].wordId}----->${taskWords[taskWords.length - 1].wordId}`)
+                    taskArticles = this.artDao.getTodayArticles(taskWords[0].wordId, taskWords[taskWords.length - 1].wordId)
+                    taskArticles = taskArticles.map((article, index) => {
+                        return {
+                            id: article.id,
+                            score: 0,
+
+                        }
+                    })
+                }
+                //2.3 包装
                 vocaTasks.push({
                     taskOrder: taskOrder++, //完成一次自加
                     vocaTaskDate,
                     wordCount: taskWords.length,
                     taskWords,
-                    taskArticles: [],
+                    taskArticles,
                 })
             }
             //3. 修改单词learned
@@ -256,8 +275,7 @@ export default class VocaTaskService {
                             storedTask.leftTimes = 0
                         } else {                                            //延迟
                             storedTask.progress = Constant.IN_REVIEW_PLAY
-                            // storedTask.leftTimes = store.getState().mine.configReviewPlayTimes 
-                            storedTask.leftTimes = 10 //todo:不要写死
+                            storedTask.leftTimes = store.getState().mine.configReviewPlayTimes
                         }
                     }
                 }
@@ -291,7 +309,7 @@ export default class VocaTaskService {
                     arr.push({
                         isHeader: false,
                         checked: false,
-                        content: w,
+                        word: w.word,
                     })
                 }
                 if (arr.length > 0) {
@@ -331,7 +349,7 @@ export default class VocaTaskService {
                     title: ''
                 }
                 passArr.push(header)
-                const words = task.words
+                const words = task.taskWords
                 // console.log(words)
                 for (let i in words) {
                     if (words[i].passed) {
@@ -339,14 +357,14 @@ export default class VocaTaskService {
                         passArr.push({
                             isHeader: false,
                             checked: false,
-                            content: words[i],
+                            word: words[i].word,
                         })
                         if (!hasPassedWord) {
                             hasPassedWord = true
                         }
                     }
                 }
-                header.title = `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${count}词`
+                header.title = `${VocaUtil.genTaskName(task.taskOrder)}, 共${count}词`
                 //任务中没有passed 单词
                 if (!hasPassedWord) {
                     passArr.pop()
@@ -363,7 +381,7 @@ export default class VocaTaskService {
 
 
     /**
-     *  获取已学单词列表 //fixme:修改对应的列表UI
+     *  获取已学单词列表 
      * @returns {Array}
      */
     getLearnedList() {
@@ -371,11 +389,11 @@ export default class VocaTaskService {
         try {
             const tasks = this.vtd.getLearnedTasks()
             for (let task of tasks) { //遍历任务
-                const words = task.words
+                const words = task.taskWords
                 const header = {
                     isHeader: true,
                     checked: false,
-                    title: `List-${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
+                    title: `${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
                 }
                 learnedArr.push(header)
 
@@ -383,7 +401,7 @@ export default class VocaTaskService {
                     learnedArr.push({
                         isHeader: false,
                         checked: false,
-                        content: words[i],
+                        word: words[i].word,
                     })
                 }
             }
@@ -397,29 +415,29 @@ export default class VocaTaskService {
 
 
     /**
-     *  获取未学单词列表 //fixme:
+     *  获取未学单词列表
      * @returns {Array}
      */
     getNewList() {
         const newArr = []
         try {
-            const tasks = this.vtd.getNotLearnedTasks()
-            for (let task of tasks) { //遍历任务
-                const words = task.words
-                const header = {
-                    isHeader: true,
-                    checked: false,
-                    title: `${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
-                }
-                newArr.push(header)
-
-                for (let i in words) {
+            const newLearnTasks = this.vtd.getNewLearnTasks()       //新学任务
+            const notLearnedWords = this.vtd.getNotLearnedBookWords()   //未学单词
+            for (let task of newLearnTasks) {
+                for (let tWord of task.taskWords) {
                     newArr.push({
                         isHeader: false,
                         checked: false,
-                        content: words[i],
+                        word: tWord.word,
                     })
                 }
+            }
+            for (let w of notLearnedWords) {
+                newArr.push({
+                    isHeader: false,
+                    checked: false,
+                    word: w.word,
+                })
             }
         } catch (e) {
             console.log(e)
@@ -438,7 +456,7 @@ export default class VocaTaskService {
      */
     countLeftDays(taskCount, taskWordCount) {
         let leftDays = 0
-        const notLearnWords = this.vtd.getNotLearnedWords()
+        const notLearnWords = this.vtd.getNotLearnedBookWords()
         const length = notLearnWords.length
         if (length > 0) {
             // 当存在未学单词时
