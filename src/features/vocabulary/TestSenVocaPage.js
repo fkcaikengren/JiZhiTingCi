@@ -42,12 +42,10 @@ class TestSenVocaPage extends Component {
         console.disableYellowBox = true
     }
 
-    _renderContent = (state) => {
-        const { showWordInfos, curIndex, task, showAnswer } = state
-        const sentence = showWordInfos[curIndex] ? showWordInfos[curIndex].sentence : null
-        const pronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].sen_pron_url : null
-        const words = vocaUtil.getNotPassedWords(task.words)
-        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+    _renderContent = (taskWord, wordInfo, showAnswer) => {
+        const sentence = wordInfo.sentence
+        const pronUrl = wordInfo.sen_pron_url
+        const testWrongNum = taskWord.testWrongNum
         let sen = ''
         if (sentence) {
             const s = sentence.split(/<em>|<\/em>/)

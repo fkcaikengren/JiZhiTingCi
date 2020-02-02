@@ -156,7 +156,7 @@ class VocaLibPage extends Component {
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
             const isExacted = true
-            // await _util.checkLocalTime()
+            // await _util.checkLocalTime() #todo:检查时间
             if (isExacted) {
                 this.props.changeVocaBook({
                     plan: {

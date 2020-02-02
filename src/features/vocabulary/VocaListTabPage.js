@@ -7,8 +7,8 @@ import { Header } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon';
 import * as VocaListAction from './redux/action/vocaListAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
+import * as HomeAction from './redux/action/homeAction'
 import VocaListPage from "./VocaListPage";
-import styles from './VocaListStyle'
 import * as Constant from './common/constant'
 import gstyles from "../../style";
 
@@ -57,6 +57,7 @@ class VocaListTabPage extends Component {
                             this.props.app.toast.show('当前处于编辑状态，不可以退出哦')
                         } else {
                             this.props.navigation.goBack();
+                            this.props.syncTask(null)
                         }
                     }} />}
                     rightComponent={<TouchableOpacity activeOpacity={0.8} onPress={() => { this.props.toggleEdit() }}>
@@ -137,6 +138,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+    syncTask: HomeAction.syncTask,
     toggleEdit: VocaListAction.toggleEdit,
     changePlayTimer: VocaPlayAction.changePlayTimer
 }

@@ -3,6 +3,7 @@ import * as Constant from './constant'
 import VocaTaskDao from '../service/VocaTaskDao'
 import { NavigationActions, StackActions } from 'react-navigation'
 import { store } from '../../../redux/store'
+import ArticleService from '../../reading/service/ArticleService'
 
 export default class VocaUtil {
 
@@ -233,32 +234,25 @@ export default class VocaUtil {
     }
 
     /**
-     * @description 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
-     * @memberof VocaUtil
+     * 生成一个minNum到maxMum间的随机数数组 (不出现指定数)
+     * @param {Number} minNum 
+     * @param {Number} maxNum 
+     * @param {Array} numArr 不包含的数
+     * @param {Number} length 随机数组长度
      */
-    static randomArr(minNum, maxNum, numArr, word, wordInfos) {
+    static randomArr(minNum, maxNum, numArr, length) {
         //判断错误
         if ((typeof minNum !== "number") || (typeof maxNum !== "number") || (typeof numArr !== "object")) {
             throw new Error('参数类型错误，minNum, maxNum must be number, numArr must be object ')
         }
         let options = []
-        console.log('--生成选项时 word -')
-        console.log(word)
-        for (let i of [1, 2, 3]) { //产生3个选项
+        for (let i = 0; i < length; i++) { //产生3个选项
             let option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
-            while (options.includes(option) || numArr.includes(option) || word === wordInfos[option].word) {
-                if (word === wordInfos[option].word) {
-                    // console.log('--------生成选项时，单词重复-------------')
-                    // console.log(word)
-                }
+            while (options.includes(option) || numArr.includes(option)) {
                 option = Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
             }
             options.push(option)
         }
-        // console.log('--------生成选项时，单词-------------')
-        // for(let o of options){
-        //     console.log(wordInfos[o].word)
-        // }
         return options
     }
 
@@ -290,111 +284,63 @@ export default class VocaUtil {
 
 
     /**
-     * @function pass任务中的单词
-     * @param words 单词信息数组
-     * @param word 要pass的单词
-     * @param taskOrder 单词所在任务序号
-     * @param showWordInfos 显示的单词信息数组
-     * @param shouldFilter 是否过滤（）
+     * pass VocaTask中的单词
+     *      需要修改 1.状态中的task的taskWords  2.状态中的showWordInfos  3.realm数据中的pass
      * @returns {words,showInfos} 默认shouldFilter=false，返回 {words,showInfos}；当shouldFilter=false,返回pass的单词
      */
-    static passWordInTask(words, word, taskOrder, showWordInfos, shouldFilter = true) {
-        // 修改realm数据库的 pass
-        let res = null
+    static passWordInTask(passedWord, task, showWordInfos) {
+        const { taskOrder, taskWords } = task
         const taskDao = VocaTaskDao.getInstance()
-        if (shouldFilter) {
-            const newWords = []
-            for (let i in words) {
-                if (words[i].word === word) { //pass
-                    taskDao.modifyTaskWord({ word: word, passed: true })
-                    taskDao.modify(() => {
-                        const task = taskDao.getTaskByOrder(taskOrder)
-                        task.wordCount = task.wordCount - 1
-                    })
-                    newWords.push({ ...words[i], passed: true })
-                } else {
-                    newWords.push(words[i])
-                }
+        let passedIndex = -1
+        //1.修改task的taskWords
+        console.log('----1.修改task中的pass---单词：' + passedWord)
+        task.taskWords = taskWords.map((item, i) => {
+            if (item.word === passedWord) {
+                passedIndex = i
+                return { ...item, passed: true }
+            } else {
+                return item
             }
+        })
 
-            const newShowWordInfos = showWordInfos.filter((item, i) => {
+        //2.修改showWordInfos
+        if (showWordInfos) {
+            console.log('----2.修改showWordInfos的pass---')
+            showWordInfos = showWordInfos.filter((item, i) => {
                 if (item) {
-                    if (item.word === word) {
+                    if (item.word === passedWord) {
                         return false
                     } else {
                         return true
                     }
                 }
             })
-            res = { words: newWords, showWordInfos: newShowWordInfos }
-        } else {
-            for (let w of words) {
-                if (w.word === word) { //pass
-                    taskDao.modifyTaskWord({ word: word, passed: true })
-                    taskDao.modify(() => {
-                        const task = taskDao.getTaskByOrder(taskOrder)
-                        task.wordCount = task.wordCount - 1
-                    })
-                    res = word
+        }
+
+        //3.修改realm数据库
+        taskDao.modify(() => {
+            console.log('----3.修改realm的pass-')
+            const goalTask = taskDao.getTaskByOrder(taskOrder)
+            goalTask.wordCount = task.wordCount
+            for (let tWord of goalTask.taskWords) {
+                if (tWord.word === passedWord) {
+                    tWord.passed = true
                     break
                 }
             }
-        }
-        return res
-    }
+        })
 
-
-
-    /**
-     * @function  
-     * @param state 组件状态
-     * @param word 要pass的单词
-     * @returns {task, curIndex, showWordInfos}
-     */
-    static passWordInState(state, word) {
-        const beforeCount = state.task.wordCount
-        let index = state.curIndex
-        const task = state.task
-        const showWordInfos = state.showWordInfos
-
-
-        //修改passed, wordCount, 保存到realm数据库
-        const res = VocaUtil.passWordInTask(task.words, word, task.taskOrder, showWordInfos)
-
-        //pass最后一个单词，修改下标
-        if (index + 1 === beforeCount) {
-            index = 0
-        }
 
         return {
-            task: { ...task, words: res.words, wordCount: beforeCount - 1, curIndex: index },
-            curIndex: index,
-            showWordInfos: res.showWordInfos
+            passedIndex, //pass的单词下标
+            task,
+            showWordInfos,
         }
     }
 
 
-    //获取单词在wordInfos中的下标
-    static getIndexInWordInfos(curWord, wordInfos) {
-        for (let i in wordInfos) {
-            if (wordInfos[i].word === curWord) {
-                return i
-            }
-        }
-    }
 
-    //统计单词（未passed）的错误平均数
-    static calculateWrongAvg(words, ) {
-        let count = 0
-        let sum = 0
-        for (let w of words) {
-            if (w.passed !== true) {
-                sum += w.wrongNum
-                count++
-            }
-        }
-        return (sum / count).toFixed(1)
-    }
+
 
     /** 
      * 构建一个虚拟Task 
@@ -453,15 +399,57 @@ export default class VocaUtil {
 
     /**
      * 新学任务数据迁移至1复任务
-     * @param reviewTask 1复任务
      * @param newTask  新学任务
      * @returns
      * */
-    static updateNewTaskToReviewTask(reviewTask, newTask) {
-        const ws = newTask.words.map((w, i) => {
+    static updateNewTaskToReviewTask(newTask) {
+        let reviewTask = newTask
+        for (let task of store.getState().home.tasks) {
+            if (task.taskOrder === newTask.taskOrder && task.status === Constant.STATUS_1) {
+                reviewTask = task
+                break
+            }
+        }
+
+        const taskWords = newTask.taskWords.map((w, i) => {
             return { ...w, testWrongNum: 0 }
         })
-        return { ...reviewTask, listenTimes: newTask.listenTimes, testTimes: newTask.testTimes, words: ws }
+        return {
+            ...reviewTask,
+            listenTimes: newTask.listenTimes,
+            testTimes: newTask.testTimes,
+            taskWords: taskWords,
+            taskArticles: newTask.taskArticles
+        }
+    }
+
+    /**
+     * 由VocaTask数组生成文章任务数组
+     * @param {*} tasks 
+     */
+    static genArticleTasksByVocaTasks(tasks) {
+        const newLearnTasks = tasks.filter((item, i) => item.status === Constant.STATUS_0)
+        const artService = new ArticleService()
+        let articleTasks = []
+        for (let nTask of newLearnTasks) {
+            articleTasks = articleTasks.concat(artService.getArticlesInfo(nTask.taskArticles))
+        }
+        return articleTasks
+    }
+
+    /**
+     * 判断任务是否处于今日任务中
+     */
+    static isInTodayTasks(taskOrder) {
+        const todayTasks = store.getState().home.tasks.filter((item, i) => {
+            return (item.taskType === Constant.TASK_VOCA_TYPE)
+        })
+        for (let task of todayTasks) {
+            if (task.taskOrder === taskOrder) {
+                return true
+            }
+        }
+        return false
     }
 
 }

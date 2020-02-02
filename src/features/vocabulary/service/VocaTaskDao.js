@@ -52,8 +52,8 @@ const TaskArticleSchema = {
     name: 'TaskArticle',
     primaryKey: 'id',
     properties: {
-        id: 'string',                                          //文章id
-        score: { type: 'int', optional: true, default: 0 },     //得分
+        id: 'string',                                           //文章id
+        score: { type: 'int', optional: true, default: -1 },     //得分, -1表示未做题
     }
 };
 
@@ -291,6 +291,7 @@ export default class VocaTaskDao {
 
 
 
+
     /**
      * 获取最后一个VocaTask的TaskOrder
      * @returns 返回TaskOrder，当无VocaTask数据时返回0
@@ -333,6 +334,21 @@ export default class VocaTaskDao {
         return this.realm.objects('BookWord').filtered('wordId >= ' + startWordId + ' AND wordId <= ' + endWordId)
     }
 
+
+
+    /**
+     * 获取所有任务
+     */
+    getAllTasks() {
+        const allTasks = this.realm.objects('VocaTask')
+        if (allTasks) {
+            return allTasks.sorted('taskOrder') //升序
+        } else {
+            return []
+        }
+    }
+
+
     /**
      * 根据日期获取任务
      * @param nth 0表示今天，-n表示前n天，n表示后n天
@@ -343,9 +359,6 @@ export default class VocaTaskDao {
         let vocaTasks = this.realm.objects('VocaTask').filtered('vocaTaskDate = ' + today + 'SORT(taskOrder ASC)')
         return vocaTasks;
     }
-
-
-
 
 
     /**
@@ -386,10 +399,10 @@ export default class VocaTaskDao {
     /**
      * 根据taskOrder获取任务
      * @param taskOrder
-     * @returns {any} 如果不存在，返回undefined
+     * @returns {any} 如果不存在，返回null
      */
     getTaskByOrder(taskOrder) {
-        return this.realm.objects('VocaTask').filtered('taskOrder = ' + taskOrder)[0]
+        return this.realm.objects('VocaTask').filtered('taskOrder = ' + taskOrder)[0] || null
     }
 
 

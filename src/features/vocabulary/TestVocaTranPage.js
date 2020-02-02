@@ -47,13 +47,11 @@ class TestVocaTranPage extends Component {
         console.disableYellowBox = true
     }
 
-    _renderContent = (state) => {
-        const { showWordInfos, curIndex, task } = state
-        const words = vocaUtil.getNotPassedWords(task.words)
-        const word = showWordInfos[curIndex] ? showWordInfos[curIndex].word : ''
-        const pronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].pron_url : null
-        const phonetic = showWordInfos[curIndex] ? showWordInfos[curIndex].phonetic : null
-        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+    _renderContent = (taskWord, wordInfo) => {
+        const word = wordInfo.word
+        const pronUrl = wordInfo.pron_url
+        const phonetic = wordInfo.phonetic
+        const testWrongNum = taskWord.testWrongNum
         const pronTypeText = (this.props.mine.configVocaPronType === Constant.VOCA_PRON_TYPE_EN) ? '英' : '美'
         return <View style={styles.content}>
             <View style={{}}>

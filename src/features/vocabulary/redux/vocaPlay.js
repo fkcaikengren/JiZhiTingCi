@@ -15,7 +15,7 @@ const defaultState = {
 
     //任务,包含了单词列表 
     task: {
-        words: []
+        taskWords: []
     },
     showWordInfos: [],
     //当前下标
@@ -131,7 +131,10 @@ export const vocaPlay = (state = defaultState, action) => {
         //Pass单词
         case vpAction.PASS_WORD:
             return {
-                ...state, ...action.payload
+                ...state,
+                curIndex: action.payload.curIndex,
+                task: action.payload.task,
+                showWordInfos: action.payload.showWordInfos
             };
 
         // 改变normal_type

@@ -23,6 +23,10 @@ export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模�
 export const CLEAR_PLAY = 'CLEAR_PLAY'    //清空任务
 
 
+const fn = (payload) => {
+  return payload
+}
+
 // 驼峰式命名，不可以更改(与变量名必须对应)
 export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
   changeBg, showBlur, changeTheme, passWord, changeNormalType, clearPlay } = createActions({
@@ -59,7 +63,7 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
       return { showTran }
     },
     // 获取所有背景图
-    [GET_BGS]: ()=>{
+    [GET_BGS]: () => {
 
     },
     //改变背景
@@ -75,9 +79,7 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
       return { themeId };
     },
     //pass单词
-    [PASS_WORD]: (payload) => {
-      return payload
-    },
+    [PASS_WORD]: fn,
 
     [CHANGE_NORMAL_TYPE]: (normalType) => {
       return { normalType }

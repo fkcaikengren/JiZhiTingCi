@@ -8,15 +8,12 @@ import HomeDrawerPanel from './component/HomeDrawerPanel'
 import HomeHeader from './component/HomeHeader'
 import Task from './component/Task'
 import HomeFooter from './component/HomeFooter'
-import VocaTaskService from './service/VocaTaskService'
 import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
 import { BY_REAL_TASK } from "./common/constant";
-
-
 
 
 class HomePage extends Component {
@@ -26,7 +23,7 @@ class HomePage extends Component {
             modalVisible: false,
             appState: AppState.currentState
         }
-        this.vts = new VocaTaskService()
+
         console.disableYellowBox = true
     }
 
@@ -35,8 +32,6 @@ class HomePage extends Component {
 
         // 加载任务
         this._init()
-        // 上传数据
-        this.props.syncTask(null)
         // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
     }
@@ -64,7 +59,6 @@ class HomePage extends Component {
         }
         if (this.state.appState.match(/active/) && nextAppState === 'background') {
             console.log('App 到后台')
-
         }
         this.setState({ appState: nextAppState });
     }
@@ -72,27 +66,30 @@ class HomePage extends Component {
 
     _init = async () => {
         // 加载今日数据
-        const { tasks } = this.props.home
-        const { lastLearnDate } = this.props.plan
         const { plan } = this.props.plan
+        const { lastLearnDate } = plan
         const today = _util.getDayTime(0)
         console.log(today)
-        if ((lastLearnDate && (today !== lastLearnDate)) || IsLoginToHome) {  //任务过期or登录进入
-
-            // #todo:判断是否清空VocaPlay
+        if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
+            const { tasks } = this.props.home
             const { task, normalType } = this.props.vocaPlay
-            if (normalType === BY_REAL_TASK) {
-                for (let t of tasks) {
-                    if (t.taskOrder && t.taskOrder === task.taskOrder) {
-                        this.props.clearPlay()
-                        break
-                    }
-                }
-            }
+            // #todo:判断是否清空VocaPlay
+            // if (normalType === BY_REAL_TASK) {
+            //     for (let t of tasks) {
+            //         if (t.taskOrder && t.taskOrder === task.taskOrder) {
+            //             this.props.clearPlay()
+            //             break
+            //         }
+            //     }
+            // }
             //获取今日任务
-            this.props.loadTasks()
-            //统计剩余天数
-            this.props.changeLeftDays(this.vts.countLeftDays(plan.taskCount, plan.taskWordCount))
+            this.props.loadTasks({
+                lastLearnDate: lastLearnDate,
+                taskCount: plan.taskCount,
+                taskWordCount: plan.taskWordCount
+            })
+            // 同步任务
+            this.props.syncTask(null)
         }
     }
 

@@ -42,10 +42,6 @@ export const home = (state = defaultState, action) => {
                     return item
                 }
             })
-
-            console.log('----redudx: after update tasks-----------')
-            // console.log(tasks)
-            // //保存至本地
             return { ...state, tasks }
         //上传单词任务
         case ha.SYNC_TASK_START:

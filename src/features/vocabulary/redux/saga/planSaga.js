@@ -1,16 +1,16 @@
 import { takeLatest, put } from 'redux-saga/effects'
 import VocaTaskDao from '../../service/VocaTaskDao';
 import ArticleDao from "../../../reading/service/ArticleDao";
-import VocaUtil from "../../common/vocaUtil";
 import * as Constant from "../../common/constant";
 import { store } from "../../../../redux/store";
 import { LOAD_TASKS_SUCCEED, LOAD_TASKS_FAIL, LOAD_TASKS_START } from '../action/homeAction';
 import {
-    CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START, LOAD_VOCA_BOOKS_FAIL, LOAD_VOCA_BOOKS_SUCCEED, LOAD_VOCA_BOOKS_START,
+    CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL, LOAD_VOCA_BOOKS, CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START, LOAD_VOCA_BOOKS_FAIL, LOAD_VOCA_BOOKS_SUCCEED, LOAD_VOCA_BOOKS_START, MODIFY_LAST_LEARN_DATE,
 } from '../action/planAction';
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
 import VocaTaskService from '../../service/VocaTaskService';
-import ArticleService from '../../../reading/service/ArticleService';
+import VocaUtil from "../../common/vocaUtil";
+import _util from '../../../../common/util';
 
 
 /** 提交单词计划 */
@@ -27,19 +27,14 @@ export function* createPlan(action) {
         artDao.deleteAllArticles()
         vtd.saveBookWords(words)
         artDao.saveArticles(articles)
-
+        //清空未同步任务
+        Storage.clearMapForKey('notSyncTasks')
 
 
         //加载今日数据 
         const tasks = new VocaTaskService().getTodayTasks(null, plan.taskCount, plan.taskWordCount)
         //构建文章任务
-        const newLearnTasks = tasks.filter((item, i) => item.status === Constant.STATUS_0)
-        const artService = new ArticleService()
-        let articleTasks = []
-        for (let nTask of newLearnTasks) {
-            articleTasks = articleTasks.concat(artService.getArticlesInfo(nTask.taskArticles))
-            console.log(articleTasks)
-        }
+        const articleTasks = VocaUtil.genArticleTasksByVocaTasks(tasks)
 
         if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
             yield put({ type: CLEAR_PLAY })
@@ -51,6 +46,8 @@ export function* createPlan(action) {
                 plan
             }
         })
+        //加载成功后，修改lastLearnDate
+        yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
     } catch (err) {
         console.log(err)
         yield put({ type: CHANGE_VOCA_BOOK_FAIL })

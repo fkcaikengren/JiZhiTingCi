@@ -9,6 +9,7 @@ import TestPage from "./TestPage";
 import * as Constant from './common/constant'
 import vocaUtil from './common/vocaUtil'
 import * as PlanAction from "./redux/action/planAction";
+import VocaUtil from "./common/vocaUtil";
 
 const styles = StyleSheet.create({
     content: {
@@ -36,37 +37,35 @@ const styles = StyleSheet.create({
 class TestTranVocaPage extends Component {
 
     constructor(props) {
-        super(props);
-        this.state = {
-            transNum: 0,
-        }
+        super(props)
+        this.word = null
+        this.transNum = 0
         console.disableYellowBox = true
     }
 
-    _setTransNum = (transNum) => {
-        this.setState({ transNum })
-    }
 
-    _renderContent = (state) => {
-        const { showWordInfos, curIndex, task } = state
-        const trans = showWordInfos[curIndex] ? showWordInfos[curIndex].trans : null
-        const words = vocaUtil.getNotPassedWords(task.words)
-        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+    _renderContent = (taskWord, wordInfo) => {
+        const testWrongNum = taskWord.testWrongNum
+        const trans = wordInfo.trans
         let property = null
         let translation = null
+        if (this.word != wordInfo.word) {
+            this.word = wordInfo.word
+            this.transNum = VocaUtil.randomNum(0, Object.keys(trans).length - 1)
+        }
+
         if (trans) {
             let i = 0
             for (let k in trans) {
-                if (i === this.state.transNum) {
+                if (i === this.transNum) {
                     property = k
                     translation = trans[k]
                     break
                 }
                 i++
             }
-        } else {
-            translation = showWordInfos[curIndex] ? showWordInfos[curIndex].translation : ''
         }
+        translation = translation ? translation : wordInfo.translation
         property = property ? property + '.' : ''
         return <View style={styles.content}>
             <Text style={styles.tranFont}>
@@ -85,7 +84,7 @@ class TestTranVocaPage extends Component {
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.TRAN_WORD}
                 renderContent={this._renderContent}
-                setTransNum={this._setTransNum}
+
             />
         )
     }

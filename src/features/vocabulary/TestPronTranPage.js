@@ -67,11 +67,9 @@ class TestPronTranPage extends Component {
         }, this._startPlay, this._finishPlay, this._failPlay)
     }
 
-    _renderContent = (state) => {
-        const { showWordInfos, curIndex, task } = state
-        const pronUrl = showWordInfos[curIndex] ? showWordInfos[curIndex].pron_url : null
-        const words = vocaUtil.getNotPassedWords(task.words)
-        const testWrongNum = words[curIndex] ? words[curIndex].testWrongNum : 0
+    _renderContent = (taskWord, wordInfo) => {
+        const pronUrl = wordInfo.pron_url
+        const testWrongNum = taskWord.testWrongNum
         return <View style={styles.content}>
             {!this.state.isPlaying &&
                 <AliIcon name='shengyin' size={60} color='#F29F3F'

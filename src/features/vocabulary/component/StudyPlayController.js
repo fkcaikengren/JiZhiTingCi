@@ -7,7 +7,6 @@ import { PropTypes } from 'prop-types';
 import * as Progress from 'react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style';
-import * as Constant from '../common/constant'
 import styles from '../VocaPlayStyle'
 
 const Dimensions = require('Dimensions');
@@ -43,27 +42,10 @@ export default class StudyPlayController extends React.Component {
 
     _toggleWord = () => {
         this.props.toggleWord()
-        if (this.props.mode === Constant.REVIEW_PLAY) {
-            if (this.props.finishedTimes <= 0 && this.props.playState.showWord === false) {
-                //提示前1遍不看释义
-                this.props.toastRef.show('建议前2遍不看单词哦', 1000);
-            }
-        }
+
     }
-    //控制翻译
     _toggleTran = () => {
         this.props.toggleTran()
-        if (this.props.mode === Constant.LEARN_PLAY) {
-            if (this.props.finishedTimes === 0 && this.props.playState.showTran === false) {
-                //提示第一遍不看释义
-                this.props.toastRef.show('建议前4遍不看释义哦', 1000);
-            }
-        } else {
-            if (this.props.finishedTimes <= 1 && this.props.playState.showTran === false) {
-                this.props.toastRef.show('建议前4遍不看释义哦', 1000);
-            }
-        }
-
     }
 
 
@@ -130,7 +112,7 @@ export default class StudyPlayController extends React.Component {
                 }, gstyles.r_around]}>
                     {/* 返回 */}
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
-                        this.props.updateTask({ ...task })
+                        this.props.updateTask({ task })
                         this.props.navigation.goBack()
                     }} />
                     {/* 控制播放 */}

@@ -2,18 +2,34 @@
 
 'use strict';
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import { Header } from 'react-native-elements'
+import { connect } from 'react-redux';
+
+import * as HomeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon';
-import styles from './ArticleManageStyle'
 import gstyles from '../../style'
 import VocaTaskDao from "./service/VocaTaskDao";
 import ArticleDao from "../reading/service/ArticleDao";
-import VocaUtil from './common/vocaUtil'
 import { DETAIL_READ } from "../reading/common/constant";
 
 
-export default class ArticleManagePage extends Component {
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    nameView: {
+        flex: 1
+    },
+    noteText: {
+        fontSize: 12,
+        lineHeight: 24,
+        marginLeft: 3,
+    },
+})
+
+
+class ArticleManagePage extends Component {
 
     constructor(props) {
         super(props);
@@ -111,6 +127,7 @@ export default class ArticleManagePage extends Component {
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack()
+                            this.props.syncTask(null)
                         }} />}
                     centerComponent={{ text: '阅读真题', style: gstyles.lg_black_bold }}
                     containerStyle={{
@@ -128,3 +145,13 @@ export default class ArticleManagePage extends Component {
         );
     }
 }
+const mapStateToProps = state => ({
+    app: state.app,
+});
+
+const mapDispatchToProps = {
+    syncTask: HomeAction.syncTask,
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleManagePage);

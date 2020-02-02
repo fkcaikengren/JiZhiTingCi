@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 import * as homeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon'
-import styles from './LearnCardStyle'
 import gstyles from '../../style'
 import VocaCard from "./component/VocaCard";
 import VocaTaskDao from './service/VocaTaskDao'
@@ -22,6 +21,22 @@ const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
 
 
+const styles = StyleSheet.create({
+    nextBtn: {
+        width: 60,
+        height: 60,
+        backgroundColor: '#FFE957',
+        borderRadius: 50,
+        elevation: 5,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 10,
+        alignSelf: 'center'
+    }
+});
+
 class LearnCardPage extends Component {
 
     constructor(props) {
@@ -29,7 +44,7 @@ class LearnCardPage extends Component {
         this.state = {
             task: {
                 curIndex: 0,
-                words: []
+                taskWords: []
             },
             showWordInfos: [],
             showNext: true,
@@ -39,7 +54,7 @@ class LearnCardPage extends Component {
         this.taskDao = VocaTaskDao.getInstance()
 
         //检查本地时间
-        _util.checkLocalTime()
+        // _util.checkLocalTime() #todo:检查本地时间
     }
 
     componentDidMount() {
@@ -51,7 +66,7 @@ class LearnCardPage extends Component {
         }
         let showWordInfos = getParam('showWordInfos')
         if (!showWordInfos) {
-            showWordInfos = VocaDao.getInstance().getShowWordInfos(task.words)
+            showWordInfos = VocaDao.getInstance().getShowWordInfos(task.taskWords)
         }
 
         this.setState({ task, showWordInfos })
@@ -73,7 +88,7 @@ class LearnCardPage extends Component {
             const finalTask = { ...task, curIndex: 0, progress: Constant.IN_LEARN_TEST_1 }
             const routeName = this.props.navigation.getParam('nextRouteName')
             //更新任务
-            this.props.updateTask(finalTask)
+            this.props.updateTask({ task: finalTask })
             //完成卡片学习
             VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
                 task: finalTask,
@@ -105,7 +120,7 @@ class LearnCardPage extends Component {
                         <AliIcon name='fanhui' size={26} color='#555' onPress={() => {
                             //更新、上传task
                             const newTask = { ...this.state.task }
-                            this.props.updateTask(newTask)
+                            this.props.updateTask({ task: newTask })
                             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
                             VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
                             this.audioService.releaseSound()

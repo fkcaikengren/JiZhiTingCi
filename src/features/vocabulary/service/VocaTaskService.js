@@ -145,8 +145,7 @@ export default class VocaTaskService {
                     taskArticles = taskArticles.map((article, index) => {
                         return {
                             id: article.id,
-                            score: 0,
-
+                            score: -1,
                         }
                     })
                 }
@@ -161,8 +160,23 @@ export default class VocaTaskService {
             }
             //3. 修改单词learned
             this.vtd.modifyBookWordsLearnedById(wordIds, true)
-            // 4. 保存VocaTask
+            //4. 保存VocaTask
             this.vtd.saveVocaTasks(vocaTasks)
+
+            //5. 添加至上传任务
+            for (let task of vocaTasks) {
+                Storage.save({
+                    key: 'notSyncTasks',
+                    id: CConstant.COMMAND_CREATE_TASK.split('_').join('-') + task.taskOrder,
+                    data: {
+                        command: CConstant.COMMAND_CREATE_TASK,
+                        data: {
+                            ...task,
+                            taskWords: task.taskWords.map((item, i) => ({ word: item.word }))
+                        }
+                    }
+                })
+            }
         }
 
     }
@@ -265,6 +279,14 @@ export default class VocaTaskService {
 
                     if (isDeleted) {
                         console.log('----重学任务删除：taskOrder: ' + storedTask.taskOrder)
+                        Storage.save({
+                            key: 'notSyncTasks',
+                            id: CConstant.COMMAND_DELETE_TASK.split('_').join('-') + storedTask.taskOrder,
+                            data: {
+                                command: CConstant.COMMAND_DELETE_TASK,
+                                data: storedTask
+                            }
+                        })
                         this.vtd.realm.delete(storedTask.taskArticles)
                         this.vtd.realm.delete(storedTask.taskWords)
                         this.vtd.realm.delete(storedTask)
@@ -468,6 +490,9 @@ export default class VocaTaskService {
             const d = (vocaTaskDate - _util.getDayTime(0)) / CConstant.DAY_MS
             leftDays = d + 15
             switch (status) {
+                case STATUS_200:
+                    leftDays = 0
+                    break
                 case Constant.STATUS_15:
                     leftDays = d + 1
                     break

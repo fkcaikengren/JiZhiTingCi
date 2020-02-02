@@ -31,9 +31,9 @@ export default class TaskItem extends Component {
 
   //开始学习
   _startStudy = () => {
-    if (this.props.disable) {
+    if (false) { //this.props.disable #todo:方便测试，临时设置为false。
       //提示先完成新学任务
-      this.props.toastRef.show('完成前面的任务才可以解锁哦')
+      this.props.toastRef.show('完成新学任务才可以解锁哦')
     } else {
       //根据进度进行不同的跳转
       let { index, item } = this.props
@@ -47,9 +47,9 @@ export default class TaskItem extends Component {
           }
         }
         if (task && item.listenTimes < task.listenTimes) {
-          item = VocaUtil.updateNewTaskToReviewTask(item, task)
+          item = VocaUtil.updateNewTaskToReviewTask(task)
           console.log('---1复更新到最新--')
-          this.props.updateTask(item)
+          this.props.updateTask({ task: item })
         }
       }
       switch (item.progress) {

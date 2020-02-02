@@ -5,9 +5,7 @@ import CardView from 'react-native-cardview'
 import { Header, Button } from 'react-native-elements'
 import gstyles from "../../style";
 import AliIcon from "../../component/AliIcon";
-
-
-
+import * as HomeAction from './redux/action/homeAction'
 
 
 const styles = StyleSheet.create({
@@ -65,6 +63,7 @@ class VocaPlanPage extends React.Component {
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
+                            this.props.syncTask(null)
                         }} />}
                     centerComponent={{ text: '学习计划', style: gstyles.lg_black_bold }}
                     containerStyle={{
@@ -120,6 +119,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+    syncTask: HomeAction.syncTask
 }
 
 

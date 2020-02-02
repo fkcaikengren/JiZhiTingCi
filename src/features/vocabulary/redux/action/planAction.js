@@ -28,14 +28,12 @@ export const { savePlan, changeVocaBook, modifyLastLearnDate, changeLearnedWordC
     //修改单词书
     [CHANGE_VOCA_BOOK]: fn,
     //修改lastLeanDate
-    [modifyLastLearnDate]: fn,
+    [MODIFY_LAST_LEARN_DATE]: fn,
 
     [CHANGE_LEARNED_WORD_COUNT]: (learnedWordCount) => {
         return { learnedWordCount }
     },
-    [CHANGE_LEFT_DAYS]: (leftDays) => {
-        return { leftDays }
-    }
+    [CHANGE_LEFT_DAYS]: fn
 });
 
 
