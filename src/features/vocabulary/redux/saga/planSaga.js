@@ -23,7 +23,7 @@ export function* createPlan(action) {
         //清空先前数据，存储新数据到realm
         const vtd = VocaTaskDao.getInstance()
         const artDao = ArticleDao.getInstance()
-        vtd.deleteAllTasks()
+        vtd.deleteAll()
         artDao.deleteAllArticles()
         vtd.saveBookWords(words)
         artDao.saveArticles(articles)

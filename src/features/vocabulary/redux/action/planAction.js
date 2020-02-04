@@ -30,9 +30,7 @@ export const { savePlan, changeVocaBook, modifyLastLearnDate, changeLearnedWordC
     //修改lastLeanDate
     [MODIFY_LAST_LEARN_DATE]: fn,
 
-    [CHANGE_LEARNED_WORD_COUNT]: (learnedWordCount) => {
-        return { learnedWordCount }
-    },
+    [CHANGE_LEARNED_WORD_COUNT]: fn,
     [CHANGE_LEFT_DAYS]: fn
 });
 

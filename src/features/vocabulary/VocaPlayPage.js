@@ -76,6 +76,9 @@ class VocaPlayPage extends React.Component {
         this.vocaPlayService.changePlayTimer = this._changePlayTimer
         this.vocaPlayService.finishQuit = this.isStudyMode ? this._finishQuit : null
 
+
+
+
         //状态
         const studyState = this.isStudyMode ? {
             task: {
@@ -101,8 +104,8 @@ class VocaPlayPage extends React.Component {
         }
 
         this.vocaPlayService.stateRef = this.isStudyMode ? this.state : null
-
         this.disablePass = true
+        this.timerArr = []
         console.disableYellowBox = true
     }
 
@@ -184,6 +187,9 @@ class VocaPlayPage extends React.Component {
     }
 
     componentWillUnmount() { //退出界面
+        for (let timer of this.timerArr) {
+            clearTimeout(timer)
+        }
         if (this.isStudyMode) {
             this._quitLearn();
         }
@@ -351,16 +357,20 @@ class VocaPlayPage extends React.Component {
                 nextRouteName = 'Home'
                 finalTask.progress = 'IN_REVIEW_TEST'
             }
-            // 拷贝给home
+            // 更新任务
             this.props.updateTask({ task: finalTask })
-            console.log('--routeName--: ' + routeName)
+
             // 抹掉stack，跳转
-            VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
-                task: finalTask,
-                showWordInfos: showWordInfos,
-                nextRouteName: nextRouteName,
-                ...otherParams
-            })
+            console.log('--routeName--: ' + routeName)
+            this.timerArr.push(setTimeout(() => {
+                VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
+                    task: finalTask,
+                    showWordInfos: showWordInfos,
+                    nextRouteName: nextRouteName,
+                    ...otherParams
+                })
+            }, 1000))
+
             //结束
             return;
         }
@@ -428,8 +438,8 @@ class VocaPlayPage extends React.Component {
                                 onPress={() => {
                                     //关闭侧滑
                                     this.vocaPlayService.listRef.closePassBtn()
-                                    if (task.wordCount <= 3) {
-                                        this.props.app.toast.show('只剩3个了，不能再pass了哦', 1000)
+                                    if (task.wordCount <= 2) {
+                                        this.props.app.toast.show('只剩2个单词，不能再Pass了', 1000)
                                     } else {
                                         this._passWord(item.word)
                                     }
@@ -494,7 +504,7 @@ class VocaPlayPage extends React.Component {
                 this._changePlayTimer(0);
             }
             //数据库加载任务
-            const task = VocaUtil.copyTaskDeep(this.taskDao.getTaskByOrder(item.taskOrder))
+            const task = VocaUtil.copyTaskDeep(this.taskDao.getTaskByOrder(item.taskOrder), true)
             const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords)
             changeNormalType(Constant.BY_REAL_TASK)
             this.disablePass = false
@@ -539,7 +549,7 @@ class VocaPlayPage extends React.Component {
         const { isTasksModalOpened } = this.state
         const data = this.taskDao.getAllTasks().map((task, i) => {
             let disablePlay = false
-            if (VocaUtil.isInTodayTasks(task.taskOrder)) {
+            if (VocaUtil.isLearningInTodayTasks(task.taskOrder)) {
                 disablePlay = true
             }
             return {
@@ -708,7 +718,7 @@ class VocaPlayPage extends React.Component {
                     barStyle="light-content" // or directly
                     leftComponent={this.isStudyMode ? null :
                         <AliIcon name='fanhui' size={26} color='#FFF' onPress={() => {
-                            this.props.navigation.goBack();
+                            this.props.navigation.goBack()
                         }} />}
                     centerComponent={{ text: task.taskOrder ? name : '未选择', style: gstyles.lg_white_bold }}
                     rightComponent={this.isStudyMode ?

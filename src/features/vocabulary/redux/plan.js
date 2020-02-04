@@ -51,8 +51,7 @@ export const plan = (state = defaultState, action) => {
         case pa.CHANGE_LEFT_DAYS:
             return { ...state, leftDays: action.payload.leftDays }
         case pa.CHANGE_LEARNED_WORD_COUNT:
-            console.log('-------learnedWordCount------')
-            console.log(action.payload.learnedWordCount)
+            console.log('已学单词数量：' + action.payload.learnedWordCount)
             return { ...state, learnedWordCount: action.payload.learnedWordCount }
         //退出登录
         case LOGOUT:

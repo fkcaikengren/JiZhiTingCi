@@ -419,7 +419,7 @@ export default class VocaTaskDao {
     /**
      *  清空所有任务和单词，清空数据库
      */
-    deleteAllTasks() {
+    deleteAll() {
         this.realm.write(() => {
             this.realm.deleteAll();
         })

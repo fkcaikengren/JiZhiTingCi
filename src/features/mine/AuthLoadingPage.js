@@ -6,7 +6,7 @@ import { DURATION } from 'react-native-easy-toast'
 import RNFetchBlob from 'rn-fetch-blob'
 const uuidv4 = require('uuid/v4');
 import createHttp from '../../common/http';
-import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
+
 import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 import FileService from '../../common/FileService';
 import { USER_DIR } from '../../common/constant';
@@ -14,6 +14,8 @@ import * as MineAction from '../mine/redux/action/mineAction';
 import { store } from '../../redux/store';
 import { logoutHandle } from './common/userHandler';
 import httpBaseConfig from '../../common/httpBaseConfig';
+import VocaTaskService from '../vocabulary/service/VocaTaskService';
+import ArticleDao from '../reading/service/ArticleDao';
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
 
@@ -41,9 +43,12 @@ class AuthLoadingPage extends Component {
         //1. 登录进入首页
         if (IsLoginToHome) {
             this.props.app.loader.show("同步数据...", DURATION.FOREVER)
-            const loginUserInfo = this.props.navigation.getParam("loginUserInfo")
+            const loginUserInfo = this.props.navigation.getParam("user")
+            const bookWords = this.props.navigation.getParam("words")
+            const articles = this.props.navigation.getParam("articles")
+
             if (loginUserInfo) {
-                const { avatarUrl, vocaGroups, vocaTasks } = loginUserInfo
+                const { avatarUrl, vocaGroups, vocaTasks, } = loginUserInfo
                 //保存头像
                 if (avatarUrl) {
                     let extname = ".jpg"
@@ -59,18 +64,21 @@ class AuthLoadingPage extends Component {
                     console.log(avatarSource)
                     this.props.setAvatarSource({ avatarSource })
                 }
-                // 保存vocaGroups
+                // 保存vocaGroups ,bookWords,vocaTasks, articles
                 if (vocaGroups && vocaGroups.length > 0) {
                     const vgDao = VocaGroupDao.getInstance()
                     vgDao.deleteAllGroups()
                     vgDao.saveVocaGroups(vocaGroups)
                 }
-
-                // 保存vocaTasks
                 if (vocaTasks && vocaTasks.length > 0) {
-                    const vtDao = VocaTaskDao.getInstance()
-                    vtDao.deleteAllTasks()
-                    vtDao.saveVocaTasks(vocaTasks, 10) //plan.taskWordCount 暂时用10
+                    const vts = new VocaTaskService()
+                    vts.deleteAll()
+                    vts.saveUserVocaTasks(vocaTasks, bookWords)
+                }
+                if (articles && articles.length > 0) {
+                    const artDao = ArticleDao.getInstance()
+                    artDao.deleteAllArticles()
+                    artDao.saveArticles(articles)
                 }
             }
             this.props.app.loader.close()

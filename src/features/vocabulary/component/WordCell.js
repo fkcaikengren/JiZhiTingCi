@@ -60,19 +60,19 @@ export default class WordCell extends Component {
                             />
                         }
                         <TouchableOpacity activeOpacity={0.6} onPress={() => {
-                            const wi = VocaDao.getInstance().lookWordInfo(item.content.word)
+                            const wi = VocaDao.getInstance().lookWordInfo(item.word)
                             AudioService.getInstance().playSound({
                                 pDir: CConstant.VOCABULARY_DIR,
                                 fPath: wi.am_pron_url
                             })
                         }}>
                             <Text style={[styles.word, { marginLeft: onEdit ? 0 : 10 }]}>
-                                {item.content.word}
+                                {item.word}
                             </Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.itemCenter}>
-                        <TogglePane word={item.content.word} />
+                        <TogglePane word={item.word} />
                     </View>
                     <View style={{ flex: 1 }} >
                         <AliIcon name='youjiantou' size={26} color='#C9C9C9' style={{ paddingLeft: 10 }} onPress={() => {

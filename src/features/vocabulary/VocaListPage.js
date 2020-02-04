@@ -14,8 +14,8 @@ import VocaUtil from "./common/vocaUtil";
 import WordCell from "./component/WordCell";
 
 const ITEM_HEIGHT = styles.item.height;         //item的高度
-const HEADER_HEIGHT = styles.headerView.height;       //分组头部的高度
-const SEPARATOR_HEIGHT = 0;     //分割线的高度
+const HEADER_HEIGHT = styles.headerView.height; //分组头部的高度
+const SEPARATOR_HEIGHT = 0;                     //分割线的高度
 
 export default class VocaListPage extends Component {
   constructor() {
@@ -47,13 +47,12 @@ export default class VocaListPage extends Component {
     }
 
     const headers = [];
-    data.map(item => {
+    for (let item of data) {
       if (item.isHeader) {
         headers.push(data.indexOf(item));
       }
-      return item
-    });
-    headers.push(0);
+    }
+    // headers.push(0);
     this.setState({
       data: data,
       stickyHeaderIndices: headers

@@ -29,7 +29,6 @@ class HomePage extends Component {
 
 
     componentDidMount() {
-
         // 加载任务
         this._init()
         // 监听App状态
@@ -67,10 +66,11 @@ class HomePage extends Component {
     _init = async () => {
         // 加载今日数据
         const { plan } = this.props.plan
-        const { lastLearnDate } = plan
+        const { lastLearnDate, taskCount, taskWordCount } = plan
         const today = _util.getDayTime(0)
-        console.log(today)
+        console.log('today --> ' + today)
         if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
+            IsLoginToHome = false
             const { tasks } = this.props.home
             const { task, normalType } = this.props.vocaPlay
             // #todo:判断是否清空VocaPlay
@@ -82,11 +82,13 @@ class HomePage extends Component {
             //         }
             //     }
             // }
+
             //获取今日任务
+            console.log('--------------home  loadTasks------------------------')
             this.props.loadTasks({
-                lastLearnDate: lastLearnDate,
-                taskCount: plan.taskCount,
-                taskWordCount: plan.taskWordCount
+                lastLearnDate,
+                taskCount,
+                taskWordCount,
             })
             // 同步任务
             this.props.syncTask(null)
@@ -124,7 +126,6 @@ class HomePage extends Component {
                 }}
                 tweenDuration={350}
                 tweenHandler={(ratio) => {
-                    // console.log(ratio)
                     return {
                         mainOverlay: { opacity: ratio * 0.6 }
                     }

@@ -17,12 +17,13 @@ export default class StudyPlayController extends React.Component {
         super(props);
     }
 
+
+
     //选择播放时间间隔
     _chooseInterval = (interval) => {
         console.log(interval)
         const { changeInterval } = this.props;
         changeInterval(interval);
-
     }
 
     //播放暂停切换
@@ -112,6 +113,7 @@ export default class StudyPlayController extends React.Component {
                 }, gstyles.r_around]}>
                     {/* 返回 */}
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
+                        //更新任务
                         this.props.updateTask({ task })
                         this.props.navigation.goBack()
                     }} />

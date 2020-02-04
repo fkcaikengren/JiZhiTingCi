@@ -27,6 +27,42 @@ export default class VocaTaskService {
         this.vtd.close()
     }
 
+
+
+    /**
+    * 保存用户的任务数据
+    *   把leftTimes设置为系统配置值
+    *   同时修改bookWord的learned
+    * @param vocaTasks
+    * @param bookWords
+    */
+    saveUserVocaTasks(vocaTasks, bookWords) {
+        const learnedWords = []
+        for (let task of vocaTasks) {
+            for (let tWord of task.taskWords) {
+                learnedWords.push(tWord.word)
+            }
+        }
+
+        try {
+            this.vtd.realm.write(() => {
+                for (let task of vocaTasks) {
+                    task.leftTimes = store.getState().mine.configReviewPlayTimes
+                    this.vtd.realm.create('VocaTask', task)
+                }
+
+                for (let bWord of bookWords) {
+                    bWord.learned = learnedWords.includes(bWord.word)
+                    this.vtd.realm.create('BookWord', bWord);
+                }
+            })
+            console.log('saveUserVocaTasks 保存成功，结束！')
+        } catch (e) {
+            console.log('saveUserVocaTasks 保存失败！')
+            console.log(e)
+        }
+    }
+
     /**
     * 获取今日任务
     *       任务顺序，大原则按taskOrder递增，新学产生的1复任务放末尾
@@ -39,13 +75,14 @@ export default class VocaTaskService {
     */
     getTodayTasks(lastLearnDate, taskCount, taskWordCount, n = 0) {
 
+        let d = 1
         if (lastLearnDate) {
-            const d = (_util.getDayTime(n) - lastLearnDate) / CConstant.DAY_MS
+            d = parseInt((_util.getDayTime(n) - lastLearnDate) / CConstant.DAY_MS)
             console.log('------日期差：-------')
             console.log(d)
-            if (d < 1) {
+            if (d < 0) {
                 //VocaTask未过时 (不会调用该函数， 如果调用该函数则应该抛出异常)
-                throw new Error('getTodayTasks 错误: lastLearnDate 大于等于今日零点时间戳！')
+                throw new Error('getTodayTasks 错误: lastLearnDate 大于今日零点时间戳！')
             } else if (d > 1 && d <= 13) {
                 //迭代模拟学习
                 for (let day = d; day >= 2; day--) {
@@ -62,12 +99,15 @@ export default class VocaTaskService {
                     }
                 })
             }
+            // d==0表示当天退出重登录
             // d==1表示未中断过学习
         }
 
 
         //1. 计算
-        this.calculateTasks(taskCount, taskWordCount, n)
+        if (d > 0) {
+            this.calculateTasks(taskCount, taskWordCount, n)
+        }
         //2. 获取今日任务
         const storedTasks = this.vtd.getTasksByDay(n)
         console.log('----获取今日任务，长度：-----')
@@ -482,7 +522,7 @@ export default class VocaTaskService {
         const length = notLearnWords.length
         if (length > 0) {
             // 当存在未学单词时
-            leftDays = Math.ceil(length / (taskCount * taskWordCount)) + Constant.LEFT_PLUS_DAYS
+            leftDays = 1 + Math.ceil(length / (taskCount * taskWordCount)) + Constant.LEFT_PLUS_DAYS
         } else {
             // 当不存在未学单词
             const lastTask = this.vtd.realm.objects('VocaTask').sorted('taskOrder', true)[0] //获取最后一个VocaTask
@@ -490,7 +530,7 @@ export default class VocaTaskService {
             const d = (vocaTaskDate - _util.getDayTime(0)) / CConstant.DAY_MS
             leftDays = d + 15
             switch (status) {
-                case STATUS_200:
+                case Constant.STATUS_200:
                     leftDays = 0
                     break
                 case Constant.STATUS_15:
@@ -521,5 +561,12 @@ export default class VocaTaskService {
             sum += task.taskWords.length
         }
         return sum
+    }
+
+    /**
+    *  清空数据库
+    */
+    deleteAll() {
+        this.vtd.deleteAll()
     }
 }

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 
-  phoneInput: {
+  inputBox: {
     width: '100%',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: gstyles.gray,
@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
 
 })
 
+const MODE_PHONE_INPUT = 'MODE_PHONE_INPUT' //手机输入模式
+const MODE_CODE_INPUT = 'MODE_CODE_INPUT'   //验证码输入模式
+const MODE_PWD_INPUT = 'MODE_PWD_INPUT'     //手机+密码输入
 
 
 class PhoneLoginPage extends Component {
@@ -40,17 +43,16 @@ class PhoneLoginPage extends Component {
     super(props)
     this.state = {
       phone: '',
-      verifyCode: '',        //验证码
+      verifyCode: '',
+      password: '',
       isPhoneRight: false,
-      codeBorderColor: '#D0D0D0',
-      codeMode: false,     //是否是在验证码模式
+      mode: MODE_PHONE_INPUT,     //是否是在验证码模式
     }
 
     console.disableYellowBox = true
   }
 
   componentDidMount() {
-
   }
 
   _login = () => {
@@ -73,7 +75,7 @@ class PhoneLoginPage extends Component {
 
   //发送验证码
   _requestVerifyCode = () => {
-    this.setState({ codeMode: true })
+    this.setState({ mode: MODE_CODE_INPUT })
     //服务器发送验证码
     let param = { phone: this.state.phone }
     // Http.post('/user/signUp', param)
@@ -82,14 +84,10 @@ class PhoneLoginPage extends Component {
     //   })
   }
 
-  // 更改验证码
-  _changeVerifyCode = (verifyCode) => {
-    this.setState({ verifyCode })
-  }
 
   //取消登录
   _cancel = () => {
-    this.setState({ codeMode: false, codeBorderColor: '#D0D0D0', verifyCode: '' })
+    this.setState({ mode: MODE_PHONE_INPUT, verifyCode: '' })
   }
 
   render() {
@@ -105,19 +103,19 @@ class PhoneLoginPage extends Component {
           <AliIcon name='fanhui' size={26} color={gstyles.black} />
         </TouchableOpacity>
 
-        {/* 手机登录层 */}
-        <View style={[gstyles.c_center, { width: width - 60, paddingBottom: 30 }]}>
+
+        <View style={[gstyles.c_center, { width: width - 60, paddingBottom: 80 }]}>
           {/* logo */}
-          <View style={[gstyles.r_center, { width: '100%', paddingBottom: 50 }]}>
+          <View style={[gstyles.r_center, { width: '100%', paddingBottom: 90 }]}>
             <Text style={{ fontSize: 36, color: '#202020' }}>爱听词</Text>
           </View>
           {/* 如果是输入手机号模式  */}
-          {!this.state.codeMode &&
+          {this.state.mode === MODE_PHONE_INPUT &&
             <View style={{ width: '100%' }}>
-              <View style={[gstyles.r_start, styles.phoneInput]}>
+              <View style={[gstyles.r_start, styles.inputBox]}>
                 <AliIcon name="shouji" size={26} color={gstyles.gray} />
                 <TextInput
-                  placeholder="手机号"
+                  placeholder="输入手机号"
                   maxLength={11}
                   style={[{ height: gstyles.mdHeight, width: '100%', marginLeft: 5 }, gstyles.md_black]}
                   value={this.state.searchText}
@@ -139,28 +137,30 @@ class PhoneLoginPage extends Component {
 
                 <Button
                   type='clear'
-                  disabled={!this.state.isPhoneRight}
                   title="密码登录"
                   titleStyle={{ fontSize: 14, color: '#202020' }}
                   containerStyle={{ alignSelf: 'flex-end', marginTop: 10 }}
+                  onPress={() => {
+                    this.setState({ mode: MODE_PWD_INPUT })
+                  }}
                 />
               </View>
             </View>
-
           }
 
 
           {/* 验证码模式下 */}
-          {this.state.codeMode &&
+          {this.state.mode === MODE_CODE_INPUT &&
             <View style={{ width: '100%' }}>
-              <View style={[gstyles.r_start, styles.phoneInput]}>
+              <View style={[gstyles.r_start, styles.inputBox]}>
                 <AliIcon name="anquanzhuye-copy" size={24} color={gstyles.gray} />
                 <TextInput
-                  ref={ref => this._inputRef = ref}
                   placeholder="验证码"
                   maxLength={6}
                   style={[{ height: gstyles.mdHeight, width: '100%', marginLeft: 5 }, gstyles.md_black]}
-                  onChangeText={this._changeVerifyCode}
+                  onChangeText={(value) => {
+                    this.setState({ verifyCode: value })
+                  }}
                   value={this.state.verifyCode}
                   keyboardType='numeric'
                 />
@@ -189,10 +189,61 @@ class PhoneLoginPage extends Component {
             </View>
           }
 
+          {/* 手机号密码登录模式 */}
+          {this.state.mode === MODE_PWD_INPUT &&
+            <View style={{ width: '100%' }}>
+              <View style={[gstyles.r_start, styles.inputBox]}>
+                <AliIcon name="shouji" size={26} color={gstyles.gray} />
+                <TextInput
+                  placeholder="输入手机号"
+                  maxLength={11}
+                  style={[{ height: gstyles.mdHeight, width: '100%', marginLeft: 5 }, gstyles.md_black]}
+                  value={this.state.searchText}
+                  onChangeText={this._changePhone}
+                  value={this.state.phone}
+                  keyboardType='numeric'
+                />
+              </View>
+              <View style={[gstyles.r_start, styles.inputBox]}>
+                <AliIcon name="anquanzhuye-copy" size={24} color={gstyles.gray} />
+                <TextInput
+                  placeholder="输入密码"
+                  maxLength={6}
+                  style={[{ height: gstyles.mdHeight, width: '100%', marginLeft: 5 }, gstyles.md_black]}
+                  onChangeText={() => {
+                    this.setState({ password })
+                  }}
+                  value={this.state.password}
+                  keyboardType='numeric'
+                />
+              </View>
+
+              <View style={[gstyles.c_center, { width: '100%', marginTop: 20, }]}>
+                <Button
+                  disabled={!this.state.isPhoneRight}
+                  disabledStyle={{ backgroundColor: gstyles.mainColor }}
+                  title="登录"
+                  titleStyle={gstyles.md_black}
+                  buttonStyle={{ height: gstyles.mdHeight, backgroundColor: gstyles.mainColor, borderRadius: 100 }}
+                  containerStyle={{ width: '100%' }}
+                  onPress={this._login}
+                />
+                <Button
+                  type='clear'
+                  title="验证码登录"
+                  titleStyle={{ fontSize: 14, color: '#202020' }}
+                  containerStyle={{ alignSelf: 'flex-end' }}
+                  onPress={() => {
+                    this.setState({ mode: MODE_PHONE_INPUT })
+                  }}
+                />
+              </View>
+            </View>
+          }
 
         </View>
 
-      </View>
+      </View >
     );
   }
 }

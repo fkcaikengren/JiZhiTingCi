@@ -44,7 +44,7 @@ export default class PlayController extends React.Component {
         const { task } = this.props.vocaPlay
         const testTask = { ...task, curIndex: 0 }
         //如果没有列表单词，则提示
-        if (task.words && task.words.length > 0 && task.wordCount > 0) {
+        if (task.taskWords && task.taskWords.length > 0 && task.wordCount > 0) {
             this._pause()
             switch (value) {
                 case 0: //中义选词测试
@@ -146,7 +146,7 @@ export default class PlayController extends React.Component {
     render() {
 
         const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex } = this.props.vocaPlay;
-        const { words, wordCount } = task
+        const { wordCount } = task
         const { toggleWord, toggleTran, } = this.props;
         //主题
         const Theme = themes[themeId]

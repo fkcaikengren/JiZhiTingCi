@@ -134,6 +134,7 @@ class VocaLibPage extends Component {
                         borderRadius: 50,
                     }}
                     onPress={() => {
+                        hide()
                         this._putPlan({
                             bookId: book._id,
                             taskCount: taskCount,
@@ -195,7 +196,7 @@ class VocaLibPage extends Component {
                     },
                 })
             }}>
-            <View style={[gstyles.r_start, styles.bookView]} >
+            <View style={[gstyles.r_start_top, styles.bookView]} >
                 <CardView
                     cardElevation={5}
                     cardMaxElevation={5}
@@ -204,15 +205,14 @@ class VocaLibPage extends Component {
                     <Image source={{ uri: item.coverUrl }} style={styles.img} />
                 </CardView>
                 <View style={[styles.bookContent, gstyles.c_between_left]}>
-                    <View >
+                    <View style={[{ height: '70%' }, gstyles.c_start_left]}>
                         <Text style={styles.bookname}>{item.name}</Text>
-                        <Text style={styles.note}>{item.desc}</Text>
+                        <Text numberOfLine={2} style={styles.note}>{item.desc}</Text>
                         {item.price > 0 &&
                             <Text style={styles.price}>{`￥${item.price.toFixed(2)}`}</Text>
                         }
                     </View>
                     <Text style={styles.wordCount}>共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{item.count}</Text>个单词</Text>
-
                 </View>
             </View>
         </TouchableOpacity>

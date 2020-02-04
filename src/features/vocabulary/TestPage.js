@@ -19,6 +19,7 @@ import AudioService from '../../common/AudioService'
 import VocaTaskService from "./service/VocaTaskService";
 import { VOCABULARY_DIR, COMMAND_MODIFY_TASK, COMMAND_MODIFY_PASSED } from "../../common/constant";
 import _ from 'lodash'
+import { store } from "../../redux/store";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -123,6 +124,11 @@ export default class TestPage extends Component {
         }
     }
 
+    componentWillUnmount() {
+        for (let timer of this.timerArr) {
+            clearTimeout(timer)
+        }
+    }
 
     //开始倒计时
     _countDown = () => {
@@ -237,10 +243,12 @@ export default class TestPage extends Component {
                         progress = Constant.IN_REVIEW_FINISH
                         //统计已学单词数量
                         if (task.status === Constant.STATUS_1) {
-                            this.props.changeLearnedWordCount(new VocaTaskService().countLearnedWords())
+                            this.props.changeLearnedWordCount({
+                                learnedWordCount: new VocaTaskService().countLearnedWords()
+                            })
                         }
                     }
-                } else if (routeName.startsWith('Test')) { //进入第二轮测试
+                } else if (routeName && routeName.startsWith('Test')) { //进入第二轮测试
                     progress = Constant.IN_LEARN_TEST_2
                 }
             } else {
@@ -272,14 +280,19 @@ export default class TestPage extends Component {
         // 重新计时
         // this._reCountDown()
         if (isQuit) { //完成测试，退出
+            console.log('----------updateTask-同时测试次数+1-------')
+            const newTask = {
+                ...task,
+                curIndex: 0,
+                progress,
+                testTimes: task.testTimes + 1,
+                taskWords: task.taskWords.map((item, _) => {
+                    item.testWrongNum = 0
+                    return item
+                })
+            }
             if (this.props.mode === 'study') {      //学习模式下
-                console.log('----------updateTask-同时测试次数+1-------')
-                const newTask = {
-                    ...task,
-                    curIndex: 0,
-                    progress,
-                    testTimes: task.testTimes + 1
-                }
+
                 this.props.updateTask({ task: newTask })
                 let params = {}
                 if (routeName === 'Home') {
@@ -297,7 +310,7 @@ export default class TestPage extends Component {
                 }
                 vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
             } else {                                //普通模式下
-                // this._normalPlayEnd()
+                this._normalTestEnd(newTask)
             }
             this.audioService.releaseSound()
         } else {     //继续测试
@@ -312,12 +325,26 @@ export default class TestPage extends Component {
     }
 
     //非学习模式下完成测试#todo:
-    _normalPlayEnd = (_state) => {
+    _normalTestEnd = (task) => {
+        const showWordInfos = []
+        let i = 0
+        for (let tWord of task.taskWords) {
+            if (tWord.passed === false) {
+                showWordInfos.push(this.allWordInfos[i])
+            }
+            i++
+        }
+        const newTask = {
+            ...task,
+            curIndex: 0,
+            taskWords: task.taskWords.map((item, _) => {
+                item.testWrongNum = 0
+                return item
+            })
+        }
         if (this.props.vocaPlay.normalType === Constant.BY_REAL_TASK) {
-            //更新
-            this.props.updatePlayTask(newTask, null)
-            //保存到realm数据库
-            this.taskDao.modifyTask({ taskOrder: _state.task.taskOrder, testTimes })
+            //更新任务
+            this.props.updatePlayTask(newTask, showWordInfos)
             //上传数据
             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
         }
@@ -351,11 +378,15 @@ export default class TestPage extends Component {
                 {!this.noPass &&
                     <Button
                         title={isPassed ? '' : 'Pass'}
-                        icon={isPassed ? <AliIcon name='complete' size={24} color='#FFF' /> : null}
+                        icon={isPassed ? <AliIcon name='complete' size={30} color='#FFF' /> : null}
                         titleStyle={{ color: '#FFF', fontSize: 16 }}
                         containerStyle={{ flex: 1, marginRight: 20 }}
                         buttonStyle={[styles.selectBtn, { backgroundColor: bgColor }]}
                         onPress={() => {
+                            if (this.state.task.wordCount <= 2) {
+                                store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
+                                return
+                            }
                             this._passWord(this.allWordInfos[this.answerIndex].word)
                             if (isAnsweredModalOpen) {
                                 this._closeAnsweredModal()
@@ -438,15 +469,14 @@ export default class TestPage extends Component {
                     barStyle="light-content"
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color='#555' onPress={() => {
+                            const curIndexWhenBack = curIndex - this.perPassWordArr.length
+                            const newTask = { ...this.state.task, curIndex: curIndexWhenBack }
                             if (this.props.mode === 'study') { //更新上传任务
-                                const curIndexWhenBack = curIndex - this.perPassWordArr.length
-                                console.log('curIndexWhenBack : ' + curIndexWhenBack)
-                                const newTask = { ...this.state.task, curIndex: curIndexWhenBack }
                                 this.props.updateTask({ task: newTask })
                                 this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
                                 vocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
                             } else {
-                                // this._normalPlayEnd()#todo:
+                                this._normalTestEnd(newTask)
                             }
                             this.audioService.releaseSound()
                         }} />}
@@ -544,11 +574,15 @@ export default class TestPage extends Component {
                             <Button
                                 disabled={this.state.showAnswer}
                                 title={isPassed ? '' : 'Pass'}
-                                icon={isPassed ? <AliIcon name='complete' size={24} color='#F2753F' /> : null}
+                                icon={isPassed ? <AliIcon name='complete' size={30} color='#F2753F' /> : null}
                                 titleStyle={{ color: '#F2753F', fontSize: 16 }}
                                 containerStyle={{ flex: 1, marginRight: 20 }}
                                 buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957', }]}
                                 onPress={() => {
+                                    if (this.state.task.wordCount <= 2) {
+                                        store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
+                                        return
+                                    }
                                     this._passWord(this.allWordInfos[this.answerIndex].word)
                                     this.timerArr.push(setTimeout(this._nextWord, 500))
                                 }} //pass

@@ -7,7 +7,7 @@ import {
 import createHttp from '../../../../common/http'
 import VocaUtil from "../../common/vocaUtil";
 import _util from '../../../../common/util';
-import { MODIFY_LAST_LEARN_DATE, CHANGE_LEFT_DAYS } from '../action/planAction';
+import { MODIFY_LAST_LEARN_DATE, CHANGE_LEFT_DAYS, CHANGE_LEARNED_WORD_COUNT } from '../action/planAction';
 import VocaTaskService from '../../service/VocaTaskService';
 
 
@@ -15,6 +15,7 @@ import VocaTaskService from '../../service/VocaTaskService';
  * 加载今日任务 
  */
 export function* loadTasks(action) {
+    console.log('--------------saga  loadTasks------------------------')
     const { lastLearnDate, taskCount, taskWordCount } = action.payload
     yield put({ type: LOAD_TASKS_START })
     try {
@@ -24,10 +25,16 @@ export function* loadTasks(action) {
         yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
         //修改剩余学习天数
         const leftDays = vts.countLeftDays(taskCount, taskWordCount)
+        console.log('leftDays==============================' + leftDays)
         yield put({ type: CHANGE_LEFT_DAYS, payload: { leftDays } })
+        //修改已学单词
+        const learnedWordCount = vts.countLearnedWords()
+        console.log('learnedWordCount===========================' + learnedWordCount)
+        yield put({ type: CHANGE_LEARNED_WORD_COUNT, payload: { learnedWordCount } })
         //加载成功后，修改上次学习日期lastLearnDate
         yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
     } catch (err) {
+        console.log(err)
         yield put({ type: LOAD_TASKS_FAIL })
     }
 }

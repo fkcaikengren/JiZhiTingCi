@@ -343,18 +343,18 @@ ip: 129.211.71.111
 
 ---------------------------
 5. 测试同步任务
-	play: 【todo】
+	play: 【ok】
 		播放次数、
 	card: 【ok】
 	test:
 		测试次数
 	---------------
 	create: 【ok】
-	delete:
+	delete: 【ok】
 	modify: 【ok】
 	pass: 【ok】
 	listenTimes: 【ok】
-	testTimes: 【todo】
+	testTimes: 【】
 6. 添加：调整学习计划:改变新学数量
 
 
@@ -386,16 +386,34 @@ ip: 129.211.71.111
 		pass中间和尾部->完成 【ok】
 		pass头和中间->返回  【ok】
 		pass中间和尾部->返回 【ok】
-		pass头和中间->再重测
-		pass中间和尾部->再重测
+		pass头和中间->再重测 【ok】
+		pass中间和尾部->再重测 【ok】
 		
 	4.第一轮和重测都pass
-		一轮：pass头和中间->重测：pass 中间和尾部
-		一轮：pass中间和尾部->重测：pass 头部中间
+		一轮：pass头和中间->重测：pass 中间和尾部 【ok】
+		一轮：pass中间和尾部->重测：pass 头部中间 【ok】
 
 
 
-	5.播放时pass + 测试时pass
+	5.播放时pass + 测试时pass 【ok】
+
+单词4大测试：随意复习测试
+	【ok】
+	
+限制Pass数量
+	一个列表wordCount>=2 【ok】
+
+登录后任务数据加载	【】
+	1.没有加载已学单词 【ok】
+	解决：Service层解决
+	2.leftTimes云端是5 本地是10不一致
+	解决：云端不存储leftTimes  【ok】
+	
+	3.剩余天数不正确 【ok】
+
+-----------------------------
+List页面测试
+
 
 
 

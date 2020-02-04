@@ -31,7 +31,7 @@ export default class TaskItem extends Component {
 
   //开始学习
   _startStudy = () => {
-    if (false) { //this.props.disable #todo:方便测试，临时设置为false。
+    if (this.props.disable) { //
       //提示先完成新学任务
       this.props.toastRef.show('完成新学任务才可以解锁哦')
     } else {

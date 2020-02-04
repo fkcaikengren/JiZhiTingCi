@@ -21,22 +21,24 @@ const styles = StyleSheet.create({
     bookContent: {
         flex: 1,
         height: 100,
-        // borderWidth: 1,
-        paddingBottom: 4,
+        paddingRight: 10,
+        marginBottom: 10,
     },
     bookname: {
+        flex: 4,
         fontSize: 16,
         color: '#303030',
         fontWeight: '500',
     },
     note: {
+        flex: 6,
         fontSize: 13,
-        marginTop: 6,
+        textAlignVertical: "center"
     },
     price: {
+        flex: 3,
         fontSize: 14,
         color: 'red',
-        marginTop: 6,
     },
     wordCount: {
         fontSize: 14,

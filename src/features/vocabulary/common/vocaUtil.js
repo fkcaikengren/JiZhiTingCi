@@ -440,12 +440,12 @@ export default class VocaUtil {
     /**
      * 判断任务是否处于今日任务中
      */
-    static isInTodayTasks(taskOrder) {
+    static isLearningInTodayTasks(taskOrder) {
         const todayTasks = store.getState().home.tasks.filter((item, i) => {
             return (item.taskType === Constant.TASK_VOCA_TYPE)
         })
         for (let task of todayTasks) {
-            if (task.taskOrder === taskOrder) {
+            if (task.taskOrder === taskOrder && !task.progress.endsWith('FINISH')) {
                 return true
             }
         }
