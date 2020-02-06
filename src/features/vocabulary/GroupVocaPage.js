@@ -3,9 +3,8 @@ import { StatusBar, View, Text, FlatList, TouchableNativeFeedback } from 'react-
 import { Header, CheckBox, Button } from 'react-native-elements'
 import { sortBy } from 'lodash'
 import CardView from 'react-native-cardview'
-
 import { connect } from 'react-redux';
-import BackgroundTimer from 'react-native-background-timer';
+import BackgroundTimer from 'react-native-background-timer'
 
 import AliIcon from '../../component/AliIcon';
 import IndexSectionList from '../../component/IndexSectionList';

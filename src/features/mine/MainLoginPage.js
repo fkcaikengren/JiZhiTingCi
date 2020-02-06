@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import gstyles from "../../style";
 import WXService from "../../common/WXService";
 import * as MineAction from './redux/action/mineAction'
+import QQService from "../../common/QQService";
 
 
 
@@ -53,7 +54,7 @@ class MainLoginPage extends Component {
                     style={{ marginTop: 160 }}>
                     <Image
                         style={{ width: 90, height: 90, borderRadius: 10 }}
-                        source={{ uri: 'ic_launcher' }} />
+                        source={require('../../image/logo_icon.png')} />
                 </CardView>
 
                 <View style={[{ flex: 1, width: "100%" }, gstyles.c_center]}>
@@ -77,7 +78,17 @@ class MainLoginPage extends Component {
                         style={[styles.loginBtn, { backgroundColor: '#3EC6FB' }]}
                         onStartShouldSetResponder={() => true}
                         onResponderStart={async (e) => {
-                            alert('QQ登录')
+                            const result = await QQService.getInstance().getAccess()
+                            if (result) {
+                                this.props.loginByQq({
+                                    params: {
+                                        access_token: result.access_token,
+                                        openid: result.openid,
+                                        oauth_consumer_key: result.oauth_consumer_key
+                                    },
+                                    navigation: this.props.navigation
+                                })
+                            }
                         }}
                     >
                         <AliIcon name='qq' size={24} color='#FFF'></AliIcon>
@@ -106,6 +117,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     loginByWx: MineAction.loginByWx,
+    loginByQq: MineAction.loginByQq,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLoginPage);

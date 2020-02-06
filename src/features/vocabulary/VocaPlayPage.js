@@ -9,8 +9,8 @@ import ModalBox from 'react-native-modalbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types'
 import Modal from 'react-native-modalbox';
-import BackgroundTimer from 'react-native-background-timer';
 import { BlurView } from "@react-native-community/blur";
+import BackgroundTimer from 'react-native-background-timer'
 
 import VocaCard from './component/VocaCard'
 import SwipeableFlatList from '../../component/SwipeableFlatList'
@@ -27,11 +27,13 @@ import VocaTaskDao from './service/VocaTaskDao';
 import VocaDao from './service/VocaDao';
 import VocaPlayService from './service/VocaPlayService'
 import NotificationManage from '../../modules/NotificationManage'
-import ShareUtil from '../../modules/ShareUtil'
 import _util from "../../common/util";
 import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
 import { store } from '../../redux/store'
 import LookWordBoard from './component/LookWordBoard';
+import SharePanel from '../../component/SharePanel';
+
+
 
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
@@ -669,14 +671,52 @@ class VocaPlayPage extends React.Component {
     }
 
 
+    _renderSharePanel = ({ commonModal }) => {
+        return () => {
+            const {
+                hide
+            } = commonModal
+            const params = {
+
+            }
+            // 网络图片过大导致下载缓慢，分享失败。（图片限制在1M内）
+            const shareInfo = {
+                type: 'news', //text,news,imageUrl,imageFile
+                title: '用爱听词学习单词',
+                description: '描述:播放单词界面分享',
+                webpageUrl: 'https://www.aitingci.com/', //news必带字段
+                imageUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/h5/1/screen_7.jpg'
+            }
+            return <SharePanel
+                params={params}
+                shareInfo={shareInfo}
+            />
+        }
+    }
 
     _share = () => {
         //    [0, 1, 2, 3, 4, 5, 6] 表示 [QQ,微博，微信，朋友圈，空间，邮件，短信]
-        const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
-        const url = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html'
-        ShareUtil.shareboard('我在爱听词听单词，一起吧！', imgUrl, url, '爱听词', [2, 3,], (code, message) => {
-            console.log("result:" + code + message);
-        });
+        // const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
+        // const url = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html'
+        // ShareUtil.shareboard('我在爱听词听单词，一起吧！', imgUrl, url, '爱听词', [2, 3,], (code, message) => {
+        //     console.log("result:" + code + message);
+        // });
+
+        // 打开分享面板
+        const {
+            show,
+            setContentState
+        } = this.props.app.commonModal
+        show({
+            renderContent: this._renderSharePanel({ commonModal: this.props.app.commonModal }),
+            modalStyle: {
+                height: 200,
+                backgroundColor: "#EFEFEF",
+            },
+            backdropPressToClose: true,
+            position: 'bottom'
+        })
+
     }
 
 
@@ -695,7 +735,7 @@ class VocaPlayPage extends React.Component {
         const contentHeight = height - STATUSBAR_HEIGHT - 260
 
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
-            require('../../image/bg.jpg')
+            require('../../image/play_bg.jpg')
         return (
             <View style={{ flex: 1, }}>
                 <Image style={[styles.bgImage]}

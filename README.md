@@ -210,11 +210,7 @@ yarn add redux-saga
 yarn add redux-actions
 ```
 
-### 安装redux-logger
 
-```
-yarn add redux-logger
-```
 
 
 
@@ -273,12 +269,6 @@ yarn add axios
 
 
 
-
-### 安装querystring
-
-```
-yarn add querystring
-```
 
 
 
@@ -423,7 +413,7 @@ yarn add react-native-linear-gradient
 ```
 yarn add react-native-spinkit
 手动link
-修改：import androidx.annotation.Nullable;
+
 ```
 
 ### 安装react-native-webview
@@ -431,10 +421,7 @@ yarn add react-native-spinkit
 ```jsx
 yarn add react-native-webview
 react-native link react-native-webview
-//修改：
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
+
 ```
 
 
@@ -457,23 +444,6 @@ yarn add react-native-easy-toast
 
 
 
-### 实现后台任务react-native-background-task (移除)
-
-```
-yarn add react-native-background-task
-react-native link react-native-background-task
-手动添加 BackgroundTaskPackage.useContext(this);
-```
-
-
-
-### 实现后台定时调用react-native-background-timer
-
-```
-yarn add react-native-background-timer
-手动link
-```
-
 
 
 ### 图片选择器 react-native-image-picker
@@ -492,9 +462,21 @@ react-native link react-native-image-picker
 yarn add react-native-wheel-picker
 //手动link
 
-//修改：把WheelCurvedPicker.android.js
-- propTypes:{} 
-+ static propTypes = {}
+```
+
+issue:
+
+**出现propTypes问题** 
+
+采用其他pull后修复该问题的库
+
+**"Build failed" when i go genarate de apk file "./gradlew assembleRelease"**
+
+修改 build.gradle 文件
+
+```js
+compileSdkVersion 28 
+buildToolsVersion "28.0.3" 
 ```
 
 
@@ -521,6 +503,21 @@ yarn add react-native-zip-archive
 
 
 
+### 后台计时react-native-background-timer
+
+```
+yarn add react-native-background-timer
+```
+
+
+
+### 退出Appreact-native-exit-app
+
+```
+yarn add react-native-exit-app
+react-native link react-native-exit-app
+```
+
 ### 用户反馈react-native-feedback
 
 ```
@@ -534,17 +531,72 @@ yarn add react-native-feedback
 
 # 调试
 
-1. ### 调试本地数据库
+### 调试本地数据库
 
-2. ### 调试webview
+#### 借助Chrome浏览器查看realm数据库
 
-   安装spy-debugger
+##### 1.项目集成stetho
 
-   ```jsx
-   npm install spy-debugger -g
-   ```
+##### 2.打开chrome://inspect/ , 使用dev tool进行查看数据库
 
-   参考：https://github.com/wuchangming/spy-debugger
+##### 3.集成第三方插件stetho_realm，才可以查看realm数据库
+
+**参考：基本配置**    <https://github.com/uPhyca/stetho-realm>
+
+**参考： support realm5.10.0**  <https://github.com/uPhyca/stetho-realm/issues/62>
+
+
+
+遇到问题：
+
+​	找不到stetho_realm， 找不到Realm
+
+​	打开devtools ，点开realm数据库就出现 connect close.
+
+最终方案：
+
+```js
+import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+ 
+ // #todo:生产环境下注释
+    //Realm初始化 
+    Realm.init(this);
+    RealmConfiguration configuration = new RealmConfiguration.Builder()
+            .name(Realm.DEFAULT_REALM_NAME)
+            .schemaVersion(0)
+            .deleteRealmIfMigrationNeeded()
+            .build();
+    Realm realm =  Realm.getDefaultInstance();
+    Realm.setDefaultConfiguration(configuration);
+    realm.close();
+    //调试时查看数据库
+    Stetho.initialize(
+            Stetho.newInitializerBuilder(this)
+                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                    .enableWebKitInspector(RealmInspectorModulesProvider
+                            .builder(this)
+                            .withDeleteIfMigrationNeeded(true)
+                            .build())
+                    .build());
+    //调试查看WebView
+    WebView.setWebContentsDebuggingEnabled(true);
+```
+
+
+
+### 调试webview
+
+安装spy-debugger
+
+```jsx
+npm install spy-debugger -g
+```
+
+参考：https://github.com/wuchangming/spy-debugger
 
 
 
@@ -630,27 +682,7 @@ yarn add react-native-mock --dev
 
 
 
-#### 借助Chrome浏览器查看realm数据库
 
-##### 1.项目集成stetho
-
-##### 2.打开chrome://inspect/ , 使用dev tool进行查看数据库
-
-##### 3.集成第三方插件stetho_realm，才可以查看realm数据库
-
-**参考：基本配置**    <https://github.com/uPhyca/stetho-realm>
-
-**参考： support realm5.10.0**  <https://github.com/uPhyca/stetho-realm/issues/62>
-
-
-
-遇到问题：
-
-​	找不到stetho_realm， 找不到Realm
-
-​	打开devtools ，点开realm数据库就出现 connect close.
-
-​	
 
 
 
@@ -680,15 +712,11 @@ yarn add react-native-mock --dev
 
 使用android studio `Refactor -> Migrate to AndroidX`
 
+
+
+### 3.修改包名
+
 App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.github.com/dlew/5db1b780896bbc6f542e7c00a11db6a0
-
-
-
-### 3.错误: 程序包android.support.annotation不存在
-
-
-
-
 
 
 
@@ -708,23 +736,36 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
-### 5.集成AlipaySDK 出错
 
-```js
-//错误描述
-Task :app:transformClassesWithDexBuilderForDebug
-Caused by: com.android.builder.dexing.DexArchiveBuilderException: Error while dexing.
+
+
+
+### 5.点击App出现停顿后才打开
+
+```
+import androidx.multidex.MultiDex;
+MultiDex.install(this);
+
+// 突破64K引用限制
+implementation 'androidx.multidex:multidex:2.0.1'
 
 ```
 
-**分析**
-出现了重复的包utdid。阿里支付和阿里百川的类冲突，建议在阿里支付中使用无utdid的sdk
-
-1. 把原来的libs/alipaySdk-15.5.9-20181123210601.arr换成
-   **alipaySdk-15.6.8-20191021122455-noUtdid.arr**
-2. 修改build.gradle文件
 
 
+
+
+点击App出现停顿
+
+解决： https://github.com/crazycodeboy/react-native-splash-screen/issues/22 
+
+```
+//去除AppTheme中下面的代码
+<item name="android:windowIsTranslucent">true</item>
+//AppTheme添加
+<item name="android:windowBackground">@drawable/launch_screen</item>
+<item name="colorPrimaryDark">@android:color/transparent</item>
+```
 
 
 
@@ -734,9 +775,63 @@ Caused by: com.android.builder.dexing.DexArchiveBuilderException: Error while de
 
 
 
-### 集成Umeng（分析、推送、分享）
+### 集成极光统计、极光推送
+
+```js
+yarn add jcore-react-native
+yarn add janalytics-react-native
+yarn add jpush-react-native 
+//手动link
+```
+
+**issues:**
+
+issue1
+
+```js
+程序包cn.jpush.reactnativejanalytics不存在
+程序包cn.jpush.reactnativejpush不存在
+...找不到符号
+new JAnalyticsPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
+new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
+```
+
+解决：包名地址不对，检查源文件。
+
+改为：
+
+```
+import cn.jiguang.plugins.analytics.JAnalyticsPackage;
+import cn.jiguang.plugins.push.JPushPackage;
+```
+
+然后报错：
+
+```js
+无法将类 JPushPackage中的构造器 JPushPackage应用到给定类型
+new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
+需要: 没有参数
+找到: boolean,boolean
+原因: 实际参数列表和形式参数列表长度不同
+```
+
+解决：删除两个参数：SHUTDOWN_TOAST, SHUTDOWN_LOG
 
 
+
+issue2
+
+```js
+找不到：JAnalyticsInterface
+```
+
+修改:
+
+jcore-react-native
+janalytics-react-native
+jpush-react-native 
+
+里面的build.gradle文件， 把依赖中的implement改为api
 
 ### 集成支付宝支付
 
@@ -795,7 +890,9 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 //生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "第7次生产环境更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "第9次生产环境更新" --m true
+
+//--m true 强制用户更新
 ```
 
 
@@ -811,4 +908,12 @@ keytool -list -v -keystore aitingci.jks
 ./gradlew assembleRelease
 
 ```
+
+
+
+
+
+
+
+
 

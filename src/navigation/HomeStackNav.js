@@ -38,8 +38,8 @@ import AccountPage from '../features/mine/AccountPage'
 import PasswordPage from '../features/mine/PasswordPage'
 import NicknamePage from '../features/mine/NicknamePage'
 import DownloadManagePage from '../features/mine/DownloadManagePage'
-import GuidePage from '../features/mine/GuidePage'
-import GuideDetailPage from '../features/mine/GuideDetailPage'
+import MessagePage from '../features/mine/MessagePage'
+import MessageDetailPage from '../features/mine/MessageDetailPage'
 
 import FileTest from "../FileTest";
 import SettingPage from '../features/mine/SettingPage';
@@ -236,11 +236,11 @@ const VocaHomeStackNav = createStackNavigator({
   },
 
   // 首页侧面板
-  Guide: {
-    screen: GuidePage
+  Message: {
+    screen: MessagePage
   },
-  GuideDetail: {
-    screen: GuideDetailPage
+  MessageDetail: {
+    screen: MessageDetailPage
   },
   DownloadManage: {
     screen: DownloadManagePage

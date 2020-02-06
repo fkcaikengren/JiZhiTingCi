@@ -18,6 +18,10 @@ import {
     LOGIN_BY_WX,
     LOGIN_BY_WX_START,
     LOGIN_BY_WX_SUCCEED,
+    // QQ登录
+    LOGIN_BY_QQ,
+    LOGIN_BY_QQ_START,
+    LOGIN_BY_QQ_SUCCEED,
     // 昵称
     MODIFY_NICKNAME,
     MODIFY_NICKNAME_START,
@@ -41,7 +45,11 @@ import {
     MODIFY_WECHAT_SUCCEED,
     MODIFY_PHONE,
     MODIFY_WECHAT,
-    MODIFY_AVATAR_FAIL
+    MODIFY_AVATAR_FAIL,
+    LOGIN_BY_PWD,
+    MODIFY_QQ_START,
+    MODIFY_QQ_SUCCEED,
+    MODIFY_QQ
 } from '../action/mineAction'
 
 const fs = RNFetchBlob.fs
@@ -65,7 +73,17 @@ function* loginByCode(action) {
 
 
 /**密码登录 */
-
+function* loginByPwd(action) {
+    yield put({ type: LOGIN_BY_CODE_START })
+    const res = yield Http.post('/user/loginByPwd', action.payload.params)
+    if (res.status === 200) {
+        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        if (plan) { //保存计划
+            yield put({ type: SAVE_PLAN, payload: { plan } })
+        }
+        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
+    }
+}
 
 
 /**微信登录 */
@@ -84,6 +102,18 @@ function* loginByWX(action) {
 
 
 /**QQ登录 */
+function* loginByQQ(action) {
+    console.log(action.payload.params)
+    yield put({ type: LOGIN_BY_QQ_START })
+    const res = yield Http.post('/user/loginByQQ', action.payload.params)
+    if (res.status === 200) {
+        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        if (plan) { //保存计划
+            yield put({ type: SAVE_PLAN, payload: { plan } })
+        }
+        yield put({ type: LOGIN_BY_QQ_SUCCEED, payload: { credential, user } }) //保存user
+    }
+}
 
 
 
@@ -103,7 +133,6 @@ function* modifySex(action) {
     const res = yield Http.post('/user/modifySex', { sex: action.payload.sex })
     if (res.status === 200) {
         yield put({ type: MODIFY_SEX_SUCCEED, payload: res.data })
-
     }
 }
 
@@ -163,6 +192,13 @@ function* modifyWechat(action) {
 }
 
 // 绑定QQ
+function* modifyQQ(action) {
+    yield put({ type: MODIFY_QQ_START })
+    const res = yield Http.post('/user/modifyQQ', action.payload.params)
+    if (res.status === 200) {
+        yield put({ type: MODIFY_QQ_SUCCEED, payload: res.data })
+    }
+}
 
 
 // 绑定手机
@@ -184,11 +220,18 @@ function* modifyPhone(action) {
 export function* watchLoginByCode() {
     yield takeLatest(LOGIN_BY_CODE, loginByCode)
 }
+export function* watchLoginByPwd() {
+    yield takeLatest(LOGIN_BY_PWD, loginByPwd)
+}
+
 
 export function* watchLoginByWX() {
     yield takeLatest(LOGIN_BY_WX, loginByWX)
 }
 
+export function* watchLoginByQQ() {
+    yield takeLatest(LOGIN_BY_QQ, loginByQQ)
+}
 
 export function* watchModifyNickname() {
     yield takeLatest(MODIFY_NICKNAME, modifyNickname)
@@ -203,13 +246,16 @@ export function* watchModifyPwd() {
 }
 export function* watchModifyAvatar() {
     yield takeLatest(MODIFY_AVATAR, modifyAvatar)
-
 }
-
 
 export function* watchModifyWechat() {
     yield takeLatest(MODIFY_WECHAT, modifyWechat)
 }
+
+export function* watchModifyQQ() {
+    yield takeLatest(MODIFY_QQ, modifyQQ)
+}
+
 export function* watchModifyPhone() {
     yield takeLatest(MODIFY_PHONE, modifyPhone)
 }

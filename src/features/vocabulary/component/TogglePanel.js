@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import VocaDao from '../service/VocaDao'
 import VocaUtil from '../common/vocaUtil';
 
-export default class TogglePane extends Component {
+export default class TogglePanel extends Component {
 
   constructor(props) {
     super(props);
@@ -59,13 +59,13 @@ const styles = StyleSheet.create({
   }
 });
 
-TogglePane.propTypes = {
+TogglePanel.propTypes = {
   word: PropTypes.string.isRequired,
   containerStyle: PropTypes.object,
   coverColor: PropTypes.string,
 };
 
-TogglePane.defaultProps = {
-  containerStyle: {},
+TogglePanel.defaultProps = {
+  containerStyle: null,
   coverColor: '#AAA',
 };

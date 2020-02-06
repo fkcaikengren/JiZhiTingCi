@@ -74,7 +74,7 @@ export default class HomeFooter extends React.Component {
         let word = showWordInfos[curIndex] ? showWordInfos[curIndex].word : ''
 
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
-            require('../../../image/bg.jpg')
+            require('../../../image/play_bg.jpg')
         return (
 
             <Grid

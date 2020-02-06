@@ -6,7 +6,7 @@ import { CheckBox } from "react-native-elements";
 import VocaDao from "../service/VocaDao";
 import AudioService from "../../../common/AudioService";
 import * as CConstant from "../../../common/constant";
-import TogglePane from "./TogglePane";
+import TogglePanel from "./TogglePanel";
 import AliIcon from "../../../component/AliIcon";
 
 
@@ -72,7 +72,7 @@ export default class WordCell extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.itemCenter}>
-                        <TogglePane word={item.word} />
+                        <TogglePanel word={item.word} />
                     </View>
                     <View style={{ flex: 1 }} >
                         <AliIcon name='youjiantou' size={26} color='#C9C9C9' style={{ paddingLeft: 10 }} onPress={() => {

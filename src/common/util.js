@@ -1,7 +1,7 @@
 import * as CConstant from "./constant";
-// import { NavigationActions, StackActions } from "react-navigation";
-// import createHttp from "./http";
-// import { store } from '../redux/store'
+import { NavigationActions, StackActions } from "react-navigation";
+import createHttp from "./http";
+import { store } from '../redux/store'
 
 export default class _util {
 
@@ -21,42 +21,40 @@ export default class _util {
         return dayCount * CConstant.DAY_MS
     }
 
-    // todo: 取消注释
     /**
      *   抹掉stack，跳转到指定路由 
      * @param navigation
      * @param routeName
      * @param params
      */
-    // static goPageWithoutStack(navigation, routeName, params = {}) {
-    //     const resetAction = StackActions.reset({
-    //         index: 0,
-    //         actions: [
-    //             NavigationActions.navigate({ routeName, params })
-    //         ]
-    //     });
-    //     navigation.dispatch(resetAction);
-    // }
+    static goPageWithoutStack(navigation, routeName, params = {}) {
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName, params })
+            ]
+        });
+        navigation.dispatch(resetAction);
+    }
 
 
-    // todo:取消注释
     /**
      * @description  
      * @return 时间准确返回true,否则返回false
      */
-    // static async checkLocalTime() {
-    //     //如果本地时间不对，提示修改手机时间
-    //     const myHttp = createHttp(null, { shouldRefreshToken: true })
-    //     const res = await myHttp.get('/timestamp')
-    //     const d = res.data.timestamp - Date.now()
-    //     console.log('时间差：  ' + d)
-    //     if (d >= -10000 && d <= 10000) { //相差在10秒
-    //         return true
-    //     } else {
-    //         // store.getState().app.toast.show('手机时间不准确，请调整时间后重试！', 3000)
-    //         return false
-    //     }
-    // }
+    static async checkLocalTime() {
+        //如果本地时间不对，提示修改手机时间
+        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        const res = await myHttp.get('/timestamp')
+        const d = res.data.timestamp - Date.now()
+        console.log('时间差：  ' + d)
+        if (d >= -10000 && d <= 10000) { //相差在10秒
+            return true
+        } else {
+            // store.getState().app.toast.show('手机时间不准确，请调整时间后重试！', 3000)
+            return false
+        }
+    }
 
     /**
      *  @function 随机生成字符串
@@ -85,4 +83,25 @@ export default class _util {
         return parseInt(Math.random() * m)
     }
 
+
+
+    static formateTimestamp(timestamp) {
+        if (timestamp) {
+            var time = new Date(timestamp);
+            var y = time.getFullYear();
+            var M = time.getMonth() + 1;
+            var d = time.getDate();
+            var h = time.getHours();
+            var m = time.getMinutes();
+            var s = time.getSeconds();
+            return [y + '-' + this.addZero(M) + '-' + this.addZero(d), this.addZero(h) + ':' + this.addZero(m) + ':' + this.addZero(s)]
+        } else {
+            return ['', ''];
+        }
+    }
+
+
+    static addZero(m) {
+        return m < 10 ? '0' + m : m;
+    }
 }

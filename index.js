@@ -1,6 +1,5 @@
 
 import { Platform, AppRegistry } from 'react-native';
-import codePush from "react-native-code-push";
 import App from './App';
 import { name as appName } from './app.json';
 
@@ -24,8 +23,6 @@ if (!__DEV__) {
 }
 
 
-//用户在启动App时，CodePush自动检测更新
-// () => codePush(App)
 AppRegistry.registerComponent(appName, () => App);
 
 

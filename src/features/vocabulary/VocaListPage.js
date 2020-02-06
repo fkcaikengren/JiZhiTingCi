@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { FlatList, View, Text } from "react-native";
 import { Button } from 'react-native-elements'
-import BackgroundTimer from 'react-native-background-timer';
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
+import BackgroundTimer from 'react-native-background-timer'
 
 import * as Constant from './common/constant'
 import AliIcon from '../../component/AliIcon';

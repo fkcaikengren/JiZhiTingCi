@@ -1,5 +1,5 @@
 
-
+import * as QQAPI from 'react-native-qq';
 
 /**QQ业务 */
 export default class QQService {
@@ -15,4 +15,56 @@ export default class QQService {
         return this.instance;
     }
 
+
+    /**
+     * QQ登录
+     */
+    getAccess = async () => {
+        try {
+            const result = await QQAPI.login()
+            const { errCode } = result
+            if (errCode === 0) {
+                return result
+            } else {
+                store.getState().app.toast.show('QQ授权失败：' + err.message, 2000)
+            }
+        } catch (err) {
+            store.getState().app.toast.show('QQ授权失败：' + err.message, 2000)
+        }
+        return null
+    }
+
+    /**
+     * 分享到QQ好友或群
+     */
+    shareToQQ = async (params, shareInfo, onFail, onSucceed) => {
+        try {
+            const result = await QQAPI.shareToQQ(shareInfo)
+            console.log(result)
+        } catch (err) {
+            if (err) {
+                console.log(err)
+                if (onFail) {
+                    onFail()
+                }
+            }
+        }
+    }
+
+    /**
+     * 分享到空间
+     */
+    shareToQzone = async (params, shareInfo, onFail, onSucceed) => {
+        try {
+            const result = await QQAPI.shareToQzone(shareInfo)
+            console.log(result)
+        } catch (err) {
+            if (err) {
+                console.log(err)
+                if (onFail) {
+                    onFail()
+                }
+            }
+        }
+    }
 }

@@ -1,6 +1,8 @@
 import {
+    LOGIN_BY_PWD_SUCCEED,
     LOGIN_BY_CODE_SUCCEED,
     LOGIN_BY_WX_SUCCEED,
+    LOGIN_BY_QQ_SUCCEED,
 
     MODIFY_NICKNAME_SUCCEED,
     MODIFY_NICKNAME_FAIL,
@@ -22,7 +24,11 @@ import {
     MODIFY_WECHAT_FAIL,
     MODIFY_PHONE_SUCCEED,
     MODIFY_PHONE_FAIL,
-    MODIFY_CREDENTIAL
+    MODIFY_CREDENTIAL,
+    ADD_MESSAGES,
+    MODIFY_QQ_SUCCEED,
+    MODIFY_QQ_FAIL,
+
 } from "./action/mineAction"
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
 
@@ -31,13 +37,14 @@ const defaultState = {
     credential: {},
     user: {},
     avatarSource: null,
+    messages: [],
 
-    //发音类型
-    configVocaPronType: VOCA_PRON_TYPE_EN,
-    //复习轮播次数
-    configReviewPlayTimes: 10,
+    //学习设置
+    configVocaPronType: VOCA_PRON_TYPE_EN,  //发音类型
+    configReviewPlayTimes: 10,              //复习轮播次数
     configShowNTrans: true,
     configShowMTrans: true,
+
 }
 
 export const mine = (state = defaultState, action) => {
@@ -47,8 +54,18 @@ export const mine = (state = defaultState, action) => {
             const { credential, user } = action.payload
             return { ...state, credential, user }
         }
+        case LOGIN_BY_PWD_SUCCEED: {//密码登录成功
+            console.log('密码登录成功')
+            const { credential, user } = action.payload
+            return { ...state, credential, user }
+        }
         case LOGIN_BY_WX_SUCCEED: {  //微信登录成功
             console.log('----微信登录成功')
+            const { credential, user } = action.payload
+            return { ...state, credential, user }
+        }
+        case LOGIN_BY_QQ_SUCCEED: {  //QQ登录成功
+            console.log('----QQ录成功')
             const { credential, user } = action.payload
             return { ...state, credential, user }
         }
@@ -77,6 +94,10 @@ export const mine = (state = defaultState, action) => {
             return { ...state, user: { ...state.user, wechat: action.payload.wechat } }
         case MODIFY_WECHAT_FAIL:           //绑定微信失败
             return state
+        case MODIFY_QQ_SUCCEED:        //绑定QQ成功
+            return { ...state, user: { ...state.user, qq: action.payload.qq } }
+        case MODIFY_QQ_FAIL:           //绑定QQ失败
+            return state
         case MODIFY_PHONE_SUCCEED:        //绑定手机成功
             return { ...state, user: { ...state.user, phone: action.payload.phone } }
         case MODIFY_PHONE_FAIL:           //绑定手机失败
@@ -98,6 +119,9 @@ export const mine = (state = defaultState, action) => {
         case CHANGE_CONFIG_M_TRANS:
             return { ...state, configShowMTrans: action.payload.configShowMTrans }
 
+        //消息
+        case ADD_MESSAGES:
+            return { ...state, messages: state.messages.concat(action.payload.messages) }
         // 退出登录
         case LOGOUT:
             console.log("--------------mine.js 退出登录-------------------")

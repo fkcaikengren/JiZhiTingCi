@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StatusBar, View, AppState } from 'react-native';
 import { connect } from 'react-redux'
 import Drawer from 'react-native-drawer'
+import SplashScreen from 'react-native-splash-screen';
 
 import styles from './HomeStyle'
 import HomeDrawerPanel from './component/HomeDrawerPanel'
@@ -14,6 +15,7 @@ import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
 import VocaUtil from "./common/vocaUtil";
 import { BY_REAL_TASK } from "./common/constant";
+
 
 
 class HomePage extends Component {
@@ -54,6 +56,7 @@ class HomePage extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            SplashScreen.hide()
             console.log('App 到前台')
         }
         if (this.state.appState.match(/active/) && nextAppState === 'background') {
@@ -70,6 +73,7 @@ class HomePage extends Component {
         const today = _util.getDayTime(0)
         console.log('today --> ' + today)
         if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
+            // #fixme:退出登录第二天获取任务异常
             IsLoginToHome = false
             const { tasks } = this.props.home
             const { task, normalType } = this.props.vocaPlay

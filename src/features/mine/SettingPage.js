@@ -26,7 +26,7 @@ class SettingPage extends React.Component {
     }
 
     _renderItem = ({ title, rightComponent }) => {
-        return <View style={[gstyles.r_between, styles.itemView]}>
+        return <View style={[gstyles.r_between, styles.itemView]} >
             <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
                 {title}
             </Text>
@@ -57,9 +57,9 @@ class SettingPage extends React.Component {
 
     render() {
         const { selectedIndex } = this.state
-        const { configShowNTrans, configShowMTrans } = this.props.mine
+        const { configShowNTrans, configShowMTrans, configEnableNotice, configEnableLearnNotice, configLearnNoticeTime } = this.props.mine
         return (
-            <View style={[{ flex: 1 }, gstyles.c_start]}>
+            <View style={[{ flex: 1, backgroundColor: '#EFEFEF' }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
@@ -75,7 +75,7 @@ class SettingPage extends React.Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <View style={{ flex: 1, width: '100%' }}>
+                <View style={{ width: '100%', backgroundColor: '#FFF', marginTop: 10 }}>
                     {
                         this._renderItem({
                             title: '单词发音',
@@ -85,7 +85,7 @@ class SettingPage extends React.Component {
                                     selectedIndex={selectedIndex}
                                     buttons={['美', '英']}
                                     containerStyle={{ width: 100, height: 34 }}
-                                    selectedButtonStyle={{ backgroundColor: gstyles.emColor }}
+                                    selectedButtonStyle={{ backgroundColor: gstyles.secColor }}
                                 />
                             </View>
                         })
@@ -129,8 +129,8 @@ class SettingPage extends React.Component {
                                     onValueChange={(value) => {
                                         this.props.changeConfigNTrans(value)
                                     }}
-                                    thumbColor={gstyles.emColor}
-                                    trackColor={{ false: '#DDD', true: gstyles.mainColor }} />
+                                    thumbColor={gstyles.secColor}
+                                    trackColor={{ false: '#DDD', true: gstyles.secColor + '66' }} />
                             </View>
                         })
                     }
@@ -143,17 +143,21 @@ class SettingPage extends React.Component {
                                     onValueChange={(value) => {
                                         this.props.changeConfigMTrans(value)
                                     }}
-                                    thumbColor={gstyles.emColor}
-                                    trackColor={{ false: '#DDD', true: gstyles.mainColor }} />
+                                    thumbColor={gstyles.secColor}
+                                    trackColor={{ false: '#DDD', true: gstyles.secColor + '66' }} />
                             </View>
                         })
                     }
 
                 </View>
 
+
+
                 <View style={[gstyles.r_center, styles.version]}>
-                    <Text style={{ fontSize: 20 }}>爱听词 v1.0.0</Text>
+                    <Text style={{ fontSize: 20, color: '#666' }}>爱听词 v1.0.0</Text>
                 </View>
+
+
             </View>
         );
     }

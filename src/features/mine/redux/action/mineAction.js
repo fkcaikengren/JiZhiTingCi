@@ -6,11 +6,23 @@ export const LOGIN_BY_CODE_START = 'LOGIN_BY_CODE_START'
 export const LOGIN_BY_CODE_SUCCEED = 'LOGIN_BY_CODE_SUCCEED'
 export const LOGIN_BY_CODE_FAIL = 'LOGIN_BY_CODE_FAIL'
 
+//密码登录
+export const LOGIN_BY_PWD = 'LOGIN_BY_PWD'
+export const LOGIN_BY_PWD_START = 'LOGIN_BY_PWD_START'
+export const LOGIN_BY_PWD_SUCCEED = 'LOGIN_BY_PWD_SUCCEED'
+export const LOGIN_BY_PWD_FAIL = 'LOGIN_BY_PWD_FAIL'
+
 // 微信登录
 export const LOGIN_BY_WX = 'LOGIN_BY_WX'
 export const LOGIN_BY_WX_START = 'LOGIN_BY_WX_START'
 export const LOGIN_BY_WX_SUCCEED = 'LOGIN_BY_WX_SUCCEED'
 export const LOGIN_BY_WX_FAIL = 'LOGIN_BY_WX_FAIL'
+
+// QQ登录
+export const LOGIN_BY_QQ = 'LOGIN_BY_QQ'
+export const LOGIN_BY_QQ_START = 'LOGIN_BY_QQ_START'
+export const LOGIN_BY_QQ_SUCCEED = 'LOGIN_BY_QQ_SUCCEED'
+export const LOGIN_BY_QQ_FAIL = 'LOGIN_BY_QQ_FAIL'
 
 // 修改密码
 export const MODIFY_NICKNAME = 'MODIFY_NICKNAME'
@@ -71,16 +83,22 @@ export const CHANGE_CONFIG_REVIEW_PLAY_TIMES = 'CHANGE_CONFIG_REVIEW_PLAY_TIMES'
 export const CHANGE_CONFIG_N_TRANS = 'CHANGE_CONFIG_N_TRANS'
 export const CHANGE_CONFIG_M_TRANS = 'CHANGE_CONFIG_M_TRANS'
 
+// 消息
+export const ADD_MESSAGES = 'ADD_MESSAGES'
+
 const fn = (payload) => {
     return payload
 }
 
-export const { loginByCode, loginByWx,
-    modifyNickname, modifySex, modifyPassword, modifyAvatar, modifyWechat, modify_Qq, modifyPhone,
+export const { loginByCode, loginByPwd, loginByWx, loginByQq,
+    modifyNickname, modifySex, modifyPassword, modifyAvatar, modifyWechat, modifyQq, modifyPhone,
     setAvatarSource, logout,
-    changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans } = createActions({
+    changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans,
+    addMessages } = createActions({
         [LOGIN_BY_CODE]: fn,
+        [LOGIN_BY_PWD]: fn,
         [LOGIN_BY_WX]: fn,
+        [LOGIN_BY_QQ]: fn,
 
         [MODIFY_NICKNAME]: fn,
         [MODIFY_SEX]: fn,
@@ -112,4 +130,7 @@ export const { loginByCode, loginByWx,
         [CHANGE_CONFIG_M_TRANS]: (configShowMTrans) => {
             return { configShowMTrans }
         },
+
+        //添加消息
+        [ADD_MESSAGES]: fn
     })

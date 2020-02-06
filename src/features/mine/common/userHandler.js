@@ -3,10 +3,21 @@ import { LOGOUT } from "../redux/action/mineAction"
 import VocaTaskDao from "../../vocabulary/service/VocaTaskDao"
 import VocaGroupDao from "../../vocabulary/service/VocaGroupDao"
 import ArticleDao from "../../reading/service/ArticleDao"
-
+import AnalyticsUtil from "../../../modules/AnalyticsUtil"
 
 export const loginHandle = (data, navigation) => {
     const { credential, user, words, articles } = data
+    const success = (data != null && user != null && credential.accessToken != null)
+    /*极光统计*/
+    AnalyticsUtil.postEvent({
+        type: 'login',
+        method: "loginHandle",
+        success
+    })
+    if (!success) {
+        return
+    }
+
     //1.标记登录进入App首页
     console.log('---通过登录进入App首页--')
     IsLoginToHome = true

@@ -4,8 +4,8 @@ import { watchLoadTasks, watchSyncTask } from '../features/vocabulary/redux/saga
 import { watchPlan } from '../features/vocabulary/redux/saga/planSaga'
 import { watchLoadArticle, watchLoadAnalysis } from '../features/reading/redux/saga/articleSaga'
 import {
-    watchLoginByCode, watchLoginByWX,
-    watchModifyNickname, watchModifySex, watchModifyPwd, watchModifyAvatar, watchModifyWechat, watchModifyPhone
+    watchLoginByCode, watchLoginByPwd, watchLoginByWX, watchLoginByQQ,
+    watchModifyNickname, watchModifySex, watchModifyPwd, watchModifyAvatar, watchModifyWechat, watchModifyQQ, watchModifyPhone
 }
     from '../features/mine/redux/saga/mineSaga'
 import { watchSyncGroup } from '../features/vocabulary/redux/saga/vocaGroupSaga'
@@ -23,14 +23,17 @@ function* rootSaga() {
         call(watchLoadAnalysis),
 
         //用户
-        call(watchLoginByWX),
         call(watchLoginByCode),
+        call(watchLoginByPwd),
+        call(watchLoginByWX),
+        call(watchLoginByQQ),
         call(watchModifyNickname),
         call(watchModifySex),
         call(watchModifyPwd),
         call(watchModifyAvatar),
 
         call(watchModifyWechat),
+        call(watchModifyQQ),
         call(watchModifyPhone),
 
     ])

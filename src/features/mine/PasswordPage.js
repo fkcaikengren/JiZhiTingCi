@@ -77,8 +77,8 @@ class PasswordPage extends React.Component {
                 <View style={[gstyles.c_start, styles.content]}>
                     <TextInput
                         secureTextEntry={true}
-                        placeholder="请输入6-12位数字+字母"
-                        maxLength={12}
+                        placeholder="请输入6-16位数字+字母"
+                        maxLength={16}
                         style={[styles.inputStyle, gstyles.lg_black]}
                         value={this.state.password}
                         onChangeText={this._changePassword}

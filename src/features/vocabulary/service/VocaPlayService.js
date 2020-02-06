@@ -1,6 +1,6 @@
 
 import { BackHandler } from 'react-native'
-import BackgroundTimer from 'react-native-background-timer';
+import BackgroundTimer from 'react-native-background-timer'
 import AudioService from '../../../common/AudioService'
 import { store } from '../../../redux/store'
 import NotificationManage from '../../../modules/NotificationManage'
@@ -149,14 +149,3 @@ export default class VocaPlayService {
 
 
 }
-
-
- //单词、释义到一定遍数后自动显示
-//  if (this.mode === Constant.REVIEW_PLAY) {
-//     const fTimes = store.getState().mine.configReviewPlayTimes - leftTimes
-//     if (fTimes === 2) {
-//         this._toggleWord(true)
-//     } else if (fTimes === 4) {
-//         this._toggleTran(true)
-//     }
-// }

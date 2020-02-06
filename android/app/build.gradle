@@ -1,7 +1,5 @@
 apply plugin: "com.android.application"
 
-
-
 import com.android.build.OutputFile
 
 /**
@@ -120,16 +118,21 @@ android {
         versionName "1.0.0"
         flavorDimensions "versionCode"
         // Enabling multidex support.
-        multiDexEnabled true
+        multiDexEnabled true 
         //blur
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
-        //
         ndk {
             abiFilters "armeabi-v7a"
         }
+        manifestPlaceholders = [
+            JPUSH_APPKEY: "9fdb517619433f8299e0beb9",               //极光的APPKey
+            JPUSH_CHANNEL: "aitingci-web",              //渠道号 #todo:发布到不同平台使用不同标记
 
+            QQ_APPID: "1109905088"                                  //QQ的AppID       
+        ]
     }
+   
 
     signingConfigs {
         release {
@@ -179,6 +182,11 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-exit-app')
+    implementation project(':react-native-background-timer')
+
+    
+    implementation project(':react-native-qq')
     implementation project(':@gregfrench_react-native-wheel-picker')
     implementation project(':@0x5e_react-native-alipay')
     implementation project(':react-native-zip-archive')
@@ -190,7 +198,6 @@ dependencies {
     implementation project(':react-native-cardview')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-code-push')
-    implementation project(':react-native-background-timer')
     implementation project(':react-native-spinkit')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-svg')
@@ -209,20 +216,21 @@ dependencies {
     implementation 'com.uphyca:stetho_realm:2.3.0'
     //必须有，否则io.realm.Realm找不到。stetho_reaml访问realm需要用到的realm-java API
     implementation 'io.realm:realm-android-library-object-server:5.10.0'
-    // 如果你需要支持GIF动图
-    // 保证版本匹配
+    // 如果你需要支持GIF动图 (保证版本匹配)
     implementation 'com.facebook.fresco:animated-gif:1.10.0'
-    api project(':umeng')
-    // 突破64K引用限制
-    implementation 'androidx.multidex:multidex:2.0.1'
+    
     //阿里百川 反馈模块
     implementation 'com.aliyun.ams:alicloud-android-feedback:3.3.1'
     implementation 'com.aliyun.ams:alicloud-android-utdid:1.1.5.3'
     implementation 'com.aliyun.ams:alicloud-android-ut:5.4.0'
     implementation 'com.aliyun.ams:alicloud-android-utils:1.1.3'
-    implementation project(':push')
-    //微信支付sdk
-    implementation project(':RCTWeChat')    // Add this line only.
+    //微信sdk
+    implementation project(':RCTWeChat')    
+    
+    implementation project(':jcore-react-native')       // 添加 jcore 依赖
+    implementation project(':janalytics-react-native')  // 添加 janalytics 依赖
+    implementation project(':jpush-react-native')       // 添加 jpush 依赖
+    
 }
 
 // Run this once to be able to run the application with BUCK

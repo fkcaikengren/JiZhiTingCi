@@ -42,14 +42,15 @@ class HomeDrawerPanel extends Component {
             <AliIcon name='youjiantou' size={30} color='#202020' style={{ marginRight: 10 }} />
           </ImageBackground>
         </TouchableWithoutFeedback>
+
         <Button type='clear'
-          icon={<AliIcon name='gonglvexian' size={24} color={gstyles.gray} />}
-          title={'攻略'}
+          icon={<AliIcon name='xinxi' size={24} color={gstyles.gray} />}
+          title={'消息中心'}
           titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
           containerStyle={{ width: '100%' }}
           buttonStyle={[styles.btn, gstyles.r_start]}
           onPress={() => {
-            this.props.navigation.navigate('Guide')
+            this.props.navigation.navigate('Message')
           }}
         />
 
@@ -94,6 +95,16 @@ class HomeDrawerPanel extends Component {
           buttonStyle={[styles.btn, gstyles.r_start]}
           onPress={() => {
             this.props.navigation.navigate('About')
+          }}
+        />
+        <Button type='clear'
+          icon={<AliIcon name='dingshirenwu' size={24} color={gstyles.gray} />}
+          title={'定时关闭'}
+          titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
+          containerStyle={{ width: '100%' }}
+          buttonStyle={[styles.btn, gstyles.r_start]}
+          onPress={() => {
+            // this.props.navigation.navigate('Guide')
           }}
         />
         <Button type='clear'

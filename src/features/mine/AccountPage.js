@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#EFEFEF',
     },
     mainView: {
-        marginTop: 16,
+        marginTop: 10,
         borderTopColor: '#DFDFDF',
         borderTopWidth: StyleSheet.hairlineWidth,
         borderBottomColor: '#DFDFDF',
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
     logout: {
         height: 50,
-        marginTop: 10,
+        marginTop: 20,
         backgroundColor: '#FDFDFD',
         borderTopColor: '#DFDFDF',
         borderTopWidth: StyleSheet.hairlineWidth,

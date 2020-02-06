@@ -78,6 +78,10 @@
 		33E2FF5212C64B3999B6A8AD /* libRNZipArchive.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1C5BE67AAA3405CA4A04F15 /* libRNZipArchive.a */; };
 		9741DB6AC9CA45AD8DFC1B15 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE29FD435984BDD930D0634 /* libART.a */; };
 		A09C7F60F35A4D2F8700A610 /* libART-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08F46CE48A274A7DA1FD0989 /* libART-tvOS.a */; };
+		D1E99FD4C6834F288733FD00 /* libRCTQQAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FC392555794EAA8B168ACE /* libRCTQQAPI.a */; };
+		4E91A327874846B5A8965570 /* libRNJAnalyticsModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BE9CE1EC534B8F97DD6940 /* libRNJAnalyticsModule.a */; };
+		84EAADFC080947F38DE0AEDC /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 283C4F2DEB4C41DA861D1DE0 /* libRNBackgroundTimer.a */; };
+		3C0ED1D63F3A45EFBAACA82E /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F771A218C1E47A293A3130C /* libRNExitApp.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -438,6 +442,14 @@
 		792BB6F152FD4179B85625BE /* ART.xcodeproj */ = {isa = PBXFileReference; name = "ART.xcodeproj"; path = "../node_modules/@react-native-community/art/ios/ART.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		0EE29FD435984BDD930D0634 /* libART.a */ = {isa = PBXFileReference; name = "libART.a"; path = "libART.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		08F46CE48A274A7DA1FD0989 /* libART-tvOS.a */ = {isa = PBXFileReference; name = "libART-tvOS.a"; path = "libART-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		34A803A43C1947F1AD817474 /* RCTQQAPI.xcodeproj */ = {isa = PBXFileReference; name = "RCTQQAPI.xcodeproj"; path = "../node_modules/react-native-qq/ios/RCTQQAPI.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F5FC392555794EAA8B168ACE /* libRCTQQAPI.a */ = {isa = PBXFileReference; name = "libRCTQQAPI.a"; path = "libRCTQQAPI.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		7FBEE84B2DB54E32A5692861 /* RCTJAnalyticsModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJAnalyticsModule.xcodeproj"; path = "../node_modules/janalytics-react-native/ios/RCTJAnalyticsModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C2BE9CE1EC534B8F97DD6940 /* libRNJAnalyticsModule.a */ = {isa = PBXFileReference; name = "libRNJAnalyticsModule.a"; path = "libRNJAnalyticsModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		64D81B570E0144D4A61F12B4 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundTimer.xcodeproj"; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		283C4F2DEB4C41DA861D1DE0 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; name = "libRNBackgroundTimer.a"; path = "libRNBackgroundTimer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		AE96E64491AD4BCBA3834954 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; name = "RNExitApp.xcodeproj"; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6F771A218C1E47A293A3130C /* libRNExitApp.a */ = {isa = PBXFileReference; name = "libRNExitApp.a"; path = "libRNExitApp.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,6 +494,10 @@
 				A58DBA034DEC4A04B18F1A46 /* libRNCWebView.a in Frameworks */,
 				33E2FF5212C64B3999B6A8AD /* libRNZipArchive.a in Frameworks */,
 				9741DB6AC9CA45AD8DFC1B15 /* libART.a in Frameworks */,
+				D1E99FD4C6834F288733FD00 /* libRCTQQAPI.a in Frameworks */,
+				4E91A327874846B5A8965570 /* libRNJAnalyticsModule.a in Frameworks */,
+				84EAADFC080947F38DE0AEDC /* libRNBackgroundTimer.a in Frameworks */,
+				3C0ED1D63F3A45EFBAACA82E /* libRNExitApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,6 +706,10 @@
 				4683766041794554B4CEAE53 /* RNCWebView.xcodeproj */,
 				5D414D6AAD5A4857854C0F82 /* RNZipArchive.xcodeproj */,
 				792BB6F152FD4179B85625BE /* ART.xcodeproj */,
+				34A803A43C1947F1AD817474 /* RCTQQAPI.xcodeproj */,
+				7FBEE84B2DB54E32A5692861 /* RCTJAnalyticsModule.xcodeproj */,
+				64D81B570E0144D4A61F12B4 /* RNBackgroundTimer.xcodeproj */,
+				AE96E64491AD4BCBA3834954 /* RNExitApp.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1370,6 +1390,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1387,6 +1411,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1412,6 +1439,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1429,6 +1460,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1465,6 +1499,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1500,6 +1537,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1533,6 +1573,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1550,6 +1594,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1583,6 +1630,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1600,6 +1651,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1632,6 +1686,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1649,6 +1707,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1681,6 +1742,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1698,6 +1763,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 					"$(SRCROOT)\..\node_modules\react-native-zip-archive\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-community\art\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
+					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;

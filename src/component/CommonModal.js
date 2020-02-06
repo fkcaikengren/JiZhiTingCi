@@ -14,6 +14,7 @@ const defaultState = {
     contentState: {
         keyboardSpace: 0,
     },
+    backdropPressToClose: false,
     position: "center",
     heightForListenKeyBoard: 0,
 }
@@ -46,8 +47,14 @@ export default class CommonModal extends React.Component {
     getContentState = () => {
         return this.state.contentState
     }
-    show = ({ renderContent, modalStyle, position = "center", heightForListenKeyBoard = 0 }) => {
-        this.setState({ isOpen: true, renderContent, modalStyle, position, heightForListenKeyBoard });
+    show = ({ renderContent, modalStyle, backdropPressToClose = false, position = "center", heightForListenKeyBoard = 0 }) => {
+        this.setState({
+            isOpen: true,
+            renderContent,
+            modalStyle,
+            backdropPressToClose, position,
+            heightForListenKeyBoard
+        });
     }
 
     hide = () => {
@@ -72,7 +79,7 @@ export default class CommonModal extends React.Component {
             onOpened={() => { this.setState({ isOpen: true, }) }}
             onClosed={() => { this.setState({ isOpen: false, }) }}
             backdrop={true}
-            backdropPressToClose={false}
+            backdropPressToClose={this.state.backdropPressToClose}
             swipeToClose={false}
             position={isListenKeyBoard ? "bottom" : this.state.position}
             animationDuration={1}
