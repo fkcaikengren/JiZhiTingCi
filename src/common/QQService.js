@@ -37,7 +37,7 @@ export default class QQService {
     /**
      * 分享到QQ好友或群
      */
-    shareToQQ = async (params, shareInfo, onFail, onSucceed) => {
+    shareToQQ = async (shareInfo, onFail, onSucceed) => {
         try {
             const result = await QQAPI.shareToQQ(shareInfo)
             console.log(result)
@@ -54,7 +54,7 @@ export default class QQService {
     /**
      * 分享到空间
      */
-    shareToQzone = async (params, shareInfo, onFail, onSucceed) => {
+    shareToQzone = async (shareInfo, onFail, onSucceed) => {
         try {
             const result = await QQAPI.shareToQzone(shareInfo)
             console.log(result)

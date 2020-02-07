@@ -20,9 +20,9 @@ import QuestionPage from './QuestionPage';
 import * as Constant from './common/constant'
 import { TYPE_ERR_CODE_ARTICLE } from '../vocabulary/common/constant';
 import ErrorTemplate from '../../component/ErrorTemplate';
+import SharePanel from '../../component/SharePanel';
 
 const questionSize = 10
-
 
 /**
  *Created by Jacy on 19/08/09.
@@ -192,7 +192,25 @@ class ArticleTabPage extends React.Component {
         }
     }
 
-
+    // 分享 #todo:
+    _renderSharePanel = ({ commonModal }) => {
+        const articleInfo = this.props.navigation.getParam('articleInfo')
+        return () => {
+            return <SharePanel
+                containerStyle={{ flex: 1 }}
+                share={() => {
+                    const shareInfo = {
+                        type: 'news',
+                        title: articleInfo.name,
+                        description: articleInfo.note,
+                        webpageUrl: 'https://www.aitingci.com',
+                        imageUrl: this.props.plan.bookCoverUrl
+                    }
+                    return shareInfo
+                }}
+            />
+        }
+    }
 
 
     _renderContent = () => {
@@ -267,7 +285,18 @@ class ArticleTabPage extends React.Component {
                                         <Text style={styles.menuOptionText}>主题字号</Text>
                                     </MenuOption>
 
-                                    <MenuOption onSelect={() => alert(`分享`)} style={styles.menuOptionView}>
+                                    <MenuOption style={styles.menuOptionView} onSelect={() => {
+                                        // 打开分享面板
+                                        this.props.app.commonModal.show({
+                                            renderContent: this._renderSharePanel({ commonModal: this.props.app.commonModal }),
+                                            modalStyle: {
+                                                height: 150,
+                                                backgroundColor: "#FFF",
+                                            },
+                                            backdropPressToClose: true,
+                                            position: 'bottom'
+                                        })
+                                    }}>
                                         <Text style={styles.menuOptionText}>分享</Text>
                                     </MenuOption>
 
@@ -344,6 +373,7 @@ const mapStateToProps = state => ({
     app: state.app,
     mine: state.mine,
     article: state.article,
+    plan: state.plan.plan
 });
 
 const mapDispatchToProps = {

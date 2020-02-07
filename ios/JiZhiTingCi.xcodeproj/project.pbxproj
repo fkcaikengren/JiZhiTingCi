@@ -82,6 +82,7 @@
 		4E91A327874846B5A8965570 /* libRNJAnalyticsModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2BE9CE1EC534B8F97DD6940 /* libRNJAnalyticsModule.a */; };
 		84EAADFC080947F38DE0AEDC /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 283C4F2DEB4C41DA861D1DE0 /* libRNBackgroundTimer.a */; };
 		3C0ED1D63F3A45EFBAACA82E /* libRNExitApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F771A218C1E47A293A3130C /* libRNExitApp.a */; };
+		D85F4F99439445BFAF2B9719 /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A89BADC829A94ACAB81834DF /* libRNViewShot.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -450,6 +451,8 @@
 		283C4F2DEB4C41DA861D1DE0 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; name = "libRNBackgroundTimer.a"; path = "libRNBackgroundTimer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		AE96E64491AD4BCBA3834954 /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; name = "RNExitApp.xcodeproj"; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6F771A218C1E47A293A3130C /* libRNExitApp.a */ = {isa = PBXFileReference; name = "libRNExitApp.a"; path = "libRNExitApp.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		7AE5DEF26B2F4C1D8715BD79 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; name = "RNViewShot.xcodeproj"; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		A89BADC829A94ACAB81834DF /* libRNViewShot.a */ = {isa = PBXFileReference; name = "libRNViewShot.a"; path = "libRNViewShot.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -498,6 +501,7 @@
 				4E91A327874846B5A8965570 /* libRNJAnalyticsModule.a in Frameworks */,
 				84EAADFC080947F38DE0AEDC /* libRNBackgroundTimer.a in Frameworks */,
 				3C0ED1D63F3A45EFBAACA82E /* libRNExitApp.a in Frameworks */,
+				D85F4F99439445BFAF2B9719 /* libRNViewShot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +714,7 @@
 				7FBEE84B2DB54E32A5692861 /* RCTJAnalyticsModule.xcodeproj */,
 				64D81B570E0144D4A61F12B4 /* RNBackgroundTimer.xcodeproj */,
 				AE96E64491AD4BCBA3834954 /* RNExitApp.xcodeproj */,
+				7AE5DEF26B2F4C1D8715BD79 /* RNViewShot.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1394,6 +1399,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1414,6 +1420,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Debug;
@@ -1443,6 +1450,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1463,6 +1471,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Release;
@@ -1502,6 +1511,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Debug;
@@ -1540,6 +1550,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Release;
@@ -1577,6 +1588,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1597,6 +1609,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Debug;
@@ -1634,6 +1647,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1654,6 +1668,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Release;
@@ -1690,6 +1705,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1710,6 +1726,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Debug;
@@ -1746,6 +1763,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1766,6 +1784,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-qq\ios\RCTQQAPI/**",
 					"$(SRCROOT)\..\node_modules\janalytics-react-native\ios\RCTJAnalyticsModule",
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
+					"$(SRCROOT)\..\node_modules\react-native-view-shot\ios",
 				);
 			};
 			name = Release;

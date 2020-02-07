@@ -109,7 +109,7 @@ export default class WXService {
      * @param onFail 失败回调
      * @param onSucceed 成功回调
      */
-    shareToTimeline = async (params, shareInfo, onFail, onSucceed) => {
+    shareToTimeline = async (shareInfo, onFail, onSucceed) => {
         //判断微信是否安装
         const isInstalled = await Wechat.isWXAppInstalled()
         if (isInstalled) {
@@ -144,7 +144,7 @@ export default class WXService {
      * @param onFail 失败回调
      * @param onSucceed 成功回调
      */
-    shareToSession = async (params, shareInfo, onFail, onSucceed) => {
+    shareToSession = async (shareInfo, onFail, onSucceed) => {
         console.log(shareInfo)
         //判断微信是否安装
         const isInstalled = await Wechat.isWXAppInstalled()

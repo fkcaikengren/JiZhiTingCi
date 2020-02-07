@@ -483,10 +483,17 @@ buildToolsVersion "28.0.3"
 
 ### 虚化背景@react-native-community/blur
 
+
+
 ```js
 yarn add @react-native-community/blur
 react-native link @react-native-community/blur
-//修改：
+
+```
+
+issue: 【fixed】//修改Module.java
+
+```
 import androidx.renderscript.Allocation;
 import androidx.renderscript.Element;
 import androidx.renderscript.RenderScript;
@@ -517,6 +524,25 @@ yarn add react-native-background-timer
 yarn add react-native-exit-app
 react-native link react-native-exit-app
 ```
+
+
+
+### 拖拽排序列表react-native-sortable-listview 
+
+```
+yarn add react-native-sortable-listview
+```
+
+
+
+### View生成图片react-native-view-shot
+
+```
+yarn add react-native-view-shot
+react-native link react-native-view-shot
+```
+
+
 
 ### 用户反馈react-native-feedback
 
@@ -817,9 +843,7 @@ new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
 
 解决：删除两个参数：SHUTDOWN_TOAST, SHUTDOWN_LOG
 
-
-
-issue2
+issue2: 【fixed】
 
 ```js
 找不到：JAnalyticsInterface
@@ -839,6 +863,8 @@ jpush-react-native
 yarn add @0x5e/react-native-alipay
 ```
 
+issue: 【fixed】
+
 解决冲突utdid类冲突，用alipaySdk-15.6.8-20191021122455-noUtdid.arr替换android/libs下的arr文件
 
 需要修改：@0x5e/react-native-alipay/android/build.gradle：
@@ -856,7 +882,7 @@ compile(name: 'alipaySdk-15.6.8-20191021122455-noUtdid', ext: 'aar')
 yarn add react-native-wechat
 ```
 
-迁移至androidx，需修改 WeChatModule ：
+issue: 【fixed】 迁移至androidx，需修改 WeChatModule ：
 
 ```js
 //import android.support.annotation.Nullable;
@@ -864,6 +890,41 @@ import androidx.annotation.Nullable;
 ```
 
 
+
+### 集成QQ登录、分享
+
+```
+yarn add react-native-qq
+react-native link react-native-qq
+```
+
+issue: 【fixed】**该库在分享纯图片时需要修改**
+
+参考： https://www.jianshu.com/p/a493f6f92b34 
+
+//修改QQModule.java   把下面的：
+
+```js
+if (data.hasKey(RCTQQShareImageUrl)){
+	bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,data.getString(RCTQQShareImageUrl));
+}
+```
+
+修改为：
+
+```js
+ if (!type.equals(RCTQQShareTypeImage)){
+   if (data.hasKey(RCTQQShareImageUrl)){
+ 	bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,data.getString(RCTQQShareImageUrl));
+   }
+ }
+```
+
+issue: App如果没有文件读写权限则无法唤起QQ分享
+
+```
+
+```
 
 
 

@@ -464,9 +464,15 @@ jpush-react-native
 
 -----------------服务端---------------------------------
 1. Guide改为Message, 修改接口
+	App: 没有messages则获取全部。
+		如果有：获取新增的=> /Message/getNewMessages()
+		
+	带有：message字段的通知=>跳转到Message页面
 
 2.实现文字+图片=>海报
-	轮播；文章
+	andoird的读取文件权限
+	【bug】QQ分享图片压缩的很模糊
+	
 
 3. QQ登录 绑定 【待测试】
 
@@ -475,6 +481,10 @@ jpush-react-native
 	支付成功的回调，校验结果
 
 
+
+5. 单词列表=>播放
+
+6. 生词本=>播放
 
 
 

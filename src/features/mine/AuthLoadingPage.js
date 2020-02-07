@@ -9,7 +9,7 @@ import createHttp from '../../common/http';
 
 import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 import FileService from '../../common/FileService';
-import { USER_DIR } from '../../common/constant';
+import { USER_DIR, SHARE_DIR } from '../../common/constant';
 import * as MineAction from '../mine/redux/action/mineAction';
 import { store } from '../../redux/store';
 import { logoutHandle } from './common/userHandler';
@@ -18,7 +18,7 @@ import VocaTaskService from '../vocabulary/service/VocaTaskService';
 import ArticleDao from '../reading/service/ArticleDao';
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
-
+const ShareQRUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/share/share_qr.png'
 
 class AuthLoadingPage extends Component {
 
@@ -81,6 +81,14 @@ class AuthLoadingPage extends Component {
                     artDao.saveArticles(articles)
                 }
             }
+            //保存分享的二维码
+            const shareDir = DocumentDir + SHARE_DIR
+            const isExist = fs.exists(shareDir)
+            if (!isExist) {
+                await fs.mkdir(shareDir)      //创建目录
+            }
+            res = await FileService.getInstance().fetch(ShareQRUrl, shareDir + 'share_qr.png')
+            console.log(res.path())
             this.props.app.loader.close()
         }
 

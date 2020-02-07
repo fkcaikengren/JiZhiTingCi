@@ -13,6 +13,7 @@ import com.reactlibrary.AlipayPackage;
 import com.theweflex.react.WeChatPackage; 
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import com.github.wumke.RNExitApp.RNExitAppPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import cn.reactnative.modules.qq.QQPackage;
@@ -62,6 +63,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
             new NotificationPackage(),
             new MainReactPackage(),
+            new RNViewShotPackage(),
             new RNExitAppPackage(),
             new BackgroundTimerPackage(),
             new QQPackage(),

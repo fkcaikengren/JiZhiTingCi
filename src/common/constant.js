@@ -7,6 +7,7 @@ export const FILE_ROOT_DIR = '/'
 export const VOCABULARY_DIR = 'vocabulary/'
 export const READING_DIR = 'reading/'
 export const USER_DIR = 'user/'
+export const SHARE_DIR = 'share/'
 
 
 

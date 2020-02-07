@@ -27,28 +27,25 @@ export default class SharePanel extends Component {
     //     webpageUrl: 'https://www.aitingci.com', //网页链接
     //     imageUrl: 'https://..'                   //图片地址
     // }
-    onShareToTimeline = () => {
-        const { params, shareInfo } = this.props
-        this.wxService.shareToTimeline(params, shareInfo, () => {
+    onShareToTimeline = async () => {
+        const shareInfo = await this.props.share()
+        if (shareInfo.type === 'imageUrl') {
+            shareInfo.imageUrl = 'file://' + shareInfo.imageUrl
+        }
+
+        this.wxService.shareToTimeline(shareInfo, () => {
             store.getState().app.toast.show('分享失败！', 2000)
         }, () => {
             store.getState().app.toast.show('分享成功', 2000)
         })
     }
 
-    onShareToSession = () => {
-        const { params, shareInfo } = this.props
-        this.wxService.shareToSession(params, shareInfo, () => {
-            store.getState().app.toast.show('分享失败！', 2000)
-        }, () => {
-            store.getState().app.toast.show('分享成功', 2000)
-        })
-    }
-
-    onShareToQQ = () => {
-
-        const { params, shareInfo } = this.props
-        this.qqService.shareToQQ(params, shareInfo, () => {
+    onShareToSession = async () => {
+        const shareInfo = await this.props.share()
+        if (shareInfo.type === 'imageUrl') {
+            shareInfo.imageUrl = 'file://' + shareInfo.imageUrl
+        }
+        this.wxService.shareToSession(shareInfo, () => {
             store.getState().app.toast.show('分享失败！', 2000)
         }, () => {
             store.getState().app.toast.show('分享成功', 2000)
@@ -56,9 +53,27 @@ export default class SharePanel extends Component {
     }
 
 
-    onShareToQzone = () => {
-        const { params, shareInfo } = this.props
-        this.qqService.shareToQzone(params, shareInfo, () => {
+
+    onShareToQzone = async () => {
+        const shareInfo = await this.props.share()
+        if (shareInfo.type === 'imageUrl') {
+            shareInfo.type = 'image'
+        }
+        console.log(shareInfo)
+        this.qqService.shareToQzone(shareInfo, () => {
+            store.getState().app.toast.show('分享失败！', 2000)
+        }, () => {
+            store.getState().app.toast.show('分享成功', 2000)
+        })
+    }
+
+    onShareToQQ = async () => {
+        const shareInfo = await this.props.share()
+        if (shareInfo.type === 'imageUrl') {
+            shareInfo.type = 'image'
+        }
+        console.log(shareInfo)
+        this.qqService.shareToQQ(shareInfo, () => {
             store.getState().app.toast.show('分享失败！', 2000)
         }, () => {
             store.getState().app.toast.show('分享成功', 2000)
@@ -99,7 +114,6 @@ export default class SharePanel extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -117,8 +131,7 @@ const styles = StyleSheet.create({
 
 SharePanel.propTypes = {
     containerStyle: PropTypes.object,
-    params: PropTypes.object.isRequired,
-    shareInfo: PropTypes.object.isRequired
+    share: PropTypes.func.isRequired
 };
 
 SharePanel.defaultProps = {

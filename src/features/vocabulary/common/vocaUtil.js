@@ -350,14 +350,14 @@ export default class VocaUtil {
         let copyTask = {
             taskOrder: Constant.VIRTUAL_TASK_ORDER,
             curIndex: 0,
-            words: [],
+            taskWords: [],
             wordCount: words.length,
             listenTimes: 0,
             testTimes: 0
         }
         if (typeof words[0] === 'object') {
             for (let i in words) {
-                copyTask.words.push({
+                copyTask.taskWords.push({
                     word: words[i].word,
                     passed: false,
                     wrongNum: words[i].wrongNum,
@@ -366,7 +366,7 @@ export default class VocaUtil {
             }
         } else if (typeof words[0] === 'string') {
             for (let i in words) {
-                copyTask.words.push({
+                copyTask.taskWords.push({
                     word: words[i],
                     passed: false,
                     wrongNum: 0,

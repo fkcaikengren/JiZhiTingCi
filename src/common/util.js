@@ -1,5 +1,6 @@
 import * as CConstant from "./constant";
 import { NavigationActions, StackActions } from "react-navigation";
+import { Platform, PermissionsAndroid } from 'react-native'
 import createHttp from "./http";
 import { store } from '../redux/store'
 
@@ -103,5 +104,21 @@ export default class _util {
 
     static addZero(m) {
         return m < 10 ? '0' + m : m;
+    }
+
+
+    static async checkPermission() {
+        if (Platform.OS !== 'android') {
+            return Promise.resolve(true);
+        }
+
+        const rationale = {
+            'title': '相册权限',
+            'message': '需要您的相册权限来支持分享图片'
+        };
+        console.log('要相册权限------')
+        const result = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, rationale)
+        console.log(result)
+        return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
     }
 }

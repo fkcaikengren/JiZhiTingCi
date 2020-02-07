@@ -49,6 +49,7 @@ class VocaPlanPage extends React.Component {
         const {
             bookId,
             bookName,
+            bookCoverUrl,
             taskCount,
             taskWordCount,
             reviewWordCount,
@@ -80,7 +81,9 @@ class VocaPlanPage extends React.Component {
                                 cardMaxElevation={5}
                                 style={{ marginBottom: 20 }}
                             >
-                                <Image source={{ uri: "https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/liuji.jpg" }} style={styles.img} />
+                                {bookCoverUrl &&
+                                    <Image source={{ uri: bookCoverUrl }} style={styles.img} />
+                                }
                             </CardView>
                             <Text style={gstyles.lg_black_bold}>{bookName}</Text>
                             <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount}词，复习{reviewWordCount}词</Text>

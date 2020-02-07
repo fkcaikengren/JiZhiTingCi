@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, Image,
-    findNodeHandle
+    Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, Image, findNodeHandle
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { connect } from 'react-redux';
@@ -31,7 +30,7 @@ import _util from "../../common/util";
 import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
 import { store } from '../../redux/store'
 import LookWordBoard from './component/LookWordBoard';
-import SharePanel from '../../component/SharePanel';
+import ShareTemplate from '../../component/ShareTemplate';
 
 
 
@@ -671,57 +670,32 @@ class VocaPlayPage extends React.Component {
     }
 
 
-    _renderSharePanel = ({ commonModal }) => {
-        return () => {
-            const {
-                hide
-            } = commonModal
-            const params = {
 
-            }
-            // 网络图片过大导致下载缓慢，分享失败。（图片限制在1M内）
-            const shareInfo = {
-                type: 'news', //text,news,imageUrl,imageFile
-                title: '用爱听词学习单词',
-                description: '描述:播放单词界面分享',
-                webpageUrl: 'https://www.aitingci.com/', //news必带字段
-                imageUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/h5/1/screen_7.jpg'
-            }
-            return <SharePanel
-                params={params}
-                shareInfo={shareInfo}
-            />
+    _renderShareContentView = () => {
+        let { showWordInfos } = this.props.vocaPlay;
+        if (this.isStudyMode) {
+            showWordInfos = this.state.showWordInfos
         }
+        return <View style={[gstyles.c_start, { width: '100%' }]}>
+            {
+                showWordInfos.map((item, i) => {
+                    if (i > 4) {
+                        return null
+                    } else {
+                        textStyle = { fontSize: 13, color: (i === 2) ? gstyles.mainColor : '#FFF' }
+                        return <View style={[gstyles.c_center, { width: '70%' }]}>
+                            <Text numberOfLines={1} style={textStyle}>{item.word}</Text>
+                            <Text numberOfLines={1} style={[textStyle, { marginBottom: 3 }]}>{item.translation}</Text>
+                        </View>
+                    }
+                })
+            }
+        </View>
     }
 
-    _share = () => {
-        //    [0, 1, 2, 3, 4, 5, 6] 表示 [QQ,微博，微信，朋友圈，空间，邮件，短信]
-        // const imgUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/logo.png'
-        // const url = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/voca/resources/h5/1/index.html'
-        // ShareUtil.shareboard('我在爱听词听单词，一起吧！', imgUrl, url, '爱听词', [2, 3,], (code, message) => {
-        //     console.log("result:" + code + message);
-        // });
-
-        // 打开分享面板
-        const {
-            show,
-            setContentState
-        } = this.props.app.commonModal
-        show({
-            renderContent: this._renderSharePanel({ commonModal: this.props.app.commonModal }),
-            modalStyle: {
-                height: 200,
-                backgroundColor: "#EFEFEF",
-            },
-            backdropPressToClose: true,
-            position: 'bottom'
-        })
-
-    }
 
 
     render() {
-
         let { task, themeId, themes, showWordInfos, bgPath } = this.props.vocaPlay;
         if (this.isStudyMode) {
             task = this.state.task
@@ -763,7 +737,14 @@ class VocaPlayPage extends React.Component {
                     centerComponent={{ text: task.taskOrder ? name : '未选择', style: gstyles.lg_white_bold }}
                     rightComponent={this.isStudyMode ?
                         <Text style={{ color: '#FFF', fontSize: 16 }}>{`${this.finishedTimes + 1}/${this.totalTimes}`}</Text> :
-                        <AliIcon name='fenxiang' size={26} color='#FFF' onPress={this._share} />}
+                        <AliIcon name='fenxiang' size={26} color='#FFF' onPress={() => {
+                            // 打开分享面板
+                            ShareTemplate.show({
+                                commonModal: this.props.app.commonModal,
+                                bgSource: imgSource,
+                                renderContentView: this._renderShareContentView()
+                            })
+                        }} />}
                     containerStyle={{
                         backgroundColor: '#FCFCFC00',
                         borderBottomColor: '#FCFCFC00',
