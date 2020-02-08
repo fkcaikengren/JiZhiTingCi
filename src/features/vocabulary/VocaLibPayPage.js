@@ -13,25 +13,13 @@ import PayTemplate from "../../component/PayTemplate";
 class VocaLibPayPage extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-        }
     }
 
 
-
-
     render() {
-        // const { book } = this.props
-        const book = {
-            price: 6,
-            createTime: 1579438921191,
-            _id: '5e2453497d0fab186cd21b07',
-            name: '高中核心词组(乱序版)',
-            desc: '高中核心词组(乱序版)',
-            count: 858,
-            coverUrl: 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/gaozhong.jpg',
-            type: 13
-        }
+
+        const book = this.props.navigation.getParam('book')
+        const loadBooks = this.props.navigation.getParam('loadBooks')
         return (
             <View style={{ flex: 1 }}>
                 <Header
@@ -65,16 +53,18 @@ class VocaLibPayPage extends Component {
                         >
                             <Image source={{ uri: book.coverUrl }} style={libStyles.img} />
                         </CardView>
+
                         <View style={[libStyles.bookContent, gstyles.c_between_left]}>
-                            <View >
+                            <View style={[{ height: '70%' }, gstyles.c_start_left]}>
                                 <Text style={libStyles.bookname}>{book.name}</Text>
-                                <Text style={libStyles.note}>{book.desc}</Text>
+                                <Text numberOfLine={2} style={libStyles.note}>{book.desc}</Text>
                                 {book.price > 0 &&
                                     <Text style={libStyles.price}>{`￥${book.price.toFixed(2)}`}</Text>
                                 }
                             </View>
                             <Text style={libStyles.wordCount}>共<Text style={[libStyles.wordCount, { color: '#F29F3F' }]}>{book.count}</Text>个单词</Text>
                         </View>
+
                     </View>
                     {/* 特点一 */}
                     <View style={[gstyles.c_start_left, styles.featureView]}>
@@ -123,7 +113,6 @@ class VocaLibPayPage extends Component {
                             <Text style={styles.boxFont}>
                                 词组在历年高考中占比10%~20%,在近10年的真题中，xxxxxxxxxxxxxxxxxxxxxxxxx
                                 </Text>
-
                         </View>
                     </View>
                     <View style={{ marginBottom: 40 }}></View>
@@ -138,7 +127,18 @@ class VocaLibPayPage extends Component {
                         buttonStyle={styles.payBtn}
                         onPress={() => {
                             PayTemplate.show({
-                                commonModal: this.props.app.commonModal
+                                commonModal: this.props.app.commonModal,
+                                payInfo: {
+                                    productName: book.name,
+                                    totalAmount: book.price,
+                                    body: book.desc,
+                                    productCode: book._id
+                                },
+                                onSucceed: () => {
+                                    //支付成功后重新加载词汇书
+                                    this.navigation.goBack()
+                                    loadBooks()
+                                }
                             })
                         }}
                     />

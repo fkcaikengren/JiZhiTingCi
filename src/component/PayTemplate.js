@@ -16,42 +16,44 @@ import { store } from '../redux/store'
  */
 export default class PayTemplate {
 
-    static _renderPay = ({ commonModal }) => {
+    // payInfo参数说明
+    // {
+    //     productName: "产品名称",
+    //     totalAmount: 6, //产品价格（元）
+    //     body: "产品描述",
+    //     productCode: "abc123" //产品编码（资源id）
+    // }
+    static _renderPay = ({ commonModal, payInfo, onFail, onSucceed }) => {
+        console.log(payInfo)
         return () => {
             const {
                 hide
             } = commonModal
 
             return <View style={[gstyles.c_end, { flex: 1, width: "100%", height: '100%', backgroundColor: "#FFF" }]}>
-                <View style={{ position: "absolute", top: 5, right: 5 }}>
-                    <AliIcon name='guanbi' size={26} color='#555' onPress={() => {
-                        hide()
-                    }} />
-                </View>
+
                 <View style={gstyles.c_center}>
                     <Text style={gstyles.md_black}>爱听词</Text>
-                    <Text style={{ fontSize: 30, color: gstyles.emColor, marginVertical: 20 }}>6.00元</Text>
+                    <Text style={{ fontSize: 30, color: gstyles.emColor, marginVertical: 20 }}>{payInfo.totalAmount.toFixed(2)}元</Text>
                 </View>
                 <View
                     style={[{ width: "90%", height: 60, borderTopWidth: 1, borderColor: "#EEE" }, gstyles.r_between]}
                     onStartShouldSetResponder={() => true}
                     onResponderStart={async (e) => {
-                        // 从服务端获取支付订单信息
-                        const params = {
-                            productName: "四级词组(乱序)",
-                            totalAmount: 0.01,
-                            body: "Mac pro 12",
-                            productCode: "VOCABOOK_123456"
-                        }
                         // 微信支付
-                        const res = await Http.post('/vocaBook/getOrderInfoByWX', params)
+                        const res = await Http.post('/vocaBook/getOrderInfoByWX', payInfo)
                         if (res.status === 200) {
                             await WXService.getInstance().payByWX(res.data, () => {
                                 hide()
                                 store.getState().app.toast.show('支付失败！请稍后重试', 2000)
+                                if (onFail) {
+                                    onFail()
+                                }
                             }, () => {
                                 hide()
-                                // 获取单词数据，进入计划页面
+                                if (onSucceed) {
+                                    onSucceed()
+                                }
                             })
 
                         }
@@ -68,19 +70,20 @@ export default class PayTemplate {
                     onStartShouldSetResponder={() => true}
                     onResponderStart={async (e) => {
                         // 获取订单信息
-                        const res = await Http.post('/vocaBook/getOrderInfoByAli', {
-                            productName: "四级词组(乱序)",
-                            totalAmount: 0.01,
-                            body: "vocaBook 1",
-                            productCode: "VOCABOOK_123456"
-                        })
+                        const res = await Http.post('/vocaBook/getOrderInfoByAli', payInfo)
                         // 支付宝支付
                         if (res.status === 200) {
                             await AliPayService.getInstance().payByAli(res.data, () => {
                                 hide()
                                 store.getState().app.toast.show('支付失败！请稍后重试', 2000)
+                                if (onFail) {
+                                    onFail()
+                                }
                             }, () => {
                                 hide()
+                                if (onSucceed) {
+                                    onSucceed()
+                                }
                             })
                         }
                     }}
@@ -99,19 +102,21 @@ export default class PayTemplate {
 
 
     static show({
-        commonModal,
+        commonModal, payInfo
     }) {
         const {
             show,
         } = commonModal
         show({
-            renderContent: this._renderPay({ commonModal }),
+            renderContent: this._renderPay({ commonModal, payInfo }),
             modalStyle: {
                 width: '100%',
                 height: 240,
                 backgroundColor: "#FFF",
             },
+            backdropPressToClose: true,
             position: 'bottom'
+
         })
     }
 }

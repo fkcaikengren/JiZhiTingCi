@@ -45,10 +45,16 @@ const styles = StyleSheet.create({
         color: '#444'
     },
 
-    emFont: {
-        fontSize: 16,
-        color: gstyles.emColor,
+    payedBadge: {
+        position: 'absolute',
+        bottom: 5,
+        right: 0,
+        padding: 2,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        backgroundColor: 'red'
     }
+
 });
 
 export default styles

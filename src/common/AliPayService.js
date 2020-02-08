@@ -23,11 +23,10 @@ export default class AliPayService {
      * @param onSucceed
      */
     payByAli = async (order, onFail, onSucceed) => {
+
         try {
             const response = await Alipay.pay(order);
-
             const { resultStatus, result } = response;
-
             if (parseInt(resultStatus) === 9000) {
                 const resultObj = JSON.parse(result);
                 let { code, msg } = resultObj.alipay_trade_app_pay_response
