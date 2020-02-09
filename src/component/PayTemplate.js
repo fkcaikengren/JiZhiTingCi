@@ -102,13 +102,13 @@ export default class PayTemplate {
 
 
     static show({
-        commonModal, payInfo
+        commonModal, payInfo, onFail, onSucceed
     }) {
         const {
             show,
         } = commonModal
         show({
-            renderContent: this._renderPay({ commonModal, payInfo }),
+            renderContent: this._renderPay({ commonModal, payInfo, onFail, onSucceed }),
             modalStyle: {
                 width: '100%',
                 height: 240,

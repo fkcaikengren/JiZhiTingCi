@@ -51,7 +51,7 @@ class MessagePage extends React.Component {
 
     _init = async () => {
         //没有数据，请求数据 #todo: 修改接口，每次请求带上第一个的时间戳
-        const res = await Http.get("/guide/list")
+        const res = await Http.get("/message/list")
         if (res.status === 200) {
             this.props.addMessages({
                 messages: res.data

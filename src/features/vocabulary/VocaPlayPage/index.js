@@ -1,36 +1,33 @@
 import React, { Component } from 'react';
 import {
-    Platform, StatusBar, View, Text, FlatList, TouchableOpacity, Easing, Image, findNodeHandle
+    Platform, StatusBar, View, Text, TouchableOpacity, Image, findNodeHandle
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { connect } from 'react-redux';
-import ModalBox from 'react-native-modalbox';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types'
 import Modal from 'react-native-modalbox';
 import { BlurView } from "@react-native-community/blur";
 import BackgroundTimer from 'react-native-background-timer'
 
-import VocaCard from './component/VocaCard'
-import SwipeableFlatList from '../../component/SwipeableFlatList'
-import * as Constant from './common/constant'
-import * as HomeAction from './redux/action/homeAction'
-import * as VocaPlayAction from './redux/action/vocaPlayAction';
-import AliIcon from '../../component/AliIcon';
-import styles from './VocaPlayStyle'
-import PlayController from './component/PlayController';
-import StudyPlayController from './component/StudyPlayController'
-import VocaUtil from './common/vocaUtil'
-import gstyles from '../../style'
-import VocaTaskDao from './service/VocaTaskDao';
-import VocaDao from './service/VocaDao';
-import VocaPlayService from './service/VocaPlayService'
-import NotificationManage from '../../modules/NotificationManage'
-import _util from "../../common/util";
-import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../common/constant';
-import { store } from '../../redux/store'
-import LookWordBoard from './component/LookWordBoard';
-import ShareTemplate from '../../component/ShareTemplate';
+import VocaCard from '../component/VocaCard'
+import SwipeableFlatList from '../../../component/SwipeableFlatList'
+import * as Constant from '../common/constant'
+import * as HomeAction from '../redux/action/homeAction'
+import * as VocaPlayAction from '../redux/action/vocaPlayAction';
+import AliIcon from '../../../component/AliIcon';
+import styles from './style'
+import PlayController from './PlayController';
+import StudyPlayController from './StudyPlayController'
+import VocaUtil from '../common/vocaUtil'
+import gstyles from '../../../style'
+import VocaDao from '../service/VocaDao';
+import VocaPlayService from '../service/VocaPlayService'
+import NotificationManage from '../../../modules/NotificationManage'
+import _util from "../../../common/util";
+import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../../common/constant';
+import { store } from '../../../redux/store'
+import LookWordBoard from '../component/LookWordBoard';
+import ShareTemplate from '../../../component/ShareTemplate';
 
 
 
@@ -54,7 +51,7 @@ class VocaPlayPage extends React.Component {
 
     constructor(props) {
         super(props);
-        this.taskDao = VocaTaskDao.getInstance()
+
         this.vocaDao = VocaDao.getInstance()
 
         //当前模式
@@ -479,64 +476,8 @@ class VocaPlayPage extends React.Component {
         }
     }
 
-    // 渲染任务列表
-    _renderTaskItem = ({ item, index }) => {
-        const { autoPlayTimer, themes } = this.props.vocaPlay
-        const { loadTask, changeNormalType } = this.props
-        let name = VocaUtil.genTaskName(item.taskOrder)
-        const listenTimes = item.listenTimes
-        const testTimes = item.testTimes
-        const label = item.status === Constant.STATUS_200 ? '掌握' : '学习'
 
-        let dotColor = '#1890FFEE'
-        if (item.disablePlay) {
-            dotColor = '#F2553FEE'
-        }
-        // 播放新的任务
-        return <TouchableOpacity onPress={() => {
-            //判断VocaTask是否处于今日任务中 #todo:
-            if (item.disablePlay) {
-                this.props.app.toast.show("该列表正在学习中,暂时无法播放", 1000)
-                return //结束
-            }
-
-            if (autoPlayTimer) {
-                BackgroundTimer.clearTimeout(autoPlayTimer);
-                this._changePlayTimer(0);
-            }
-            //数据库加载任务
-            const task = VocaUtil.copyTaskDeep(this.taskDao.getTaskByOrder(item.taskOrder), true)
-            const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords)
-            changeNormalType(Constant.BY_REAL_TASK)
-            this.disablePass = false
-            loadTask(task, showWordInfos)
-            //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
-            this.vocaPlayService.autoplay(0)
-            // NotificationManage.play((e)=>{
-            //     console.log(e)
-            // },()=>null);
-            //随机切换主题
-            this.props.changeTheme(VocaUtil.randomNum(0, themes.length - 1))
-        }}>
-            <View style={[styles.taskItem, gstyles.r_between]}>
-                <View style={[{ flex: 1, height: '100%' }, gstyles.r_start]}>
-                    <View style={[gstyles.c_center, { marginRight: 10 }]}>
-                        <Text style={gstyles.serialText}>{index < 9 ? '0' + (index + 1) : (index + 1)}</Text>
-                        <View style={[styles.WrongAvgDot, { backgroundColor: dotColor }]} />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={gstyles.lg_black}>{name}</Text>
-                        <View style={[gstyles.r_start]}>
-                            <Text style={gstyles.labelText}>{label}</Text>
-                            <Text style={[gstyles.noteText]}>{`共${item.wordCount}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>
-                        </View>
-                    </View>
-                </View>
-                <FontAwesome name="play-circle" size={24} color="#999" style={{ marginRight: 10 }} />
-            </View>
-        </TouchableOpacity>
-    }
-    // 关闭任务列表
+    // 关闭任务列表 #todo:显示隐藏
     _closeTaskListModal = () => {
         this.setState({ isTasksModalOpened: false })
     }
@@ -544,61 +485,7 @@ class VocaPlayPage extends React.Component {
     _openTaskListModal = () => {
         this.setState({ isTasksModalOpened: true })
     }
-    // 创建任务列表
-    _createTaskListModal = () => {
-        // 获取任务列表数据
-        const { isTasksModalOpened } = this.state
-        const data = this.taskDao.getAllTasks().map((task, i) => {
-            let disablePlay = false
-            if (VocaUtil.isLearningInTodayTasks(task.taskOrder)) {
-                disablePlay = true
-            }
-            return {
-                disablePlay,
-                taskOrder: task.taskOrder,
-                status: task.status,
-                listenTimes: task.listenTimes,
-                testTimes: task.testTimes,
-                wordCount: task.wordCount
-            }
-        })
-        return <ModalBox style={[styles.tasksModal]}
-            isOpen={isTasksModalOpened}
-            onClosed={this._closeTaskListModal}
-            onOpened={this._openTaskListModal}
-            backdrop={true}
-            backdropPressToClose={true}
-            swipeToClose={false}
-            position={"bottom"}
-            easing={Easing.elastic(0.2)}
-            ref={ref => {
-                this.taskListRef = ref
-            }}>
-            <View style={[gstyles.c_start, { width: '100%' }]}>
-                <View style={[styles.modalHeader, gstyles.r_center]}>
-                    <Text style={gstyles.lg_black}>{this.props.plan.plan.bookName}</Text>
-                </View>
-                <View style={{ height: 40 }}>
-                </View>
-                {data.length > 0 &&
-                    <FlatList
-                        style={{ width: '100%' }}
-                        data={data}
-                        renderItem={this._renderTaskItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        ListFooterComponent={<View style={[{ width: '100%', height: 50, }, gstyles.r_center]}>
-                        </View>}
-                    />
-                }
-                {data.length <= 0 &&
-                    <View style={[gstyles.c_center, { marginTop: 80 }]}>
-                        <AliIcon name={'nodata_icon'} size={80} color={gstyles.black} />
-                        <Text style={gstyles.md_black}>你还没有学过的单词列表哦</Text>
-                    </View>
-                }
-            </View>
-        </ModalBox>
-    }
+
 
     _openVocaModal = () => {
         //暂停
@@ -664,8 +551,18 @@ class VocaPlayPage extends React.Component {
                 toggleTran={this._toggleTran}
             />
         } else {
-            return <PlayController {...this.props} autoplay={this.vocaPlayService.autoplay}
-                openTaskListModal={this._openTaskListModal} toastRef={this.props.app.toast} />
+            return <PlayController
+                navigate={this.props.navigation.navigate}
+                autoplay={this.vocaPlayService.autoplay}
+                changePlayTimer={this._changePlayTimer}
+                changeInterval={this._changeInterval}
+                toggleWord={this._toggleWord}
+                toggleTran={this._toggleTran}
+                changeBg={this.props.changeBg}
+                changeNormalType={this.props.changeNormalType}
+                loadTask={this.props.loadTask}
+                changeTheme={this.props.changeTheme}
+            />
         }
     }
 
@@ -709,7 +606,7 @@ class VocaPlayPage extends React.Component {
         const contentHeight = height - STATUSBAR_HEIGHT - 260
 
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
-            require('../../image/play_bg.jpg')
+            require('../../../image/play_bg.jpg')
         return (
             <View style={{ flex: 1, }}>
                 <Image style={[styles.bgImage]}
@@ -788,13 +685,10 @@ class VocaPlayPage extends React.Component {
                     this._renderController()
                 }
                 {
-                    this._createTaskListModal()
-                }
-                {
                     this._createVocaModal()
                 }
                 <LookWordBoard
-                    ref={ref => this.wordBoard = ref}
+                    ref={comp => this.wordBoard = comp}
                     navigation={this.props.navigation}
                 />
             </View>
@@ -822,7 +716,7 @@ const mapDispatchToProps = {
     changeBg: VocaPlayAction.changeBg,
 
     loadTask: VocaPlayAction.loadTask,
-    loadTheme: VocaPlayAction.loadThemes,
+    loadThemes: VocaPlayAction.loadThemes,
     changeTheme: VocaPlayAction.changeTheme,
     updateTask: HomeAction.updateTask,
     syncTask: HomeAction.syncTask,

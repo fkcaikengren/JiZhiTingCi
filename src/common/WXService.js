@@ -81,6 +81,7 @@ export default class WXService {
                     }
                 )
                 if (errCode === 0) {//成功
+                    console.log('WXService 微信支付成功')
                     if (onSucceed) {
                         onSucceed()
                     }

@@ -9,6 +9,9 @@ import * as MineAction from './redux/action/mineAction'
 import gstyles from "../../style";
 import WXService from '../../common/WXService';
 import { logoutHandle } from './common/userHandler';
+import QQService from '../../common/QQService';
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -211,8 +214,22 @@ class AccountPage extends React.Component {
                     <GroupItem
                         title='绑定QQ'
                         rightComponent={<AliIcon name='qq' size={26} color={user.qq ? '#3EC6FB' : gstyles.gray} />}
-                        onPress={() => {
-
+                        onPress={async () => {
+                            if (user.qq) {
+                                this.props.app.confirmModal.show("已绑定QQ，是否换绑？", null, async () => {
+                                    const result = await QQService.getInstance().getAccess()
+                                    this.props.modifyQq({ params: result })
+                                })
+                            } else {
+                                const result = await QQService.getInstance().getAccess()
+                                this.props.modifyQq({
+                                    params: {
+                                        access_token: result.access_token,
+                                        openid: result.openid,
+                                        oauth_consumer_key: result.oauth_consumer_key
+                                    },
+                                })
+                            }
                         }}
                     />
                     <GroupItem
@@ -253,5 +270,6 @@ const mapDispatchToProps = {
     modifySex: MineAction.modifySex,
     modifyAvatar: MineAction.modifyAvatar,
     modifyWechat: MineAction.modifyWechat,
+    modifyQq: MineAction.modifyQq,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage)

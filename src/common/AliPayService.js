@@ -30,7 +30,11 @@ export default class AliPayService {
             if (parseInt(resultStatus) === 9000) {
                 const resultObj = JSON.parse(result);
                 let { code, msg } = resultObj.alipay_trade_app_pay_response
+                console.log('开始支付宝支付......')
+                console.log('code: ' + code)
+                console.log('msg :' + msg)
                 if (parseInt(code) === 10000) {
+                    console.log('AliPayService 支付宝支付成功')
                     if (onSucceed) {
                         onSucceed()
                     }

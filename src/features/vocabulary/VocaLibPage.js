@@ -8,7 +8,7 @@ import * as PlanAction from './redux/action/planAction'
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
 import _util from '../../common/util'
-import PlanSelectTemplate from "../../component/PlanSelectTemplate";
+import PlanSelectTemplate from "./component/PlanSelectTemplate";
 
 
 

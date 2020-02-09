@@ -54,6 +54,7 @@ export const logoutHandle = () => {
     //1.清空Storage 
     Storage.clearMapForKey('notSyncTasks')
     Storage.clearMapForKey('notSyncGroups')
+    Storage.remove({ key: 'groupOrdersString' })
     //2.清空token和user
     store.dispatch({ type: LOGOUT })
     //3.清空realm 

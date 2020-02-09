@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, View, Text, } from 'react-native';
 import { Button } from 'react-native-elements'
 import Picker from '@gregfrench/react-native-wheel-picker'
-import AliIcon from './AliIcon'
-import gstyles from '../style';
-import { LEFT_PLUS_DAYS } from '../features/vocabulary/common/constant';
+import AliIcon from '../../../component/AliIcon'
+import gstyles from '../../../style';
+import { LEFT_PLUS_DAYS } from '../common/constant';
 
 const PickerItem = Picker.Item;
 const planOptions = [{

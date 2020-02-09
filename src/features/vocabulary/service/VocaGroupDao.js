@@ -114,27 +114,22 @@ export default class VocaGroupDao {
     saveVocaGroups = (vocaGroups) => {
         this.realm.write(() => {
             for (let vg of vocaGroups) {
-                if (this.getGroup(vg.groupName)) {
-                    throw new Error('生词本名字重复了')
-                } else {
-                    let group = {
-                        id: vg.id,                          //生词本id ()
-                        groupName: vg.groupName,            //生词本名称
-                        count: vg.count,                     //生词数
-                        createTime: vg.createTime,
-                        isDefault: vg.isDefault,
-                        sections: [],
-                    }
-                    //分组section
-                    const sectionClass = new Section()
-                    for (let newWord of vg.newWords) {
-                        sectionClass.pushWord(newWord.word, newWord.isHidden)
-                    }
-                    group.sections = sectionClass.getSections()
-                    //保存
-                    this.realm.create('VocaGroup', group);
+                let group = {
+                    id: vg.id,                          //生词本id ()
+                    groupName: vg.groupName,            //生词本名称
+                    count: vg.count,                     //生词数
+                    createTime: vg.createTime,
+                    isDefault: vg.isDefault,
+                    sections: [],
                 }
-
+                //分组section
+                const sectionClass = new Section()
+                for (let newWord of vg.newWords) {
+                    sectionClass.pushWord(newWord.word, newWord.isHidden)
+                }
+                group.sections = sectionClass.getSections()
+                //保存
+                this.realm.create('VocaGroup', group);
             }
         })
 
@@ -146,24 +141,18 @@ export default class VocaGroupDao {
      * @returns {boolean} 如果重名,添加失败，则返回false；否则返回true
      */
     addGroup = (groupName) => {
-        let result = null
+
         let group = {
-            id: uuidv4(),                    //生词本id ()
-            groupName: groupName,           //生词本名称
+            id: uuidv4(),                 //生词本id ()
+            groupName: groupName,         //生词本名称
             count: 0,                    //生词数
             createTime: new Date().getTime(),
             sections: [],                     //list类型：生词列表
         }
-        //判断是否重名
-        if (this.getGroup(groupName)) {
-            throw new Error('生词本名字重复了')
-        } else {
-            this.realm.write(() => {
-                this.realm.create('VocaGroup', group);
-            })
-            result = group
-        }
-        return result
+        this.realm.write(() => {
+            this.realm.create('VocaGroup', group);
+        })
+        return group
     }
 
     /**
@@ -189,13 +178,13 @@ export default class VocaGroupDao {
 
     /**
      * 删除生词本 ，同时删除下面所有单词
-     * @param groupName
+     * @param groupId
      * @returns {boolean}
      */
-    deleteGroup = (groupName) => {
+    deleteGroup = (groupId) => {
         let id = null
         this.realm.write(() => {
-            let group = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+            let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
             if (group) {
                 id = group.id
                 let sections = group.sections;
@@ -221,20 +210,29 @@ export default class VocaGroupDao {
 
     /**
      * 获取具体某生词本
-     * @param groupName
-     * @returns {any} 不存在返回undetified
+     * @param id
+     * @returns {any} 
      */
-    getGroup = (groupName) => {
-        return this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+    getGroupById = (id) => {
+        return this.realm.objects('VocaGroup').filtered('id = "' + id + '"')[0] || {}
+    }
+
+    /**
+     * 获取具体某生词本
+     * @param groupName
+     * @returns {any} 
+     */
+    getGroupByName = (groupName) => {
+        return this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0] || {}
     }
 
 
     /**
      * 修改为默认生词本
-     * @param groupName
+     * @param groupId
      * @returns {boolean} 生词本不存在，修改失败，返回false; 否则返回true
      */
-    updateToDefault = (groupName) => {
+    updateToDefault = (groupId) => {
         let id = null
         this.realm.write(() => {
             //先取消所有的默认生词本，再设置新的默认生词本（保证唯一）
@@ -242,8 +240,7 @@ export default class VocaGroupDao {
             for (let dg of dgs) {
                 dg.isDefault = false
             }
-            console.log('---------------' + groupName)
-            let group = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+            let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
             if (group) {
                 group.isDefault = true;
                 id = group.id
@@ -256,11 +253,11 @@ export default class VocaGroupDao {
 
     /**
      *  判断是否是默认生词本
-     * @param groupName
-     * @returns {boolean|VocaGroupDao.isDefault|VocaGroupSchema.properties.isDefault|{default, optional, type}|boolean}
+     * @param groupId
+     * @returns 
      */
-    isDefault = (groupName) => {
-        const defaultGroup = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+    isDefault = (groupId) => {
+        const defaultGroup = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
         if (defaultGroup) {
             return defaultGroup.isDefault
         }
@@ -399,13 +396,13 @@ export default class VocaGroupDao {
 
     /**
      * 批量删除单词
-     * @param groupName
+     * @param groupId
      * @param words 单词数组
      * @returns {object} result 结果信息
      */
-    deleteWords = (groupName, words) => {
+    deleteWords = (groupId, words) => {
         let result = { success: true, groupId: null, deletedSections: [], deletedWords: [] }
-        let group = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+        let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
         if (group) {
             result.groupId = group.id
             try {
@@ -437,7 +434,7 @@ export default class VocaGroupDao {
                 console.log(e)
             }
         } else {
-            console.warn(`${groupName} 生词本不存在`)
+            throw new Error('生词本不存在')
             result.success = false
         }
         return result

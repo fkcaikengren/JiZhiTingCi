@@ -112,6 +112,20 @@ const gstyles = StyleSheet.create({
         alignItems: 'flex-end',
     },
 
+    // 菜单栏
+    menuOptionView: {
+        width: 120,
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginHorizontal: 10,
+        borderBottomWidth: StyleSheet.hairlineWidth
+    },
+    menuOptionText: {
+        fontSize: 16,
+        color: '#303030'
+    },
 
     noteText: {
         fontSize: 12,
@@ -149,6 +163,7 @@ const gstyles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 10,
     },
+    // 底部
     footer: {
         position: 'absolute',
         bottom: 10,
@@ -156,23 +171,19 @@ const gstyles = StyleSheet.create({
         width: '60%',
         height: 40,
         backgroundColor: '#FDFDFD',
-
     },
     serialText: {
         fontSize: 16,
         color: '#404040'
     },
-
     separator: {
         borderColor: '#F4F4F4',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
-
     scrollView: {
         width: '100%',
         backgroundColor: '#F9F9F9'
     },
-
     scrollViewContent: {
         backgroundColor: '#F9F9F9',
     },
@@ -188,7 +199,6 @@ const gstyles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#FDFDFD'
     },
-
     closeBtn: {
         width: 60,
         height: 60,

@@ -8,19 +8,15 @@ const styles = StyleSheet.create({
         backgroundColor: gstyles.bgGray,
         flex: 1
     },
-    content: {
-        flex: 1,
-        paddingHorizontal: 10,
-    },
-
     groupItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#FFF',
-        borderRadius: 12,
-        marginTop: 16,
-        paddingVertical: 10
+        borderRadius: 10,
+        marginHorizontal: 10,
+        paddingVertical: 10,
+
     },
     iconBg: {
         flexDirection: 'column',

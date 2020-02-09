@@ -7,7 +7,7 @@ import { PropTypes } from 'prop-types';
 import * as Progress from 'react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style';
-import styles from '../VocaPlayStyle'
+import styles from './style'
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -16,8 +16,6 @@ export default class StudyPlayController extends React.Component {
     constructor(props) {
         super(props);
     }
-
-
 
     //选择播放时间间隔
     _chooseInterval = (interval) => {
@@ -147,6 +145,7 @@ export default class StudyPlayController extends React.Component {
                         </MenuOptions>
                     </Menu>
                 </Row>
+
             </Grid>
 
         );
@@ -166,6 +165,4 @@ StudyPlayController.propTypes = {
 }
 
 StudyPlayController.defaultProps = {
-
-
 }

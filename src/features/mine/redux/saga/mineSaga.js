@@ -196,6 +196,7 @@ function* modifyQQ(action) {
     yield put({ type: MODIFY_QQ_START })
     const res = yield Http.post('/user/modifyQQ', action.payload.params)
     if (res.status === 200) {
+        console.log(res.data)
         yield put({ type: MODIFY_QQ_SUCCEED, payload: res.data })
     }
 }

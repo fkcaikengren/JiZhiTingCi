@@ -18,20 +18,6 @@ const styles = StyleSheet.create({
     menuOptions: {
     },
 
-    menuOptionView: {
-        width: 120,
-        height: 40,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginHorizontal: 10,
-        borderBottomWidth: StyleSheet.hairlineWidth
-    },
-    menuOptionText: {
-        fontSize: 16,
-        color: '#505050'
-    },
-
     settingModal: {
         flexDirection: 'column',
         justifyContent: 'center',

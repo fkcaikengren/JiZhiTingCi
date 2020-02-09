@@ -135,8 +135,9 @@ class VocaLibPayPage extends Component {
                                     productCode: book._id
                                 },
                                 onSucceed: () => {
+                                    console.log('返回 单词书页面')
                                     //支付成功后重新加载词汇书
-                                    this.navigation.goBack()
+                                    this.props.navigation.goBack();
                                     loadBooks()
                                 }
                             })

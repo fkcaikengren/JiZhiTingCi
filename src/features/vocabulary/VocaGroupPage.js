@@ -1,11 +1,13 @@
 
 import React, { Component } from "react";
 import {
-    View, Text, TouchableNativeFeedback, ScrollView,
+    Platform, StatusBar, View, Text, TouchableNativeFeedback, TouchableOpacity
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 import CardView from 'react-native-cardview'
+const SortableListView = require('react-native-sortable-listview');
+import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 
 import AliIcon from '../../component/AliIcon';
 import VocaGroupService from './service/VocaGroupService'
@@ -16,6 +18,7 @@ import * as VGroupAction from './redux/action/vocaGroupAction'
 import { connect } from "react-redux";
 import InputTemplate from "../../component/InputTemplate";
 
+
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
 
@@ -25,7 +28,8 @@ class VocaGroupPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            vocaGroups: [],          //生词本数组
+            groupOrders: [],         //生词本序号
+            vocaGroups: {},          //生词本
             inEdit: false,
             selectedName: '',
             refresh: true,          //用来刷新
@@ -35,28 +39,25 @@ class VocaGroupPage extends Component {
     }
 
     componentDidMount() {
-        this._refreshGroup()
+        //Storage加载 groupOrders
+        Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
+            const groupOrders = JSON.parse(groupOrdersData)
+            this._refreshGroup(groupOrders)
+        })
     }
 
     componentWillUnmount() {
     }
 
-
-
-
-
-
-
-
     _toggleEdit = () => {
-        this.setState({ inEdit: !this.state.inEdit })
+        this.setState({ inEdit: !this.state.inEdit, groupOrders: [...this.state.groupOrders] })
     }
 
     //判断是否存在该名称的生词本
     _isNameExist = (name) => {
         let isExist = false;
-        for (let g of this.state.vocaGroups) {
-            if (g.groupName === name) {
+        for (let i in this.state.vocaGroups) {
+            if (this.state.vocaGroups[i].groupName === name) {
                 isExist = true;
                 break;
             }
@@ -74,9 +75,13 @@ class VocaGroupPage extends Component {
         } else if (isExist) {
             this.props.app.toast.show('重名了，添加失败', 1000);
         } else {
-            this.vgService.addGroup(addName)
-            this._refreshGroup()
-            this.props.app.toast.show('添加成功', 500);
+            const groupId = this.vgService.addGroup(addName)
+            if (groupId) {
+                this.props.app.toast.show('添加成功', 500);
+                this._refreshGroup([...this.state.groupOrders, groupId])
+            } else {
+                this.props.app.toast.show('添加失败', 500);
+            }
         }
     }
 
@@ -90,34 +95,57 @@ class VocaGroupPage extends Component {
             this.props.app.toast.show('重名了，修改失败', 1000);
         } else {
             this.vgService.updateGroupName(this.state.selectedName, newName);
-            this.setState({ selectedName: '' })
             this.props.app.toast.show('修改成功', 500);
+            this._refreshGroup()
         }
     }
 
     //删除生词本
-    _deleteVocaGroup = (deleteName) => {
-        //默认生词本不能删除
-        if (this.vgService.isDefault(deleteName)) {
-            this.props.app.toast.show('无法删除默认生词本', 1000);
-        } else {
-            this.vgService.deleteGroup(deleteName)
+    _deleteVocaGroup = (groupId) => {
+        const id = this.vgService.deleteGroup(groupId)
+        if (id) {
             this.props.app.toast.show('删除成功', 500);
-            this.setState({ refresh: !this.state.refresh })
+            const orders = this.state.groupOrders.filter((item, _) => {
+                return !(id === item)
+            })
+            this._refreshGroup(orders)
         }
     }
 
     _setDefaultGroup = (item) => {
         if (!item.isDefault) { //不是默认
-            this.vgService.updateToDefault(item.groupName)
-            this.setState({ refresh: !this.state.refresh })
+            this.vgService.updateToDefault(item.id)
+            this._refreshGroup([...this.state.groupOrders])
         }
     }
 
     // 刷新
-    _refreshGroup = () => {
-        const vocaGroups = this.vgService.getAllGroups();
-        this.setState({ vocaGroups })
+    _refreshGroup = (groupOrders = null, shouldUpdateGroups = true) => {
+        if (groupOrders) {
+            Storage.save({
+                key: 'groupOrdersString',
+                data: JSON.stringify(groupOrders),
+            })
+            if (shouldUpdateGroups) {
+                const vocaGroups = this.vgService.getAllGroups()
+                this.setState({
+                    groupOrders, vocaGroups
+                })
+            } else {
+                this.setState({
+                    groupOrders
+                })
+            }
+
+        } else {
+            const vocaGroups = this.vgService.getAllGroups()
+            this.setState({
+                vocaGroups
+            })
+        }
+
+
+
     }
 
     _goBack = () => {
@@ -130,8 +158,81 @@ class VocaGroupPage extends Component {
     }
 
 
-    render() {
+    _renderRow = (item) => {
+        return (
+            <TouchableOpacity
+                style={{ paddingVertical: 8 }}
+                activeOpacity={0.8}
+                disabled={this.state.inEdit}
+                onPress={() => {
+                    //加载生词
+                    this.props.navigation.navigate('GroupVoca', {
+                        groupId: item.id,
+                        groupName: item.groupName,
+                        refreshGroup: this._refreshGroup
+                    });
+                }}>
+                <View style={styles.groupItem}>
+                    <View style={[gstyles.r_start, { width: "100%", flex: 1, }]}>
+                        <View style={styles.iconBg}>
+                            <Text style={gstyles.md_black_bold}>
+                                {item.groupName[0]}
+                            </Text>
+                        </View>
+                        <View style={{ width: "100%" }}>
+                            <Text numberOfLines={1} style={[{ marginLeft: 10, width: "80%" }, gstyles.lg_black]}>{item.groupName}</Text>
+                            <Text style={[{ marginLeft: 10 }, gstyles.sm_gray]}>共{item.count}词</Text>
+                        </View>
+                    </View>
+                    {!this.state.inEdit && item.isDefault &&
+                        <AliIcon name='pingfen' size={26} color={gstyles.secColor} style={{ marginRight: 10 }} />
+                    }
+                    {this.state.inEdit &&
+                        <View style={[gstyles.r_center, { flex: 1 }]}>
+                            <View style={[gstyles.r_center, { flex: 1, justifyContent: 'flex-end' }]}>
+                                {/* 设置为默认生词本 */}
+                                <AliIcon name={item.isDefault ? 'pingfen' : 'malingshuxiangmuicon-'} color={item.isDefault ? '#F29F3F' : '#888'} size={26} onPress={() => {
+                                    this._setDefaultGroup(item)
+                                }} />
+                                {/* 修改 */}
+                                <TouchableNativeFeedback onPress={() => {
+                                    this.setState({
+                                        selectedName: item.groupName
+                                    })
+                                    InputTemplate.show({
+                                        commonModal: this.props.app.commonModal,
+                                        modalHeight: 160,
+                                        title: '修改生词本',
+                                        placeholder: item.groupName,
+                                        onCancel: null,
+                                        onConfirm: this._updateVocaGroup
+                                    })
+                                }}>
+                                    <Text style={{ fontSize: 14, color: '#1890FF', marginHorizontal: 10 }}>修改名称</Text>
+                                </TouchableNativeFeedback>
+                                {/* 删除 */}
+                                <TouchableNativeFeedback onPress={() => {
+                                    if (item.isDefault) {
+                                        this.props.app.toast.show('当前生词本是默认生词本，不能删除', 1500)
+                                    } else if (item.count > 0) {
+                                        this.props.app.toast.show('当前生词本下存在单词，不能删除', 1500)
+                                    } else {
+                                        this.props.app.confirmModal.show(`删除生词本"${item.groupName}"?`, null,
+                                            () => { this._deleteVocaGroup(item.id) })
+                                    }
+                                }}>
+                                    <Text style={{ fontSize: 14, color: 'red', marginRight: 10 }}>删除</Text>
+                                </TouchableNativeFeedback>
+                            </View>
+                        </View>
+                    }
+                </View>
 
+            </TouchableOpacity >
+        )
+    }
+
+    render() {
         return (
             <View style={styles.container}>
                 <Header
@@ -139,7 +240,47 @@ class VocaGroupPage extends Component {
                     barStyle='dark-content' // or directly
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={this._goBack} />}
-                    rightComponent={<AliIcon name='tongbu' size={24} color={gstyles.black} onPress={this._syncByhand} />}
+                    rightComponent={
+                        <View style={[gstyles.r_start]}>
+                            {this.state.inEdit &&
+                                <TouchableOpacity activeOpacity={0.8} style={{ marginRight: 20 }} onPress={this._toggleEdit}>
+                                    <Text style={gstyles.md_black}>完成</Text>
+                                </TouchableOpacity>
+                            }
+                            <Menu renderer={renderers.Popover} rendererProps={{ placement: 'bottom' }}>
+                                <MenuTrigger >
+                                    <AliIcon name='add' size={26} color='#303030'></AliIcon>
+                                </MenuTrigger>
+                                <MenuOptions >
+                                    <MenuOption onSelect={() => {
+                                        InputTemplate.show({
+                                            commonModal: this.props.app.commonModal,
+                                            modalHeight: 160,
+                                            title: '新建生词本',
+                                            placeholder: '请输入生词本名称',
+                                            onCancel: null,
+                                            onConfirm: this._addVocaGroup
+                                        })
+                                    }} style={gstyles.menuOptionView}>
+                                        <AliIcon name="tianjia" size={20} color="#303030" style={{ marginRight: 15 }} />
+                                        <Text style={gstyles.menuOptionText}>添加</Text>
+                                    </MenuOption>
+
+                                    <MenuOption onSelect={this._toggleEdit} style={gstyles.menuOptionView}>
+                                        <AliIcon name="bianji1" size={20} color="#303030" style={{ marginRight: 15 }} />
+                                        <Text style={gstyles.menuOptionText}>{this.state.inEdit ? "完成" : "编辑"}</Text>
+                                    </MenuOption>
+
+                                    <MenuOption onSelect={this._syncByhand} style={[gstyles.menuOptionView, { borderBottomWidth: 0 }]} >
+                                        <AliIcon name='tongbu' size={20} color="#303030" style={{ marginRight: 15 }} />
+                                        <Text style={gstyles.menuOptionText}>同步</Text>
+                                    </MenuOption>
+
+                                </MenuOptions>
+                            </Menu>
+
+                        </View>
+                    }
                     centerComponent={{ text: '生词本', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
@@ -147,113 +288,19 @@ class VocaGroupPage extends Component {
                     }}
                 />
                 {/* 生词本列表 */}
-                <View style={styles.content}>
-                    <ScrollView style={{ flex: 1, paddingBottom: 40 }}
-                        pagingEnabled={false}
-                        automaticallyAdjustContentInsets={false}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {this.state.vocaGroups.map((item, index) => {
-                            return (
-                                <TouchableNativeFeedback disabled={this.state.inEdit} key={index} onPress={() => {
-                                    //加载生词
-                                    this.props.navigation.navigate('GroupVoca', {
-                                        groupName: item.groupName,
-                                        refreshGroup: this._refreshGroup
-                                    });
-
-                                }}>
-                                    <View style={styles.groupItem}>
-                                        <View style={[gstyles.r_start, { width: "100%", flex: 1, }]}>
-                                            <View style={styles.iconBg}>
-                                                <Text style={gstyles.md_black_bold}>
-                                                    {item.groupName[0]}
-                                                </Text>
-                                            </View>
-                                            <View style={{ width: "100%" }}>
-                                                <Text numberOfLines={1} style={[{ marginLeft: 10, width: "80%" }, gstyles.lg_black]}>{item.groupName}</Text>
-                                                <Text style={[{ marginLeft: 10 }, gstyles.sm_gray]}>共{item.count}词</Text>
-                                            </View>
-                                        </View>
-                                        {!this.state.inEdit && item.isDefault &&
-                                            <AliIcon name='pingfen' size={26} color={gstyles.secColor} style={{ marginRight: 10 }} />
-                                        }
-                                        {this.state.inEdit &&
-                                            <View style={[gstyles.r_center, { flex: 1 }]}>
-                                                <View style={[gstyles.r_center, { flex: 1, justifyContent: 'flex-end' }]}>
-                                                    {/* 设置为默认生词本 */}
-                                                    <AliIcon name={item.isDefault ? 'pingfen' : 'malingshuxiangmuicon-'} color={item.isDefault ? '#F29F3F' : '#888'} size={26} onPress={() => {
-                                                        this._setDefaultGroup(item)
-                                                    }} />
-                                                    {/* 修改 */}
-                                                    <TouchableNativeFeedback onPress={() => {
-                                                        this.setState({
-                                                            selectedName: item.groupName
-                                                        })
-                                                        InputTemplate.show({
-                                                            commonModal: this.props.app.commonModal,
-                                                            modalHeight: 160,
-                                                            title: '修改生词本',
-                                                            placeholder: item.groupName,
-                                                            onCancel: null,
-                                                            onConfirm: this._updateVocaGroup
-                                                        })
-                                                    }}>
-                                                        <Text style={{ fontSize: 14, color: '#1890FF', marginHorizontal: 10 }}>修改名称</Text>
-                                                    </TouchableNativeFeedback>
-                                                    {/* 删除 */}
-                                                    <TouchableNativeFeedback onPress={() => {
-                                                        this.props.app.confirmModal.show(`删除生词本"${item.groupName}"?`, null,
-                                                            () => { this._deleteVocaGroup(item.groupName) })
-                                                    }}>
-                                                        <Text style={{ fontSize: 14, color: 'red', marginRight: 10 }}>删除</Text>
-                                                    </TouchableNativeFeedback>
-                                                </View>
-                                            </View>
-                                        }
-                                    </View>
-                                </TouchableNativeFeedback>
-                            )
-
-                        })}
-
-                    </ScrollView>
-
+                <View style={{ flex: 1 }}>
+                    <SortableListView
+                        data={this.state.vocaGroups}
+                        order={this.state.groupOrders}
+                        onRowMoved={e => {
+                            const orders = [...this.state.groupOrders]
+                            orders.splice(e.to, 0, orders.splice(e.from, 1)[0]);
+                            this._refreshGroup(orders, false)
+                        }}
+                        renderRow={this._renderRow}
+                        rowHasChanged={(r1, r2) => { return r1 !== r2 }}
+                    />
                 </View>
-                {/* 添加 编辑*/}
-                <CardView
-                    cardElevation={5}
-                    cardMaxElevation={5}
-                    cornerRadius={20}
-                    style={gstyles.footer}>
-                    <View style={gstyles.r_around}>
-                        <Button
-                            type="clear"
-                            icon={<AliIcon name="tianjia" size={20} color="#303030" />}
-                            title='添加'
-                            titleStyle={gstyles.md_black_bold}
-                            onPress={() => {
-                                InputTemplate.show({
-                                    commonModal: this.props.app.commonModal,
-                                    modalHeight: 160,
-                                    title: '新建生词本',
-                                    placeholder: '请输入生词本名称',
-                                    onCancel: null,
-                                    onConfirm: this._addVocaGroup
-                                })
-                            }}>
-                        </Button>
-                        <View style={{ width: 1, height: 20, backgroundColor: '#555' }}></View>
-                        <Button
-                            type="clear"
-                            icon={<AliIcon name="bianji1" size={20} color="#303030" />}
-                            title={this.state.inEdit ? '完成' : '编辑'}
-                            titleStyle={gstyles.md_black_bold}
-                            onPress={this._toggleEdit}>
-                        </Button>
-                    </View>
-                </CardView>
 
             </View>
         );

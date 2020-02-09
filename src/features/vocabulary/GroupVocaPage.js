@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, View, Text, FlatList, TouchableNativeFeedback } from 'react-native';
+import { StatusBar, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Header, CheckBox, Button } from 'react-native-elements'
 import { sortBy } from 'lodash'
 import CardView from 'react-native-cardview'
@@ -37,6 +37,7 @@ class GroupVocaPage extends Component {
         this.audioService = AudioService.getInstance()
 
         this.state = {
+
             onEdit: false,
             checked: false,
             isSelectAll: true,
@@ -70,8 +71,8 @@ class GroupVocaPage extends Component {
         const { getParam } = this.props.navigation
         const isEnPron = (this.props.mine.configVocaPronType === Constant.VOCA_PRON_TYPE_EN)
 
-        const groupName = getParam('groupName')
-        const group = this.vgService.getGroup(groupName);
+        const groupId = getParam('groupId')
+        const group = this.vgService.getGroupById(groupId)
         let sections = group.sections
         //每组的开头在列表中的位置
         let totalSize = 0;
@@ -179,12 +180,12 @@ class GroupVocaPage extends Component {
     //批量删除单词
     _deleteWords = () => {
         //删除
-        const groupName = this.props.navigation.getParam('groupName')
+        const groupId = this.props.navigation.getParam('groupId')
         const words = this.state.checkedIndex.map((itemIndex, i) => {
             return this.state.flatData[itemIndex].word
         })
         console.log(words)
-        const result = this.vgService.deleteWords(groupName, words)
+        const result = this.vgService.deleteWords(groupId, words)
         if (result.success) {
             this.props.app.toast.show(`成功删除${result.deletedWords.length}个生词`, 1000);
             //刷新
@@ -254,18 +255,18 @@ class GroupVocaPage extends Component {
         const playIconColor = this.state.checked ? gstyles.mainColor : '#999'
         const editBtn = this.state.onEdit ?
             <View style={gstyles.r_start}>
-                <TouchableNativeFeedback onPress={this._selectAll}>
+                <TouchableOpacity onPress={this._selectAll}>
                     <Text style={[gstyles.md_black, { marginRight: 10 }]}>{this.state.isSelectAll ? "全选" : "全不选"}</Text>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
 
-                <TouchableNativeFeedback onPress={this._toggleEdit}>
+                <TouchableOpacity onPress={this._toggleEdit}>
                     <Text style={gstyles.md_black}>取消</Text>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
             </View>
             :
-            <TouchableNativeFeedback onPress={this._toggleEdit}>
+            <TouchableOpacity onPress={this._toggleEdit}>
                 <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
 
         return (
             <View style={styles.container}>
@@ -288,7 +289,7 @@ class GroupVocaPage extends Component {
                 />
 
                 {this.state.flatData.length > 0 &&
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, marginBottom: 60 }}>
                         <FlatList
                             ref={ref => this._list = ref}
                             data={this.state.flatData}
@@ -304,8 +305,8 @@ class GroupVocaPage extends Component {
                 }
                 {this.state.flatData.length <= 0 &&
                     <View style={[gstyles.c_center, { flex: 1 }]}>
-                        <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
-                        <Text style={gstyles.md_black}>还没来得及添加生词哦</Text>
+                        <AliIcon name={'no-data'} size={100} color={gstyles.gray} />
+                        <Text style={gstyles.md_gray}>暂无生词</Text>
                     </View>
                 }
 

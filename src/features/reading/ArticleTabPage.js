@@ -276,16 +276,18 @@ class ArticleTabPage extends React.Component {
                                 <MenuTrigger >
                                     <AliIcon name='add' size={26} color='#555'></AliIcon>
                                 </MenuTrigger>
-                                <MenuOptions style={styles.menuOptions}>
-                                    <MenuOption onSelect={this._toggleKeyWords} style={styles.menuOptionView}>
-                                        <Text style={styles.menuOptionText}>{showKeyWords ? '隐藏关键词' : '显示关键词'}</Text>
+                                <MenuOptions >
+                                    <MenuOption onSelect={this._toggleKeyWords} style={gstyles.menuOptionView}>
+                                        <AliIcon name="cidian" size={18} color="#303030" style={{ marginRight: 10 }} />
+                                        <Text style={gstyles.menuOptionText}>{showKeyWords ? '隐藏关键词' : '显示关键词'}</Text>
                                     </MenuOption>
 
-                                    <MenuOption onSelect={this._openSettingModal} style={styles.menuOptionView}>
-                                        <Text style={styles.menuOptionText}>主题字号</Text>
+                                    <MenuOption onSelect={this._openSettingModal} style={gstyles.menuOptionView}>
+                                        <AliIcon name="zt-zt-1" size={18} color="#303030" style={{ marginRight: 10 }} />
+                                        <Text style={gstyles.menuOptionText}>主题字号</Text>
                                     </MenuOption>
 
-                                    <MenuOption style={styles.menuOptionView} onSelect={() => {
+                                    <MenuOption style={gstyles.menuOptionView} onSelect={() => {
                                         // 打开分享面板
                                         this.props.app.commonModal.show({
                                             renderContent: this._renderSharePanel({ commonModal: this.props.app.commonModal }),
@@ -297,7 +299,8 @@ class ArticleTabPage extends React.Component {
                                             position: 'bottom'
                                         })
                                     }}>
-                                        <Text style={styles.menuOptionText}>分享</Text>
+                                        <AliIcon name="fenxiang" size={20} color="#303030" style={{ marginRight: 10 }} />
+                                        <Text style={gstyles.menuOptionText}>分享</Text>
                                     </MenuOption>
 
                                     <MenuOption onSelect={() => {
@@ -317,15 +320,14 @@ class ArticleTabPage extends React.Component {
                                         })
 
                                     }}
-                                        style={[styles.menuOptionView, { borderBottomWidth: 0 }]}>
-                                        <Text style={styles.menuOptionText}>纠错</Text>
+                                        style={[gstyles.menuOptionView, { borderBottomWidth: 0 }]}>
+                                        <AliIcon name="baocuo" size={19} color="#303030" style={{ marginRight: 10 }} />
+                                        <Text style={gstyles.menuOptionText}>纠错</Text>
                                     </MenuOption>
 
 
                                 </MenuOptions>
                             </Menu>
-
-
 
                         </View>
                     }

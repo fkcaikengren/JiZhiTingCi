@@ -4,13 +4,15 @@ import { Grid, Col, Row, } from 'react-native-easy-grid'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from "rn-fetch-blob";
+import { PropTypes } from 'prop-types';
 
 import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from 'react-native-progress';
 import AliIcon from '../../../component/AliIcon'
-import styles from '../VocaPlayStyle'
+import styles from './style'
 import gstyles from '../../../style';
-
+import PlayListPane from './PlayListPane';
+import { store } from '../../../redux/store';
 
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
@@ -25,23 +27,12 @@ export default class PlayController extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        //blur的变化，不引起重绘
-        if (nextProps.vocaPlay.showBlur === !this.props.vocaPlay.showBlur) {
-            return false
-        }
-
-        return true
-    }
 
 
     //选择测试
     _chooseTest = (value) => {
-
-
-
-        const { navigate } = this.props.navigation
-        const { task } = this.props.vocaPlay
+        const { navigate } = this.props
+        const { task } = store.getState().vocaPlay
         const testTask = { ...task, curIndex: 0 }
         //如果没有列表单词，则提示
         if (task.taskWords && task.taskWords.length > 0 && task.wordCount > 0) {
@@ -61,16 +52,17 @@ export default class PlayController extends React.Component {
                     break;
             }
         } else {
-            this.props.toastRef.show('没有单词可以测试')
+            store.getState().app.toast.show('没有单词可以测试', 1000)
         }
 
     }
 
     //选择主题
     _chooseBgOption = (value) => {
+        const { navigate } = this.props
         switch (value) {
             case 0:
-                this.props.navigation.navigate('BgSelector')
+                navigate('BgSelector')
                 break
             case 1:
                 const options = {
@@ -108,7 +100,7 @@ export default class PlayController extends React.Component {
     }
 
     _pause = () => {
-        const { autoPlayTimer, task, curIndex } = this.props.vocaPlay;
+        const { autoPlayTimer } = store.getState().vocaPlay
         const { changePlayTimer } = this.props;
         if (autoPlayTimer) {
             //暂停
@@ -123,7 +115,7 @@ export default class PlayController extends React.Component {
 
     //播放暂停切换
     _togglePlay = () => {
-        const { autoPlayTimer, task, curIndex } = this.props.vocaPlay;
+        const { autoPlayTimer, curIndex } = store.getState().vocaPlay
         const { changePlayTimer } = this.props;
         if (autoPlayTimer) {
             //暂停
@@ -144,10 +136,9 @@ export default class PlayController extends React.Component {
 
 
     render() {
-
-        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex } = this.props.vocaPlay;
+        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex } = store.getState().vocaPlay
         const { wordCount } = task
-        const { toggleWord, toggleTran, } = this.props;
+        const { toggleWord, toggleTran } = this.props;
         //主题
         const Theme = themes[themeId]
         const selected = {
@@ -266,13 +257,40 @@ export default class PlayController extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <TouchableOpacity activeOpacity={0.8} onPress={this.props.openTaskListModal}>
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                        console.log('播放列表-----go')
+                        this.playListPane.show()
+                    }}>
                         <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
                     </TouchableOpacity>
                 </Row>
 
+                {/* 播放列表 */}
+                <PlayListPane
+                    ref={comp => {
+                        this.playListPane = comp
+                    }}
+                    autoplay={this.props.autoplay}
+                    changePlayTimer={this.props.changePlayTimer}
+                    changeNormalType={this.props.changeNormalType}
+                    loadTask={this.props.loadTask}
+                    changeTheme={this.props.changeTheme}
+                />
             </Grid>
 
         );
     }
+}
+
+PlayController.propTypes = {
+    navigate: PropTypes.func.isRequired,
+    autoplay: PropTypes.func.isRequired,
+    changePlayTimer: PropTypes.func.isRequired,
+    changeInterval: PropTypes.func.isRequired,
+    toggleWord: PropTypes.func.isRequired,
+    toggleTran: PropTypes.func.isRequired,
+    changeBg: PropTypes.func.isRequired,
+    changeNormalType: PropTypes.func.isRequired,
+    loadTask: PropTypes.func.isRequired,
+    changeTheme: PropTypes.func.isRequired,
 }
