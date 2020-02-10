@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
-import CardView from 'react-native-cardview'
 const SortableListView = require('react-native-sortable-listview');
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 
@@ -13,7 +12,6 @@ import AliIcon from '../../component/AliIcon';
 import VocaGroupService from './service/VocaGroupService'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
-import DashSecondLine from '../../component/DashSecondLine'
 import * as VGroupAction from './redux/action/vocaGroupAction'
 import { connect } from "react-redux";
 import InputTemplate from "../../component/InputTemplate";
@@ -41,8 +39,14 @@ class VocaGroupPage extends Component {
     componentDidMount() {
         //Storage加载 groupOrders
         Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
+
             const groupOrders = JSON.parse(groupOrdersData)
-            this._refreshGroup(groupOrders)
+            const vocaGroups = this.vgService.getAllGroups()
+            this.setState({
+                groupOrders,
+                vocaGroups
+            })
+
         })
     }
 
@@ -66,7 +70,7 @@ class VocaGroupPage extends Component {
     }
 
     //添加生词本
-    _addVocaGroup = (addName) => {
+    _addVocaGroup = async (addName) => {
         //循环
         let isExist = this._isNameExist(addName);
         //添加生词本
@@ -75,10 +79,10 @@ class VocaGroupPage extends Component {
         } else if (isExist) {
             this.props.app.toast.show('重名了，添加失败', 1000);
         } else {
-            const groupId = this.vgService.addGroup(addName)
-            if (groupId) {
+            const orders = await this.vgService.addGroup(addName)
+            if (orders) {
+                this._refreshGroup(orders)
                 this.props.app.toast.show('添加成功', 500);
-                this._refreshGroup([...this.state.groupOrders, groupId])
             } else {
                 this.props.app.toast.show('添加失败', 500);
             }
@@ -95,20 +99,19 @@ class VocaGroupPage extends Component {
             this.props.app.toast.show('重名了，修改失败', 1000);
         } else {
             this.vgService.updateGroupName(this.state.selectedName, newName);
-            this.props.app.toast.show('修改成功', 500);
             this._refreshGroup()
+            this.props.app.toast.show('修改成功', 500);
         }
     }
 
     //删除生词本
-    _deleteVocaGroup = (groupId) => {
-        const id = this.vgService.deleteGroup(groupId)
-        if (id) {
-            this.props.app.toast.show('删除成功', 500);
-            const orders = this.state.groupOrders.filter((item, _) => {
-                return !(id === item)
-            })
+    _deleteVocaGroup = async (groupId) => {
+        const orders = await this.vgService.deleteGroup(groupId)
+        if (orders) {
             this._refreshGroup(orders)
+            this.props.app.toast.show('删除成功', 500);
+        } else {
+            this.props.app.toast.show('删除失败', 500);
         }
     }
 
@@ -122,10 +125,6 @@ class VocaGroupPage extends Component {
     // 刷新
     _refreshGroup = (groupOrders = null, shouldUpdateGroups = true) => {
         if (groupOrders) {
-            Storage.save({
-                key: 'groupOrdersString',
-                data: JSON.stringify(groupOrders),
-            })
             if (shouldUpdateGroups) {
                 const vocaGroups = this.vgService.getAllGroups()
                 this.setState({
@@ -143,9 +142,6 @@ class VocaGroupPage extends Component {
                 vocaGroups
             })
         }
-
-
-
     }
 
     _goBack = () => {
@@ -157,8 +153,10 @@ class VocaGroupPage extends Component {
         this.props.syncGroup({ isByHand: true })
     }
 
-
     _renderRow = (item) => {
+        if (!item) {
+            return <Text>nothing</Text>
+        }
         return (
             <TouchableOpacity
                 style={{ paddingVertical: 8 }}
@@ -212,12 +210,13 @@ class VocaGroupPage extends Component {
                                 </TouchableNativeFeedback>
                                 {/* 删除 */}
                                 <TouchableNativeFeedback onPress={() => {
-                                    if (item.isDefault) {
-                                        this.props.app.toast.show('当前生词本是默认生词本，不能删除', 1500)
-                                    } else if (item.count > 0) {
-                                        this.props.app.toast.show('当前生词本下存在单词，不能删除', 1500)
+
+                                    if (this.props.task && this.props.task.taskOrder === item.id) {
+                                        this.props.app.toast.show('当前生词本正在播放中，无法删除', 1500)
+                                    } else if (item.isDefault) {
+                                        this.props.app.toast.show('当前生词本是默认生词本，无法删除', 1500)
                                     } else {
-                                        this.props.app.confirmModal.show(`删除生词本"${item.groupName}"?`, null,
+                                        this.props.app.confirmModal.show(`删除生词本"${item.groupName}"以及其所有单词?`, null,
                                             () => { this._deleteVocaGroup(item.id) })
                                     }
                                 }}>
@@ -292,9 +291,10 @@ class VocaGroupPage extends Component {
                     <SortableListView
                         data={this.state.vocaGroups}
                         order={this.state.groupOrders}
-                        onRowMoved={e => {
+                        onRowMoved={(e) => {
                             const orders = [...this.state.groupOrders]
                             orders.splice(e.to, 0, orders.splice(e.from, 1)[0]);
+                            this.vgService.sortGroups(orders)
                             this._refreshGroup(orders, false)
                         }}
                         renderRow={this._renderRow}
@@ -310,6 +310,7 @@ class VocaGroupPage extends Component {
 
 const mapStateToProps = state => ({
     app: state.app,
+    task: state.vocaPlay.task
 });
 
 const mapDispatchToProps = {

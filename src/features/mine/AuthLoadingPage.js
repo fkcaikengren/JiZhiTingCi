@@ -70,10 +70,9 @@ class AuthLoadingPage extends Component {
                     vgDao.deleteAllGroups()
                     vgDao.saveVocaGroups(vocaGroups)
                 }
-                const groupOrdersData = groupOrders || []
                 await Storage.save({
                     key: 'groupOrdersString',
-                    data: JSON.stringify(groupOrdersData),
+                    data: groupOrders ? groupOrders : '[]',  //groupOrders为字符串
                 })
                 if (vocaTasks && vocaTasks.length > 0) {
                     const vts = new VocaTaskService()

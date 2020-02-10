@@ -223,7 +223,7 @@ class GroupVocaPage extends Component {
         if (words.length < Constant.MIN_PLAY_NUMBER) {
             this.props.app.toast.show('当前选择不足5个，不可以播放哦', 1000)
         } else {
-            const virtualTask = VocaUtil.genVirtualTask(words)
+            const virtualTask = VocaUtil.genVirtualTask(words, '来源：生词本')
             // console.log(virtualTask)
 
             //暂停

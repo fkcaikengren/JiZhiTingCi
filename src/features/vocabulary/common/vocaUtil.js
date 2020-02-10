@@ -346,9 +346,10 @@ export default class VocaUtil {
      * 构建一个虚拟Task 
      * words 是task的words
     */
-    static genVirtualTask(words) {
+    static genVirtualTask(words, playName, taskOrder = Constant.VIRTUAL_TASK_ORDER) {
         let copyTask = {
-            taskOrder: Constant.VIRTUAL_TASK_ORDER,
+            taskOrder,
+            playName,
             curIndex: 0,
             taskWords: [],
             wordCount: words.length,

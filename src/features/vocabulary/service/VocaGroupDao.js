@@ -1,4 +1,6 @@
 import Section from "../common/Section";
+import _util from "../../../common/util";
+
 
 const Realm = require('realm');
 const uuidv4 = require('uuid/v4');
@@ -10,9 +12,6 @@ const uuidv4 = require('uuid/v4');
 // 4. 修改 （获取到对象，修改属性，自动自动持久化；）
 // 5. 删除 （获取到对象，便可删除；不会级联删除；）
 // 6. filtered 过滤的得到是Realm.Results
-// 7. 关联查询得到的子对象是 Object，支持push, 但不支持for of, forEach
-// 8. Realm.Results/Realm.List  支持forEach, for of遍历， push, pop, splice等。 支持filter, map. 还支持一些统计聚合函数
-
 
 
 // 1. 生词本表
@@ -21,10 +20,12 @@ const VocaGroupSchema = {
     primaryKey: 'id',
     properties: {
         id: 'string',                      //生词本id
-        groupName: 'string?',           //生词本名称
+        groupName: 'string?',               //生词本名称
         count: { type: 'int', optional: true, default: 0 },                //生词数
+        isDefault: { type: 'bool', optional: true, default: false },        //是否是默认生词本
+        listenTimes: { type: 'int', optional: true, default: 0 }, //听的遍数
+        testTimes: { type: 'int', optional: true, default: 0 },   //测试遍数
         createTime: 'int?',
-        isDefault: { type: 'bool', optional: true, default: false },     //是否是默认生词本
         sections: 'GroupSection[]'              //list类型：生词分类
     }
 };
@@ -120,6 +121,8 @@ export default class VocaGroupDao {
                     count: vg.count,                     //生词数
                     createTime: vg.createTime,
                     isDefault: vg.isDefault,
+                    listenTimes: vg.listenTimes,
+                    testTimes: vg.testTimes,
                     sections: [],
                 }
                 //分组section
@@ -143,7 +146,7 @@ export default class VocaGroupDao {
     addGroup = (groupName) => {
 
         let group = {
-            id: uuidv4(),                 //生词本id ()
+            id: _util.generateMixed(3) + Date.now(),                 //生词本id
             groupName: groupName,         //生词本名称
             count: 0,                    //生词数
             createTime: new Date().getTime(),
@@ -155,13 +158,39 @@ export default class VocaGroupDao {
         return group
     }
 
+
+
+
+    /**
+     * 删除生词本 ，同时删除下面所有单词
+     * @param groupId
+     * @returns {boolean}
+     */
+    deleteGroup = (groupId) => {
+        let result = null
+        this.realm.write(() => {
+            let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
+            if (group) {
+                result = group
+                let sections = group.sections;
+                for (let key in sections) {
+                    this.realm.delete(sections[key].words)
+                }
+                this.realm.delete(sections)
+                this.realm.delete(group)
+            }
+        })
+        return result
+    }
+
+
     /**
      * 修改生词本名
      * @param oldName
      * @param newName
      * @returns {boolean} 如果生词本不存在，修改失败，则返回false；否则返回true
      */
-    updateGroupName = (oldName, newName) => {
+    modifyGroupName = (oldName, newName) => {
         let result = null
         this.realm.write(() => {
             let group = this.realm.objects('VocaGroup').filtered('groupName = "' + oldName + '"')[0];
@@ -175,27 +204,43 @@ export default class VocaGroupDao {
         return result
     }
 
-
     /**
-     * 删除生词本 ，同时删除下面所有单词
-     * @param groupId
-     * @returns {boolean}
+     * 修改生词本 listenTimes
+     * @param id
+     * @param listenTimes
+     * @returns 修改失败返回null,成功返回VocaGroup
      */
-    deleteGroup = (groupId) => {
-        let id = null
+    modifyListenTimes = (id, listenTimes) => {
+        let result = null
         this.realm.write(() => {
-            let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
+            let group = this.realm.objects('VocaGroup').filtered('id = "' + id + '"')[0];
+            result = group
             if (group) {
-                id = group.id
-                let sections = group.sections;
-                for (let key in sections) {
-                    this.realm.delete(sections[key].words)
-                }
-                this.realm.delete(sections)
-                this.realm.delete(group)
+                group.listenTimes = listenTimes;
+            } else {
+                throw new Error('生词本不存在，修改失败')
             }
         })
-        return id
+        return result
+    }
+    /**
+  * 修改生词本 testTimes
+  * @param id
+  * @param testTimes
+  * @returns 修改失败返回null,成功返回VocaGroup
+  */
+    modifyTestTimes = (id, testTimes) => {
+        let result = null
+        this.realm.write(() => {
+            let group = this.realm.objects('VocaGroup').filtered('id = "' + id + '"')[0];
+            result = group
+            if (group) {
+                group.testTimes = testTimes;
+            } else {
+                throw new Error('生词本不存在，修改失败')
+            }
+        })
+        return result
     }
 
 
@@ -232,8 +277,8 @@ export default class VocaGroupDao {
      * @param groupId
      * @returns {boolean} 生词本不存在，修改失败，返回false; 否则返回true
      */
-    updateToDefault = (groupId) => {
-        let id = null
+    modifyToDefault = (groupId) => {
+        let result = null
         this.realm.write(() => {
             //先取消所有的默认生词本，再设置新的默认生词本（保证唯一）
             let dgs = this.realm.objects('VocaGroup').filtered('isDefault = true')
@@ -243,12 +288,12 @@ export default class VocaGroupDao {
             let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
             if (group) {
                 group.isDefault = true;
-                id = group.id
+                result = group
             } else {
                 throw new Error('生词本不存在, 修改为默认失败')
             }
         })
-        return id;
+        return result;
     }
 
     /**
@@ -282,7 +327,7 @@ export default class VocaGroupDao {
             //如果默认生词本不存在，创建一个默认生词本
             if (!defaultGroup) {
                 let group = {
-                    id: uuidv4(),
+                    id: _util.generateMixed(3) + Date.now(),
                     groupName: '默认生词本',
                     count: 0,
                     createTime: new Date().getTime(),

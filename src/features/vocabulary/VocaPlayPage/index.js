@@ -21,6 +21,7 @@ import StudyPlayController from './StudyPlayController'
 import VocaUtil from '../common/vocaUtil'
 import gstyles from '../../../style'
 import VocaDao from '../service/VocaDao';
+import VocaTaskDao from '../service/VocaTaskDao';
 import VocaPlayService from '../service/VocaPlayService'
 import NotificationManage from '../../../modules/NotificationManage'
 import _util from "../../../common/util";
@@ -28,6 +29,7 @@ import { COMMAND_MODIFY_PASSED, COMMAND_MODIFY_LISTEN_TIMES } from '../../../com
 import { store } from '../../../redux/store'
 import LookWordBoard from '../component/LookWordBoard';
 import ShareTemplate from '../../../component/ShareTemplate';
+
 
 
 
@@ -150,7 +152,6 @@ class VocaPlayPage extends React.Component {
                 this.vocaPlayService.autoplay(task.curIndex)
             }, 1000);
         } else {
-
             if (this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK || normalType === Constant.BY_VIRTUAL_TASK) {
                 const task = this.props.navigation.getParam('task')
                 console.log('-----------------virtual task---------------------')
@@ -198,16 +199,12 @@ class VocaPlayPage extends React.Component {
         const beforeCount = state.task.wordCount
         let listenTimes = state.task.listenTimes
         let leftTimes = state.task.leftTimes
-        const normalType = this.props.navigation.getParam('normalType')
 
         //播放到最后一个单词
         if (playIndex + 1 === beforeCount) {
             listenTimes++
             if (leftTimes && leftTimes > 0) {
                 leftTimes--
-            }
-            if (normalType !== Constant.BY_VIRTUAL_TASK) {
-                VocaTaskDao.getInstance().modifyTask({ taskOrder: state.task.taskOrder, listenTimes: listenTimes, leftTimes })
             }
         }
 
@@ -218,16 +215,23 @@ class VocaPlayPage extends React.Component {
                 curIndex: playIndex
             })
         } else {
+            const { normalType } = this.props.vocaPlay
             this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
-            if (listenTimes === state.task.listenTimes + 1 && normalType !== Constant.BY_VIRTUAL_TASK) {
-                //上传
-                this.props.syncTask({
-                    command: COMMAND_MODIFY_LISTEN_TIMES,
-                    data: {
-                        taskOrder: state.task.taskOrder,
-                        listenTimes
-                    }
-                })
+            if (listenTimes === state.task.listenTimes + 1) {
+                if (normalType === Constant.BY_VIRTUAL_TASK) {
+                    //todo: 生词本- 修改听的遍数
+                    console.log('-生词本- 修改听的遍数-')
+                } else if (normalType === Constant.BY_REAL_TASK) {
+                    //修改、上传
+                    VocaTaskDao.getInstance().modifyTask({ taskOrder: state.task.taskOrder, listenTimes: listenTimes, leftTimes })
+                    this.props.syncTask({
+                        command: COMMAND_MODIFY_LISTEN_TIMES,
+                        data: {
+                            taskOrder: state.task.taskOrder,
+                            listenTimes
+                        }
+                    })
+                }
             }
         }
     }
@@ -594,12 +598,13 @@ class VocaPlayPage extends React.Component {
 
     render() {
         let { task, themeId, themes, showWordInfos, bgPath } = this.props.vocaPlay;
+        let name = task.playName
         if (this.isStudyMode) {
             task = this.state.task
             showWordInfos = this.state.showWordInfos
+            name = VocaUtil.genTaskName(task.taskOrder)
         }
 
-        const name = VocaUtil.genTaskName(task.taskOrder)
         this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
         this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
 

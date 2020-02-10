@@ -68,11 +68,11 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
     },
     //改变背景
     [CHANGE_BG]: (bgPath) => {
-      return ({ bgPath })
+      return { bgPath }
     },
     //是否显示模糊效果
     [SHOW_BLUR]: (showBlur) => {
-      return ({ showBlur })
+      return { showBlur }
     },
     //改变主题
     [CHANGE_THEME]: (themeId) => {

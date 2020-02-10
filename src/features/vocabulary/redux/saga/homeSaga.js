@@ -9,7 +9,7 @@ import VocaUtil from "../../common/vocaUtil";
 import _util from '../../../../common/util';
 import { MODIFY_LAST_LEARN_DATE, CHANGE_LEFT_DAYS, CHANGE_LEARNED_WORD_COUNT } from '../action/planAction';
 import VocaTaskService from '../../service/VocaTaskService';
-
+const uuidv4 = require('uuid/v4');
 
 /**
  * 加载今日任务 
@@ -47,7 +47,6 @@ export function* syncTask(action) {
     try {
         //1. 取之前没有上传的数据
         let uploadedTasks = yield Storage.getAllDataForKey('notSyncTasks')
-
         //2. 同步至本地
         if (curUploadedTask && curUploadedTask.command) {
             const { data, command } = curUploadedTask
@@ -56,7 +55,6 @@ export function* syncTask(action) {
             if (command === COMMAND_MODIFY_TASK) {
                 // 数据更新到本地realm数据库
                 VocaTaskDao.getInstance().modifyTask(data)
-
                 // 合并本次上传的数据 (对于同步整个单词任务时而言)
                 uploadedTasks = uploadedTasks.filter((item, i) => {
                     if (item.command === curUploadedTask.command && item.data.taskOrder === curUploadedTask.data.taskOrder) {
@@ -65,13 +63,10 @@ export function* syncTask(action) {
                         return true
                     }
                 })
-
             }
             //加入上传任务中
             uploadedTasks.push(curUploadedTask)
         }
-
-
         console.log('-------所有上传的的数据：-------------')
         console.log(uploadedTasks)
         //3. 成功则清空
@@ -83,12 +78,18 @@ export function* syncTask(action) {
                 Storage.clearMapForKey('notSyncTasks');
                 yield put({ type: SYNC_TASK_SUCCEED })
             } else {
+                if (curUploadedTask) {
+                    Storage.save({
+                        key: 'notSyncTasks',
+                        id: uuidv4(),
+                        data: curUploadedTask,
+                    });
+                }
                 yield put({ type: SYNC_TASK_FAIL })
             }
 
 
         }
-
         //上传后，修改lastLearnDate
         yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
     } catch (err) {
@@ -97,7 +98,7 @@ export function* syncTask(action) {
         if (curUploadedTask) {
             Storage.save({
                 key: 'notSyncTasks',
-                id: curUploadedTask.command.split('_').join('-') + (curUploadedTask.data.taskOrder || ''),
+                id: uuidv4(),
                 data: curUploadedTask,
             });
         }
@@ -105,7 +106,6 @@ export function* syncTask(action) {
     }
 
 }
-
 
 
 /**watch saga */

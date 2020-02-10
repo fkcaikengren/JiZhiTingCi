@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
+import Swiper from 'react-native-swiper'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style';
 import VocaTaskDao from '../service/VocaTaskDao';
@@ -10,12 +11,10 @@ import VocaDao from '../service/VocaDao';
 import VocaUtil from '../common/vocaUtil';
 import { store } from '../../../redux/store'
 import * as Constant from '../common/constant';
-
-
+import VocaGroupService from '../service/VocaGroupService';
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
-const PaneBgColor = '#808080EE'
 
 /**
  * 关于CommonModal的展示模板
@@ -26,6 +25,7 @@ export default class PlayListPane extends Component {
         super(props)
         this.taskDao = VocaTaskDao.getInstance()
         this.vocaDao = VocaDao.getInstance()
+        this.vgService = new VocaGroupService()
     }
 
     render() {
@@ -51,7 +51,7 @@ export default class PlayListPane extends Component {
         return <TouchableOpacity onPress={() => {
             //判断VocaTask是否处于今日任务中 
             if (item.disablePlay) {
-                app.toast.show("该列表正在学习中,暂时无法播放", 1000)
+                app.toast.show("该列表正在学习中,无法播放", 1000)
                 return //结束
             }
             if (autoPlayTimer) {
@@ -91,45 +91,127 @@ export default class PlayListPane extends Component {
         </TouchableOpacity>
     }
 
+
+    _renderGroupItem = ({ item, index }) => {
+        const { app, vocaPlay } = store.getState()
+        const { autoPlayTimer, themes } = vocaPlay
+        const { autoplay, changePlayTimer, loadTask, changeNormalType, changeTheme } = this.props
+
+        const listenTimes = item.listenTimes
+        const testTimes = item.testTimes
+        const label = '生词'
+        const disablePlay = (item.count < 5)
+        let dotColor = '#1890FFEE'
+        if (disablePlay) {
+            dotColor = '#F2553FEE'
+        }
+        // 播放新的列表
+        return <TouchableOpacity onPress={() => {
+            if (disablePlay) {
+                app.toast.show("单词数量少于5个,无法播放", 1000)
+                return //结束
+            }
+            const virtualTask = VocaUtil.genVirtualTask(item.words, item.groupName, item.id)
+            const showWordInfos = this.vocaDao.getWordInfos(item.words)
+            changeNormalType(Constant.BY_VIRTUAL_TASK)
+            loadTask(virtualTask, showWordInfos)
+            //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
+            autoplay(0)
+            // NotificationManage.play((e)=>{
+            //     console.log(e)
+            // },()=>null);
+            //随机切换主题
+            changeTheme(VocaUtil.randomNum(0, themes.length - 1))
+        }}>
+            <View style={[styles.taskItem, gstyles.r_between]}>
+                <View style={[{ flex: 1, height: '100%' }, gstyles.r_start]}>
+                    <View style={[gstyles.c_center, { marginRight: 10 }]}>
+                        <Text style={[gstyles.serialText, { color: '#FFF' }]}>{index < 9 ? '0' + (index + 1) : (index + 1)}</Text>
+                        <View style={[styles.statusDot, { backgroundColor: dotColor }]} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Text style={gstyles.lg_white}>{item.groupName}</Text>
+                        <View style={[gstyles.r_start]}>
+                            <Text style={[gstyles.labelText]}>{label}</Text>
+                            <Text style={[gstyles.noteText, { color: '#FFF' }]}>{`共${item.count}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>
+                        </View>
+                    </View>
+                </View>
+                <FontAwesome name="play-circle" size={24} color="#EFEFEF" style={{ marginRight: 10 }} />
+            </View>
+        </TouchableOpacity>
+
+    }
+
+    _onIndexChanged = (index) => {
+        const { setContentState } = store.getState().app.commonModal
+        setContentState({ pageIndex: index })
+    }
+
     _renderPlayList = () => {
         const { plan } = store.getState().plan
+        const { getContentState } = store.getState().app.commonModal
         return () => {
-            const data = this.taskDao.getAllTasks().map((task, i) => {
-                let disablePlay = false
-                if (VocaUtil.isLearningInTodayTasks(task.taskOrder)) {
-                    disablePlay = true
-                }
-                return {
-                    disablePlay,
-                    taskOrder: task.taskOrder,
-                    status: task.status,
-                    listenTimes: task.listenTimes,
-                    testTimes: task.testTimes,
-                    wordCount: task.wordCount
-                }
-            })
-            return <View style={[gstyles.c_start, { width: '100%', }]}>
+            const { pageIndex, playTasks, playGroups, isLoadingTasks, isLoadingGroups } = getContentState()
+            return <View style={[gstyles.c_start, { width: '100%', height: 440 }]}>
                 <View style={[styles.modalHeader, gstyles.r_center]}>
-                    <Text style={gstyles.white}>{plan.bookName}</Text>
+                    <Text style={gstyles.md_white}>{pageIndex === 0 ? plan.bookName : '生词'}</Text>
                 </View>
-                <View style={{ height: 40 }}>
-                </View>
-                {data.length > 0 &&
-                    <FlatList
-                        style={{ width: '100%' }}
-                        data={data}
-                        renderItem={this._renderTaskItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        ListFooterComponent={<View style={[{ width: '100%', height: 50, }, gstyles.r_center]}>
-                        </View>}
-                    />
-                }
-                {data.length <= 0 &&
-                    <View style={[gstyles.c_center, { marginTop: 80 }]}>
-                        <AliIcon name={'nodata_icon'} size={80} color={gstyles.white} />
-                        <Text style={gstyles.md_white}>你还没有学过的单词列表哦</Text>
+                <Swiper
+                    style={styles.listSize}
+                    ref={comp => this.swiper = comp}
+                    showsPagination={true}
+                    loop={false}
+                    onIndexChanged={this._onIndexChanged}
+                    index={pageIndex}
+                    loadMinimal loadMinimalSize={2}
+                    dotColor='#FFFFFFAA'
+                    activeDotColor='#FFE957'
+                    paginationStyle={styles.dotPosition}
+                >
+                    {/* 任务播放列表 */}
+                    <View style={[styles.listSize, gstyles.c_start]}>
+                        {isLoadingTasks &&
+                            <Text style={[gstyles.md_white, { marginTop: 180 }]}>加载中...</Text>
+                        }
+                        {!isLoadingTasks && playTasks.length > 0 &&
+                            <FlatList
+                                style={{ width: '100%' }}
+                                data={playTasks}
+                                renderItem={this._renderTaskItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                ListFooterComponent={<View style={[{ width: '100%', height: 30, }, gstyles.r_center]}>
+                                </View>}
+                            />
+                        }
+                        {!isLoadingTasks && playTasks.length <= 0 &&
+                            <View style={[gstyles.c_center, { marginTop: 80 }]}>
+                                <AliIcon name={'no-data'} size={50} color={gstyles.white} />
+                                <Text style={gstyles.md_white}>暂无学习过的单词</Text>
+                            </View>
+                        }
                     </View>
-                }
+                    {/* 生词播放列表 */}
+                    <View style={[styles.listSize, gstyles.c_start]}>
+                        {isLoadingGroups &&
+                            <Text style={[gstyles.md_white, { marginTop: 180 }]}>加载中...</Text>
+                        }
+                        {!isLoadingGroups &&
+                            <FlatList
+                                style={{ width: '100%' }}
+                                data={playGroups}
+                                renderItem={this._renderGroupItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                ListFooterComponent={<View style={[{ width: '100%', height: 30, }, gstyles.r_center]}>
+                                </View>}
+                            />
+                        }
+
+
+                    </View>
+                </Swiper>
+
+
             </View>
 
 
@@ -139,22 +221,57 @@ export default class PlayListPane extends Component {
 
 
     /**
-     * 显示分享模板
-     * @param {*} commonModal 
+     * 显示播放列表
      */
     show() {
-        const { app } = store.getState()
-        app.commonModal.show({
+        const { commonModal } = store.getState().app
+        const { show, setContentState } = commonModal
+
+        setContentState({
+            pageIndex: 0,
+            playTasks: [],
+            isLoadingTasks: true,
+            playGroups: [],
+            isLoadingGroups: true
+        })
+        show({
             renderContent: this._renderPlayList(),
             modalStyle: {
-                height: 420,
+                height: 440,
                 borderTopLeftRadius: 12,
                 borderTopRightRadius: 12,
-                backgroundColor: PaneBgColor,
+                backgroundColor: '#808080EE',
             },
             backdropPressToClose: true,
             position: 'bottom'
         })
+        // 加载数据，改变状态
+        const playTasks = this.taskDao.getAllTasks().map((task, i) => {
+            let disablePlay = false
+            if (VocaUtil.isLearningInTodayTasks(task.taskOrder)) {
+                disablePlay = true
+            }
+            return {
+                disablePlay,
+                taskOrder: task.taskOrder,
+                status: task.status,
+                listenTimes: task.listenTimes,
+                testTimes: task.testTimes,
+                wordCount: task.wordCount
+            }
+        })
+        setContentState({
+            playTasks: playTasks, isLoadingTasks: false
+        })
+        Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
+            const groupOrders = JSON.parse(groupOrdersData)
+            const vocaGroups = this.vgService.getAllGroups(true)
+            const playGroups = groupOrders.map((order, i) => vocaGroups[order])
+            setContentState({
+                playGroups: playGroups, isLoadingGroups: false
+            })
+        })
+
     }
 }
 
@@ -162,19 +279,20 @@ const styles = StyleSheet.create({
     modalHeader: {
         width: width,
         height: 40,
-        position: 'absolute',
-        top: 0,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
-        borderColor: '#EFEFEF88',
+        borderColor: '#EFEFEF66',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
-
+    listSize: {
+        width: width,
+        height: 370
+    },
     taskItem: {
         width: '100%',
         paddingHorizontal: 10,
         paddingVertical: 8,
-        borderColor: '#666666EE',
+        borderColor: '#777777EE',
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
 
@@ -183,6 +301,14 @@ const styles = StyleSheet.create({
         height: 4,
         borderRadius: 20
     },
+    dotPosition: {
+        position: 'absolute',
+        bottom: 4,
+        left: 0,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });
 
 

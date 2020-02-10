@@ -292,7 +292,6 @@ export default class TestPage extends Component {
                 })
             }
             if (this.props.mode === 'study') {      //学习模式下
-
                 this.props.updateTask({ task: newTask })
                 let params = {}
                 if (routeName === 'Home') {
@@ -347,6 +346,8 @@ export default class TestPage extends Component {
             this.props.updatePlayTask(newTask, showWordInfos)
             //上传数据
             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
+        } else {
+            //todo: 虚拟 生词本-测试次数+1
         }
         this.props.navigation.goBack()
     }

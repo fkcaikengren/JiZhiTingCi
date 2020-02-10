@@ -12,7 +12,6 @@ import { store } from "../../../../redux/store"
  * @description 同步生词本数据
  */
 export function* syncGroup(action) {
-
   const syncArr = yield Storage.getAllDataForKey('notSyncGroups')
   console.log(syncArr)
   if (syncArr && syncArr.length > 0) {
@@ -29,7 +28,7 @@ export function* syncGroup(action) {
     }
   } else {
     if (action.payload.isByHand) {
-      store.getState().app.toast.show("暂无同步数据", 2000)
+      store.getState().app.toast.show("暂无同步数据", 1000)
     }
   }
 

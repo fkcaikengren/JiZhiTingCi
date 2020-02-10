@@ -153,7 +153,7 @@ export default class VocaListPage extends Component {
       if (words.length < Constant.MIN_PLAY_NUMBER) {
         this.props.toast.show('当前选择不足5个，不可以播放哦')
       } else {
-        const virtualTask = VocaUtil.genVirtualTask(words)
+        const virtualTask = VocaUtil.genVirtualTask(words, '来源：单词列表')
         // console.log(virtualTask)
 
         //暂停
