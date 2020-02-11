@@ -9,6 +9,7 @@ export const CHANGE_SHOW_WORD_INFOS = 'CHANGE_SHOW_WORD_INFOS'  //改变要显�
 
 export const CHANGE_PLAY_TIMER = 'CHANGE_PLAY_TIMER';             //暂停播放
 export const CHANGE_CUR_INDEX = 'CHANGE_CUR_INDEX';               // 更新当前单词
+export const CHANGE_TEST_TIMES = 'CHANGE_TEST_TIMES'              //修改testTimes 测试遍数
 export const CHANGE_INTERVAL = 'CHANGE_INTERVAL';                 //控制时间间隔
 export const TOGGLE_WORD = 'TOGGLE_WORD';             //控制英文单词显示
 export const TOGGLE_TRAN = 'TOGGLE_TRAN';             //控制中文释义显示
@@ -16,11 +17,13 @@ export const GET_BGS = 'GET_BGS'                      //获取所有播放背景
 export const CHANGE_BG = 'CHANGE_BG';                 //改变背景
 export const SHOW_BLUR = 'SHOW_BLUR'                  //是否显示模糊效果
 export const CHANGE_THEME = 'CHANGE_THEME'            //改变主题
-export const TOGGLE_TASK_MODAL = 'TOGGLE_TASK_MODAL'  //打开关闭任务列表
 
 export const PASS_WORD = 'PASS_WORD';                 //Pass单词
 export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模式的类型
-export const CLEAR_PLAY = 'CLEAR_PLAY'    //清空任务
+export const CHANGE_HOW_PLAY = 'CHANGE_HOW_PLAY'        //修改播放方式
+
+
+export const CLEAR_PLAY = 'CLEAR_PLAY'                 //清空任务
 
 
 const fn = (payload) => {
@@ -28,13 +31,15 @@ const fn = (payload) => {
 }
 
 // 驼峰式命名，不可以更改(与变量名必须对应)
-export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, changeCurIndex, changeInterval, toggleWord, toggleTran,
-  changeBg, showBlur, changeTheme, passWord, changeNormalType, clearPlay } = createActions({
+export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer,
+  changeCurIndex, changeTestTimes, changeInterval, toggleWord, toggleTran,
+  changeBg, showBlur, changeTheme, passWord, changeNormalType, changeHowPlay, clearPlay } = createActions({
 
     //加载任务  
     [LOAD_TASK]: (task, showWordInfos) => {
       return { task, showWordInfos };
     },
+    //更新任务
     [UPDATE_PLAY_TASK]: (task, showWordInfos) => {
       return { task, showWordInfos };
     },
@@ -49,6 +54,10 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
     //更新当前单词
     [CHANGE_CUR_INDEX]: (payload) => {
       return payload;
+    },
+    //更新测试次数
+    [CHANGE_TEST_TIMES]: (testTimes) => {
+      return { testTimes }
     },
     //改变播放间隔
     [CHANGE_INTERVAL]: (interval) => {
@@ -83,6 +92,9 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer, c
 
     [CHANGE_NORMAL_TYPE]: (normalType) => {
       return { normalType }
+    },
+    [CHANGE_HOW_PLAY]: (howPlay) => {
+      return { howPlay }
     },
 
     [CLEAR_PLAY]: () => {

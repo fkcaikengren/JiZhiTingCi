@@ -110,7 +110,7 @@ export default class VocaGroupDao {
 
 
     /**
-     *  保存生词本数据
+     *  批量保存生词本数据
      */
     saveVocaGroups = (vocaGroups) => {
         this.realm.write(() => {
@@ -167,11 +167,11 @@ export default class VocaGroupDao {
      * @returns {boolean}
      */
     deleteGroup = (groupId) => {
-        let result = null
+        let deleteId = null
         this.realm.write(() => {
             let group = this.realm.objects('VocaGroup').filtered('id = "' + groupId + '"')[0];
             if (group) {
-                result = group
+                deleteId = group.id
                 let sections = group.sections;
                 for (let key in sections) {
                     this.realm.delete(sections[key].words)
@@ -180,7 +180,7 @@ export default class VocaGroupDao {
                 this.realm.delete(group)
             }
         })
-        return result
+        return deleteId
     }
 
 

@@ -97,7 +97,8 @@ const mapDispatchToProps = {
     updateTask: homeAction.updateTask,
     syncTask: homeAction.syncTask,
     changeLearnedWordCount: PlanAction.changeLearnedWordCount,
-    updatePlayTask: vocaPlayAction.updatePlayTask
+    updatePlayTask: vocaPlayAction.updatePlayTask,
+    changeTestTimes: vocaPlayAction.changeTestTimes
 }
 
 

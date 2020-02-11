@@ -352,7 +352,6 @@ export default class VocaUtil {
             playName,
             curIndex: 0,
             taskWords: [],
-            wordCount: words.length,
             listenTimes: 0,
             testTimes: 0
         }
@@ -375,6 +374,7 @@ export default class VocaUtil {
                 })
             }
         }
+        copyTask.wordCount = copyTask.taskWords.length
         return copyTask
     }
 

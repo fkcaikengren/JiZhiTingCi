@@ -19,30 +19,46 @@ export default class VocaGroupService {
   }
 
   /**
-    * @description 通过id获取生词本详情
-    * @memberof VocaGroupService
-    */
+     * 获取具体某生词本
+     * @param id
+     * @returns {any} 
+     */
   getGroupById = (id) => {
     return this.vgDao.getGroupById(id)
   }
-
   /**
-   * @description 通过名字获取生词本详情
-   * @memberof VocaGroupService
-   */
-  getGroupByName = (groupName) => {
-    return this.vgDao.getGroupByName(groupName)
+    * @description 通过id获取生词本详情
+    * @memberof VocaGroupService
+    */
+  getGroupAndWordsById = (id) => {
+    const vg = this.vgDao.getGroupById(id)
+    const obj = {
+      id: vg.id,
+      groupName: vg.groupName,
+      count: vg.count,
+      isDefault: vg.isDefault,
+      listenTimes: vg.listenTimes,
+      testTimes: vg.testTimes,
+      createTime: vg.createTime,
+    }
+    let words = []
+    for (let section of vg.sections) {
+      const sWords = section.words.map((w, _) => w.word)
+      words = words.concat(sWords)
+    }
+    obj.words = words
+    return obj
   }
 
   /**
    * @description 获取所有生词本
    * @memberof VocaGroupService
    */
-  getAllGroups = (hasWords = false) => {
+  getAllGroups = () => {
     const vocaGroups = this.vgDao.getAllGroups();
     const vocaGroupsObj = {}
     for (let vg of vocaGroups) {
-      const obj = {
+      vocaGroupsObj[vg.id] = {
         id: vg.id,
         groupName: vg.groupName,
         count: vg.count,
@@ -51,15 +67,6 @@ export default class VocaGroupService {
         testTimes: vg.testTimes,
         createTime: vg.createTime,
       }
-      if (hasWords) {
-        let words = []
-        for (let section of vg.sections) {
-          const sWords = section.words.map((w, _) => w.word)
-          words = words.concat(sWords)
-        }
-        obj.words = words
-      }
-      vocaGroupsObj[vg.id] = obj
     }
     return vocaGroupsObj
   }
@@ -262,7 +269,7 @@ export default class VocaGroupService {
    * 修改生词本的testTimes
    */
   updateTestTimes = async (id, testTimes) => {
-    const group = this.vgDao.modifyListenTimes(id, testTimes)
+    const group = this.vgDao.modifyTestTimes(id, testTimes)
     const saveKey = 'notSyncGroups'
     const saveId = COMMAND_GROUP_MODIFY_TEST_TIMES.split('_').join('-')
     //若存在则删除

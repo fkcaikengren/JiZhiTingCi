@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     },
 
     triggerText: {
+        width: 40,
         color: '#FFF',
         paddingHorizontal: 4,
         fontSize: 14,
@@ -111,17 +112,6 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         borderRadius: 70,
-    },
-    intervalButton: {
-        width: 26,
-        color: '#FFF',
-        paddingHorizontal: 3,
-        fontSize: 14,
-        textAlign: 'center',
-        lineHeight: 20,
-        borderWidth: 1,
-        borderColor: '#FFF',
-        borderRadius: 5
     },
     intervalFont: {
         fontSize: 12,

@@ -4,12 +4,6 @@ import { Themes } from '../common/vocaConfig'
 import * as Constant from '../common/constant'
 import { LOGOUT } from '../../mine/redux/action/mineAction'
 
-/**
- *  总结：
- *  1. state的一级变量不可以直接修改，但是二级变量可以直接修改。
- *     例如：task不可以在state里直接修改，但是task的words可以直接修改 
- */
-
 
 const defaultState = {
 
@@ -36,11 +30,14 @@ const defaultState = {
     themes: Themes,
     //当前主题id
     themeId: 1,
-    //加载状态
-    isLoadPending: false,
 
     //normal播放模式的类型
     normalType: Constant.BY_REAL_TASK, //默认是真实task 构建播放内容
+    //播放方式：[顺序播放,单曲循环]
+    howPlay: Constant.PLAY_WAY_SINGLE,  //默认单曲循环
+
+    //加载状态
+    isLoadPending: false,
 
 }
 
@@ -67,7 +64,7 @@ export const vocaPlay = (state = defaultState, action) => {
                 ...state, autoPlayTimer: action.payload.autoPlayTimer
             };
         //更新当前单词
-        case vpAction.CHANGE_CUR_INDEX:
+        case vpAction.CHANGE_CUR_INDEX: {
             const newTask = {
                 ...state.task,
                 curIndex: action.payload.curIndex,
@@ -76,6 +73,18 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state, task: newTask, curIndex: action.payload.curIndex,
             };
+        }
+        // 改变任务的testTimes
+        case vpAction.CHANGE_TEST_TIMES: {
+            const newTask = {
+                ...state.task,
+                testTimes: action.payload.testTimes
+            }
+            return {
+                ...state, task: newTask,
+            };
+        }
+
         //改变播放间隔
         case vpAction.CHANGE_INTERVAL:
             return {
@@ -123,11 +132,7 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state, themeId: action.payload.themeId
             };
-        // 是否显示任务面板
-        case vpAction.TOGGLE_TASK_MODAL:
-            return {
-                ...state, tasksModalOpened: action.payload.tasksModalOpened
-            };
+
         //Pass单词
         case vpAction.PASS_WORD:
             return {
@@ -137,10 +142,15 @@ export const vocaPlay = (state = defaultState, action) => {
                 showWordInfos: action.payload.showWordInfos
             };
 
-        // 改变normal_type
+        // 修改normalType
         case vpAction.CHANGE_NORMAL_TYPE:
             return {
                 ...state, normalType: action.payload.normalType
+            };
+        // 修改howPlay
+        case vpAction.CHANGE_HOW_PLAY:
+            return {
+                ...state, howPlay: action.payload.howPlay
             };
         // 清空任务
         case vpAction.CLEAR_PLAY:

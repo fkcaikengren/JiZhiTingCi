@@ -121,6 +121,7 @@ const mapDispatchToProps = {
     syncTask: homeAction.syncTask,
     changeLearnedWordCount: PlanAction.changeLearnedWordCount,
     updatePlayTask: vocaPlayAction.updatePlayTask,
+    changeTestTimes: vocaPlayAction.changeTestTimes
 }
 
 

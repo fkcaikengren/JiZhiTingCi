@@ -20,6 +20,7 @@ import VocaTaskService from "./service/VocaTaskService";
 import { VOCABULARY_DIR, COMMAND_MODIFY_TASK, COMMAND_MODIFY_PASSED } from "../../common/constant";
 import _ from 'lodash'
 import { store } from "../../redux/store";
+import VocaGroupService from "./service/VocaGroupService";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -323,7 +324,7 @@ export default class TestPage extends Component {
         }
     }
 
-    //非学习模式下完成测试#todo:
+    //非学习模式下完成测试
     _normalTestEnd = (task) => {
         const showWordInfos = []
         let i = 0
@@ -346,8 +347,13 @@ export default class TestPage extends Component {
             this.props.updatePlayTask(newTask, showWordInfos)
             //上传数据
             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
-        } else {
-            //todo: 虚拟 生词本-测试次数+1
+        } else if (this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK) {
+            if (task && task.taskOrder !== Constant.VIRTUAL_TASK_ORDER) {//如果是生词本
+                this.props.changeTestTimes(task.testTimes)
+                const vgService = new VocaGroupService()
+                vgService.updateTestTimes(task.taskOrder, task.testTimes)
+                console.log(task.taskOrder + '--生词本 测试次数--' + task.testTimes)
+            }
         }
         this.props.navigation.goBack()
     }

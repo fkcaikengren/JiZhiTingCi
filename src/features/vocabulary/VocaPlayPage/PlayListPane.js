@@ -111,8 +111,9 @@ export default class PlayListPane extends Component {
                 app.toast.show("单词数量少于5个,无法播放", 1000)
                 return //结束
             }
-            const virtualTask = VocaUtil.genVirtualTask(item.words, item.groupName, item.id)
-            const showWordInfos = this.vocaDao.getWordInfos(item.words)
+            const group = this.vgService.getGroupAndWordsById(item.id)
+            const virtualTask = VocaUtil.genVirtualTask(group.words, group.groupName, group.id)
+            const showWordInfos = this.vocaDao.getWordInfos(group.words)
             changeNormalType(Constant.BY_VIRTUAL_TASK)
             loadTask(virtualTask, showWordInfos)
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
@@ -185,8 +186,8 @@ export default class PlayListPane extends Component {
                             />
                         }
                         {!isLoadingTasks && playTasks.length <= 0 &&
-                            <View style={[gstyles.c_center, { marginTop: 80 }]}>
-                                <AliIcon name={'no-data'} size={50} color={gstyles.white} />
+                            <View style={[gstyles.c_center, { marginTop: 120 }]}>
+                                <AliIcon name={'no-data'} size={80} color='#DFDFDF' />
                                 <Text style={gstyles.md_white}>暂无学习过的单词</Text>
                             </View>
                         }
@@ -206,16 +207,9 @@ export default class PlayListPane extends Component {
                                 </View>}
                             />
                         }
-
-
                     </View>
                 </Swiper>
-
-
             </View>
-
-
-
         }
     }
 
@@ -265,7 +259,7 @@ export default class PlayListPane extends Component {
         })
         Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
             const groupOrders = JSON.parse(groupOrdersData)
-            const vocaGroups = this.vgService.getAllGroups(true)
+            const vocaGroups = this.vgService.getAllGroups()
             const playGroups = groupOrders.map((order, i) => vocaGroups[order])
             setContentState({
                 playGroups: playGroups, isLoadingGroups: false
@@ -310,7 +304,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 });
-
 
 PlayListPane.propTypes = {
     autoplay: PropTypes.func.isRequired,

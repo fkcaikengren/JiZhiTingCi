@@ -48,13 +48,17 @@ export const IN_REVIEW_TEST = 'IN_REVIEW_TEST'
 export const IN_REVIEW_RETEST = 'IN_REVIEW_RETEST'
 export const IN_REVIEW_FINISH = 'IN_REVIEW_FINISH'
 
-//
-export const IN_CASUAL_PLAY = 'IN_CASUAL_PLAY'
+
 
 // normalType 的两种取值
 export const BY_REAL_TASK = 'BY_REAL_TASK'
 export const BY_VIRTUAL_TASK = 'BY_VIRTUAL_TASK'
 export const VIRTUAL_TASK_ORDER = 1000000
+
+//howPlay 播放方式
+export const PLAY_WAY_SINGLE = 'PLAY_WAY_SINGLE' //单曲循环
+export const PLAY_WAY_LOOP = 'PLAY_WAY_LOOP'  //顺序播放
+
 
 //最小播放数量
 export const MIN_PLAY_NUMBER = 5

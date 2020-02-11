@@ -13,6 +13,7 @@ import styles from './style'
 import gstyles from '../../../style';
 import PlayListPane from './PlayListPane';
 import { store } from '../../../redux/store';
+import { PLAY_WAY_SINGLE, PLAY_WAY_LOOP } from '../common/constant';
 
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
@@ -136,9 +137,19 @@ export default class PlayController extends React.Component {
 
 
     render() {
-        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex } = store.getState().vocaPlay
+        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex, howPlay } = store.getState().vocaPlay
         const { wordCount } = task
         const { toggleWord, toggleTran } = this.props;
+        //播放方式
+        howPlayIcon = ''
+        switch (howPlay) {
+            case PLAY_WAY_SINGLE:
+                howPlayIcon = 'danquxunhuan'
+                break
+            case PLAY_WAY_LOOP:
+                howPlayIcon = 'shunxubofang'
+                break
+        }
         //主题
         const Theme = themes[themeId]
         const selected = {
@@ -189,6 +200,25 @@ export default class PlayController extends React.Component {
                             </MenuOption>
                         </MenuOptions>
                     </Menu>
+                    {/* 时间间隔 */}
+                    <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+                        <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.triggerText, }} />
+                        <MenuOptions>
+                            <MenuOption style={gstyles.haireBottom} value={4.0}>
+                                <Text style={popStyle}>4.0s</Text>
+                            </MenuOption>
+                            <MenuOption style={gstyles.haireBottom} value={3.0}>
+                                <Text style={popStyle}>3.0s</Text>
+                            </MenuOption>
+                            <MenuOption style={gstyles.haireBottom} value={2.0}>
+                                <Text style={popStyle}>2.0s</Text>
+                            </MenuOption>
+                            <MenuOption value={1.4}>
+                                <Text style={popStyle}>1.0s</Text>
+                            </MenuOption>
+
+                        </MenuOptions>
+                    </Menu>
                     {/* 中文按钮 */}
                     <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
                         onStartShouldSetResponder={() => true}
@@ -214,29 +244,21 @@ export default class PlayController extends React.Component {
                 {/* 播放按钮 */}
                 <Row style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-around',
+                    justifyContent: 'center',
                     alignItems: 'center',
                     paddingHorizontal: 14,
                     marginBottom: 10,
                 }}>
-                    <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.intervalButton, }} />
-                        <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                <Text style={popStyle}>4.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={3.0}>
-                                <Text style={popStyle}>3.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={2.0}>
-                                <Text style={popStyle}>2.0s</Text>
-                            </MenuOption>
-                            <MenuOption value={1.4}>
-                                <Text style={popStyle}>1.0s</Text>
-                            </MenuOption>
-
-                        </MenuOptions>
-                    </Menu>
+                    {/* 播放方式 */}
+                    <TouchableOpacity style={{ position: 'absolute', left: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
+                        if (howPlay === PLAY_WAY_SINGLE) {
+                            this.props.changeHowPlay(PLAY_WAY_LOOP)
+                        } else if (howPlay === PLAY_WAY_LOOP) {
+                            this.props.changeHowPlay(PLAY_WAY_SINGLE)
+                        }
+                    }}>
+                        <AliIcon name={howPlayIcon} size={20} color='#FFF'></AliIcon>
+                    </TouchableOpacity>
                     <View style={[{ width: width * (1 / 2) + 30 }, gstyles.r_around]}>
                         <TouchableWithoutFeedback >
                             <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
@@ -257,9 +279,9 @@ export default class PlayController extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                        console.log('播放列表-----go')
+                    <TouchableOpacity style={{ position: 'absolute', right: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
                         this.playListPane.show()
+                        this.props.syncGroup({ isByHand: false })
                     }}>
                         <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
                     </TouchableOpacity>
@@ -291,6 +313,8 @@ PlayController.propTypes = {
     toggleTran: PropTypes.func.isRequired,
     changeBg: PropTypes.func.isRequired,
     changeNormalType: PropTypes.func.isRequired,
+    changeHowPlay: PropTypes.func.isRequired,
     loadTask: PropTypes.func.isRequired,
     changeTheme: PropTypes.func.isRequired,
+    syncGroup: PropTypes.func.isRequired,
 }
