@@ -75,7 +75,8 @@ export default class InputTemplate {
             show
         } = commonModal
         setContentState({
-            name: ""
+            name: "",
+
         })
         show({
             renderContent: this._renderInputer({ commonModal, title, placeholder, onCancel, onConfirm }), //函数
@@ -86,6 +87,8 @@ export default class InputTemplate {
                 borderRadius: 10,
             },
             heightForListenKeyBoard: modalHeight,
+            //动画
+            animationDuration: 1
         })
     }
 }

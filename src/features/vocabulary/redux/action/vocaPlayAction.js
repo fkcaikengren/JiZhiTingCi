@@ -23,6 +23,16 @@ export const CHANGE_NORMAL_TYPE = 'CHANGE_NORMAL_TYPE' //修改normal播放模�
 export const CHANGE_HOW_PLAY = 'CHANGE_HOW_PLAY'        //修改播放方式
 
 
+//修改 playTaskList和playGroupList
+export const CHANGE_PLAY_LIST = 'CHANGE_PLAY_LIST'
+
+
+//切换播放列表下标
+export const CHANGE_PLAY_LIST_INDEX = 'CHANGE_PLAY_LIST_INDEX'
+export const CHANGE_PLAY_LIST_INDEX_START = 'CHANGE_PLAY_LIST_INDEX_START'
+export const CHANGE_PLAY_LIST_INDEX_SUCCEED = 'CHANGE_PLAY_LIST_INDEX_SUCCEED'
+
+
 export const CLEAR_PLAY = 'CLEAR_PLAY'                 //清空任务
 
 
@@ -33,7 +43,8 @@ const fn = (payload) => {
 // 驼峰式命名，不可以更改(与变量名必须对应)
 export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer,
   changeCurIndex, changeTestTimes, changeInterval, toggleWord, toggleTran,
-  changeBg, showBlur, changeTheme, passWord, changeNormalType, changeHowPlay, clearPlay } = createActions({
+  changeBg, showBlur, changeTheme, passWord, changeNormalType, changeHowPlay,
+  changePlayList, changePlayListIndex, clearPlay } = createActions({
 
     //加载任务  
     [LOAD_TASK]: (task, showWordInfos) => {
@@ -52,9 +63,7 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer,
       return { autoPlayTimer };
     },
     //更新当前单词
-    [CHANGE_CUR_INDEX]: (payload) => {
-      return payload;
-    },
+    [CHANGE_CUR_INDEX]: fn,
     //更新测试次数
     [CHANGE_TEST_TIMES]: (testTimes) => {
       return { testTimes }
@@ -72,9 +81,7 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer,
       return { showTran }
     },
     // 获取所有背景图
-    [GET_BGS]: () => {
-
-    },
+    [GET_BGS]: fn,
     //改变背景
     [CHANGE_BG]: (bgPath) => {
       return { bgPath }
@@ -89,14 +96,19 @@ export const { loadTask, updatePlayTask, changeShowWordInfos, changePlayTimer,
     },
     //pass单词
     [PASS_WORD]: fn,
-
+    //改变normalType
     [CHANGE_NORMAL_TYPE]: (normalType) => {
       return { normalType }
     },
+    //改变播放方式
     [CHANGE_HOW_PLAY]: (howPlay) => {
       return { howPlay }
     },
-
+    // 修改播放列表
+    [CHANGE_PLAY_LIST]: fn,
+    //修改播放列表播放下标
+    [CHANGE_PLAY_LIST_INDEX]: fn,
+    // 清空
     [CLEAR_PLAY]: () => {
       return {}
     }

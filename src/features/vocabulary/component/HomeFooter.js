@@ -64,13 +64,11 @@ export default class HomeFooter extends React.Component {
         }
     }
     render() {
-        const { task, curIndex, autoPlayTimer, showWordInfos, bgPath, normalType } = this.props.vocaPlay
+        const { task, curIndex, autoPlayTimer, showWordInfos, bgPath } = this.props.vocaPlay
         // console.log(curIndex)
         // console.log(showWordInfos)
         const { wordCount } = task
         const progressNum = wordCount == undefined ? 0 : (curIndex + 1) / wordCount
-        //任务名
-        let name = (normalType === Constant.BY_VIRTUAL_TASK) ? task.playName : VocaUtil.genTaskName(task.taskOrder)
         let word = showWordInfos[curIndex] ? showWordInfos[curIndex].word : ''
 
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
@@ -102,7 +100,7 @@ export default class HomeFooter extends React.Component {
                     <Row style={[gstyles.r_between, { marginBottom: 5 }]}>
                         <View style={gstyles.c_center_left}>
                             <Text style={gstyles.md_black}>{word}</Text>
-                            <Text style={gstyles.sm_gray}>{name}</Text>
+                            <Text style={gstyles.sm_gray}>{task.playName}</Text>
                         </View>
                         <View style={gstyles.r_end}>
                             <AliIcon name={autoPlayTimer === 0 ? 'bofang1' : 'zanting1'} size={22} color='#404040' style={{ paddingRight: 20 }} onPress={() => {

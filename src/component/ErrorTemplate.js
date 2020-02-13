@@ -121,6 +121,8 @@ export default class ErrorTemplate {
         setContentState({
             checkedIndex: [],
             errDesc: "",
+
+
         })
         show({
             renderContent: this._renderErrroSelector({ commonModal, title, errorTypes, params, onSucceed }), //函数
@@ -131,6 +133,8 @@ export default class ErrorTemplate {
                 borderRadius: 10,
             },
             heightForListenKeyBoard: modalHeight,
+            //动画
+            animationDuration: 1
         })
     }
 }

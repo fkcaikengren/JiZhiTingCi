@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Keyboard } from 'react-native';
+import { Text, View, StyleSheet, Keyboard, Easing } from 'react-native';
 import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
 import gstyles from '../style';
@@ -16,7 +16,10 @@ const defaultState = {
     },
     backdropPressToClose: false,
     position: "center",
+    animationDuration: 400,
+    easing: Easing.elastic(0.6),
     heightForListenKeyBoard: 0,
+
 }
 
 export default class CommonModal extends React.Component {
@@ -47,12 +50,14 @@ export default class CommonModal extends React.Component {
     getContentState = () => {
         return this.state.contentState
     }
-    show = ({ renderContent, modalStyle, backdropPressToClose = false, position = "center", heightForListenKeyBoard = 0 }) => {
+    show = ({ renderContent, modalStyle, animationDuration = 400, backdropPressToClose = false, position = "center", heightForListenKeyBoard = 0 }) => {
         this.setState({
             isOpen: true,
             renderContent,
             modalStyle,
-            backdropPressToClose, position,
+            animationDuration,
+            backdropPressToClose,
+            position,
             heightForListenKeyBoard
         });
     }
@@ -82,7 +87,7 @@ export default class CommonModal extends React.Component {
             backdropPressToClose={this.state.backdropPressToClose}
             swipeToClose={false}
             position={isListenKeyBoard ? "bottom" : this.state.position}
-            animationDuration={1}
+            animationDuration={this.state.animationDuration}
         >
             {this.state.renderContent(this.state.contentState)}
         </Modal>

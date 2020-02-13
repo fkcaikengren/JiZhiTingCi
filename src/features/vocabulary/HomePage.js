@@ -75,18 +75,10 @@ class HomePage extends Component {
         if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
             // #fixme:退出登录第二天获取任务异常
             IsLoginToHome = false
-            const { tasks } = this.props.home
-            const { task, normalType } = this.props.vocaPlay
-            // #todo:判断是否清空VocaPlay
-            // if (normalType === BY_REAL_TASK) {
-            //     for (let t of tasks) {
-            //         if (t.taskOrder && t.taskOrder === task.taskOrder) {
-            //             this.props.clearPlay()
-            //             break
-            //         }
-            //     }
-            // }
-
+            // 如果是任务播放，则清空VocaPlay
+            if (this.props.vocaPlay.normalType === BY_REAL_TASK) {
+                this.props.clearPlay()
+            }
             //获取今日任务
             console.log('--------------home  loadTasks------------------------')
             this.props.loadTasks({

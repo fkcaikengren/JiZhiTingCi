@@ -1,13 +1,13 @@
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
+import { Platform, Easing, StyleSheet, FlatList, View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { PropTypes } from 'prop-types';
 import Swiper from 'react-native-swiper'
+import BackgroundTimer from 'react-native-background-timer'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style';
 import VocaTaskDao from '../service/VocaTaskDao';
-import VocaDao from '../service/VocaDao';
 import VocaUtil from '../common/vocaUtil';
 import { store } from '../../../redux/store'
 import * as Constant from '../common/constant';
@@ -24,7 +24,6 @@ export default class PlayListPane extends Component {
     constructor(props) {
         super(props)
         this.taskDao = VocaTaskDao.getInstance()
-        this.vocaDao = VocaDao.getInstance()
         this.vgService = new VocaGroupService()
     }
 
@@ -34,10 +33,7 @@ export default class PlayListPane extends Component {
 
     // 渲染任务列表
     _renderTaskItem = ({ item, index }) => {
-        const { app, vocaPlay } = store.getState()
-        const { autoPlayTimer, themes } = vocaPlay
-        const { autoplay, changePlayTimer, loadTask, changeNormalType, changeTheme } = this.props
-
+        const { autoplay, changePlayTimer, changeNormalType, changeTheme, changePlayListIndex } = this.props
         let name = VocaUtil.genTaskName(item.taskOrder)
         const listenTimes = item.listenTimes
         const testTimes = item.testTimes
@@ -49,6 +45,8 @@ export default class PlayListPane extends Component {
         }
         // 播放新的任务
         return <TouchableOpacity onPress={() => {
+            const { app, vocaPlay } = store.getState()
+            const { autoPlayTimer, themes, playTaskList, playListIndex } = vocaPlay
             //判断VocaTask是否处于今日任务中 
             if (item.disablePlay) {
                 app.toast.show("该列表正在学习中,无法播放", 1000)
@@ -58,12 +56,19 @@ export default class PlayListPane extends Component {
                 BackgroundTimer.clearTimeout(autoPlayTimer);
                 changePlayTimer(0);
             }
-            //数据库加载任务
-            const task = VocaUtil.copyTaskDeep(this.taskDao.getTaskByOrder(item.taskOrder), true)
-            const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords)
             changeNormalType(Constant.BY_REAL_TASK)
-            // this.disablePass = false #todo:不能Pass单词
-            loadTask(task, showWordInfos)
+
+            let curPlayListIndex = playListIndex
+            for (let i in playTaskList) {
+                if (playTaskList[i] === item.taskOrder) {
+                    curPlayListIndex = i
+                }
+            }
+            changePlayListIndex({ //改变播放下标，重新加载播放数据
+                changeType: 0,
+                playListIndex: parseInt(curPlayListIndex)
+            })
+
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             autoplay(0)
             // NotificationManage.play((e)=>{
@@ -93,10 +98,8 @@ export default class PlayListPane extends Component {
 
 
     _renderGroupItem = ({ item, index }) => {
-        const { app, vocaPlay } = store.getState()
-        const { autoPlayTimer, themes } = vocaPlay
-        const { autoplay, changePlayTimer, loadTask, changeNormalType, changeTheme } = this.props
 
+        const { autoplay, changePlayTimer, changeNormalType, changeTheme, changePlayListIndex } = this.props
         const listenTimes = item.listenTimes
         const testTimes = item.testTimes
         const label = '生词'
@@ -107,15 +110,27 @@ export default class PlayListPane extends Component {
         }
         // 播放新的列表
         return <TouchableOpacity onPress={() => {
+            const { app, vocaPlay } = store.getState()
+            const { autoPlayTimer, themes, playGroupList, playListIndex } = vocaPlay
             if (disablePlay) {
                 app.toast.show("单词数量少于5个,无法播放", 1000)
                 return //结束
             }
-            const group = this.vgService.getGroupAndWordsById(item.id)
-            const virtualTask = VocaUtil.genVirtualTask(group.words, group.groupName, group.id)
-            const showWordInfos = this.vocaDao.getWordInfos(group.words)
+            if (autoPlayTimer) {
+                BackgroundTimer.clearTimeout(autoPlayTimer);
+                changePlayTimer(0);
+            }
             changeNormalType(Constant.BY_VIRTUAL_TASK)
-            loadTask(virtualTask, showWordInfos)
+            let curPlayListIndex = playListIndex
+            for (let i in playGroupList) {
+                if (playGroupList[i] === item.id) {
+                    curPlayListIndex = i
+                }
+            }
+            changePlayListIndex({ //改变播放下标，重新加载播放数据
+                changeType: 0,
+                playListIndex: parseInt(curPlayListIndex)
+            })
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             autoplay(0)
             // NotificationManage.play((e)=>{
@@ -151,7 +166,7 @@ export default class PlayListPane extends Component {
 
     _renderPlayList = () => {
         const { plan } = store.getState().plan
-        const { getContentState } = store.getState().app.commonModal
+        const { getContentState, hide } = store.getState().app.commonModal
         return () => {
             const { pageIndex, playTasks, playGroups, isLoadingTasks, isLoadingGroups } = getContentState()
             return <View style={[gstyles.c_start, { width: '100%', height: 440 }]}>
@@ -191,6 +206,7 @@ export default class PlayListPane extends Component {
                                 <Text style={gstyles.md_white}>暂无学习过的单词</Text>
                             </View>
                         }
+
                     </View>
                     {/* 生词播放列表 */}
                     <View style={[styles.listSize, gstyles.c_start]}>
@@ -209,6 +225,11 @@ export default class PlayListPane extends Component {
                         }
                     </View>
                 </Swiper>
+                <View style={styles.closeBtn}
+                    onStartShouldSetResponder={e => true}
+                    onResponderStart={e => hide()}>
+                    <Text style={gstyles.md_white}>关闭</Text>
+                </View>
             </View>
         }
     }
@@ -226,7 +247,9 @@ export default class PlayListPane extends Component {
             playTasks: [],
             isLoadingTasks: true,
             playGroups: [],
-            isLoadingGroups: true
+            isLoadingGroups: true,
+
+
         })
         show({
             renderContent: this._renderPlayList(),
@@ -280,7 +303,7 @@ const styles = StyleSheet.create({
     },
     listSize: {
         width: width,
-        height: 370
+        height: 340
     },
     taskItem: {
         width: '100%',
@@ -297,11 +320,19 @@ const styles = StyleSheet.create({
     },
     dotPosition: {
         position: 'absolute',
-        bottom: 4,
+        bottom: 44,
         left: 0,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    closeBtn: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        width: width,
+        height: 40,
+        ...gstyles.c_center
     }
 });
 
@@ -309,8 +340,8 @@ PlayListPane.propTypes = {
     autoplay: PropTypes.func.isRequired,
     changePlayTimer: PropTypes.func.isRequired,
     changeNormalType: PropTypes.func.isRequired,
-    loadTask: PropTypes.func.isRequired,
     changeTheme: PropTypes.func.isRequired,
+    changePlayListIndex: PropTypes.func.isRequired,
 }
 
 

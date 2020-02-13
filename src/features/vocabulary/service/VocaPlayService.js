@@ -8,11 +8,11 @@ import * as CConstant from '../../../common/constant'
 
 export default class VocaPlayService {
 
-    constructor({ listRef, stateRef, changeCurIndex, changePlayTimer, finishQuit = null, }) {
+    constructor({ listRef, stateRef, changeCurIndexAndAutoTimer, changePlayTimer, finishQuit = null, }) {
 
         this.listRef = listRef
         this.stateRef = stateRef
-        this.changeCurIndex = changeCurIndex
+        this.changeCurIndexAndAutoTimer = changeCurIndexAndAutoTimer
         this.changePlayTimer = changePlayTimer
         this.finishQuit = finishQuit
 
@@ -31,13 +31,13 @@ export default class VocaPlayService {
                 source = this.stateRef
             }
             const { autoPlayTimer } = source
-            this.changePlayTimer(0)
+            this.changePlayTimer(0)  //todo:要不要changePlayTimer
             BackgroundTimer.clearTimeout(autoPlayTimer);
         })
 
         //监听通知控制条的播放
         NotificationManage.onPlay((evt) => {
-            console.log('--窗口发送播放--')
+            // console.log('--窗口发送播放--')
             let source = store.getState().vocaPlay
             if (this.stateRef) {
                 source = this.stateRef
@@ -54,7 +54,7 @@ export default class VocaPlayService {
         if (!this.instance) {
             this.instance = new VocaPlayService({
                 listRef: null, stateRef: null,
-                changeCurIndex: null, changePlayTimer: null, finishQuit: null,
+                changeCurIndexAndAutoTimer: null, changePlayTimer: null, finishQuit: null,
             });
         }
         return this.instance;
@@ -73,42 +73,45 @@ export default class VocaPlayService {
      * @description 自动播放 
      */
     autoplay = (index) => {
-
+        console.log('---autoplay--->index: ' + index)
         let source = store.getState().vocaPlay
         if (this.stateRef) {
             source = this.stateRef
         }
 
-        const { task, showWordInfos, curIndex, interval } = source
+        const { task, showWordInfos, interval } = source
         const { wordCount } = task
 
 
         // 1.滑动 {animated: boolean是否动画, index: item的索引, viewPosition:视图位置（0-1） };
         let params = { animated: true, index, viewPosition: 0.5 };
         if (wordCount > 0) {
-            if (this.listRef) {
-                console.log('move');
+            if (this.listRef && index < wordCount) {
+                // console.log('move');
                 this.listRef.scrollToIndex(params);
             }
             //2.更新通知栏的单词
             if (this.stateRef === null) {
-                NotificationManage.updateWord(showWordInfos[curIndex].word, (e) => { console.log(e) },
-                    () => { console.log('--更新通知栏单词成功--') })
+                NotificationManage.updateWord(showWordInfos[index].word, (e) => { console.log(e) },
+                    () => { })
             }
 
             //3.播放单词音频
             this.audioService.playSound({
                 pDir: CConstant.VOCABULARY_DIR,
-                fPath: showWordInfos[curIndex].pron_url
+                fPath: showWordInfos[index].pron_url
             })
 
-            //4.循环回调
+
+
+            //4.循环回调 
             let timer = 0
             if (this.stateRef === null) {
                 timer = BackgroundTimer.setTimeout(() => {
                     const nextIndex = (index + 1) % wordCount;
                     this.replay(nextIndex);
                 }, interval * 1000);
+
             } else {
                 timer = setTimeout(() => {
                     const nextIndex = (index + 1) % wordCount;
@@ -116,9 +119,9 @@ export default class VocaPlayService {
                 }, interval * 1000);
             }
 
-            console.log('------' + timer)
-            this.changePlayTimer(timer);     //改变
 
+            //改变curIndex和autoTimer
+            this.changeCurIndexAndAutoTimer(source, index, timer);
 
             //完成学习后，退出
             if (this.finishQuit) {
@@ -137,8 +140,6 @@ export default class VocaPlayService {
         }
         const { autoPlayTimer } = source
 
-        //改变单词下标
-        this.changeCurIndex(source, index);
 
         // 回调自动播放
         if (autoPlayTimer) {

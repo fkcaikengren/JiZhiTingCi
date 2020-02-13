@@ -2,17 +2,17 @@
 import Sound from 'react-native-sound'
 import * as CConstant from './constant'
 import FileService from "./FileService";
-export default class AudioService{
-  
-  constructor(){
+export default class AudioService {
+
+  constructor() {
     this.sound = null
     this.fileService = FileService.getInstance()
   }
 
   //单例模式
-  static getInstance(){
-    if(!this.instance) {
-        this.instance = new AudioService();
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new AudioService();
     }
     return this.instance;
   }
@@ -26,46 +26,46 @@ export default class AudioService{
    * @param finishPlay
    * @param failPlay
    */
-  playSound = ({pDir, fPath },startPlay=null, finishPlay=null,failPlay=null)=>{
+  playSound = ({ pDir, fPath }, startPlay = null, finishPlay = null, failPlay = null) => {
     //先判断本地是否存在
     this.fileService.load(pDir, fPath)
-    .then(audioPath=>{
-        console.log(audioPath)
-        if(!audioPath){   //音频查找失败,播放失败
-          if(failPlay){
+      .then(audioPath => {
+        // console.log(audioPath)
+        if (!audioPath) {   //音频查找失败,播放失败
+          if (failPlay) {
             failPlay()
           }
           return;
         }
 
-        if(startPlay){
+        if (startPlay) {
           startPlay() //开始播放
         }
         //先暂停并释放资源
         this.releaseSound()
-        this.sound = new Sound(audioPath,null, err => {
+        this.sound = new Sound(audioPath, null, err => {
           //播放失败
           if (err) {        //获取失败
             console.log(err)
-            if(failPlay){
+            if (failPlay) {
               failPlay() //播放失败
             }
             return;
           }
           //播放成功
           this.sound.play(() => {
-            if(finishPlay){
+            if (finishPlay) {
               finishPlay()  //完成播放
             }
           });
         })
-    })
-    .catch(e=>{
+      })
+      .catch(e => {
         console.log(e)
-        if(failPlay){
+        if (failPlay) {
           failPlay() //播放失败
         }
-    })
+      })
 
 
   }
@@ -73,11 +73,11 @@ export default class AudioService{
   /**
    *  释放播放资源
    */
-  releaseSound = ()=>{
-      if(this.sound){
-        this.sound.release();
-        this.sound = null
-      }
+  releaseSound = () => {
+    if (this.sound) {
+      this.sound.release();
+      this.sound = null
+    }
   }
 
 }

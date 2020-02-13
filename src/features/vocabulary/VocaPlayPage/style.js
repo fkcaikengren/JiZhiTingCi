@@ -82,6 +82,17 @@ const styles = StyleSheet.create({
         borderRadius: 4
     },
 
+    studyIntervalButton: {
+        fontSize: 16,
+        color: '#FFF',
+        textAlign: 'center',
+        lineHeight: 24,
+        borderColor: '#FFF',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 4,
+    },
+
     //底部控制栏
     textIcon: {
         height: 26,
@@ -113,11 +124,6 @@ const styles = StyleSheet.create({
         height: 65,
         borderRadius: 70,
     },
-    intervalFont: {
-        fontSize: 12,
-    },
-
-
 
     bgImage: {
         position: 'absolute',

@@ -36,6 +36,11 @@ const defaultState = {
     //播放方式：[顺序播放,单曲循环]
     howPlay: Constant.PLAY_WAY_SINGLE,  //默认单曲循环
 
+    //播放列表
+    playListIndex: -1,          //播放列表的当前index
+    playTaskList: [],              //任务播放列表
+    playGroupList: [],            //生词播放列表
+
     //加载状态
     isLoadPending: false,
 
@@ -152,6 +157,27 @@ export const vocaPlay = (state = defaultState, action) => {
             return {
                 ...state, howPlay: action.payload.howPlay
             };
+
+        //修改播放列表
+        case vpAction.CHANGE_PLAY_LIST: {
+            const { playListIndex, playTaskList, playGroupList } = action.payload
+            return {
+                ...state, playListIndex, playTaskList, playGroupList
+            }
+        }
+
+        //修改播放列表当前下标
+        case vpAction.CHANGE_PLAY_LIST_INDEX_START:
+            return state
+        case vpAction.CHANGE_PLAY_LIST_INDEX_SUCCEED: {
+            return {
+                ...state,
+                curIndex: 0,
+                playListIndex: action.payload.playListIndex
+            }
+        }
+
+
         // 清空任务
         case vpAction.CLEAR_PLAY:
             return {
@@ -161,6 +187,7 @@ export const vocaPlay = (state = defaultState, action) => {
                 showTran: state.showTran,
                 showWord: state.showWord,
                 showBlur: state.showBlur,
+                howPlay: state.howPlay,  //默认单曲循环
             };
         //退出登录
         case LOGOUT:

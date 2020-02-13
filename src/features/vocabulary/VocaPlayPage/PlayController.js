@@ -5,6 +5,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-nat
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from "rn-fetch-blob";
 import { PropTypes } from 'prop-types';
+import BackgroundTimer from 'react-native-background-timer'
 
 import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from 'react-native-progress';
@@ -116,8 +117,11 @@ export default class PlayController extends React.Component {
 
     //播放暂停切换
     _togglePlay = () => {
-        const { autoPlayTimer, curIndex } = store.getState().vocaPlay
+        const { autoPlayTimer, curIndex, task } = store.getState().vocaPlay
         const { changePlayTimer } = this.props;
+        if (!(task.taskWords && task.taskWords.length > 0)) {
+            return
+        }
         if (autoPlayTimer) {
             //暂停
             clearTimeout(autoPlayTimer);
@@ -135,6 +139,23 @@ export default class PlayController extends React.Component {
         }
     }
 
+    //flag=-1:播放上一个; flag=1播放下一个
+    _preOrNext = (flag) => {
+        const { autoPlayTimer, task } = store.getState().vocaPlay
+        if (!(task.taskWords && task.taskWords.length > 0)) {
+            return
+        }
+        if (autoPlayTimer) {
+
+            BackgroundTimer.clearTimeout(autoPlayTimer)
+            this.props.changePlayTimer(0)
+        }
+        this.props.changePlayListIndex({
+            changeType: flag,
+            playListIndex: null
+        })
+        this.props.autoplay(0)
+    }
 
     render() {
         const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex, howPlay } = store.getState().vocaPlay
@@ -260,7 +281,7 @@ export default class PlayController extends React.Component {
                         <AliIcon name={howPlayIcon} size={20} color='#FFF'></AliIcon>
                     </TouchableOpacity>
                     <View style={[{ width: width * (1 / 2) + 30 }, gstyles.r_around]}>
-                        <TouchableWithoutFeedback >
+                        <TouchableWithoutFeedback onPress={() => { this._preOrNext(-1) }}>
                             <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
                                 <AliIcon name='SanMiAppoutlinei1' size={20} color='#FFF'></AliIcon>
                             </View>
@@ -273,7 +294,7 @@ export default class PlayController extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback  >
+                        <TouchableWithoutFeedback onPress={() => { this._preOrNext(1) }} >
                             <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
                                 <AliIcon name='SanMiAppoutlinei' size={20} color='#FFF'></AliIcon>
                             </View>
@@ -295,11 +316,10 @@ export default class PlayController extends React.Component {
                     autoplay={this.props.autoplay}
                     changePlayTimer={this.props.changePlayTimer}
                     changeNormalType={this.props.changeNormalType}
-                    loadTask={this.props.loadTask}
                     changeTheme={this.props.changeTheme}
+                    changePlayListIndex={this.props.changePlayListIndex}
                 />
             </Grid>
-
         );
     }
 }
@@ -314,7 +334,7 @@ PlayController.propTypes = {
     changeBg: PropTypes.func.isRequired,
     changeNormalType: PropTypes.func.isRequired,
     changeHowPlay: PropTypes.func.isRequired,
-    loadTask: PropTypes.func.isRequired,
     changeTheme: PropTypes.func.isRequired,
+    changePlayListIndex: PropTypes.func.isRequired,
     syncGroup: PropTypes.func.isRequired,
 }

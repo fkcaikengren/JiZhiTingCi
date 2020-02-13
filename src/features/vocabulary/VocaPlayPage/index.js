@@ -75,7 +75,7 @@ class VocaPlayPage extends React.Component {
 
         //播放服务
         this.vocaPlayService = VocaPlayService.getInstance()
-        this.vocaPlayService.changeCurIndex = this._changeCurIndex
+        this.vocaPlayService.changeCurIndexAndAutoTimer = this._changeCurIndexAndAutoTimer
         this.vocaPlayService.changePlayTimer = this._changePlayTimer
         this.vocaPlayService.finishQuit = this.isStudyMode ? this._finishQuit : null
 
@@ -97,7 +97,6 @@ class VocaPlayPage extends React.Component {
             //学习模式特有状态
             ...studyState,
             //公共状态
-            isTasksModalOpened: false,
             isVocaModalOpen: false,
             clickIndex: null,
             //blur处理
@@ -106,9 +105,6 @@ class VocaPlayPage extends React.Component {
 
         this.vocaPlayService.stateRef = this.isStudyMode ? this.state : null
         this.disablePass = true             //不出现Pass
-        this.curPlayListIndex = -1          //播放列表的当前index
-        this.playTaskList = []              //任务播放列表
-        this.playGroupList = []             //生词播放列表
         this.timerArr = []
         console.disableYellowBox = true
     }
@@ -151,11 +147,13 @@ class VocaPlayPage extends React.Component {
             console.log('---chagne state------')
             // console.log(this.vocaPlayService.stateRef)
 
-            // 1s后自动播放
+            // 500ms后自动播放
             const timeoutId = BackgroundTimer.setTimeout(() => {
                 this.vocaPlayService.autoplay(task.curIndex)
-            }, 1000);
+            }, 500);
         } else {
+            //初始化播放列表
+            this._initPlayList()
             if (normalType === Constant.BY_VIRTUAL_TASK) {
                 const task = this.props.navigation.getParam('task')
                 if (task) { //列表页和生词页跳转来的
@@ -166,54 +164,17 @@ class VocaPlayPage extends React.Component {
                     NotificationManage.play((e) => {
                         console.log(e)
                     }, () => null);
-                    // 1s后自动播放
+                    // 500ms后自动播放
                     const timeoutId = BackgroundTimer.setTimeout(() => {
                         this.vocaPlayService.autoplay(task.curIndex)
-                    }, 1000);
+                    }, 500);
                 }
+            }
 
-            }
-            const { task } = this.props.vocaPlay
-            //加载生词播放列表
-            Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
-                const groupOrders = JSON.parse(groupOrdersData)
-                const vocaGroups = this.vgService.getAllGroups()
-                for (let id of groupOrders) {
-                    if (vocaGroups[id].count >= 5) {
-                        this.playGroupList.push(id)
-                    }
-                }
-                console.log('this.playGroupList')
-                console.log(this.playGroupList)
-                if (normalType === Constant.BY_VIRTUAL_TASK && task.taskOrder) {
-                    for (let i in this.playGroupList) {
-                        if (this.playGroupList[i] === task.taskOrder) {
-                            this.curPlayListIndex = i
-                            break
-                        }
-                    }
-                    console.log(this.curPlayListIndex)
-                }
-            })
-            //加载任务播放列表 
-            this.playTaskList = this.taskDao.getAllTasks().filter((task, _) => {
-                return !VocaUtil.isLearningInTodayTasks(task.taskOrder)
-            }).map((task, _) => {
-                return task.taskOrder
-            })
-            console.log('this.playTaskList')
-            console.log(this.playTaskList)
-            if (normalType === Constant.BY_REAL_TASK && task.taskOrder) {
-                for (let i in this.playTaskList) {
-                    if (this.playTaskList[i] === task.taskOrder) {
-                        this.curPlayListIndex = i
-                        break
-                    }
-                }
-                console.log(this.curPlayListIndex)
-            }
         }
     }
+
+
 
     componentDidUpdate(prevProps, prevState) {
         //如果播放状态变化
@@ -222,7 +183,6 @@ class VocaPlayPage extends React.Component {
         } else if (prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
             this.vocaPlayService.listRef.closePassBtn()
         }
-
 
     }
 
@@ -235,8 +195,61 @@ class VocaPlayPage extends React.Component {
         }
     }
 
+    _initPlayList = async () => {
+        let curPlayListIndex = -1
+        let playGroupList = []
+        let playTaskList = []
+        const { task, normalType } = this.props.vocaPlay
+        //加载生词播放列表
+        const groupOrdersData = await Storage.load({ key: 'groupOrdersString' })
+        const groupOrders = JSON.parse(groupOrdersData)
+        const vocaGroups = this.vgService.getAllGroups()
+        for (let id of groupOrders) {
+            if (vocaGroups[id].count >= 5) {
+                playGroupList.push(id)
+            }
+        }
+        console.log('playGroupList')
+        console.log(playGroupList)
+        if (normalType === Constant.BY_VIRTUAL_TASK && task.taskOrder) {
+            for (let i in playGroupList) {
+                if (playGroupList[i] === task.taskOrder) {
+                    curPlayListIndex = i
+                    break
+                }
+            }
+            console.log(curPlayListIndex)
+        }
+        //加载任务播放列表 
+        playTaskList = this.taskDao.getAllTasks().filter((task, _) => {
+            return !VocaUtil.isLearningInTodayTasks(task.taskOrder)
+        }).map((task, _) => {
+            return task.taskOrder
+        })
+        console.log('playTaskList')
+        console.log(playTaskList)
+        if (normalType === Constant.BY_REAL_TASK && task.taskOrder) {
+            for (let i in playTaskList) {
+                if (playTaskList[i] === task.taskOrder) {
+                    curPlayListIndex = i
+                    break
+                }
+            }
+            console.log(curPlayListIndex)
+        }
+        console.log(playGroupList)
+        //改变vocaPlay状态
+        this.props.changePlayList({
+            playListIndex: parseInt(curPlayListIndex),
+            playGroupList,
+            playTaskList
+        })
+
+    }
+
+
     // 更新单词下标
-    _changeCurIndex = (state, playIndex) => {
+    _changeCurIndexAndAutoTimer = (state, playIndex, timer) => {
         const beforeCount = state.task.wordCount
         let listenTimes = state.task.listenTimes
         let leftTimes = state.task.leftTimes
@@ -248,54 +261,39 @@ class VocaPlayPage extends React.Component {
                 leftTimes--
             }
         }
+
         //学习模式or常规模式
         if (this.isStudyMode) {//学习模式
             this.changeState({
                 task: { ...state.task, curIndex: playIndex, listenTimes, leftTimes },
-                curIndex: playIndex
+                curIndex: playIndex,
+                autoPlayTimer: timer
             })
         } else {//常规模式
-            const { task, normalType, howPlay } = state
+            const { task, normalType, howPlay } = this.props.vocaPlay
+            this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
+            this.props.changePlayTimer(timer)
             if (listenTimes === task.listenTimes + 1) {
-                //------------处理播放方式 开始-----------------------
-                if (howPlay === Constant.PLAY_WAY_SINGLE) {  //单曲循环
-                    this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
-                } else if (howPlay === Constant.PLAY_WAY_LOOP) { //顺序播放
-                    //播放新的
-                    let id = null
-                    if (normalType === Constant.BY_REAL_TASK) {
-                        if (this.curPlayListIndex >= 0) {
-                            this.curPlayListIndex = (this.curPlayListIndex + 1) % this.playTaskList.length
-                            id = this.playTaskList[this.curPlayListIndex]
-                        }
-                    } else if (normalType === Constant.BY_VIRTUAL_TASK) {
-                        if (this.curPlayListIndex >= 0) {
-                            this.curPlayListIndex = (this.curPlayListIndex + 1) % this.playGroupList.length
-                            id = this.playGroupList[this.curPlayListIndex]
-                        }
-                    }
-                    if (id) {
-                        let showWordInfos = []
-                        let nextTask = {}
-                        if (normalType === Constant.BY_REAL_TASK) {
-                            //加载任务播放
-                            nextTask = this.taskDao.getTaskByOrder(id)
-                            showWordInfos = this.vocaDao.getShowWordInfos(nextTask.taskWords)
-                        } else if (normalType === Constant.BY_VIRTUAL_TASK) {
-                            //加载生词播放
-                            const group = this.vgService.getGroupAndWordsById(id)
-                            nextTask = VocaUtil.genVirtualTask(group.words, group.groupName, group.id)
-                            showWordInfos = this.vocaDao.getWordInfos(group.words)
-                        }
-                        this.props.loadTask(nextTask, showWordInfos) //刷新vocaPlay
+                //处理播放方式 开始
+                if (howPlay === Constant.PLAY_WAY_LOOP) { //顺序播放
 
-
-                    } else {
-                        this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
+                    if (task.taskOrder !== Constant.VIRTUAL_TASK_ORDER) {//播放新的
+                        if (timer) {
+                            console.log('清理autoPlayTimer ----- ' + timer)
+                            BackgroundTimer.clearTimeout(timer)
+                            this.props.changePlayTimer(0)
+                        }
+                        BackgroundTimer.setTimeout(() => {
+                            this.props.changePlayListIndex({
+                                changeType: 1,
+                                playListIndex: null
+                            })
+                            this.vocaPlayService.autoplay(0)
+                        }, 1500)
                     }
 
                 }
-                //------------处理播放方式 结束-----------------------
+
 
                 if (normalType === Constant.BY_VIRTUAL_TASK) {
                     if (task && task.taskOrder !== Constant.VIRTUAL_TASK_ORDER) {//如果是生词本
@@ -482,7 +480,6 @@ class VocaPlayPage extends React.Component {
 
 
             if (curIndex == index) {
-                console.log(`curIndex: ${curIndex}`)
                 playEnStyle = {
                     fontSize: 22,
                     color: Theme.playColor
@@ -635,8 +632,8 @@ class VocaPlayPage extends React.Component {
                 changeBg={this.props.changeBg}
                 changeNormalType={this.props.changeNormalType}
                 changeHowPlay={this.props.changeHowPlay}
-                loadTask={this.props.loadTask}
                 changeTheme={this.props.changeTheme}
+                changePlayListIndex={this.props.changePlayListIndex}
                 syncGroup={this.props.syncGroup}
             />
         }
@@ -795,6 +792,8 @@ const mapDispatchToProps = {
     loadTask: VocaPlayAction.loadTask,
     loadThemes: VocaPlayAction.loadThemes,
     changeTheme: VocaPlayAction.changeTheme,
+    changePlayList: VocaPlayAction.changePlayList,
+    changePlayListIndex: VocaPlayAction.changePlayListIndex,
 
     updateTask: HomeAction.updateTask,
     syncTask: HomeAction.syncTask,

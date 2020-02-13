@@ -66,7 +66,9 @@ export default class DownloadTemplate {
                         hide()
                     })
                 }
-            }
+            },
+
+
         })
         show({
             renderContent: this._renderProgress({ commonModal }),
@@ -76,6 +78,8 @@ export default class DownloadTemplate {
                 backgroundColor: "#FFF",
                 borderRadius: 10,
             },
+            //动画
+            animationDuration: 1
         })
 
         downloadTask = new FileService().download({

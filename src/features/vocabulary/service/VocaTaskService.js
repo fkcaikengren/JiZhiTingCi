@@ -47,7 +47,11 @@ export default class VocaTaskService {
         try {
             this.vtd.realm.write(() => {
                 for (let task of vocaTasks) {
-                    task.leftTimes = store.getState().mine.configReviewPlayTimes
+                    if (task.status === Constant.STATUS_0) {
+                        task.leftTimes = 3
+                    } else {
+                        task.leftTimes = store.getState().mine.configReviewPlayTimes
+                    }
                     this.vtd.realm.create('VocaTask', task)
                 }
 

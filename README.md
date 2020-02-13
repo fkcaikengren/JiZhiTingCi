@@ -951,7 +951,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 //生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "第9次生产环境更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "第10次生产环境更新" --m true
 
 //--m true 强制用户更新
 ```

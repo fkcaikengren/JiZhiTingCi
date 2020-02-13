@@ -6,9 +6,9 @@ import { watchLoadArticle, watchLoadAnalysis } from '../features/reading/redux/s
 import {
     watchLoginByCode, watchLoginByPwd, watchLoginByWX, watchLoginByQQ,
     watchModifyNickname, watchModifySex, watchModifyPwd, watchModifyAvatar, watchModifyWechat, watchModifyQQ, watchModifyPhone
-}
-    from '../features/mine/redux/saga/mineSaga'
+} from '../features/mine/redux/saga/mineSaga'
 import { watchSyncGroup } from '../features/vocabulary/redux/saga/vocaGroupSaga'
+import { watchChangePlayListIndex } from '../features/vocabulary/redux/saga/vocaPlaySaga'
 
 
 function* rootSaga() {
@@ -18,6 +18,8 @@ function* rootSaga() {
         call(watchSyncTask),
         call(watchPlan),
         call(watchSyncGroup),
+        call(watchChangePlayListIndex),
+
         // 阅读
         call(watchLoadArticle),
         call(watchLoadAnalysis),

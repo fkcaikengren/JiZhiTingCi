@@ -25,7 +25,6 @@ export default class Task extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.home === this.props.home && nextProps.toastRef == this.props.toastRef) {
-      console.log('--- task not changed ------')
       return false
     }
     return true

@@ -126,9 +126,10 @@ export default class StudyPlayController extends React.Component {
                     </View>
                     {/* 控制间隔 */}
                     <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.intervalButton, }} />
+                        <MenuTrigger
+                            text={Math.floor(interval) + 's'}
+                            customStyles={{ triggerText: styles.studyIntervalButton }} />
                         <MenuOptions>
-
                             <MenuOption style={gstyles.haireBottom} value={4.0}>
                                 <Text style={popStyle}>4.0s</Text>
                             </MenuOption>

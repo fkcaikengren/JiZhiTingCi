@@ -1,9 +1,9 @@
 
 import React, { Component } from "react";
 import {
-    Platform, StatusBar, View, Text, TouchableNativeFeedback, TouchableOpacity
+    Platform, View, Text, TouchableNativeFeedback, TouchableOpacity
 } from 'react-native';
-import { Header, Button } from 'react-native-elements'
+import { Header } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
 const SortableListView = require('react-native-sortable-listview');
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
@@ -13,12 +13,12 @@ import VocaGroupService from './service/VocaGroupService'
 import styles from './VocaGroupStyle'
 import gstyles from '../../style'
 import * as VGroupAction from './redux/action/vocaGroupAction'
+import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import { connect } from "react-redux";
 import InputTemplate from "../../component/InputTemplate";
+import { BY_VIRTUAL_TASK, VIRTUAL_TASK_ORDER } from "./common/constant";
 
 
-const Dimensions = require('Dimensions');
-const { width, height } = Dimensions.get('window');
 
 
 class VocaGroupPage extends Component {
@@ -109,6 +109,10 @@ class VocaGroupPage extends Component {
         const orders = await this.vgService.deleteGroup(groupId)
         if (orders) {
             this._refreshGroup(orders)
+            //清空vocaPlay
+            if (this.props.normalType === BY_VIRTUAL_TASK && this.props.task.taskOrder !== VIRTUAL_TASK_ORDER) {
+                this.props.clearPlay()
+            }
             this.props.app.toast.show('删除成功', 500);
         } else {
             this.props.app.toast.show('删除失败', 500);
@@ -210,10 +214,7 @@ class VocaGroupPage extends Component {
                                 </TouchableNativeFeedback>
                                 {/* 删除 */}
                                 <TouchableNativeFeedback onPress={() => {
-
-                                    if (this.props.task && this.props.task.taskOrder === item.id) {
-                                        this.props.app.toast.show('当前生词本正在播放中，无法删除', 1500)
-                                    } else if (item.isDefault) {
+                                    if (item.isDefault) {
                                         this.props.app.toast.show('当前生词本是默认生词本，无法删除', 1500)
                                     } else {
                                         this.props.app.confirmModal.show(`删除生词本"${item.groupName}"以及其所有单词?`, null,
@@ -296,6 +297,12 @@ class VocaGroupPage extends Component {
                             orders.splice(e.to, 0, orders.splice(e.from, 1)[0]);
                             this.vgService.sortGroups(orders)
                             this._refreshGroup(orders, false)
+                            //清空vocaPlay
+                            if (this.props.normalType === BY_VIRTUAL_TASK && this.props.task.taskOrder !== VIRTUAL_TASK_ORDER) {
+                                this.props.clearPlay()
+                            }
+
+
                         }}
                         renderRow={this._renderRow}
                         rowHasChanged={(r1, r2) => { return r1 !== r2 }}
@@ -310,11 +317,13 @@ class VocaGroupPage extends Component {
 
 const mapStateToProps = state => ({
     app: state.app,
-    task: state.vocaPlay.task
+    task: state.vocaPlay.task,
+    normalType: state.vocaPlay.normalType
 });
 
 const mapDispatchToProps = {
-    syncGroup: VGroupAction.syncGroup
+    syncGroup: VGroupAction.syncGroup,
+    clearPlay: VocaPlayAction.clearPlay
 }
 
 
