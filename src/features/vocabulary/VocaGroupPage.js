@@ -1,7 +1,7 @@
 
 import React, { Component } from "react";
 import {
-    Platform, View, Text, TouchableNativeFeedback, TouchableOpacity
+    Platform, View, Text, TouchableNativeFeedback, TouchableOpacity, BackHandler
 } from 'react-native';
 import { Header } from 'react-native-elements'
 import Modal from 'react-native-modalbox';
@@ -36,7 +36,30 @@ class VocaGroupPage extends Component {
         console.disableYellowBox = true;
     }
 
+
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { commonModal, confirmModal } = this.props.app
+            if (commonModal.isOpen()) {
+                commonModal.hide()
+            } else if (confirmModal.isOpen()) {
+                confirmModal.hide()
+            } else if (this.state.inEdit) {
+                this.setState({ inEdit: false })
+            } else {
+                this._goBack()
+            }
+            return true
+        })
+        this._init()
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+    }
+
+    _init = () => {
         //Storage加载 groupOrders
         Storage.load({ key: 'groupOrdersString' }).then(groupOrdersData => {
 
@@ -50,8 +73,8 @@ class VocaGroupPage extends Component {
         })
     }
 
-    componentWillUnmount() {
-    }
+
+
 
     _toggleEdit = () => {
         this.setState({ inEdit: !this.state.inEdit, groupOrders: [...this.state.groupOrders] })

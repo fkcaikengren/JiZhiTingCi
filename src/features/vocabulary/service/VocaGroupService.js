@@ -245,7 +245,7 @@ export default class VocaGroupService {
   updateListenTimes = async (id, listenTimes) => {
     const group = this.vgDao.modifyListenTimes(id, listenTimes)
     const saveKey = 'notSyncGroups'
-    const saveId = COMMAND_GROUP_MODIFY_LISTEN_TIMES.split('_').join('-')
+    const saveId = COMMAND_GROUP_MODIFY_LISTEN_TIMES.split('_').join('-') + id
     //若存在则删除
     await Storage.remove({
       key: saveKey,
@@ -271,7 +271,7 @@ export default class VocaGroupService {
   updateTestTimes = async (id, testTimes) => {
     const group = this.vgDao.modifyTestTimes(id, testTimes)
     const saveKey = 'notSyncGroups'
-    const saveId = COMMAND_GROUP_MODIFY_TEST_TIMES.split('_').join('-')
+    const saveId = COMMAND_GROUP_MODIFY_TEST_TIMES.split('_').join('-') + id
     //若存在则删除
     await Storage.remove({
       key: saveKey,

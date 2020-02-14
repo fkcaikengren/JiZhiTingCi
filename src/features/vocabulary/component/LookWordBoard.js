@@ -37,7 +37,10 @@ export default class LookWordBoard extends Component {
                 return true
             }
         }
-        this.setState({ isOpen: true, wordInfo: res[0] ? res[0] : '' })
+        const notFoundWordInfo = {
+            word: res[0] ? res[0] : ''
+        }
+        this.setState({ isOpen: true, wordInfo: notFoundWordInfo })
         this.props.onStateChange(true)
         return false
     }
@@ -70,23 +73,17 @@ export default class LookWordBoard extends Component {
 
     _renderContent = () => {
         const { wordInfo } = this.state
-        if (typeof wordInfo === 'string') {
-            return <View style={[gstyles.c_start, styles.content]}>
-                <Text style={gstyles.xl_black_bold}>{wordInfo}</Text>
-                <View style={[gstyles.c_center, { marginTop: 10 }]}>
-                    <AliIcon name={'nodata_icon'} size={60} color={gstyles.black} />
-                    <Text style={gstyles.md_black}>呜呜~没查到...</Text>
-                </View>
-            </View>
-        } else {
+        if (wordInfo
+            && wordInfo.word
+            && wordInfo.translation
+            && wordInfo.translation !== ''
+        ) {
             return <View style={[gstyles.c_start, styles.content]}>
                 {/*单词*/}
-                {wordInfo.word &&
-                    <View style={[{ width: '100%' }, gstyles.r_between]}>
-                        <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
-                        <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
-                    </View>
-                }
+                <View style={[{ width: '100%' }, gstyles.r_between]}>
+                    <Text style={gstyles.xl_black_bold}>{wordInfo.word}</Text>
+                    <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
+                </View>
                 {/*y音标*/}
                 <View style={[{ width: '100%', marginTop: 10 }, gstyles.r_start]}>
                     {wordInfo.am_phonetic &&
@@ -122,13 +119,16 @@ export default class LookWordBoard extends Component {
                     }
                 </View>
             </View>
-
+        } else {
+            return <View style={[gstyles.c_start, styles.content]}>
+                <AliIcon name={'no-data'} size={50} color='#555' style={{ marginTop: 25 }} />
+                <Text style={{ fontSize: 16, color: '#555', marginTop: 10 }}>sorry，没找到{wordInfo.word}</Text>
+            </View>
         }
 
     }
 
     render() {
-        const wordInfo = this.state.wordInfo
         return <Modal style={styles.modal}
             isOpen={this.state.isOpen}
             onClosed={this._closeWordBoard}
@@ -137,30 +137,25 @@ export default class LookWordBoard extends Component {
             backdropPressToClose={true}
             swipeToClose={false}
             position={"bottom"}
-            ref={ref => {
-                this.wordBoard = ref
+            ref={comp => {
+                this.wordBoard = comp
             }}>
-            {wordInfo &&
-                <View style={[gstyles.c_start]}>
-                    <View style={[gstyles.r_center, styles.dropBar]}>
-                        <Text style={gstyles.lg_black}>释义  </Text>
-                        <AliIcon name={'cha'} color={'#555'} size={16} style={{ position: 'absolute', right: 20 }}
-                            onPress={this._closeWordBoard} />
-                    </View>
-                    {
-                        this._renderContent()
-                    }
+            <View style={[{ flex: 1 }, gstyles.c_start]}>
+                <View style={[gstyles.r_center, styles.dropBar]}>
+                    <Text style={gstyles.lg_black}>释义  </Text>
+                    <AliIcon name={'cha'} color={'#555'} size={16} style={{ position: 'absolute', right: 20 }}
+                        onPress={this._closeWordBoard} />
                 </View>
-            }
-
-
+                {this.state.wordInfo &&
+                    this._renderContent()
+                }
+            </View>
         </Modal>
     }
 }
 
 const styles = StyleSheet.create({
     modal: {
-        width: width,
         height: 240,
         backgroundColor: "#FDFDFD",
         borderTopLeftRadius: 10,
@@ -169,6 +164,7 @@ const styles = StyleSheet.create({
     content: {
         width: width,
         padding: 15,
+
     },
 
     dropBar: {

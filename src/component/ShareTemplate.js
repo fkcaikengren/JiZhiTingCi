@@ -114,7 +114,9 @@ export default class ShareTemplate {
                 height: height,
                 backgroundColor: "#AAA",
             },
-            position: 'bottom'
+            position: 'bottom',
+            //动画
+            animationDuration: 1
         })
     }
 }

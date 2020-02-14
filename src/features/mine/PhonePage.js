@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextInput, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { TextInput, StyleSheet, View, Text, TouchableOpacity, BackHandler } from 'react-native'
 import { connect } from 'react-redux'
 import { Header, Button, Input } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon'
@@ -33,11 +33,17 @@ class PhonePage extends Component {
             codeBorderColor: '#D0D0D0',
             codeMode: false,     //是否是在验证码模式
         }
-
         console.disableYellowBox = true
     }
-
-
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
+    }
 
 
     // 更改手机号码

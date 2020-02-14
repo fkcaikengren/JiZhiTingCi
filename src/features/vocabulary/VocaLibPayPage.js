@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import CardView from 'react-native-cardview'
 import { connect } from 'react-redux';
@@ -15,6 +15,22 @@ class VocaLibPayPage extends Component {
         super(props)
     }
 
+    componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else {
+                this.props.navigation.goBack()
+            }
+            return true
+        })
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+    }
 
     render() {
 

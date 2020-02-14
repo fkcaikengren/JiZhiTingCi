@@ -1,10 +1,5 @@
-import {
-  Easing,
-  Animated
-} from 'react-native'
-import {
-  createStackNavigator
-} from 'react-navigation';
+import { Easing, Animated } from 'react-native'
+import { createStackNavigator } from 'react-navigation';
 import StackViewStyleInterpolator from 'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator';
 
 
@@ -313,5 +308,7 @@ const VocaHomeStackNav = createStackNavigator({
     },
   }),
 });
+
+
 
 export default VocaHomeStackNav;

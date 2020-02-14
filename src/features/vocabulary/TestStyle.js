@@ -28,6 +28,14 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         height: 50,
     },
+    modalBottom: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        height: 60,
+        flex: 1,
+        paddingHorizontal: 10,
+    },
 })
 
 export default styles

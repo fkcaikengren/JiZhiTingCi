@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image } from 'react-native';
+import { Platform, StyleSheet, View, Text, ScrollView, BackHandler } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 
 import DashSecondLine from '../../component/DashSecondLine'
@@ -9,19 +9,25 @@ import gstyles from "../../style";
 export default class AboutPage extends React.Component {
     constructor(props) {
         super(props);
-        //微信公众号
-        //QQ群
-        //关于我们介绍
+
         this.state = {
-            public: "",
-            qqs: [],
-            about: ""
+            public: "", //微信公众号
+            qqs: [],    //QQ群
+            about: ""   //关于我们介绍
         }
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
         // 加载数据
         this._init()
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     _init = async () => {

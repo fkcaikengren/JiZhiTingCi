@@ -24,9 +24,17 @@ export default class ConfirmModal extends Component {
         }
     }
 
+    isOpen = () => {
+        return this.state.isOpen
+    }
 
     show = (title, onCancel = null, onConfirm = null, cancelText = "取消", confirmText = "确定") => {
         this.setState({ isOpen: true, title, cancelText, confirmText, onCancel, onConfirm })
+    }
+
+
+    hide = () => {
+        this.setState(this.defaultState);
     }
 
     _onCancel = () => {

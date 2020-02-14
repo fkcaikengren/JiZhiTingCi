@@ -134,6 +134,8 @@ export default class PlanSelectTemplate {
                 borderRadius: 10,
                 backgroundColor: "#FFF",
             },
+            //动画
+            animationDuration: 200
         })
     }
 }

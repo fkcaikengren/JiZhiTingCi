@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, BackHandler } from 'react-native';
 import { Header } from 'react-native-elements'
 import { WebView } from 'react-native-webview';
 import { connect } from 'react-redux';
@@ -20,6 +20,18 @@ class AnalysisPage extends React.Component {
 
     constructor(props) {
         super(props)
+    }
+
+
+    componentDidMount() {
+        //监听物理返回键 #todo:根据情况判断重做还是回到原始页面
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     componentDidUpdate(prevProps, prevState) {

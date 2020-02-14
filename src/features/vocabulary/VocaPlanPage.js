@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
 import { Header, Button } from 'react-native-elements'
 import gstyles from "../../style";
 import AliIcon from "../../component/AliIcon";
 import * as HomeAction from './redux/action/homeAction'
+import PlanSelectTemplate from "./component/PlanSelectTemplate";
 
 
 const styles = StyleSheet.create({
@@ -41,9 +42,28 @@ const styles = StyleSheet.create({
 class VocaPlanPage extends React.Component {
     constructor(props) {
         super(props);
-
     }
 
+    componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else {
+                this._goBack()
+            }
+            return true
+        })
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+    }
+    _goBack = () => {
+        this.props.navigation.goBack();
+        this.props.syncTask(null)
+    }
 
     render() {
         const {
@@ -56,16 +76,18 @@ class VocaPlanPage extends React.Component {
             totalWordCount,
             totalDays,
         } = this.props.plan.plan
+        const book = {
+            _id: bookId,
+            name: bookName,
+            count: totalWordCount,
+        }
         return (
             <View style={{ flex: 1 }}>
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle='dark-content' // or directly
                     leftComponent={
-                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
-                            this.props.navigation.goBack();
-                            this.props.syncTask(null)
-                        }} />}
+                        <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={this._goBack} />}
                     centerComponent={{ text: '学习计划', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
@@ -89,6 +111,23 @@ class VocaPlanPage extends React.Component {
                             <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount}词，复习{reviewWordCount}词</Text>
                             <Text style={styles.wordCount}>(共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{totalWordCount}</Text>个单词)</Text>
 
+                            <Button
+                                title={"修改计划"}
+                                titleStyle={gstyles.lg_black}
+                                containerStyle={{ width: 200, height: 60, marginTop: 40 }}
+                                buttonStyle={{
+                                    backgroundColor: gstyles.mainColor,
+                                    borderRadius: 50,
+                                }}
+                                onPress={() => {
+                                    //显示计划选择器
+                                    PlanSelectTemplate.show({
+                                        commonModal: this.props.app.commonModal,
+                                        book: book,
+                                        onConfirm: () => null
+                                    })
+                                }}
+                            />
                         </View>
                     }
                     {!bookId &&
@@ -97,10 +136,11 @@ class VocaPlanPage extends React.Component {
                             <Text style={{ fontSize: 16, color: '#AAA', marginTop: 15 }}>无学习计划</Text>
                         </View>
                     }
+
                     <Button
                         title={bookId ? "更换单词书" : "选择单词书"}
                         titleStyle={gstyles.lg_black}
-                        containerStyle={{ width: 200, height: 60, marginTop: 40 }}
+                        containerStyle={{ width: 200, height: 60, marginTop: 10 }}
                         buttonStyle={{
                             backgroundColor: gstyles.mainColor,
                             borderRadius: 50,

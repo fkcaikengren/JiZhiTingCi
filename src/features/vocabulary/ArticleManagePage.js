@@ -2,7 +2,7 @@
 
 'use strict';
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, BackHandler } from 'react-native';
 import { Header } from 'react-native-elements'
 import { connect } from 'react-redux';
 
@@ -42,10 +42,17 @@ class ArticleManagePage extends Component {
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
         //查询已学习过的任务 #todo:获取学习过的文章
         const articles = []
         this.setState({ articles })
-
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
 

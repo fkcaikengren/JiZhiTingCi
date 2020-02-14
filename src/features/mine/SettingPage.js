@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, TouchableOpacity, Text, Switch } from 'react-native';
+import { Platform, View, TouchableOpacity, Text, Switch, BackHandler } from 'react-native';
 import { Header, ButtonGroup } from 'react-native-elements'
 import { connect } from 'react-redux';
 
@@ -23,6 +23,15 @@ class SettingPage extends React.Component {
             selectedIndex,
             times: configReviewPlayTimes
         }
+    }
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     _renderItem = ({ title, rightComponent }) => {

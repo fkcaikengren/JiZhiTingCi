@@ -3,14 +3,17 @@ import {
   StyleSheet, StatusBar, ImageBackground, ScrollView, View, Text, Image, TouchableOpacity, TouchableWithoutFeedback
 } from 'react-native';
 import { Button } from 'react-native-elements'
-import BackgroundTimer from 'react-native-background-timer'
 import { connect } from 'react-redux';
+
+
 
 import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import FeedbackModule from '../../../modules/FeedbackUtil'
+import * as VocaPlayAction from '../redux/action/vocaPlayAction'
 import * as TimingAction from '../../../redux/action/timingAction'
 import _util from '../../../common/util';
+import TimingService from '../service/TimingService';
 
 const STATUSBAR_HEIGHT = StatusBar.currentHeight
 const Dimensions = require('Dimensions');
@@ -20,29 +23,37 @@ let { width, height } = Dimensions.get('window');
 class HomeDrawerPanel extends Component {
   constructor(props) {
     super(props)
-    this.timeOptions = [0, 1, 2, 3, 6] // [0,10,20,30,60]
+    this.timeOptions = [0, 10, 20, 30, 60] // [0,10,20,30,60]
 
-    this.timer = null
+    this.timingService = TimingService.getInstance()
+    this.timingService.changeWholeSeconds = ({ timeIndex, wholeSeconds }) => { this.props.changeWholeSeconds({ timeIndex, wholeSeconds }) }
+    this.timingService.decreaseSecond = () => { this.props.decreaseSecond() }
+    this.timingService.changePlayTimer = (timer) => { this.props.changePlayTimer(timer) }
   }
+
 
   _renderTimeSelector = ({ commonModal }) => {
     return () => {
       const {
         getContentState,
-        setContentState,
-        hide
+        setContentState
       } = commonModal
       const { selectedIndex, leftSeconds } = getContentState()
-      const { wholeSeconds } = this.props.timing
       const minutes = parseInt(leftSeconds / 60)
       const seconds = leftSeconds % 60
       return <View style={[styles.timingContainer, gstyles.c_start]}>
         <View style={[styles.timingTitle, gstyles.c_start]}>
           <Text style={gstyles.md_black}>定时关闭</Text>
-          <Text style={{ fontSize: 12, color: '#999' }}>
-            <Text style={{ color: gstyles.secColor }}>{_util.addZero(minutes)}</Text>:
-            <Text style={{ color: gstyles.secColor }}>{_util.addZero(seconds)}</Text>
-            后，将退出App</Text>
+          {leftSeconds > 0 &&
+            <Text style={{ fontSize: 12, color: '#999' }}>
+              <Text style={{ color: gstyles.secColor }}>{_util.addZero(minutes)}</Text>:
+              <Text style={{ color: gstyles.secColor }}>{_util.addZero(seconds)}</Text>
+              后，将退出App
+            </Text>
+          }
+          {leftSeconds <= 0 &&
+            <Text style={{ fontSize: 12, color: '#999' }}>未开启</Text>
+          }
         </View>
         {
           this.timeOptions.map((item, i) => {
@@ -51,33 +62,8 @@ class HomeDrawerPanel extends Component {
             return <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => {
-                //清除之前的定时
-                if (this.timer) {
-                  BackgroundTimer.clearInterval(this.timer)
-                }
-                setContentState({
-                  selectedIndex: i,
-                  leftSeconds: item * 60
-                })
-                // 设置时间
-                this.props.changeWholeSeconds({ timeIndex: i, wholeSeconds: item * 60 })
-                if (i === 0) {
-                  return
-                }
-                // 倒计时
-                this.timer = BackgroundTimer.setInterval(() => {
-                  const { wholeSeconds } = this.props.timing
-                  if (wholeSeconds > 0) {
-                    setContentState({ leftSeconds: wholeSeconds - 1 })
-                    this.props.decreaseSecond()
-                  } else {
-                    if (this.timer) {
-                      BackgroundTimer.clearInterval(this.timer)
-                    }
-                    this.props.changeWholeSeconds({ timeIndex: 0, wholeSeconds: 0 })
-                    alert('退出App')
-                  }
-                }, 1000);
+                this.timingService.setContentState = setContentState
+                this.timingService.countDown(i, item)
               }}>
               <View style={[gstyles.r_between, styles.TimingItemWrap, noBorder]}>
                 <Text style={[gstyles.md_lightBlack, selectedStyle]}>{item === 0 ? '关闭' : `${item}分钟`}</Text>
@@ -115,7 +101,9 @@ class HomeDrawerPanel extends Component {
               <Image style={styles.headerIcon} source={avatarSource} />
               <Text style={[gstyles.xl_black, { marginLeft: 10 }]}>{nickname}</Text>
             </View>
-            <AliIcon name='youjiantou' size={30} color='#202020' style={{ marginRight: 10 }} />
+            <AliIcon name='youjiantou' size={30} color='#202020' style={{ marginRight: 10 }} onPress={() => {
+              this.props.navigation.navigate('Account')
+            }} />
           </ImageBackground>
         </TouchableWithoutFeedback>
 
@@ -173,7 +161,9 @@ class HomeDrawerPanel extends Component {
             this.props.navigation.navigate('About')
           }}
         />
-        <View style={{ width: '100%' }}>
+        <View
+          ref={comp => this.timingService.timingRef = comp}
+          style={{ width: '100%' }} >
           <Button type='clear'
             icon={<AliIcon name='dingshirenwu' size={24} color={gstyles.gray} />}
             title={'定时关闭'}
@@ -276,12 +266,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   app: state.app,
   timing: state.timing,
-  mine: state.mine
+  mine: state.mine,
+
 })
 
 const mapDispatchToProps = {
+  changePlayTimer: VocaPlayAction.changePlayTimer,
+
   changeWholeSeconds: TimingAction.changeWholeSeconds,
   decreaseSecond: TimingAction.decreaseSecond
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeDrawerPanel)

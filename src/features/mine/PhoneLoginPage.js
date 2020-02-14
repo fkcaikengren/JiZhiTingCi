@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextInput, StatusBar, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { TextInput, StatusBar, StyleSheet, View, Text, TouchableOpacity, BackHandler } from 'react-native'
 import { connect } from 'react-redux'
 import { Button, Input } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon'
@@ -55,8 +55,14 @@ class PhoneLoginPage extends Component {
 
     console.disableYellowBox = true
   }
-
   componentDidMount() {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.props.navigation.goBack()
+      return true
+    })
+  }
+  componentWillUnmount() {
+    this.backHandler && this.backHandler.remove('hardwareBackPress');
   }
 
   _login = () => {

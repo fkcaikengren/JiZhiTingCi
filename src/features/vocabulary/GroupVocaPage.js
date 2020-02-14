@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StatusBar, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StatusBar, View, Text, FlatList, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, CheckBox, Button } from 'react-native-elements'
 import { sortBy } from 'lodash'
 import CardView from 'react-native-cardview'
@@ -52,10 +52,16 @@ class GroupVocaPage extends Component {
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
         this._formatData()
     }
 
     componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     shouldComponentUpdate(nextProps, nextState) {

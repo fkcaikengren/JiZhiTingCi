@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, } from 'react-native';
+import { Dimensions, View, Text, BackHandler } from 'react-native';
 import { Grid, Col, Row } from 'react-native-easy-grid'
 import { Header, Button } from 'react-native-elements'
 import * as Progress from 'react-native-progress';
@@ -21,8 +21,8 @@ import { VOCABULARY_DIR, COMMAND_MODIFY_TASK, COMMAND_MODIFY_PASSED } from "../.
 import _ from 'lodash'
 import { store } from "../../redux/store";
 import VocaGroupService from "./service/VocaGroupService";
+import LookWordBoard from "./component/LookWordBoard";
 
-const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
 
 
@@ -67,7 +67,24 @@ export default class TestPage extends Component {
         // _util.checkLocalTime() #todo:检查本地时间
     }
 
+
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this._goBack()
+            return true
+        })
+        this._init()
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+        for (let timer of this.timerArr) {
+            clearTimeout(timer)
+        }
+    }
+
+    _init = () => {
         //1.初始化信息
         const task = this.props.navigation.getParam('task')
         const curIndex = task.curIndex
@@ -125,11 +142,8 @@ export default class TestPage extends Component {
         }
     }
 
-    componentWillUnmount() {
-        for (let timer of this.timerArr) {
-            clearTimeout(timer)
-        }
-    }
+
+
 
     //开始倒计时
     _countDown = () => {
@@ -376,49 +390,53 @@ export default class TestPage extends Component {
             ref={ref => {
                 this.detailModal = ref
             }}>
-            {/* 主体 */}
-            {this.allWordInfos[this.answerIndex] &&
-                <VocaCard navigation={this.props.navigation} wordInfo={this.allWordInfos[this.answerIndex]} />
-            }
-            {/* 底部 */}
-            <View style={[gstyles.modalBottom, gstyles.r_between]}>
-                {!this.noPass &&
+            <View style={gstyles.vocaModalView}>
+                {this.allWordInfos[this.answerIndex] &&
+                    <VocaCard
+                        navigation={this.props.navigation}
+                        lookWord={this.wordBoard ? this.wordBoard.lookWord : _ => null}
+                        wordInfo={this.allWordInfos[this.answerIndex]} />
+                }
+                <View style={[styles.modalBottom, gstyles.r_between]}>
+                    {!this.noPass &&
+                        <Button
+                            title={isPassed ? '' : 'Pass'}
+                            icon={isPassed ? <AliIcon name='complete' size={30} color='#FFF' /> : null}
+                            titleStyle={{ color: '#FFF', fontSize: 16 }}
+                            containerStyle={{ flex: 1, marginRight: 20 }}
+                            buttonStyle={[styles.selectBtn, { backgroundColor: bgColor }]}
+                            onPress={() => {
+                                if (this.state.task.wordCount <= 2) {
+                                    store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
+                                    return
+                                }
+                                this._passWord(this.allWordInfos[this.answerIndex].word)
+                                if (isAnsweredModalOpen) {
+                                    this._closeAnsweredModal()
+                                } else if (isDetailModalOpen) {
+                                    this._closeDetailModal()
+                                }
+                                this.timerArr.push(setTimeout(this._nextWord, 500))
+                            }} //pass 
+                        />
+                    }
                     <Button
-                        title={isPassed ? '' : 'Pass'}
-                        icon={isPassed ? <AliIcon name='complete' size={30} color='#FFF' /> : null}
+                        title={`完成巩固，继续做题`}
                         titleStyle={{ color: '#FFF', fontSize: 16 }}
-                        containerStyle={{ flex: 1, marginRight: 20 }}
+                        containerStyle={{ flex: 4 }}
                         buttonStyle={[styles.selectBtn, { backgroundColor: bgColor }]}
                         onPress={() => {
-                            if (this.state.task.wordCount <= 2) {
-                                store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
-                                return
-                            }
-                            this._passWord(this.allWordInfos[this.answerIndex].word)
-                            if (isAnsweredModalOpen) {
+                            if (isAnswered) { //答题后
                                 this._closeAnsweredModal()
-                            } else if (isDetailModalOpen) {
+                                this._nextWord()
+                            } else {      //查看提示或超时
                                 this._closeDetailModal()
+                                this._reCountDown()
                             }
-                            this.timerArr.push(setTimeout(this._nextWord, 500))
-                        }} //pass 
+                        }}
                     />
-                }
-                <Button
-                    title={`完成巩固，继续做题`}
-                    titleStyle={{ color: '#FFF', fontSize: 16 }}
-                    containerStyle={{ flex: 4 }}
-                    buttonStyle={[styles.selectBtn, { backgroundColor: bgColor }]}
-                    onPress={() => {
-                        if (isAnswered) { //答题后
-                            this._closeAnsweredModal()
-                            this._nextWord()
-                        } else {      //查看提示或超时
-                            this._closeDetailModal()
-                            this._reCountDown()
-                        }
-                    }}
-                />
+                </View>
+
             </View>
         </Modal>
     }
@@ -458,6 +476,19 @@ export default class TestPage extends Component {
         })
     }
 
+    _goBack = () => {
+        const curIndexWhenBack = this.state.curIndex - this.perPassWordArr.length
+        const newTask = { ...this.state.task, curIndex: curIndexWhenBack }
+        if (this.props.mode === 'study') { //更新上传任务
+            this.props.updateTask({ task: newTask })
+            this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
+            vocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
+        } else {
+            this._normalTestEnd(newTask)
+        }
+        this.audioService.releaseSound()
+    }
+
 
     render() {
         const { selectedStatus, selectedIndex, curIndex, isPassed } = this.state
@@ -475,18 +506,7 @@ export default class TestPage extends Component {
                     statusBarProps={{ barStyle: 'light-content' }}
                     barStyle="light-content"
                     leftComponent={
-                        <AliIcon name='fanhui' size={26} color='#555' onPress={() => {
-                            const curIndexWhenBack = curIndex - this.perPassWordArr.length
-                            const newTask = { ...this.state.task, curIndex: curIndexWhenBack }
-                            if (this.props.mode === 'study') { //更新上传任务
-                                this.props.updateTask({ task: newTask })
-                                this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
-                                vocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
-                            } else {
-                                this._normalTestEnd(newTask)
-                            }
-                            this.audioService.releaseSound()
-                        }} />}
+                        <AliIcon name='fanhui' size={26} color='#555' onPress={this._goBack} />}
                     centerComponent={
                         <View style={gstyles.r_center}>
                             <Progress.Bar progress={this.testWordArr.length > 0 ? ((curIndex + 1) / this.testWordArr.length) : (1 / 100)} height={10} width={width - 120} color='#FFE957' unfilledColor='#EFEFEF' borderWidth={0} >
@@ -615,6 +635,10 @@ export default class TestPage extends Component {
                 {
                     this._createDetailModal(true)
                 }
+                <LookWordBoard
+                    ref={comp => this.wordBoard = comp}
+                    navigation={this.props.navigation}
+                />
             </View>
         );
     }

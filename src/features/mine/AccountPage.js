@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker';
 import GroupItem from './component/GroupItem';
@@ -58,7 +58,22 @@ class AccountPage extends React.Component {
         super(props);
     }
     componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { commonModal, confirmModal } = this.props.app
+            if (commonModal.isOpen()) {
+                commonModal.hide()
+            } else if (confirmModal.isOpen()) {
+                confirmModal.hide()
+            } else {
+                this.props.navigation.goBack()
+            }
 
+
+            return true
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
 

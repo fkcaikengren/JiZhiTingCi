@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, BackHandler } from 'react-native';
 
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
@@ -9,6 +9,7 @@ import gstyles from "../../style";
 import VocaLibPage from "./VocaLibPage";
 import { TYPE_VOCA_BOOK_WORD, TYPE_VOCA_BOOK_READ, TYPE_VOCA_BOOK_PHRASE } from "./common/constant";
 import _util from '../../common/util'
+import { store } from "../../redux/store";
 
 class VocaLibTabPage extends Component {
     constructor(props) {
@@ -16,6 +17,23 @@ class VocaLibTabPage extends Component {
         this.state = {
             pageIndex: 0,
         }
+    }
+
+    componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { isOpen, hide } = store.getState().app.commonModal
+            if (isOpen()) {
+                hide()
+            } else {
+                this.props.navigation.goBack()
+            }
+            return true
+        })
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
     }
 
     _movePage = (clickIndex) => {

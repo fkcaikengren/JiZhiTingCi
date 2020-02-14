@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image } from 'react-native';
+import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image, BackHandler } from 'react-native';
 import { Header } from 'react-native-elements'
 import { connect } from 'react-redux';
 import AliIcon from '../../component/AliIcon';
@@ -46,7 +46,14 @@ class MessagePage extends React.Component {
     }
 
     componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
         this._init()
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     _init = async () => {

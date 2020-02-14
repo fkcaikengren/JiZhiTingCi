@@ -39,6 +39,10 @@ export default class CommonModal extends React.Component {
         });
     }
 
+    isOpen = () => {
+        return this.state.isOpen
+    }
+
     setContentState = (contentState) => {
         this.setState({
             contentState: {

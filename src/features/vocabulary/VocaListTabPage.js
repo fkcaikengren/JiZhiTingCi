@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper'
 import { Header } from 'react-native-elements'
@@ -25,6 +25,15 @@ class VocaListTabPage extends Component {
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this._goBack()
+            return true
+        })
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
     }
 
     _movePage = (clickIndex) => {
@@ -40,6 +49,15 @@ class VocaListTabPage extends Component {
         this.setState({ pageIndex: index })
     }
 
+    _goBack = () => {
+        if (this.props.vocaList.onEdit) {
+            this.props.app.toast.show('当前处于编辑状态，不可以退出哦')
+        } else {
+            this.props.navigation.goBack();
+            this.props.syncTask(null)
+        }
+    }
+
     render() {
         const editBtn = this.props.vocaList.onEdit ? <Text style={gstyles.md_black}>取消</Text>
             : <AliIcon name='bianji' size={24} color={gstyles.black}></AliIcon>
@@ -52,14 +70,7 @@ class VocaListTabPage extends Component {
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle='dark-content' // or directly
-                    leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={() => {
-                        if (this.props.vocaList.onEdit) {
-                            this.props.app.toast.show('当前处于编辑状态，不可以退出哦')
-                        } else {
-                            this.props.navigation.goBack();
-                            this.props.syncTask(null)
-                        }
-                    }} />}
+                    leftComponent={<AliIcon name='fanhui' size={24} color={gstyles.black} onPress={this._goBack} />}
                     rightComponent={<TouchableOpacity activeOpacity={0.8} onPress={() => { this.props.toggleEdit() }}>
                         {editBtn}
                     </TouchableOpacity>

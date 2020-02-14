@@ -2,7 +2,7 @@
 
 
 import React, { Component } from 'react';
-import { Platform, View, Text, Easing, TouchableNativeFeedback, TextInput, } from 'react-native';
+import { Platform, View, Text, Easing, TouchableNativeFeedback, TextInput, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { Header, Slider } from 'react-native-elements'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
@@ -42,10 +42,27 @@ class ArticleTabPage extends React.Component {
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else if (this.state.showSettingModal) {
+                this._closeSettingModal()
+            } else if (this.props.app.confirmModal.isOpen()) {
+                this.props.app.confirmModal.hide()
+            } else {
+                this.props.navigation.goBack()
+            }
+
+            return true
+        })
         const articleInfo = this.props.navigation.getParam('articleInfo')
         console.log('---页面初始化后，加载文章----')
         this.props.loadArticle(articleInfo);
-
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     componentDidUpdate(prevProps, prevState) {

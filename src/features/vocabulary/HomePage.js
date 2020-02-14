@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, View, AppState } from 'react-native';
+import { Platform, StatusBar, AppState, BackHandler, View, } from 'react-native';
 import { connect } from 'react-redux'
 import Drawer from 'react-native-drawer'
 import SplashScreen from 'react-native-splash-screen';
@@ -25,23 +25,21 @@ class HomePage extends Component {
             modalVisible: false,
             appState: AppState.currentState
         }
-
         console.disableYellowBox = true
     }
 
-
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPressAndroid)
         // 加载任务
         this._init()
         // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
     }
-
-
     componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
         AppState.removeEventListener('change', this._handleAppStateChange);
     }
-
     shouldComponentUpdate(nextProps, nextState) {
 
         const { task, autoPlayTimer, bgPath } = this.props.vocaPlay
@@ -54,6 +52,25 @@ class HomePage extends Component {
         }
         return true
     }
+
+    _onBackButtonPressAndroid = () => {
+        if (this.state.modalVisible === true) {
+            this.props.app.commonModal.hide()
+            this._closeDrawerPanel()
+            return true
+        } else {
+            if (this.props.navigation.isFocused()) {
+                if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                    //最近2秒内按过back键，可以退出应用。
+                    return false;
+                }
+                this.lastBackPressed = Date.now();
+                this.props.app.toast.show('再按一次退出应用', 1000);
+                return true;
+            }
+        }
+    }
+
     _handleAppStateChange = (nextAppState) => {
         if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
             SplashScreen.hide()

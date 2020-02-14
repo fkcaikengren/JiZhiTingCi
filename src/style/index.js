@@ -153,15 +153,16 @@ const gstyles = StyleSheet.create({
     modal: {
         width: width,
         height: height - StatusBarHeight - 80,
-        backgroundColor: "#FDFDFD"
+        backgroundColor: "#FDFDFD",
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5
     },
-    modalBottom: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-        height: 60,
+    vocaModalView: {
         flex: 1,
-        paddingHorizontal: 10,
+        width: '100%',
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        paddingTop: 5
     },
     // 底部
     footer: {

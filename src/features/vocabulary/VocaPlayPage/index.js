@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Platform, StatusBar, View, Text, TouchableOpacity, Image, findNodeHandle
+    Platform, StatusBar, View, Text, TouchableOpacity, Image, findNodeHandle, BackHandler
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { connect } from 'react-redux';
@@ -39,8 +39,6 @@ const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
-
-
 
 
 /**
@@ -116,8 +114,41 @@ class VocaPlayPage extends React.Component {
         this.setState(state)
     }
 
-
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else {
+                this.props.navigation.goBack()
+            }
+            return true
+        })
+        this._init()
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        //如果播放状态变化
+        if (this.state.autoPlayTimer && prevState.autoPlayTimer !== this.state.autoPlayTimer) {
+            this.vocaPlayService.listRef.closePassBtn()
+        } else if (prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
+            this.vocaPlayService.listRef.closePassBtn()
+        }
+    }
+
+    componentWillUnmount() { //退出界面
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+
+        for (let timer of this.timerArr) {
+            clearTimeout(timer)
+        }
+        if (this.isStudyMode) {
+            this._quitLearn();
+        }
+    }
+
+    _init = () => {
         //修改当前normalType
         let normalType = this.props.navigation.getParam('normalType')
         if (normalType) {
@@ -131,7 +162,7 @@ class VocaPlayPage extends React.Component {
         if (this.isStudyMode) {
             //加载task 和word
             const task = this.props.navigation.getParam('task')
-            const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords)
+            const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords, true)
 
             this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
             this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
@@ -157,7 +188,7 @@ class VocaPlayPage extends React.Component {
             if (normalType === Constant.BY_VIRTUAL_TASK) {
                 const task = this.props.navigation.getParam('task')
                 if (task) { //列表页和生词页跳转来的
-                    const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords)
+                    const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords, true)
                     this.props.loadTask(task, showWordInfos)
                     console.log('---chagne state------')
                     // console.log(this.vocaPlayService.stateRef)
@@ -176,24 +207,7 @@ class VocaPlayPage extends React.Component {
 
 
 
-    componentDidUpdate(prevProps, prevState) {
-        //如果播放状态变化
-        if (this.state.autoPlayTimer && prevState.autoPlayTimer !== this.state.autoPlayTimer) {
-            this.vocaPlayService.listRef.closePassBtn()
-        } else if (prevProps.vocaPlay.autoPlayTimer !== this.props.vocaPlay.autoPlayTimer) {
-            this.vocaPlayService.listRef.closePassBtn()
-        }
 
-    }
-
-    componentWillUnmount() { //退出界面
-        for (let timer of this.timerArr) {
-            clearTimeout(timer)
-        }
-        if (this.isStudyMode) {
-            this._quitLearn();
-        }
-    }
 
     _initPlayList = async () => {
         let curPlayListIndex = -1
@@ -250,8 +264,18 @@ class VocaPlayPage extends React.Component {
 
     // 更新单词下标
     _changeCurIndexAndAutoTimer = (state, playIndex, timer) => {
+        //如果下标没有变化
+        if (state.curIndex === playIndex) {
+            if (this.isStudyMode) {
+                this.changeState({ autoPlayTimer: timer })
+            } else {
+                this.props.changePlayTimer(timer)
+            }
+            return
+        }
         const beforeCount = state.task.wordCount
         let listenTimes = state.task.listenTimes
+        let beforeListenTimes = listenTimes
         let leftTimes = state.task.leftTimes
 
         //播放到最后一个单词
@@ -270,10 +294,12 @@ class VocaPlayPage extends React.Component {
                 autoPlayTimer: timer
             })
         } else {//常规模式
-            const { task, normalType, howPlay } = this.props.vocaPlay
+            const { task, normalType, howPlay } = state
             this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
             this.props.changePlayTimer(timer)
-            if (listenTimes === task.listenTimes + 1) {
+            if (listenTimes === beforeListenTimes + 1) {
+                console.log('listenTimes:' + listenTimes)
+                console.log('beforeListenTimes:' + beforeListenTimes)
                 //处理播放方式 开始
                 if (howPlay === Constant.PLAY_WAY_LOOP) { //顺序播放
 
@@ -412,7 +438,7 @@ class VocaPlayPage extends React.Component {
     _finishQuit = () => {
 
         //学习模式下：完成播放，退出
-        const { task, showWordInfos, autoPlayTimer } = this.state
+        const { task, autoPlayTimer } = this.state
         if (this.isStudyMode && task.leftTimes <= 0) {
 
             // console.log('---清理--'+autoPlayTimer)
@@ -446,7 +472,6 @@ class VocaPlayPage extends React.Component {
             this.timerArr.push(setTimeout(() => {
                 VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
                     task: finalTask,
-                    showWordInfos: showWordInfos,
                     nextRouteName: nextRouteName,
                     ...otherParams
                 })
@@ -560,13 +585,13 @@ class VocaPlayPage extends React.Component {
 
     _openVocaModal = () => {
         //暂停
-        const { vocaPlay } = this.props
         if (this.isStudyMode) {
             if (this.state.autoPlayTimer) {
                 BackgroundTimer.clearTimeout(this.state.autoPlayTimer);
                 this._changePlayTimer(0);
             }
         } else {
+            const { vocaPlay } = this.props
             if (vocaPlay.autoPlayTimer) {
                 BackgroundTimer.clearTimeout(vocaPlay.autoPlayTimer);
                 this._changePlayTimer(0);
@@ -580,6 +605,11 @@ class VocaPlayPage extends React.Component {
     //单词详情modal
     _createVocaModal = () => {
         let showWordInfos = this.isStudyMode ? this.state.showWordInfos : this.props.vocaPlay.showWordInfos
+        let wordInfo = null
+        if (this.state.clickIndex !== null && showWordInfos[this.state.clickIndex]) {
+            wordInfo = this.vocaDao.getWordInfo(showWordInfos[this.state.clickIndex].word)
+        }
+
         return <Modal style={gstyles.modal}
             isOpen={this.state.isVocaModalOpen}
             onClosed={this._closeVocaModal}
@@ -591,19 +621,20 @@ class VocaPlayPage extends React.Component {
             ref={ref => {
                 this.vocaModal = ref
             }}>
-            {/* 主体 */}
-            {this.state.clickIndex !== null && showWordInfos[this.state.clickIndex] &&
-                <VocaCard
-                    navigation={this.props.navigation}
-                    lookWord={this.wordBoard.lookWord}
-                    wordInfo={showWordInfos[this.state.clickIndex]} />
-            }
-            <View
-                style={gstyles.closeBtn}
-                onStartShouldSetResponder={() => true}
-                onResponderStart={(e) => { this._closeVocaModal() }}
-            >
-                <AliIcon name='cha' size={20} color={gstyles.black} />
+            <View style={gstyles.vocaModalView}>
+                {wordInfo &&
+                    <VocaCard
+                        navigation={this.props.navigation}
+                        lookWord={this.wordBoard ? this.wordBoard.lookWord : _ => null}
+                        wordInfo={wordInfo} />
+                }
+                <View
+                    style={gstyles.closeBtn}
+                    onStartShouldSetResponder={() => true}
+                    onResponderStart={(e) => { this._closeVocaModal() }}
+                >
+                    <AliIcon name='cha' size={20} color={gstyles.black} />
+                </View>
             </View>
         </Modal>
     }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Platform, View, Text, Image, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { DURATION } from 'react-native-easy-toast'
 import { connect } from 'react-redux';
@@ -29,10 +29,19 @@ class BgSelectorPage extends Component {
 
         console.disableYellowBox = true
     }
-
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
+
         this._init()
     }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
+    }
+
 
 
     _init = async () => {

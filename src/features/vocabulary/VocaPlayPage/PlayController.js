@@ -106,7 +106,7 @@ export default class PlayController extends React.Component {
         const { changePlayTimer } = this.props;
         if (autoPlayTimer) {
             //暂停
-            clearTimeout(autoPlayTimer);
+            BackgroundTimer.clearTimeout(autoPlayTimer);
             changePlayTimer(0);
             NotificationManage.pause((e) => {
                 console.log(e)
@@ -124,7 +124,7 @@ export default class PlayController extends React.Component {
         }
         if (autoPlayTimer) {
             //暂停
-            clearTimeout(autoPlayTimer);
+            BackgroundTimer.clearTimeout(autoPlayTimer);
             changePlayTimer(0);
             NotificationManage.pause((e) => {
                 console.log(e)

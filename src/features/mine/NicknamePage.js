@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TextInput, BackHandler } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
@@ -34,6 +34,13 @@ class NicknamePage extends React.Component {
     }
 
     componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     _changeNickname = (nickname) => {

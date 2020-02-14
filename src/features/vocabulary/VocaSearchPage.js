@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
-import { StatusBar, FlatList, View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import {
+  StatusBar, View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, BackHandler, Keyboard
+} from 'react-native';
+import dismissKeyboard from 'dismissKeyboard';
 
 import VocaDao from './service/VocaDao'
-import VocaGroupDao from './service/VocaGroupDao'
 import styles from './VocaSearchStyle'
 import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
-import VocaUtil from './common/vocaUtil';
 import VocaCard from './component/VocaCard';
 import LookWordBoard from "./component/LookWordBoard";
+import { store } from '../../redux/store';
 
 
 const Dimensions = require('Dimensions');
 let { width, height } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const StatusBarHeight = StatusBar.currentHeight;
-
 
 
 export default class VocaSearchPage extends Component {
@@ -34,18 +35,26 @@ export default class VocaSearchPage extends Component {
   }
 
   componentDidMount() {
+    //监听物理返回键
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      const { isOpen, hide } = store.getState().app.commonModal
+      if (isOpen()) {
+        hide()
+      } else {
+        this.props.navigation.goBack()
+      }
+      return true
+    })
   }
-
 
   componentWillUnmount() {
+    this.backHandler && this.backHandler.remove('hardwareBackPress')
   }
 
-  _keyExtractor = (item, index) => index.toString();
 
-
-  _renderItem = ({ item, index }) => {
-
+  _renderItem = (item, index) => {
     return <TouchableOpacity onPress={() => {
+      dismissKeyboard()
       this.setState({ searchWord: item.word, selectedIndex: index })
     }}>
       <View style={styles.item}>
@@ -122,13 +131,7 @@ export default class VocaSearchPage extends Component {
         </View>
         {/* 搜索结果列表 */}
         {this.state.searchWord === '' &&
-          <FlatList
-            ref={ref => this._listRef = ref}
-            data={this.state.data}
-            renderItem={this._renderItem}
-            keyExtractor={this._keyExtractor}
-            extraData={this.state}
-          />
+          this.state.data.map(this._renderItem)
         }
 
         {this.state.searchWord !== '' &&

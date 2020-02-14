@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, BackHandler } from "react-native";
 import { Header } from "react-native-elements";
 import VocaCard from "./component/VocaCard";
 import AliIcon from '../../component/AliIcon'
@@ -17,11 +17,20 @@ export default class VocaDetailPage extends Component {
             wordInfo: null
         }
     }
-    componentDidMount() {
-        const word = this.props.navigation.getParam('word')
 
+    componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this._goBack()
+            return true
+        })
+        const word = this.props.navigation.getParam('word')
         const wordInfo = VocaDao.getInstance().getWordInfo(word)
         this.setState({ wordInfo })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress')
+
     }
 
     render() {

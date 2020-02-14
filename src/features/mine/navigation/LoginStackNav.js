@@ -15,8 +15,6 @@ const LoginStackNav = createStackNavigator(
       screen: PhoneLoginPage
     },
 
-
-
   },
   {
     initialRouteName: 'MainLogin',

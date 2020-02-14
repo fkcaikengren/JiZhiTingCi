@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, StatusBar, ImageBackground, Image, View, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, StatusBar, ImageBackground, Image, View, Text, TouchableOpacity, BackHandler } from 'react-native'
 import CardView from 'react-native-cardview'
 
 import AliIcon from '../../component/AliIcon'
@@ -32,12 +32,15 @@ const styles = StyleSheet.create({
 class MainLoginPage extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-        }
     }
 
     componentDidMount() {
-
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            //todo:双击退出
+        })
+    }
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
     render() {

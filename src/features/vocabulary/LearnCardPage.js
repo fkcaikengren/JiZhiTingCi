@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, StatusBar, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, StatusBar, View, Text, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
 import * as Progress from 'react-native-progress'
 import { Header } from 'react-native-elements'
 import { connect } from 'react-redux'
@@ -58,24 +58,29 @@ class LearnCardPage extends Component {
     }
 
     componentDidMount() {
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this._goBack()
+            return true
+        })
+        this._init()
+    }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
+    }
+
+    _init = () => {
         const { getParam } = this.props.navigation
         let task = getParam('task')
         if (!task) {
             const taskOrder = getParam('taskOrder')
             task = this.taskDao.getTaskByOrder(taskOrder)
         }
-        let showWordInfos = getParam('showWordInfos')
-        if (!showWordInfos) {
-            showWordInfos = VocaDao.getInstance().getShowWordInfos(task.taskWords)
-        }
+        showWordInfos = VocaDao.getInstance().getShowWordInfos(task.taskWords)
 
         this.setState({ task, showWordInfos })
     }
-
-    componentWillUnmount() {
-    }
-
-
 
     _nextWord = () => {
         //停止播放音频
@@ -100,6 +105,14 @@ class LearnCardPage extends Component {
     }
 
 
+    _goBack = () => {
+        //更新、上传task
+        const newTask = { ...this.state.task }
+        this.props.updateTask({ task: newTask })
+        this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
+        VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
+        this.audioService.releaseSound()
+    }
 
 
 
@@ -117,14 +130,7 @@ class LearnCardPage extends Component {
                     statusBarProps={{ barStyle: 'dark-content' }}
                     barStyle="dark-content" // or directly
                     leftComponent={//返回
-                        <AliIcon name='fanhui' size={26} color='#555' onPress={() => {
-                            //更新、上传task
-                            const newTask = { ...this.state.task }
-                            this.props.updateTask({ task: newTask })
-                            this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
-                            VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
-                            this.audioService.releaseSound()
-                        }} />}
+                        <AliIcon name='fanhui' size={26} color='#555' onPress={this._goBack} />}
 
                     centerComponent={
                         <View style={gstyles.r_center}>

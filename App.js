@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { Platform, StatusBar, View, StyleSheet, } from 'react-native';
+import React, { Component, } from 'react';
+import { Platform, StatusBar, StyleSheet, View, } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu'
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import CodePush from "react-native-code-push";
+
 import { store } from './src/redux/store'
 import Toast, { DURATION } from 'react-native-easy-toast'
 import Loader from './src/component/Loader'
@@ -15,7 +16,7 @@ import VocaTaskDao from './src/features/vocabulary/service/VocaTaskDao';
 import VocaGroupDao from './src/features/vocabulary/service/VocaGroupDao';
 import ArticleDao from './src/features/reading/service/ArticleDao';
 import gstyles from './src/style';
-import { connect } from 'react-redux'
+
 import * as AppAction from './src/redux/action'
 import DictDao from './src/features/vocabulary/service/DictDao';
 import PushUtil from './src/modules/PushUtil'
@@ -65,6 +66,13 @@ const styles = StyleSheet.create({
  */
 class Main extends React.Component {
 
+
+  constructor(props) {
+    super(props)
+    this.backHandler = null
+  }
+
+
   componentDidMount() {
 
     this.props.setToast({ toast: this.refs.toast })
@@ -72,6 +80,9 @@ class Main extends React.Component {
     this.props.setConfirmModal({ confirmModal: this.refs.confirmModal })
     this.props.setCommonModal({ commonModal: this.refs.commonModal })
   }
+
+
+
 
   render() {
     return (
@@ -97,7 +108,8 @@ class Main extends React.Component {
 
 
 const mapStateToProps = state => ({
-  app: state.app
+  app: state.app,
+  nav: state.nav
 })
 
 

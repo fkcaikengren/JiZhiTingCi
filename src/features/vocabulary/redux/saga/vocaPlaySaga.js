@@ -53,7 +53,7 @@ export function* changePlayListIndex(action) {
             //加载任务播放
             nextTask = VocaTaskDao.getInstance().getTaskByOrder(playTaskList[index])
             nextTask.playName = VocaUtil.genTaskName(nextTask.taskOrder)
-            showWordInfos = VocaDao.getInstance().getShowWordInfos(nextTask.taskWords)
+            showWordInfos = VocaDao.getInstance().getShowWordInfos(nextTask.taskWords, true)
         } else if (normalType === BY_VIRTUAL_TASK) {
             //加载生词播放
             console.log('--saga 加载生词播放--')
@@ -62,7 +62,7 @@ export function* changePlayListIndex(action) {
             nextTask = VocaUtil.genVirtualTask(group.words, group.groupName, group.id)
             nextTask.listenTimes = group.listenTimes
             nextTask.testTimes = group.testTimes
-            showWordInfos = VocaDao.getInstance().getWordInfos(group.words)
+            showWordInfos = VocaDao.getInstance().getWordInfos(group.words, true)
         }
         yield put({
             type: CHANGE_PLAY_LIST_INDEX_SUCCEED,

@@ -165,8 +165,7 @@ export default class VocaDao {
      * @param words
      * @return 返回一个数组
      */
-    getWordInfos(words) {
-        console.log(words)
+    getWordInfos(words, onlyBasic = false) {
         //验证
         if (!words || words.length === 0)
             return []
@@ -175,8 +174,6 @@ export default class VocaDao {
                 return item.trim()
             })
         }
-        console.log("---2---")
-        console.log(words)
         // 词汇类型判断/是否是短语
         const arr = []
         const isPhr = words[0].includes(' ')
@@ -222,30 +219,60 @@ export default class VocaDao {
             console.log(e)
             console.log('VocaDao : getWordInfos() Error')
         }
+
+        if (onlyBasic) {
+            const basicArr = []
+            for (let i in arr) {
+                basicArr.push({
+                    word: arr[i].word,
+                    phonetic: arr[i].phonetic,
+                    pron_url: arr[i].pron_url,
+                    translation: arr[i].translation,
+                    trans: arr[i].trans
+                })
+            }
+            return basicArr
+        }
         return arr
     }
 
     /**
      * @function 获取未pass的单词信息
      * @param {*} words 
-     * @param {*} wordInfos 
+     * @param {*} onlyWordInfo 
      */
-    getShowWordInfos(words, wordInfos = null) {
+    getShowWordInfos(words, onlyBasic = false) {
         if (!words) {
             return []
         }
         const showWordInfos = []
-        if (wordInfos === null) {
-            wordInfos = this.getWordInfos(words.map((item, index) => item.word))
-        }
-        for (let i in words) {
-            //过滤
-            if (words[i].passed === false) {
-                showWordInfos.push(wordInfos[i])
+        const wordInfos = this.getWordInfos(words.map((item, index) => item.word))
+        if (onlyBasic) {
+            for (let i in words) {
+                if (words[i].passed === false) {
+                    showWordInfos.push({
+                        word: wordInfos[i].word,
+                        phonetic: wordInfos[i].phonetic,
+                        pron_url: wordInfos[i].pron_url,
+                        translation: wordInfos[i].translation,
+                        trans: wordInfos[i].trans
+                    })
+                }
+            }
+
+        } else {
+            for (let i in words) {
+                //过滤
+                if (words[i].passed === false) {
+                    showWordInfos.push(wordInfos[i])
+                }
             }
         }
         return showWordInfos
     }
+
+
+
 
 
     getTransforms(word) {

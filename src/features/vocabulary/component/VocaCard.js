@@ -21,7 +21,6 @@ export default class VocaCard extends Component {
     constructor(props) {
         super(props)
         this.audioService = AudioService.getInstance()
-        const { wordInfo } = this.props
 
         this.state = {
             showAll: this.props.showAll,
@@ -66,14 +65,12 @@ export default class VocaCard extends Component {
                 return true
             }
 
-
         } else {
             if (this.props.showAll === false) {
                 this.setState({ showAll: false })
             }
 
             if (playWord) {
-
                 this.audioService.playSound({
                     pDir: CConstant.VOCABULARY_DIR,
                     fPath: nextProps.wordInfo.pron_url

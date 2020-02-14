@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, BackHandler } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Header, Button } from 'react-native-elements'
 
@@ -22,12 +22,20 @@ export default class DictPage extends React.Component {
     }
 
     componentDidMount() {
-
+        //监听物理返回键
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack()
+            return true
+        })
         const word = this.props.navigation.getParam('word')
-        console.log(word)
         const html = this.dictDao.getHtmlByWord(word)
         this.setState({ html })
     }
+
+    componentWillUnmount() {
+        this.backHandler && this.backHandler.remove('hardwareBackPress');
+    }
+
 
     // 首次发送
     _sendInitMessage = () => {

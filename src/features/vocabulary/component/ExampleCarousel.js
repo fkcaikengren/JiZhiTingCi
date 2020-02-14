@@ -5,10 +5,7 @@ import { PropTypes } from 'prop-types'
 import LinearGradient from 'react-native-linear-gradient';
 import AudioService from '../../../common/AudioService'
 import * as CConstant from "../../../common/constant";
-import AliIcon from "../../../component/AliIcon";
 import { BASE_URL } from "../../../common/constant";
-import gstyles from "../../../style";
-
 const { width } = Dimensions.get('window')
 
 
