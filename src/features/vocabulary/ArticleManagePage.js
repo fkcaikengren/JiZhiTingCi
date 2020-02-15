@@ -10,8 +10,8 @@ import * as HomeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon';
 import gstyles from '../../style'
 import VocaTaskDao from "./service/VocaTaskDao";
-import ArticleDao from "../reading/service/ArticleDao";
 import { DETAIL_READ } from "../reading/common/constant";
+import VocaUtil from "./common/vocaUtil";
 
 
 const styles = StyleSheet.create({
@@ -37,7 +37,6 @@ class ArticleManagePage extends Component {
             articles: []
         };
         this.taskDao = VocaTaskDao.getInstance()
-        this.articleDao = ArticleDao.getInstance()
         console.disableYellowBox = true;
     }
 
@@ -47,14 +46,18 @@ class ArticleManagePage extends Component {
             this.props.navigation.goBack()
             return true
         })
-        //查询已学习过的任务 #todo:获取学习过的文章
-        const articles = []
-        this.setState({ articles })
+        //查询已学习过的任务 
+        this._init()
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
+    _init = () => {
+        const learnedTasks = this.taskDao.getLearnedTasks()
+        const articles = VocaUtil.genArticleTasksByVocaTasks(learnedTasks)
+        this.setState({ articles })
+    }
 
 
     _renderRight = (item) => {
@@ -67,7 +70,7 @@ class ArticleManagePage extends Component {
                 type = '选词填空'
                 break
             case FOUR_SELECT_READ:
-                type = '四选一'
+                type = '选词填空'
                 break
             case EXTENSIVE_READ:
                 type = '泛读'
@@ -75,7 +78,7 @@ class ArticleManagePage extends Component {
         }
 
         const hasScore = (item.score !== -1)
-        const textStyle = hasScore ? { fontSize: 28, color: gstyles.emColor, marginRight: 10, } : [gstyles.lg_gray, { paddingRight: 10 }]
+        const textStyle = hasScore ? { fontSize: 26, color: gstyles.emColor, marginRight: 10, } : [gstyles.lg_gray, { paddingRight: 10 }]
         return <View style={[{ height: '100%' }, hasScore ? gstyles.r_start_bottom : gstyles.r_start]}>
             {hasScore &&
                 <Text style={[gstyles.xs_gray, { paddingBottom: 5, paddingRight: 5 }]}>正确率:</Text>
@@ -142,12 +145,19 @@ class ArticleManagePage extends Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <FlatList
-                    data={this.state.articles}
-                    renderItem={this._renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state.articles}
-                />
+                {this.state.articles.length <= 0 &&
+                    <View style={[gstyles.c_center, { flex: 1 }]}>
+                        <AliIcon name={'no-data'} size={100} color={gstyles.gray} />
+                        <Text style={gstyles.md_gray}>学过的阅读真题会出现在这里</Text>
+                    </View>
+                }
+                {this.state.articles.length > 0 &&
+                    <FlatList
+                        data={this.state.articles}
+                        renderItem={this._renderItem}
+                        keyExtractor={(item, index) => item.id}
+                    />
+                }
             </View>
         );
     }

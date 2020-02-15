@@ -115,7 +115,6 @@ export default class DownloadTemplate {
                             onFinishPress()
                         }
 
-
                     }
                 })
 

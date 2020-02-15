@@ -16,44 +16,16 @@ const DocumentDir = dirs.DocumentDir + '/'
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#EFEFEF',
-    },
-    mainView: {
-        marginTop: 16,
-        borderTopColor: '#DFDFDF',
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: '#DFDFDF',
-        borderBottomWidth: StyleSheet.hairlineWidth,
 
-    },
-
-    itemWrapper: {
-        paddingLeft: 12,
-        backgroundColor: '#FDFDFD'
-    },
     itemView: {
         height: 60,
+        backgroundColor: '#FFF',
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: '#DFDFDF',
         paddingLeft: 10,
     },
-    logout: {
-        height: 50,
-        marginTop: 10,
-        backgroundColor: '#FDFDFD',
-        borderTopColor: '#DFDFDF',
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: '#DFDFDF',
-        borderBottomWidth: StyleSheet.hairlineWidth,
 
-    },
-    imgStyle: {
-        width: 40,
-        height: 40,
-        borderRadius: 50,
-    },
+
     clearBtn: {
         color: 'red',
         position: 'absolute',
@@ -68,7 +40,7 @@ class DownloadManagePage extends React.Component {
         this.fileService = FileService.getInstance()
 
         this.state = {
-            storeBlocks: [],
+            resourcePackages: [],
             cacheSize: null,
         }
 
@@ -90,8 +62,10 @@ class DownloadManagePage extends React.Component {
     }
 
     _init = async () => {
-        //扫描单词包目录，
-        //DocumentDir+VOCABULARY_DIR+getParam('bookCode')
+        //获取离线包信息
+        const resourcePackages = await Storage.getAllDataForKey('resourcePackages')
+        this.setState({ resourcePackages })
+
         //获取缓存大小
         const cacheSize = await this.fileService.getSize(CacheDir)
         this.setState({
@@ -99,30 +73,40 @@ class DownloadManagePage extends React.Component {
         })
     }
 
+
+
     render() {
-        const { getParam } = this.props.navigation
 
         return (
-            <View style={[{ flex: 1 }, gstyles.c_start]}>
+            <View style={[{ flex: 1, backgroundColor: '#EFEFEF' }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
-                    barStyle='dark-content' // or directly
+                    barStyle='dark-content'
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
                             this.props.navigation.goBack();
                         }} />}
-
                     centerComponent={{ text: '离线管理', style: gstyles.lg_black_bold }}
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
                         justifyContent: 'space-around',
                     }}
                 />
-
-                <View style={{ flex: 1, width: '100%' }}>
-
-                    <TouchableOpacity activeOpacity={0.9} onPress={() => {
+                <View style={{ width: '100%', marginTop: 10 }}>
+                    {this.state.resourcePackages &&
+                        this.state.resourcePackages.map((item, i) => {
+                            return <TouchableOpacity>
+                                <View style={[gstyles.r_between, styles.itemView]} >
+                                    <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
+                                        {item.packageName}
+                                    </Text>
+                                    <Text style={[gstyles.md_gray, { marginRight: 20 }]}>{item.packageSize}M</Text>
+                                </View>
+                            </TouchableOpacity>
+                        })
+                    }
+                    <TouchableOpacity activeOpacity={0.9} style={{ marginTop: 20 }} onPress={() => {
                         //弹框提示是否清理
                         this.props.app.confirmModal.show('清空缓存', null, () => {
                             this.fileService.clearCache()
@@ -140,7 +124,6 @@ class DownloadManagePage extends React.Component {
                             </Text>
                         </View>
                     </TouchableOpacity>
-
                 </View>
                 <TouchableWithoutFeedback>
                     <Text style={[gstyles.lg_black, styles.clearBtn]}>全部清理</Text>

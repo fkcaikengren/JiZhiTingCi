@@ -6,6 +6,7 @@ import { Header, Button } from 'react-native-elements'
 import gstyles from "../../style";
 import AliIcon from "../../component/AliIcon";
 import * as HomeAction from './redux/action/homeAction'
+import * as PlanAction from './redux/action/planAction'
 import PlanSelectTemplate from "./component/PlanSelectTemplate";
 
 
@@ -65,6 +66,28 @@ class VocaPlanPage extends React.Component {
         this.props.syncTask(null)
     }
 
+
+    /**确认提交计划 */
+    _modifyPlan = ({ taskCount, taskWordCount, reviewWordCount, totalDays, leftDays }) => {
+        //提交计划
+        if (taskCount !== null && taskWordCount !== null) {
+            const isExacted = true
+            // await _util.checkLocalTime() #todo:检查时间
+            if (isExacted) {
+                this.props.modifyPlan({
+                    plan: {
+                        taskCount,
+                        taskWordCount,
+                        reviewWordCount,
+                        totalDays,
+                    },
+                    leftDays: leftDays
+                })
+            }
+        }
+
+    }
+
     render() {
         const {
             bookId,
@@ -108,7 +131,7 @@ class VocaPlanPage extends React.Component {
                                 }
                             </CardView>
                             <Text style={gstyles.lg_black_bold}>{bookName}</Text>
-                            <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount}词，复习{reviewWordCount}词</Text>
+                            <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount * taskCount}词，复习{reviewWordCount}词</Text>
                             <Text style={styles.wordCount}>(共<Text style={[styles.wordCount, { color: '#F29F3F' }]}>{totalWordCount}</Text>个单词)</Text>
 
                             <Button
@@ -124,7 +147,9 @@ class VocaPlanPage extends React.Component {
                                     PlanSelectTemplate.show({
                                         commonModal: this.props.app.commonModal,
                                         book: book,
-                                        onConfirm: () => null
+                                        learnCount: taskCount * taskWordCount,
+                                        onConfirm: this._modifyPlan,
+                                        isModifyPlan: true
                                     })
                                 }}
                             />
@@ -140,7 +165,7 @@ class VocaPlanPage extends React.Component {
                     <Button
                         title={bookId ? "更换单词书" : "选择单词书"}
                         titleStyle={gstyles.lg_black}
-                        containerStyle={{ width: 200, height: 60, marginTop: 10 }}
+                        containerStyle={{ width: 200, height: 60, marginTop: bookId ? 10 : 50 }}
                         buttonStyle={{
                             backgroundColor: gstyles.mainColor,
                             borderRadius: 50,
@@ -162,7 +187,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    syncTask: HomeAction.syncTask
+    syncTask: HomeAction.syncTask,
+    modifyPlan: PlanAction.modifyPlan
 }
 
 

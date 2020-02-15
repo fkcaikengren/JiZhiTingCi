@@ -25,42 +25,118 @@ export default class HomeHeader extends Component {
     super(props);
     this.state = {
       shift: new Animated.Value(0),
-    };
+      showDownload: false
+    }
+    this.bookId = this.props.plan.plan.bookId
   }
 
-  render() {
-    const translateY = this.state.shift.interpolate({
-      inputRange: [-HEADER_HEIGHT, 0, HEADER_HEIGHT / 2, HEADER_HEIGHT],
-      outputRange: [-30, 0, 25, 30],
-      extrapolate: 'clamp',
-    });
-
-    const transform = [{ translateY }];
-
-    return (
-      <ParallaxScrollView
-        backgroundColor='#FFE957'
-        contentBackgroundColor='#F9F9F9'
-        parallaxHeaderHeight={HEADER_HEIGHT}
-        stickyHeaderHeight={TITLE_HEIGHT}
-        showsVerticalScrollIndicator={false}
-        renderStickyHeader={this.renderStickyHeader}
-        renderForeground={this.renderHeader}
-        renderFixedHeader={this.renderFixedHeader}
-        scrollEvent={this.onScroll}
-      >
-        <Animated.View style={[{ transform }, styles.childrenView]}>
-          {this.props.children}
-        </Animated.View>
-      </ParallaxScrollView>
-    );
+  componentDidMount() {
+    const { bookId } = this.props.plan.plan
+    if (bookId) {
+      this._checkPackageDownload(bookId)
+    }
   }
+
+  // 检查是否下载资源包
+  _checkPackageDownload = (bookId) => {
+    Storage.load({
+      key: 'resourcePackages',
+      id: bookId,
+    }).then(data => {
+      //do nothing
+    }).catch(e => {
+      console.log('未下载该离线包 ' + bookId)
+      this.setState({ showDownload: true })
+    })
+  }
+
+
+  onScroll = (e) => {
+    this.state.shift.setValue(e.nativeEvent.contentOffset.y);
+  }
+
+
+  /**导航到学习计划页面 */
+  _navVocaPlan = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaPlan', { transition: 'forFadeToBottomAndroid' });
+    })
+
+  }
+
+  /**导航到单词列表页 */
+  _navVocaList = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaListTab', { transition: 'forFadeToBottomAndroid' });
+    })
+
+  }
+
+  /**导航到生词本页面 */
+  _navVocaGroup = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaGroup', { transition: 'forFadeToBottomAndroid' });
+    })
+  }
+
+  /**导航到搜索页面 */
+  _navVocaSearch = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('VocaSearch');
+    })
+
+  }
+
+  /**导航到文章管理页面 */
+  _navArticleManage = () => {
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('ArticleManage', { transition: 'forFadeToBottomAndroid' });
+    })
+
+  }
+
+  _downloadPackage = () => {
+    // 离线下载词库资源
+    this.props.app.confirmModal.show('是否下载离线包(40M)？', null, () => {
+      const { bookId, bookName } = this.props.plan.plan
+      //开始下载
+      DownloadTemplate.show({
+        commonModal: this.props.app.commonModal,
+        title: '离线包下载中...(40M)',
+        modalHeight: 240,
+        primaryDir: VOCABULARY_DIR,
+        filePath: '/resources/test.zip',
+        onUnzipPress: () => {
+          this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
+        },
+        onFinishPress: () => {
+          Storage.save({
+            key: 'resourcePackages',
+            id: bookId,
+            data: {
+              packageName: bookName,
+              packageSize: 40
+            },
+          }).then(_ => this.setState({ showDownload: false }))
+        }
+      })
+    })
+  }
+
+
+
   renderStickyHeader = () => {
     return <View style={{ width: width, height: TITLE_HEIGHT, backgroundColor: '#FFE957' }}></View>
   }
   renderFixedHeader = () => {
-    const { bookName } = this.props.plan.plan
+    const { bookId, bookName } = this.props.plan.plan
     const isFailed = this.props.home.isUploadFail
+
+    if (this.bookId !== bookId) {
+      this.bookId = bookId
+      this._checkPackageDownload(bookId)
+    }
+
     return <View style={[styles.fixedSection, gstyles.r_start]}>
       <View style={[{ flex: 1 }, gstyles.r_start_bottom]}>
         <AliIcon name='wode' size={26} color='#202020' onPress={this.props.openDrawer} />
@@ -84,24 +160,10 @@ export default class HomeHeader extends Component {
 
       <View style={[{ flex: 2 }, gstyles.r_center]}>
         <Text style={[gstyles.md_black, { fontWeight: '700' }]}>{bookName ? bookName : '爱听词'}</Text>
-        <AliIcon name='xiazai1' size={18} color='#303030' style={{ marginLeft: 10 }} onPress={() => {
-          // 离线下载词库资源
-          this.props.app.confirmModal.show('下载离线包(40M)？', null, () => {
-            //开始下载
-            DownloadTemplate.show({
-              commonModal: this.props.app.commonModal,
-              title: '离线包下载中...(40M)',
-              modalHeight: 240,
-              primaryDir: VOCABULARY_DIR,
-              filePath: '/resources/test.zip',
-              onUnzipPress: () => {
-                this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
-              },
-              onFinishPress: () => {
-              }
-            })
-          })
-        }} />
+        {this.state.showDownload &&
+          <AliIcon name='xiazai1' size={18} color='#303030' style={{ marginLeft: 10 }} onPress={this._downloadPackage} />
+        }
+
       </View>
       <View style={[{ flex: 1 }, gstyles.r_end]}>
         <AliIcon name='chazhao' size={24} color='#202020' onPress={this._navVocaSearch} />
@@ -158,52 +220,34 @@ export default class HomeHeader extends Component {
     );
   }
 
-  onScroll = (e) => {
-    this.state.shift.setValue(e.nativeEvent.contentOffset.y);
+
+  render() {
+    const translateY = this.state.shift.interpolate({
+      inputRange: [-HEADER_HEIGHT, 0, HEADER_HEIGHT / 2, HEADER_HEIGHT],
+      outputRange: [-30, 0, 25, 30],
+      extrapolate: 'clamp',
+    });
+
+    const transform = [{ translateY }];
+
+    return (
+      <ParallaxScrollView
+        backgroundColor='#FFE957'
+        contentBackgroundColor='#F9F9F9'
+        parallaxHeaderHeight={HEADER_HEIGHT}
+        stickyHeaderHeight={TITLE_HEIGHT}
+        showsVerticalScrollIndicator={false}
+        renderStickyHeader={this.renderStickyHeader}
+        renderForeground={this.renderHeader}
+        renderFixedHeader={this.renderFixedHeader}
+        scrollEvent={this.onScroll}
+      >
+        <Animated.View style={[{ transform }, styles.childrenView]}>
+          {this.props.children}
+        </Animated.View>
+      </ParallaxScrollView>
+    );
   }
-
-
-  /**导航到学习计划页面 */
-  _navVocaPlan = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaPlan', { transition: 'forFadeToBottomAndroid' });
-    })
-
-  }
-
-  /**导航到单词列表页 */
-  _navVocaList = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaListTab', { transition: 'forFadeToBottomAndroid' });
-    })
-
-  }
-
-  /**导航到生词本页面 */
-  _navVocaGroup = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaGroup', { transition: 'forFadeToBottomAndroid' });
-    })
-  }
-
-  /**导航到搜索页面 */
-  _navVocaSearch = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('VocaSearch');
-    })
-
-  }
-
-  /**导航到文章管理页面 */
-  _navArticleManage = () => {
-    InteractionManager.runAfterInteractions(() => {
-      this.props.navigation.navigate('ArticleManage', { transition: 'forFadeToBottomAndroid' });
-    })
-
-  }
-
-
-
 
 
 }

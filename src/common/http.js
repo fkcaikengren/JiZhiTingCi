@@ -57,7 +57,6 @@ const createHttp = (config, options = opt) => {
 
     //响应拦截处理
     instance.interceptors.response.use(async res => {
-        console.log(res.data)
         // 隐藏加载
         if (options.showLoader) {
             store.getState().app.loader.close()

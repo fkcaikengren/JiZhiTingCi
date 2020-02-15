@@ -15,6 +15,7 @@ import ReadUtil from './common/readUtil';
 import _util from '../../common/util'
 import * as HomeAction from '../../features/vocabulary/redux/action/homeAction'
 import { COMMAND_MODIFY_SCORE } from '../../common/constant';
+import VocaTaskDao from '../vocabulary/service/VocaTaskDao';
 
 class AnalysisPage extends React.Component {
 
@@ -102,9 +103,11 @@ class AnalysisPage extends React.Component {
             taskOrder,
             score: data.payload.score
         }
-        this.props.updateScore(userArticle)
+        //修改数据库
+        VocaTaskDao.getInstance().modifyTaskArticle({ id: userArticle.id, score: userArticle.score })
+        // 更新redux
+        this.props.updateScore({ userArticle })
         //同步至服务器
-
         this.props.syncTask({
             command: COMMAND_MODIFY_SCORE,
             data: userArticle

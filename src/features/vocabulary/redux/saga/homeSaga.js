@@ -9,6 +9,7 @@ import VocaUtil from "../../common/vocaUtil";
 import _util from '../../../../common/util';
 import { MODIFY_LAST_LEARN_DATE, CHANGE_LEFT_DAYS, CHANGE_LEARNED_WORD_COUNT } from '../action/planAction';
 import VocaTaskService from '../../service/VocaTaskService';
+import { STATUS_0 } from '../../common/constant';
 const uuidv4 = require('uuid/v4');
 
 /**
@@ -20,8 +21,11 @@ export function* loadTasks(action) {
     yield put({ type: LOAD_TASKS_START })
     try {
         const vts = new VocaTaskService()
+        // 修改今日任务
         const tasks = vts.getTodayTasks(lastLearnDate, taskCount, taskWordCount)
-        const articleTasks = VocaUtil.genArticleTasksByVocaTasks(tasks)
+        const articleTasks = VocaUtil.genArticleTasksByVocaTasks(
+            tasks.filter((item, i) => item.status === STATUS_0)
+        )
         yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
         //修改剩余学习天数
         const leftDays = vts.countLeftDays(taskCount, taskWordCount)
@@ -50,7 +54,6 @@ export function* syncTask(action) {
         //2. 同步至本地
         if (curUploadedTask && curUploadedTask.command) {
             const { data, command } = curUploadedTask
-            console.log(command)
             //修改任务
             if (command === COMMAND_MODIFY_TASK) {
                 // 数据更新到本地realm数据库

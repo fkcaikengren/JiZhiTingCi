@@ -429,11 +429,14 @@ export default class VocaUtil {
      * @param {*} tasks 
      */
     static genArticleTasksByVocaTasks(tasks) {
-        const newLearnTasks = tasks.filter((item, i) => item.status === Constant.STATUS_0)
         const artService = new ArticleService()
         let articleTasks = []
-        for (let nTask of newLearnTasks) {
-            articleTasks = articleTasks.concat(artService.getArticlesInfo(nTask.taskArticles))
+        for (let nTask of tasks) {
+            const taskArticles = nTask.taskArticles.map((tArticle, _) => {
+                tArticle.taskOrder = nTask.taskOrder
+                return tArticle
+            })
+            articleTasks = articleTasks.concat(artService.getArticlesInfo(taskArticles))
         }
         return articleTasks
     }

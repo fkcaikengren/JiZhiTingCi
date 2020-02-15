@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback } from 'react-native';
+import { Dimensions, StyleSheet, ScrollView, View, Text, TouchableWithoutFeedback } from 'react-native';
 import { PropTypes } from 'prop-types';
 import { Grid, Row, Col } from 'react-native-easy-grid'
 
@@ -7,14 +7,12 @@ import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import ExampleCarousel from './ExampleCarousel'
 import VocaOperator from './VocaOperator'
-
-import VocaDao from '../service/VocaDao'
 import AudioService from '../../../common/AudioService';
 import * as CConstant from "../../../common/constant";
+import { store } from '../../../redux/store';
 
-
-const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
+
 
 export default class VocaCard extends Component {
 
@@ -136,7 +134,7 @@ export default class VocaCard extends Component {
                 }
             })
         }
-
+        const { configShowNTrans } = store.getState().mine
 
         return (
             <ScrollView style={{ flex: 1 }}
@@ -213,7 +211,7 @@ export default class VocaCard extends Component {
                                         }} />
                                     </Row>
                                     <Row style={[gstyles.r_start_top,]}>
-                                        <Text style={[styles.grayFont, { flex: 10 }]}>{wordInfo.sen_tran}</Text>
+                                        <Text style={[styles.grayFont, { flex: 10 }]}>{configShowNTrans ? wordInfo.sen_tran : null}</Text>
                                     </Row>
                                 </Col>
                             }

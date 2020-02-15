@@ -84,7 +84,7 @@ class SettingPage extends React.Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <View style={{ width: '100%', backgroundColor: '#FFF', marginTop: 10 }}>
+                <View style={{ width: '100%', marginTop: 10 }}>
                     {
                         this._renderItem({
                             title: '单词发音',

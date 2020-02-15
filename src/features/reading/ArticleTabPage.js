@@ -73,6 +73,11 @@ class ArticleTabPage extends React.Component {
         }
     }
 
+    _movePage = (clickIndex) => {
+        this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
+    }
+
+
 
     //改变字体大小
     _onFontChange = (fontRem) => {
@@ -83,7 +88,6 @@ class ArticleTabPage extends React.Component {
     _onBgChange = (index, value) => {
         const { changeBgtheme } = this.props
         changeBgtheme(index)
-
     }
 
     //显示隐藏关键词
@@ -163,8 +167,13 @@ class ArticleTabPage extends React.Component {
                     s2 = selectStyle
                 }
                 return <View style={gstyles.r_center}>
-                    <Text style={[gstyles.md_gray, s1, { marginRight: 10 }]}>文章</Text>
-                    <Text style={[gstyles.md_gray, s2]}>答题</Text>
+                    <TouchableNativeFeedback onPress={() => this._movePage(0)}>
+                        <Text style={[gstyles.md_gray, s1, { marginRight: 10 }]}>文章</Text>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback onPress={() => this._movePage(1)}>
+                        <Text style={[gstyles.md_gray, s2]}>答题</Text>
+                    </TouchableNativeFeedback>
+
                 </View>
             case Constant.MULTI_SELECT_READ: //选词填空
                 return <View style={gstyles.r_center}>
@@ -209,7 +218,7 @@ class ArticleTabPage extends React.Component {
         }
     }
 
-    // 分享 #todo:
+    // 分享 
     _renderSharePanel = ({ commonModal }) => {
         const articleInfo = this.props.navigation.getParam('articleInfo')
         return () => {
@@ -220,7 +229,7 @@ class ArticleTabPage extends React.Component {
                         type: 'news',
                         title: articleInfo.name,
                         description: articleInfo.note,
-                        webpageUrl: 'https://www.aitingci.com',
+                        webpageUrl: 'http://www.aitingci.com',
                         imageUrl: this.props.plan.bookCoverUrl
                     }
                     return shareInfo
@@ -245,6 +254,7 @@ class ArticleTabPage extends React.Component {
             if (!isLoadPending) {
                 if (articleInfo.type === Constant.DETAIL_READ) {
                     return <Swiper
+                        ref={ref => this.swiperRef = ref}
                         showsPagination={false}
                         loop={false}
                         index={this.state.pageIndex}

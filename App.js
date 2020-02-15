@@ -181,13 +181,13 @@ class App extends React.Component {
     });
   }
   componentWillMount() {
-    CodePush.disallowRestart()          //禁止重启
+    // CodePush.disallowRestart()          //禁止重启
     // this.updateVersion()             //更新版本 #todo:生产环境下开启
     this.initPush()
   }
 
   componentDidMount() {
-    CodePush.allowRestart()   //在加载完了，允许重启
+    // CodePush.allowRestart()   //在加载完了，允许重启
   }
 
   render() {
@@ -209,4 +209,5 @@ const codePushOptions = {
   //MANUAL 手动检查
   checkFrequency: CodePush.CheckFrequency.ON_APP_START
 };
-export default CodePush(codePushOptions)(App)
+// export default CodePush(codePushOptions)(App)
+export default App

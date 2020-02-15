@@ -9,12 +9,13 @@ import Modal from 'react-native-modalbox';
 import { BlurView } from "@react-native-community/blur";
 import BackgroundTimer from 'react-native-background-timer'
 
-import VocaCard from '../component/VocaCard'
-import SwipeableFlatList from '../../../component/SwipeableFlatList'
 import * as Constant from '../common/constant'
 import * as HomeAction from '../redux/action/homeAction'
 import * as VocaPlayAction from '../redux/action/vocaPlayAction';
 import * as VocaGroupAction from '../redux/action/vocaGroupAction';
+import * as PlanAction from '../redux/action/planAction';
+import VocaCard from '../component/VocaCard'
+import SwipeableFlatList from '../../../component/SwipeableFlatList'
 import AliIcon from '../../../component/AliIcon';
 import styles from './style'
 import PlayController from './PlayController';
@@ -117,12 +118,19 @@ class VocaPlayPage extends React.Component {
     componentDidMount() {
         //监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            const { isOpen, hide } = this.props.app.commonModal
-            if (isOpen()) {
-                hide()
-            } else {
-                this.props.navigation.goBack()
+            //todo: vocaModal隐藏
+            /*-----------测试代码开始-----  #todo: 移除代码*/
+            console.log('vocaPlayPage --测试--  更新Task')
+            const isNew = (this.state.task.status === Constant.STATUS_0)
+            const newTask = {
+                ...this.state.task,
+                progress: isNew ? Constant.IN_LEARN_FINISH : Constant.IN_REVIEW_FINISH
             }
+            this.taskDao.modifyTask(newTask)
+            this.props.updateTask({ task: newTask })
+            this.props.modifyLastLearnDate({ lastLearnDate: _util.getDayTime(0) })
+            /*------------测试代码结束 ----------*/
+            this.props.navigation.goBack()
             return true
         })
         this._init()
@@ -453,7 +461,7 @@ class VocaPlayPage extends React.Component {
             if (task.status === Constant.STATUS_0) {
                 //跳转到卡片学习页面
                 nextRouteName = 'TestVocaTran'
-                finalTask.progress = 'IN_LEARN_CARD'
+                finalTask.progress = Constant.IN_LEARN_CARD
                 otherParams = {
                     showAll: false,
                     playWord: true,      //用于LearCard,自动播放单词
@@ -462,7 +470,7 @@ class VocaPlayPage extends React.Component {
             } else {
                 //跳转到测试页面
                 nextRouteName = 'Home'
-                finalTask.progress = 'IN_REVIEW_TEST'
+                finalTask.progress = Constant.IN_REVIEW_TEST
             }
             // 更新任务
             this.props.updateTask({ task: finalTask })
@@ -829,7 +837,9 @@ const mapDispatchToProps = {
     updateTask: HomeAction.updateTask,
     syncTask: HomeAction.syncTask,
 
-    syncGroup: VocaGroupAction.syncGroup
+    syncGroup: VocaGroupAction.syncGroup,
+
+    modifyLastLearnDate: PlanAction.modifyLastLearnDate
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VocaPlayPage);

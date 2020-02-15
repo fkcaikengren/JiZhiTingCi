@@ -25,6 +25,3 @@ if (!__DEV__) {
 
 AppRegistry.registerComponent(appName, () => App);
 
-
-// 进入storybook
-// export default StorybookUI;

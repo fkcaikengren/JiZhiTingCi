@@ -19,8 +19,7 @@ const defaultState = {
     learnedWordCount: 0,   // 已学单词数
     leftDays: 0,           // 剩余学习天数
 
-    //加载状态
-    isLoadPending: false,
+
 }
 
 
@@ -31,19 +30,27 @@ export const plan = (state = defaultState, action) => {
         case pa.SAVE_PLAN:
             return { ...state, plan: action.payload.plan };
         // 更换词汇书
-        case pa.CHANGE_VOCA_BOOK_START:
-            return { ...state, isLoadPending: true };
-
-        case pa.CHANGE_VOCA_BOOK_SUCCEED:
-            const { plan } = action.payload
+        case pa.CHANGE_VOCA_BOOK_SUCCEED: {
+            const { plan, leftDays } = action.payload
             return {
                 ...state,
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
-                leftDays: plan.totalDays,
-                isLoadPending: false,
-            };
-
+                leftDays: leftDays,
+            }
+        }
+        //修改计划
+        case pa.MODIFY_PLAN_SUCCEED: {
+            const { plan, leftDays } = action.payload
+            return {
+                ...state,
+                plan: {
+                    ...state.plan,
+                    ...plan,
+                },
+                leftDays: leftDays,
+            }
+        }
         case pa.MODIFY_LAST_LEARN_DATE:
             return {
                 ...state,

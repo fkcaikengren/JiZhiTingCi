@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import AudioService from '../../../common/AudioService'
 import * as CConstant from "../../../common/constant";
 import { BASE_URL } from "../../../common/constant";
+import { store } from '../../../redux/store';
 const { width } = Dimensions.get('window')
 
 
@@ -117,6 +118,7 @@ export default class ExampleCarousel extends Component {
   }
 
   render() {
+    const { configShowMTrans } = store.getState().mine
     return (
       <Swiper
         ref={ref => this._swiper = ref}
@@ -158,7 +160,9 @@ export default class ExampleCarousel extends Component {
               <Text style={styles.origin}>{item.origin}</Text>
               <View style={styles.bottomView}>
                 {this._renderText(item.sen)}
-                <Text style={{ color: '#FFFFFFCC', fontSize: 12 }}>{item.sen_tran}</Text>
+                {configShowMTrans &&
+                  <Text style={{ color: '#FFFFFFCC', fontSize: 12 }}>{item.sen_tran}</Text>
+                }
               </View>
             </View>
           })

@@ -33,7 +33,5 @@ export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
     [SYNC_TASK]: fn,
 
     // 更新分数
-    [UPDATE_SCORE]: (userArticle) => {
-        return { userArticle }
-    }
+    [UPDATE_SCORE]: fn
 });

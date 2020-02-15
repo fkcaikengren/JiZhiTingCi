@@ -46,15 +46,12 @@ class VocaLibPage extends Component {
         //加载书籍
         const res = await Http.get("/vocaBook/list?type=" + this.props.vocaBookType)
         console.log('----获取全部单词书-----' + this.props.vocaBookType)
-        console.log(res.data);
         if (res.status === 200) {
             this.setState({
                 books: res.data
             })
         }
     }
-
-
 
 
     /**确认提交计划 */
