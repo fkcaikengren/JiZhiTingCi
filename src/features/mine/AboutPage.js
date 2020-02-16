@@ -39,7 +39,7 @@ export default class AboutPage extends React.Component {
 
     render() {
         return (
-            <View style={[{ flex: 1, width: '100%' }, gstyles.c_start]}>
+            <View style={[{ flex: 1 }, gstyles.c_start]}>
                 {/* 头部 */}
                 <Header
                     statusBarProps={{ barStyle: 'dark-content' }}
@@ -56,14 +56,13 @@ export default class AboutPage extends React.Component {
                     }}
                 />
 
-                <ScrollView style={{ flex: 1 }}
-                    containerStyle={{ backgroundColor: '#FFF' }}
+                <ScrollView
+                    containerStyle={{ flex: 1 }}
+                    contentContainerStyle={[gstyles.c_start]}
                     pagingEnabled={false}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
-                    style={gstyles.scrollView}
-                    contentContainerStyle={gstyles.scrollViewContent}
                 >
                     <View style={[gstyles.c_center, { marginTop: 50, marginBottom: 50 }]}>
                         <Text style={gstyles.md_lightBlack}>请关注微信公众号</Text>

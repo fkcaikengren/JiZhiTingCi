@@ -18,6 +18,7 @@ export default class VocaPlayService {
 
         this.audioService = AudioService.getInstance()
 
+
         //监听关闭通知控制条
         NotificationManage.onClose((evt) => {
             BackHandler.exitApp();
@@ -101,6 +102,7 @@ export default class VocaPlayService {
                 pDir: CConstant.VOCABULARY_DIR,
                 fPath: showWordInfos[index].pron_url
             })
+
 
 
 

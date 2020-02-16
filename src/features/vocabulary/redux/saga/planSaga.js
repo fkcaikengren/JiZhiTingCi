@@ -15,7 +15,7 @@ import VocaUtil from "../../common/vocaUtil";
 import _util from '../../../../common/util';
 
 
-/** 提交单词计划 */
+/** 创建单词计划 */
 export function* createPlan(action) {
     yield put({ type: CHANGE_VOCA_BOOK_START })
     yield put({ type: LOAD_TASKS_START })
@@ -69,6 +69,7 @@ export function* createPlan(action) {
     }
 }
 
+/** 修改计划 */
 export function* modifyPlan(action) {
     yield put({ type: MODIFY_PLAN_START })
     try {
@@ -90,6 +91,18 @@ export function* modifyPlan(action) {
     }
 
 }
+
+/** 统计和上传 allLearnedDays */
+export function* syncAllLearnedDays(action) {
+
+    // const myHttp = createHttp(null, { shouldRefreshToken: true })
+}
+/** 统计和上传 allLearnedCount、 finishDays */
+export function* synFinishDays(action) {
+    //allFinishDays notSynFinishDays
+    // const myHttp = createHttp(null, { shouldRefreshToken: true })
+}
+
 
 
 

@@ -62,7 +62,7 @@ export default class ShareTemplate {
                     <View style={styles.shareQR}>
                         <Image source={{ uri: Platform.OS === 'android' ? 'file://' + qrPath : qrPath }}
                             style={{ width: 42, height: 42, borderRadius: 2, }} />
-                        <Text style={{ fontSize: 13, color: '#CCC', marginLeft: 15 }}>长按识别二维码</Text>
+                        <Text style={{ fontSize: 13, color: '#FFF', marginLeft: 15 }}>长按识别二维码</Text>
                     </View>
                 </ViewShot>
 

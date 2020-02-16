@@ -88,10 +88,11 @@ class MessagePage extends React.Component {
                 />
 
                 <ScrollView
+                    containerStyle={{ flex: 1 }}
+                    style={[{ width: '100%' }, { backgroundColor: '#F2F2F2' }]}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
-                    style={[gstyles.scrollView, { backgroundColor: '#F2F2F2' }]}
                 >
                     {
                         this.props.messages.map((item, index) => {

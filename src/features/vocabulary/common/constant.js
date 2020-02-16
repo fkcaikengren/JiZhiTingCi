@@ -6,7 +6,7 @@ export const TYPE_VOCA_BOOK_PHRASE = 13     //短语词汇书，
 export const TYPE_VOCA_BOOK_DIY = 14     // 自定义词汇书
 
 
-export const LEFT_PLUS_DAYS = 14
+export const LEFT_PLUS_DAYS = 13
 
 export const NORMAL_PLAY = 'NORMAL_PLAY'         //普通模式的轮播
 export const LEARN_PLAY = 'LEARN_PLAY'          //学习模式的轮播

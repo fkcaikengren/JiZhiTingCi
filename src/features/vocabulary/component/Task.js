@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
   taskView: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    borderRadius: 12
+    borderRadius: 12,
+    marginBottom: 50
   },
   taskList: {
     flex: 1,

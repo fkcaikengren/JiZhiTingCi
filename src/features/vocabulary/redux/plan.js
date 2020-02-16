@@ -19,6 +19,11 @@ const defaultState = {
     learnedWordCount: 0,   // 已学单词数
     leftDays: 0,           // 剩余学习天数
 
+    //累计数据
+    isTodayLearned: false,         //今日是否学习（纳入统计）
+    finishedBooksWordCount: 0,  //已学完的单词书中学过的单词数
+    allLearnedCount: 0,         //累计学习单词数
+    allLearnedDays: 0           //累计学习天数
 
 }
 

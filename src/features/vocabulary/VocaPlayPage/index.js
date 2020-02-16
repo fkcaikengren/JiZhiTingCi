@@ -130,7 +130,7 @@ class VocaPlayPage extends React.Component {
             this.props.updateTask({ task: newTask })
             this.props.modifyLastLearnDate({ lastLearnDate: _util.getDayTime(0) })
             /*------------测试代码结束 ----------*/
-            this.props.navigation.goBack()
+            this._goBack()
             return true
         })
         this._init()
@@ -213,6 +213,15 @@ class VocaPlayPage extends React.Component {
         }
     }
 
+    _goBack = () => {
+        console.log(this.state.autoPlayTimer)
+        if (this.isStudyMode && this.state.autoPlayTimer > 0) {
+            clearTimeout(this.state.autoPlayTimer)
+        }
+
+        this.props.navigation.goBack()
+
+    }
 
 
 
@@ -659,6 +668,7 @@ class VocaPlayPage extends React.Component {
                 changeInterval={this._changeInterval}
                 toggleWord={this._toggleWord}
                 toggleTran={this._toggleTran}
+                goBack={this._goBack}
             />
         } else {
             return <PlayController
@@ -741,9 +751,7 @@ class VocaPlayPage extends React.Component {
                     statusBarProps={{ barStyle: 'light-content' }}
                     barStyle="light-content" // or directly
                     leftComponent={this.isStudyMode ? null :
-                        <AliIcon name='fanhui' size={26} color='#FFF' onPress={() => {
-                            this.props.navigation.goBack()
-                        }} />}
+                        <AliIcon name='fanhui' size={26} color='#FFF' onPress={this._goBack} />}
                     centerComponent={{ text: task.taskOrder ? name : '未选择', style: gstyles.lg_white_bold }}
                     rightComponent={this.isStudyMode ?
                         <Text style={{ color: '#FFF', fontSize: 16 }}>{`${this.finishedTimes + 1}/${this.totalTimes}`}</Text> :

@@ -52,7 +52,9 @@ export default class HomeHeader extends Component {
 
 
   onScroll = (e) => {
+    console.log(e.nativeEvent.contentOffset.y)
     this.state.shift.setValue(e.nativeEvent.contentOffset.y);
+
   }
 
 
@@ -190,7 +192,7 @@ export default class HomeHeader extends Component {
             <Col style={gstyles.c_center}>
               <Text style={gstyles.md_black}>剩余天数</Text>
               <Text style={gstyles.md_black}>
-                <Text style={{ fontSize: 42, color: '#202020', fontWeight: '700' }}>{leftDays}</Text>
+                <Text style={{ fontSize: 42, color: '#202020', fontWeight: '700' }}>{(leftDays < 0) ? 0 : leftDays}</Text>
                 /{totalDays}</Text>
             </Col>
           </Row>

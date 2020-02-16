@@ -204,28 +204,27 @@ export default class VocaListPage extends Component {
 
 
   render() {
-    //性能测试
-    console.log('-------------------> VocaListPage : ' + this.props.type)
+
     let title = ''
     let iconName = 'Home_tv_x'
     let noData = '暂无数据'
     switch (this.props.type) {
       case Constant.WRONG_LIST:
         title = '播放'
-        noData = '你还没有错词哦'
+        noData = '没有错词哦'
         break;
       case Constant.PASS_LIST:
         title = '还原'
         iconName = 'huanyuan'
-        noData = '你还没有pass过单词哦'
+        noData = '没有pass过单词哦'
         break;
       case Constant.LEARNED_LIST:
         title = '播放'
-        noData = '你还没有学过的单词哦'
+        noData = '没有学过的单词哦'
         break;
       case Constant.NEW_LIST:
         title = '播放'
-        noData = '没有新学的单词哦'
+        noData = '没有未学的单词哦'
         break;
     }
 

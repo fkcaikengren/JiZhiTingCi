@@ -53,8 +53,8 @@ class VocaLibPayPage extends Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <ScrollView style={{ flex: 1, }}
-
+                <ScrollView
+                    style={{ flex: 1, }}
                     pagingEnabled={false}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}

@@ -113,7 +113,7 @@ export default class StudyPlayController extends React.Component {
                     <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
                         //更新任务
                         this.props.updateTask({ task })
-                        this.props.navigation.goBack()
+                        this.props.goBack()
                     }} />
                     {/* 控制播放 */}
                     <View style={[{ width: width * (1 / 2) }, gstyles.r_around]}>
@@ -155,6 +155,7 @@ export default class StudyPlayController extends React.Component {
 
 
 StudyPlayController.propTypes = {
+
     playState: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
     autoplay: PropTypes.func.isRequired,
@@ -163,6 +164,8 @@ StudyPlayController.propTypes = {
     changeInterval: PropTypes.func.isRequired,
     toggleWord: PropTypes.func.isRequired,
     toggleTran: PropTypes.func.isRequired,
+    goBack: PropTypes.func.isRequired
+
 }
 
 StudyPlayController.defaultProps = {

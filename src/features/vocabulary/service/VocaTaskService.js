@@ -524,31 +524,31 @@ export default class VocaTaskService {
         let leftDays = 0
         const notLearnWords = this.vtd.getNotLearnedBookWords()
         const length = notLearnWords.length
-        console.log('notLearnWords.length ==== ' + length)
+
         if (length > 0) {
             // 当存在未学单词时
-            leftDays = Math.ceil(length / (taskCount * taskWordCount)) + Constant.LEFT_PLUS_DAYS
+            leftDays = 1 + Math.ceil(length / (taskCount * taskWordCount)) + Constant.LEFT_PLUS_DAYS
         } else {
             // 当不存在未学单词
             const lastTask = this.vtd.realm.objects('VocaTask').sorted('taskOrder', true)[0] //获取最后一个VocaTask
             const { vocaTaskDate, status } = lastTask
             const d = (vocaTaskDate - _util.getDayTime(0)) / CConstant.DAY_MS
-            leftDays = d + 15
+            leftDays = d + 14
             switch (status) {
                 case Constant.STATUS_200:
-                    leftDays = 0
+                    leftDays = -1 //-1表示结束
                     break
                 case Constant.STATUS_15:
-                    leftDays = d + 1
+                    leftDays = d
                     break
                 case Constant.STATUS_7:
-                    leftDays = d + 9
+                    leftDays = d + 8
                     break
                 case Constant.STATUS_4:
-                    leftDays = d + 12
+                    leftDays = d + 11
                     break
                 case Constant.STATUS_2:
-                    leftDays = d + 14
+                    leftDays = d + 13
                     break
             }
         }

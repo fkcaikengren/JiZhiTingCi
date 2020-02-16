@@ -117,6 +117,16 @@ class HomeDrawerPanel extends Component {
             this.props.navigation.navigate('Message')
           }}
         />
+        <Button type='clear'
+          icon={<AliIcon name='daqia' size={24} color={gstyles.gray} />}
+          title={'学习统计'}
+          titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
+          containerStyle={{ width: '100%' }}
+          buttonStyle={[styles.btn, gstyles.r_start]}
+          onPress={() => {
+            this.props.navigation.navigate('Statistics')
+          }}
+        />
 
         <Button type='clear'
           icon={<AliIcon name='-huancunguanli' size={24} color={gstyles.gray} />}

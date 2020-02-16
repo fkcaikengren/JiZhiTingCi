@@ -10,7 +10,7 @@ import * as HomeAction from './redux/action/homeAction'
 import AliIcon from '../../component/AliIcon';
 import gstyles from '../../style'
 import VocaTaskDao from "./service/VocaTaskDao";
-import { DETAIL_READ } from "../reading/common/constant";
+import { DETAIL_READ, MULTI_SELECT_READ, FOUR_SELECT_READ, EXTENSIVE_READ } from "../reading/common/constant";
 import VocaUtil from "./common/vocaUtil";
 
 
