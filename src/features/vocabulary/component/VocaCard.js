@@ -137,12 +137,11 @@ export default class VocaCard extends Component {
         const { configShowNTrans } = store.getState().mine
 
         return (
-            <ScrollView style={{ flex: 1 }}
+            <ScrollView style={{ flex: 1, backgroundColor: '#F9F9F9' }}
                 pagingEnabled={false}
                 automaticallyAdjustContentInsets={false}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-                style={{ backgroundColor: '#F9F9F9' }}
                 contentContainerStyle={styles.contentContainer}
             >
                 <Grid style={styles.grid}>

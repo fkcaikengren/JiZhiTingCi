@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import { BackHandler, StyleSheet, StatusBar, ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { BackHandler, StyleSheet, ScrollView, Text, View, TouchableOpacity } from 'react-native';
 import { Header } from "react-native-elements";
-import CardView from 'react-native-cardview'
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
+import { store } from "../../redux/store";
+import VocaTaskService from "./service/VocaTaskService";
 
-const Dimensions = require('Dimensions');
-const { width, height } = Dimensions.get('window');
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const StatusBarHeight = StatusBar.currentHeight;
 
 const styles = StyleSheet.create({
     itemView: {
@@ -27,21 +24,15 @@ const styles = StyleSheet.create({
     }
 });
 
-
-// learnedBooks: [String], // 已学的单词书
-//   calendar: { // 日历
-//     date: String,
-//     finished: Boolean, //是否完成当天全部任务
-//     signed: Boolean, //是否打卡
-//   },
-//   allLearnedCount: { // 累计学习单词数
-//     type: Number,
-//   },
-//   allLearnedDays: { // 累计学习天数
-//     type: Number,
-//   }
-
 export default class StatisticsPage extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            masteredWordCount: 0,
+            finishedDays: {}
+        }
+    }
 
     componentDidMount() {
         //监听物理返回键
@@ -49,13 +40,31 @@ export default class StatisticsPage extends Component {
             this.props.navigation.goBack()
             return true
         })
+        //初始化
+        this._init()
     }
 
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
+    _init = async () => {
+        const finishDays = await Storage.getAllDataForKey('finishDays')
+        console.log(finishDays)
+        const finishedDays = {}
+        for (let item of finishDays) {
+            finishedDays[item] = { selected: true }
+        }
+        const masteredWordCount = new VocaTaskService().countMasteredWords()
+        console.log(masteredWordCount)
+        this.setState({
+            masteredWordCount,
+            finishedDays
+        })
+    }
+
     render() {
+        const { plan, leftDays, learnedWordCount, allLearnedCount, allLearnedDays } = store.getState().plan
         return (
             <View style={{ flex: 1, backgroundColor: '#EFEFEF' }}>
                 {/* 头部 */}
@@ -80,14 +89,15 @@ export default class StatisticsPage extends Component {
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
-
                 >
                     <View style={[{ marginTop: 10 }, styles.itemView]}>
-                        <TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => {
+                            this.props.navigation.navigate('HistoryBooks')
+                        }}>
                             <View style={[{ width: '100%', height: 55, paddingHorizontal: 10 }, gstyles.r_between]}>
                                 <Text style={gstyles.md_black_bold}>
                                     <Text style={styles.flag}>| </Text>
-                                    学过的单词书
+                                    已学的单词书
                                     </Text>
                                 <AliIcon name='youjiantou' size={26} color={gstyles.gray} />
                             </View>
@@ -99,34 +109,39 @@ export default class StatisticsPage extends Component {
                                 <Text style={styles.flag}>| </Text>
                                 当前单词书
                             </Text>
-                            <View style={[{ width: '100%', paddingVertical: 5, paddingHorizontal: 10 }]}>
-                                <View style={[{ flex: 1 }, gstyles.r_between]}>
-                                    <Text style={[{ flex: 1 }, gstyles.md_black]}>已学习单词:
-                                    <Text style={{ color: gstyles.emColor }}> 102</Text>
-                                    </Text>
-                                    <Text style={[{ flex: 1 }, gstyles.md_black]}>已掌握单词:
-                                    <Text style={{ color: gstyles.emColor }}> 102</Text>
-                                    </Text>
+                            {plan.bookId &&
+                                <View style={[{ width: '100%', paddingVertical: 5, paddingHorizontal: 10 }]}>
+                                    <View style={[{ flex: 1 }, gstyles.r_between]}>
+                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>已学习单词:
+                                        <Text style={{ color: gstyles.emColor }}> {learnedWordCount}</Text>
+                                        </Text>
+                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>已掌握单词:
+                                        <Text style={{ color: gstyles.emColor }}> {this.state.masteredWordCount}</Text>
+                                        </Text>
+                                    </View>
+                                    <View style={[{ flex: 1 }, gstyles.r_between]}>
+                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>总单词数:
+                                        <Text style={{ color: gstyles.emColor }}> {plan.totalWordCount}</Text>
+                                        </Text>
+                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>学习天数:
+                                        <Text style={{ color: gstyles.emColor }}> {plan.totalDays - leftDays + 1}</Text>
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View style={[{ flex: 1 }, gstyles.r_between]}>
-                                    <Text style={[{ flex: 1 }, gstyles.md_black]}>总单词数:
-                                    <Text style={{ color: gstyles.emColor }}> 102</Text>
-                                    </Text>
-                                    <Text style={[{ flex: 1 }, gstyles.md_black]}>学习天数:
-                                    <Text style={{ color: gstyles.emColor }}> 102</Text>
-                                    </Text>
-                                </View>
-                            </View>
+                            }
+                            {!plan.bookId &&
+                                <Text style={[gstyles.md_black, { paddingHorizontal: 10 }]}>暂无数据</Text>
+                            }
                             <Text style={[gstyles.md_black_bold, { marginTop: 15 }]}>
                                 <Text style={styles.flag}>| </Text>
                                 累计学习
                             </Text>
                             <View style={[{ paddingVertical: 5, paddingHorizontal: 10 }]}>
                                 <Text style={gstyles.md_black} >累计学习单词:
-                                <Text style={{ color: gstyles.emColor }}> 203</Text>
+                                    <Text style={{ color: gstyles.emColor }}> {allLearnedCount}</Text>
                                 </Text>
                                 <Text style={gstyles.md_black} >累计学习天数:
-                                <Text style={{ color: gstyles.emColor }}> 152</Text>
+                                    <Text style={{ color: gstyles.emColor }}> {allLearnedDays}</Text>
                                 </Text>
                             </View>
                         </View>
@@ -169,11 +184,7 @@ export default class StatisticsPage extends Component {
                             onPressArrowLeft={substractMonth => substractMonth()}
                             onPressArrowRight={addMonth => addMonth()}
                             //标记
-                            markedDates={{
-                                '2020-01-17': { selected: true },
-                                '2020-01-18': { selected: true },
-                                '2020-01-20': { selected: true },
-                            }}
+                            markedDates={this.state.finishedDays}
                             // 日历样式
                             theme={{
                                 textSectionTitleColor: '#2D4150',

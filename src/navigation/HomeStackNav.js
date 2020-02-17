@@ -12,6 +12,7 @@ import VocaListTabPage from '../features/vocabulary/VocaListTabPage';
 import VocaGroupPage from '../features/vocabulary/VocaGroupPage'
 import GroupVocaPage from '../features/vocabulary/GroupVocaPage';
 import StatisticsPage from '../features/vocabulary/StatisticsPage';
+import HistoryBooksPage from '../features/vocabulary/HistoryBooksPage';
 import LearnCardPage from '../features/vocabulary/LearnCardPage';
 import ArticleManagePage from '../features/vocabulary/ArticleManagePage'
 
@@ -42,6 +43,7 @@ import AboutPage from '../features/mine/AboutPage';
 import DictPage from '../features/vocabulary/DictPage';
 import PhonePage from '../features/mine/PhonePage';
 import VocaPlanPage from '../features/vocabulary/VocaPlanPage';
+
 
 const article1 = {
   id: 1,
@@ -141,6 +143,9 @@ const VocaHomeStackNav = createStackNavigator({
   // 学习统计
   Statistics: {
     screen: StatisticsPage,
+  },
+  HistoryBooks: {
+    screen: HistoryBooksPage
   },
   // 单词轮播
   VocaPlay: {

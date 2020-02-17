@@ -322,6 +322,7 @@ export default class TestPage extends Component {
                         nextRouteName: 'Home'
                     }
                 }
+                //todo:完成测试-修改params，添加judgeFinishAllTasks
                 vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
             } else {                                //普通模式下
                 this._normalTestEnd(newTask)

@@ -257,7 +257,6 @@ export default class VocaUtil {
     }
 
 
-
     static goPageWithoutStack(navigation, routeName, params = {}) {
         // 抹掉stack，跳转到指定路由
         const resetAction = StackActions.reset({

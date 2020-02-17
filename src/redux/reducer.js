@@ -24,7 +24,6 @@ const homeReducer = persistReducer(homeConfig, home)
 const vocalibConfig = {
     key: 'plan',
     storage: AsyncStorage,
-    blacklist: ['isTodayLearned']
 }
 const planReducer = persistReducer(vocalibConfig, plan)
 

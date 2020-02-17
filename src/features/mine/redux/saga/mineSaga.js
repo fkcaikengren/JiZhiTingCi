@@ -63,9 +63,16 @@ function* loginByCode(action) {
     yield put({ type: LOGIN_BY_CODE_START })
     const res = yield Http.post('/user/loginByCode', action.payload.params)
     if (res.status === 200) {
-        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
-            yield put({ type: SAVE_PLAN, payload: { plan } })
+            yield put({
+                type: SAVE_PLAN, payload: {
+                    plan,
+                    finishedBooksWordCount,
+                    allLearnedCount,
+                    allLearnedDays
+                }
+            })
         }
         yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
     }
@@ -77,9 +84,14 @@ function* loginByPwd(action) {
     yield put({ type: LOGIN_BY_CODE_START })
     const res = yield Http.post('/user/loginByPwd', action.payload.params)
     if (res.status === 200) {
-        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
-            yield put({ type: SAVE_PLAN, payload: { plan } })
+            yield put({
+                type: SAVE_PLAN, payload: {
+                    plan,
+                    finishedBooksWordCount, allLearnedCount, allLearnedDays
+                }
+            })
         }
         yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
     }
@@ -91,9 +103,14 @@ function* loginByWX(action) {
     yield put({ type: LOGIN_BY_WX_START })
     const res = yield Http.post('/user/loginByWX', action.payload.params)
     if (res.status === 200) {
-        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
-            yield put({ type: SAVE_PLAN, payload: { plan } })
+            yield put({
+                type: SAVE_PLAN, payload: {
+                    plan,
+                    finishedBooksWordCount, allLearnedCount, allLearnedDays
+                }
+            })
         }
         yield put({ type: LOGIN_BY_WX_SUCCEED, payload: { credential, user } }) //保存user
     }
@@ -107,9 +124,14 @@ function* loginByQQ(action) {
     yield put({ type: LOGIN_BY_QQ_START })
     const res = yield Http.post('/user/loginByQQ', action.payload.params)
     if (res.status === 200) {
-        const { credential, user, plan } = loginHandle(res.data, action.payload.navigation)
+        const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
-            yield put({ type: SAVE_PLAN, payload: { plan } })
+            yield put({
+                type: SAVE_PLAN, payload: {
+                    plan,
+                    finishedBooksWordCount, allLearnedCount, allLearnedDays
+                }
+            })
         }
         yield put({ type: LOGIN_BY_QQ_SUCCEED, payload: { credential, user } }) //保存user
     }

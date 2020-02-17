@@ -1,0 +1,784 @@
+{
+    "plan": {
+        "bookId": "5e489d3ade310a11ec854366",
+        "taskCount": 1,
+        "taskWordCount": 10,
+        "reviewWordCount": 50,
+        "totalDays": 200,
+        "lastLearnDate": null,
+        "bookName": "六级高频必考词汇",
+        "bookCoverUrl": "https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/cet-6.jpg",
+        "totalWordCount": 192
+    },
+    "words": [
+        {
+            "wordId": 1,
+            "word": "buy"
+        },
+        {
+            "wordId": 2,
+            "word": "but"
+        },
+        {
+            "wordId": 3,
+            "word": "by"
+        },
+        {
+            "wordId": 4,
+            "word": "cage"
+        },
+        {
+            "wordId": 5,
+            "word": "call"
+        },
+        {
+            "wordId": 6,
+            "word": "calm"
+        },
+        {
+            "wordId": 7,
+            "word": "can"
+        },
+        {
+            "wordId": 8,
+            "word": "cancel"
+        },
+        {
+            "wordId": 9,
+            "word": "cancer"
+        },
+        {
+            "wordId": 10,
+            "word": "capital"
+        },
+        {
+            "wordId": 11,
+            "word": "candidate"
+        },
+        {
+            "wordId": 12,
+            "word": "care"
+        },
+        {
+            "wordId": 13,
+            "word": "careful"
+        },
+        {
+            "wordId": 14,
+            "word": "carpet"
+        },
+        {
+            "wordId": 15,
+            "word": "carry"
+        },
+        {
+            "wordId": 16,
+            "word": "case"
+        },
+        {
+            "wordId": 17,
+            "word": "castle"
+        },
+        {
+            "wordId": 18,
+            "word": "casual"
+        },
+        {
+            "wordId": 19,
+            "word": "cash"
+        },
+        {
+            "wordId": 20,
+            "word": "catch"
+        },
+        {
+            "wordId": 21,
+            "word": "cattle"
+        },
+        {
+            "wordId": 22,
+            "word": "cautious"
+        },
+        {
+            "wordId": 23,
+            "word": "cause"
+        },
+        {
+            "wordId": 24,
+            "word": "ceiling"
+        },
+        {
+            "wordId": 25,
+            "word": "bowl"
+        },
+        {
+            "wordId": 26,
+            "word": "centimetre"
+        },
+        {
+            "wordId": 27,
+            "word": "central"
+        },
+        {
+            "wordId": 28,
+            "word": "celebrate"
+        },
+        {
+            "wordId": 29,
+            "word": "certain"
+        },
+        {
+            "wordId": 30,
+            "word": "centimeter"
+        },
+        {
+            "wordId": 31,
+            "word": "challenge"
+        },
+        {
+            "wordId": 32,
+            "word": "chairman"
+        },
+        {
+            "wordId": 33,
+            "word": "chance"
+        },
+        {
+            "wordId": 34,
+            "word": "ceremony"
+        },
+        {
+            "wordId": 35,
+            "word": "channel"
+        },
+        {
+            "wordId": 36,
+            "word": "character"
+        },
+        {
+            "wordId": 37,
+            "word": "chat"
+        },
+        {
+            "wordId": 38,
+            "word": "change"
+        },
+        {
+            "wordId": 39,
+            "word": "cheer"
+        },
+        {
+            "wordId": 40,
+            "word": "charge"
+        },
+        {
+            "wordId": 41,
+            "word": "chemistry"
+        },
+        {
+            "wordId": 42,
+            "word": "chief"
+        },
+        {
+            "wordId": 43,
+            "word": "choice"
+        },
+        {
+            "wordId": 44,
+            "word": "choose"
+        },
+        {
+            "wordId": 45,
+            "word": "choke"
+        },
+        {
+            "wordId": 46,
+            "word": "cigarette"
+        },
+        {
+            "wordId": 47,
+            "word": "circumstance"
+        },
+        {
+            "wordId": 48,
+            "word": "classic"
+        },
+        {
+            "wordId": 49,
+            "word": "check"
+        },
+        {
+            "wordId": 50,
+            "word": "citizen"
+        },
+        {
+            "wordId": 51,
+            "word": "coal"
+        },
+        {
+            "wordId": 52,
+            "word": "cloth"
+        },
+        {
+            "wordId": 53,
+            "word": "clear"
+        },
+        {
+            "wordId": 54,
+            "word": "collect"
+        },
+        {
+            "wordId": 55,
+            "word": "college"
+        },
+        {
+            "wordId": 56,
+            "word": "combine"
+        },
+        {
+            "wordId": 57,
+            "word": "coast"
+        },
+        {
+            "wordId": 58,
+            "word": "comedy"
+        },
+        {
+            "wordId": 59,
+            "word": "comfort"
+        },
+        {
+            "wordId": 60,
+            "word": "comment"
+        },
+        {
+            "wordId": 61,
+            "word": "committee"
+        },
+        {
+            "wordId": 62,
+            "word": "command"
+        },
+        {
+            "wordId": 63,
+            "word": "communicate"
+        },
+        {
+            "wordId": 64,
+            "word": "common"
+        },
+        {
+            "wordId": 65,
+            "word": "company"
+        },
+        {
+            "wordId": 66,
+            "word": "compare"
+        },
+        {
+            "wordId": 67,
+            "word": "compete"
+        },
+        {
+            "wordId": 68,
+            "word": "complete"
+        },
+        {
+            "wordId": 69,
+            "word": "concern"
+        },
+        {
+            "wordId": 70,
+            "word": "conclusion"
+        },
+        {
+            "wordId": 71,
+            "word": "conduct"
+        },
+        {
+            "wordId": 72,
+            "word": "condition"
+        },
+        {
+            "wordId": 73,
+            "word": "confirm"
+        },
+        {
+            "wordId": 74,
+            "word": "conductor"
+        },
+        {
+            "wordId": 75,
+            "word": "congratulate"
+        },
+        {
+            "wordId": 76,
+            "word": "confuse"
+        },
+        {
+            "wordId": 77,
+            "word": "connect"
+        },
+        {
+            "wordId": 78,
+            "word": "consider"
+        },
+        {
+            "wordId": 79,
+            "word": "construction"
+        },
+        {
+            "wordId": 80,
+            "word": "consist"
+        },
+        {
+            "wordId": 81,
+            "word": "consume"
+        },
+        {
+            "wordId": 82,
+            "word": "consult"
+        },
+        {
+            "wordId": 83,
+            "word": "container"
+        },
+        {
+            "wordId": 84,
+            "word": "contain"
+        },
+        {
+            "wordId": 85,
+            "word": "continent"
+        },
+        {
+            "wordId": 86,
+            "word": "content"
+        },
+        {
+            "wordId": 87,
+            "word": "continue"
+        },
+        {
+            "wordId": 88,
+            "word": "contribute"
+        },
+        {
+            "wordId": 89,
+            "word": "control"
+        },
+        {
+            "wordId": 90,
+            "word": "contrary"
+        },
+        {
+            "wordId": 91,
+            "word": "convenient"
+        },
+        {
+            "wordId": 92,
+            "word": "convince"
+        },
+        {
+            "wordId": 93,
+            "word": "corner"
+        },
+        {
+            "wordId": 94,
+            "word": "correct"
+        },
+        {
+            "wordId": 95,
+            "word": "cost"
+        },
+        {
+            "wordId": 96,
+            "word": "cottage"
+        },
+        {
+            "wordId": 97,
+            "word": "course"
+        },
+        {
+            "wordId": 98,
+            "word": "count"
+        },
+        {
+            "wordId": 99,
+            "word": "create"
+        },
+        {
+            "wordId": 100,
+            "word": "cover"
+        },
+        {
+            "wordId": 101,
+            "word": "cross"
+        },
+        {
+            "wordId": 102,
+            "word": "crime"
+        },
+        {
+            "wordId": 103,
+            "word": "crowd"
+        },
+        {
+            "wordId": 104,
+            "word": "cruel"
+        },
+        {
+            "wordId": 105,
+            "word": "culture"
+        },
+        {
+            "wordId": 106,
+            "word": "curious"
+        },
+        {
+            "wordId": 107,
+            "word": "cure"
+        },
+        {
+            "wordId": 108,
+            "word": "collar"
+        },
+        {
+            "wordId": 109,
+            "word": "curtain"
+        },
+        {
+            "wordId": 110,
+            "word": "custom"
+        },
+        {
+            "wordId": 111,
+            "word": "cut"
+        },
+        {
+            "wordId": 112,
+            "word": "daily"
+        },
+        {
+            "wordId": 113,
+            "word": "damage"
+        },
+        {
+            "wordId": 114,
+            "word": "danger"
+        },
+        {
+            "wordId": 115,
+            "word": "damp"
+        },
+        {
+            "wordId": 116,
+            "word": "data"
+        },
+        {
+            "wordId": 117,
+            "word": "dare"
+        },
+        {
+            "wordId": 118,
+            "word": "deaf"
+        },
+        {
+            "wordId": 119,
+            "word": "death"
+        },
+        {
+            "wordId": 120,
+            "word": "decide"
+        },
+        {
+            "wordId": 121,
+            "word": "debt"
+        },
+        {
+            "wordId": 122,
+            "word": "declare"
+        },
+        {
+            "wordId": 123,
+            "word": "decrease"
+        },
+        {
+            "wordId": 124,
+            "word": "defeat"
+        },
+        {
+            "wordId": 125,
+            "word": "deep"
+        },
+        {
+            "wordId": 126,
+            "word": "defence"
+        },
+        {
+            "wordId": 127,
+            "word": "degree"
+        },
+        {
+            "wordId": 128,
+            "word": "defense"
+        },
+        {
+            "wordId": 129,
+            "word": "deal"
+        },
+        {
+            "wordId": 130,
+            "word": "delicious"
+        },
+        {
+            "wordId": 131,
+            "word": "delight"
+        },
+        {
+            "wordId": 132,
+            "word": "demand"
+        },
+        {
+            "wordId": 133,
+            "word": "department"
+        },
+        {
+            "wordId": 134,
+            "word": "depend"
+        },
+        {
+            "wordId": 135,
+            "word": "delay"
+        },
+        {
+            "wordId": 136,
+            "word": "describe"
+        },
+        {
+            "wordId": 137,
+            "word": "desert"
+        },
+        {
+            "wordId": 138,
+            "word": "deserve"
+        },
+        {
+            "wordId": 139,
+            "word": "desire"
+        },
+        {
+            "wordId": 140,
+            "word": "destroy"
+        },
+        {
+            "wordId": 141,
+            "word": "determine"
+        },
+        {
+            "wordId": 142,
+            "word": "develop"
+        },
+        {
+            "wordId": 143,
+            "word": "devote"
+        },
+        {
+            "wordId": 144,
+            "word": "die"
+        },
+        {
+            "wordId": 145,
+            "word": "design"
+        },
+        {
+            "wordId": 146,
+            "word": "difference"
+        },
+        {
+            "wordId": 147,
+            "word": "diet"
+        },
+        {
+            "wordId": 148,
+            "word": "difficulty"
+        },
+        {
+            "wordId": 149,
+            "word": "depth"
+        },
+        {
+            "wordId": 150,
+            "word": "digest"
+        },
+        {
+            "wordId": 151,
+            "word": "director"
+        },
+        {
+            "wordId": 152,
+            "word": "disabled"
+        },
+        {
+            "wordId": 153,
+            "word": "direction"
+        },
+        {
+            "wordId": 154,
+            "word": "disadvantage"
+        },
+        {
+            "wordId": 155,
+            "word": "disappear"
+        },
+        {
+            "wordId": 156,
+            "word": "dirty"
+        },
+        {
+            "wordId": 157,
+            "word": "disagree"
+        },
+        {
+            "wordId": 158,
+            "word": "discuss"
+        },
+        {
+            "wordId": 159,
+            "word": "discover"
+        },
+        {
+            "wordId": 160,
+            "word": "discussion"
+        },
+        {
+            "wordId": 161,
+            "word": "disease"
+        },
+        {
+            "wordId": 162,
+            "word": "disaster"
+        },
+        {
+            "wordId": 163,
+            "word": "distinguish"
+        },
+        {
+            "wordId": 164,
+            "word": "distance"
+        },
+        {
+            "wordId": 165,
+            "word": "dislike"
+        },
+        {
+            "wordId": 166,
+            "word": "district"
+        },
+        {
+            "wordId": 167,
+            "word": "divide"
+        },
+        {
+            "wordId": 168,
+            "word": "disturb"
+        },
+        {
+            "wordId": 169,
+            "word": "do"
+        },
+        {
+            "wordId": 170,
+            "word": "doubt"
+        },
+        {
+            "wordId": 171,
+            "word": "dozen"
+        },
+        {
+            "wordId": 172,
+            "word": "down"
+        },
+        {
+            "wordId": 173,
+            "word": "drawer"
+        },
+        {
+            "wordId": 174,
+            "word": "dress"
+        },
+        {
+            "wordId": 175,
+            "word": "drink"
+        },
+        {
+            "wordId": 176,
+            "word": "drive"
+        },
+        {
+            "wordId": 177,
+            "word": "drop"
+        },
+        {
+            "wordId": 178,
+            "word": "drill"
+        },
+        {
+            "wordId": 179,
+            "word": "drunk"
+        },
+        {
+            "wordId": 180,
+            "word": "drug"
+        },
+        {
+            "wordId": 181,
+            "word": "duty"
+        },
+        {
+            "wordId": 182,
+            "word": "dream"
+        },
+        {
+            "wordId": 183,
+            "word": "earn"
+        },
+        {
+            "wordId": 184,
+            "word": "eager"
+        },
+        {
+            "wordId": 185,
+            "word": "earthquake"
+        },
+        {
+            "wordId": 186,
+            "word": "edge"
+        },
+        {
+            "wordId": 187,
+            "word": "each"
+        },
+        {
+            "wordId": 188,
+            "word": "education"
+        },
+        {
+            "wordId": 189,
+            "word": "effect"
+        },
+        {
+            "wordId": 190,
+            "word": "easy"
+        },
+        {
+            "wordId": 191,
+            "word": "either"
+        },
+        {
+            "wordId": 192,
+            "word": "effort"
+        }
+    ],
+    "articles": []
+}

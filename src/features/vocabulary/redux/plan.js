@@ -20,7 +20,7 @@ const defaultState = {
     leftDays: 0,           // 剩余学习天数
 
     //累计数据
-    isTodayLearned: false,         //今日是否学习（纳入统计）
+    learnedTodayFlag: null,         //当天算入学习天数的标记
     finishedBooksWordCount: 0,  //已学完的单词书中学过的单词数
     allLearnedCount: 0,         //累计学习单词数
     allLearnedDays: 0           //累计学习天数
@@ -31,17 +31,27 @@ const defaultState = {
 export const plan = (state = defaultState, action) => {
 
     switch (action.type) {
-        // 保存计划
-        case pa.SAVE_PLAN:
-            return { ...state, plan: action.payload.plan };
+        // 保存计划 (包括统计数据)
+        case pa.SAVE_PLAN: {
+            const { plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = action.payload
+            return {
+                ...state,
+                plan,
+                finishedBooksWordCount,
+                allLearnedCount,
+                allLearnedDays
+            };
+        }
+
         // 更换词汇书
         case pa.CHANGE_VOCA_BOOK_SUCCEED: {
-            const { plan, leftDays } = action.payload
+            const { plan, leftDays, finishedBooksWordCount } = action.payload
             return {
                 ...state,
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
-                leftDays: leftDays,
+                leftDays,
+                finishedBooksWordCount
             }
         }
         //修改计划
@@ -66,6 +76,19 @@ export const plan = (state = defaultState, action) => {
         case pa.CHANGE_LEARNED_WORD_COUNT:
             console.log('已学单词数量：' + action.payload.learnedWordCount)
             return { ...state, learnedWordCount: action.payload.learnedWordCount }
+
+
+
+        // 同步allLearnedDays
+        case pa.SYN_ALL_LEARNED_DAYS_START: {
+            const { allLearnedDays, learnedTodayFlag } = action.payload
+            return { ...state, allLearnedDays, learnedTodayFlag }
+        }
+        // 同步allLearnedCount
+        case pa.SYN_FINISH_DAYS_START: {
+            return { ...state, allLearnedCount: action.payload.allLearnedCount }
+        }
+
         //退出登录
         case LOGOUT:
             return defaultState

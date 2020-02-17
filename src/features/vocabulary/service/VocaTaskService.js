@@ -181,6 +181,10 @@ export default class VocaTaskService {
                     taskWords.push({ word, wordId })
                     wordIds.push(wordId)
                 }
+
+                if (isEnd) {
+                    break
+                }
                 //2.2获取今日任务的文章
                 let taskArticles = []
                 if (taskWords.length > 0) {
@@ -563,6 +567,17 @@ export default class VocaTaskService {
         const learnedTasks = this.vtd.getLearnedTasks()
         let sum = 0
         for (let task of learnedTasks) {
+            sum += task.taskWords.length
+        }
+        return sum
+    }
+
+
+    /**统计 */
+    countMasteredWords() {
+        const masteredTasks = this.vtd.realm.objects('VocaTask').filtered('status = 200')
+        let sum = 0
+        for (let task of masteredTasks) {
             sum += task.taskWords.length
         }
         return sum

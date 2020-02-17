@@ -14,7 +14,7 @@ import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import _util from '../../common/util'
-import { BY_REAL_TASK } from "./common/constant";
+import { BY_REAL_TASK, TASK_VOCA_TYPE } from "./common/constant";
 import gstyles from '../../style';
 import AliIcon from '../../component/AliIcon';
 import ShareTemplate from '../../component/ShareTemplate';
@@ -27,14 +27,18 @@ class HomePage extends Component {
             modalVisible: false,
             appState: AppState.currentState
         }
+
+        this.vtService = new VocaTaskService()
         console.disableYellowBox = true
     }
 
     componentDidMount() {
-        //监听物理返回键
+        // 监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPressAndroid)
-        // 加载任务
+        // 初始化
         this._init()
+        // 完成全部任务
+        this._judgeFinishAllTasks()
         // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
     }
@@ -87,7 +91,7 @@ class HomePage extends Component {
 
     _init = async () => {
         // 加载今日数据
-        const { plan } = this.props.plan
+        const { plan, leftDays, allLearnedDays, learnedTodayFlag } = this.props.plan
         const { lastLearnDate, taskCount, taskWordCount } = plan
         const today = _util.getDayTime(0)
         console.log('today --> ' + today)
@@ -107,9 +111,46 @@ class HomePage extends Component {
             })
             // 同步任务
             this.props.syncTask(null)
+            //同步：累计学习天数
+            if (learnedTodayFlag !== today && leftDays >= 0) {
+                console.log('同步天数')
+                this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
+            }
+
         }
     }
 
+
+    _judgeFinishAllTasks = () => {
+        const judgeFinishAllTasks = this.props.navigation.getParam('judgeFinishAllTasks', false)
+        console.log('完成任务后--judgeFinishAllTasks : ' + judgeFinishAllTasks)
+
+        if (judgeFinishAllTasks) {
+            //1.判断
+            let isAllFinished = true
+            for (let item of this.props.home.tasks) {
+                //判断是否是单词任务
+                const isVocaTask = (item.taskType === TASK_VOCA_TYPE)
+                console.log(item.progress)
+                if (isVocaTask && !item.progress.endsWith('_FINISH')) {
+                    isAllFinished = false
+                    break
+                }
+            }
+            console.log('完成任务后--isAllFinished : ' + isAllFinished)
+            if (isAllFinished) {
+                //2.修改数据
+                const { finishedBooksWordCount } = this.props.plan
+                this.props.synFinishDays({
+                    allLearnedCount: finishedBooksWordCount + this.vtService.countLearnedWords()
+                })
+                // 3.弹出分享页面
+                this._share(true)
+            }
+
+        }
+
+    }
 
     _closeDrawerPanel = () => {
         this._drawer.close()
@@ -121,11 +162,11 @@ class HomePage extends Component {
     };
 
     _renderShareContentView = () => {
-        const { plan, leftDays } = this.props.plan
-        const learnedWordCount = new VocaTaskService().countLearnedWords()
+        const { allLearnedDays } = this.props.plan
+        const learnedWordCount = this.vtService.countLearnedWords()
         return <View style={[gstyles.c_start, { width: '100%' }]}>
             <View style={[gstyles.c_center, styles.shareContent]}>
-                <View style={[gstyles.c_center, styles.userAvatar]}>
+                <View style={[gstyles.r_center, styles.userAvatar]}>
                     <Image source={this.props.avatarSource} style={{ width: 40, height: 40, borderRadius: 100, }} />
                 </View>
                 <Text style={gstyles.lg_black}>{this.props.user.nickname}</Text>
@@ -135,7 +176,7 @@ class HomePage extends Component {
                         <Text style={gstyles.sm_lightBlack}>学习单词/个</Text>
                     </View>
                     <View style={gstyles.c_start}>
-                        <Text style={gstyles.xl_black}>{plan.totalDays - leftDays}</Text>
+                        <Text style={gstyles.xl_black}>{allLearnedDays}</Text>
                         <Text style={gstyles.sm_lightBlack}>坚持学习/天</Text>
                     </View>
                 </View>
@@ -143,12 +184,13 @@ class HomePage extends Component {
         </View>
     }
 
-    _share = () => {
+    _share = (showSeal) => {
         const imgSource = require('../../image/share_bg.png')
         ShareTemplate.show({
             commonModal: this.props.app.commonModal,
             bgSource: imgSource,
-            renderContentView: this._renderShareContentView()
+            renderContentView: this._renderShareContentView(),
+            showSeal
         })
     }
 
@@ -209,7 +251,7 @@ class HomePage extends Component {
                                         backgroundColor: gstyles.mainColor,
                                         borderRadius: 50,
                                     }}
-                                    onPress={this._share}
+                                    onPress={() => this._share(false)}
                                 />
                             </View>
                         }
@@ -239,7 +281,11 @@ const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
     syncTask: HomeAction.syncTask,
     updateTask: HomeAction.updateTask,
+
     changeLeftDays: PlanAction.changeLeftDays,
+    synAllLearnedDays: PlanAction.synAllLearnedDays,
+    synFinishDays: PlanAction.synFinishDays,
+
     changePlayTimer: VocaPlayAction.changePlayTimer,
     clearPlay: VocaPlayAction.clearPlay,
 }

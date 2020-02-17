@@ -44,6 +44,9 @@ export const loginHandle = (data, navigation) => {
             qq: user.qq,
         },
         plan: user.plan,
+        finishedBooksWordCount: user.statistic.finishedBooksWordCount,
+        allLearnedCount: user.statistic.allLearnedCount,
+        allLearnedDays: user.statistic.allLearnedDays
     }
     return mineState
 }
@@ -53,8 +56,14 @@ export const logoutHandle = () => {
     // todo: 上传数据
     //1.清空Storage 
     Storage.clearMapForKey('notSyncTasks')
+
+    Storage.clearMapForKey('addedFinishDays')
+    Storage.clearMapForKey('finishDays')
+    Storage.remove({ key: 'finishedBooks' })
+
     Storage.clearMapForKey('notSyncGroups')
     Storage.remove({ key: 'groupOrdersString' })
+
     //2.清空token和user
     store.dispatch({ type: LOGOUT })
     //3.清空realm 

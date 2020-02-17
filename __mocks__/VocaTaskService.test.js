@@ -4,7 +4,7 @@ import * as Constant from '../src/features/vocabulary/common/constant'
 import VocaDao from "../src/features/vocabulary/service/VocaDao";
 const fs = require("fs");
 
-const createPlanData = require('./mock_data/createPlan.json')
+const createPlanData = require('./mock_data/createPlan2.json')
 const vts = new VocaTaskService()
 VocaDao.getInstance().open()
 
@@ -33,7 +33,7 @@ setTimeout(() => {
      * 测试用例：
      * taskCount取值：1,2,3
      */
-    // mockNormalStudy_test()
+    mockNormalStudy_test()
     function mockNormalStudy_test() {
         //获取数据
         vts.vtd.saveBookWords(createPlanData.words)
@@ -44,7 +44,7 @@ setTimeout(() => {
         let lastLearnDate = null
         for (let i = 0; i < n; i++) {
             //step1.加载今日任务,修改lastLearnDate
-            todayTasks = vts.getTodayTasks(lastLearnDate, 2, 12, i)
+            todayTasks = vts.getTodayTasks(lastLearnDate, 3, 12, i)
             lastLearnDate = _util.getDayTime(i)
             if (todayTasks && todayTasks.length <= 0) {
                 break
@@ -72,7 +72,6 @@ setTimeout(() => {
             vts.vtd.modifyTasks(todayTasks)
         }
         console.log('完成学习测试！！')
-
     }
 
 
@@ -240,7 +239,7 @@ setTimeout(() => {
      *  中断天数n取值: -2, -10, -13, -14 -20
      *  学习过程的取值：正常学习、异常学习
      */
-    mockBreakStudy_test()
+    // mockBreakStudy_test()
     function mockBreakStudy_test() {
         //获取数据
         vts.vtd.saveBookWords(createPlanData.words)

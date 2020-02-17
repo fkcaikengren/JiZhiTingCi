@@ -28,11 +28,10 @@ const styles = StyleSheet.create({
         marginTop: 35
     },
     userAvatar: {
-        width: '100%',
         position: 'absolute',
         top: -20,
-        left: 0,
-        marginBottom: 4
+        left: '45%',
+        marginBottom: 5
     }
 });
 

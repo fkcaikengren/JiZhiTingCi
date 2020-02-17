@@ -1,7 +1,7 @@
 
 import { call, all } from 'redux-saga/effects'
 import { watchLoadTasks, watchSyncTask } from '../features/vocabulary/redux/saga/homeSaga'
-import { watchCreatePlan, watchModifyPlan } from '../features/vocabulary/redux/saga/planSaga'
+import { watchCreatePlan, watchModifyPlan, watchSyncAllLearnedDays, watchSynFinishDays } from '../features/vocabulary/redux/saga/planSaga'
 import { watchLoadArticle, watchLoadAnalysis } from '../features/reading/redux/saga/articleSaga'
 import {
     watchLoginByCode, watchLoginByPwd, watchLoginByWX, watchLoginByQQ,
@@ -18,6 +18,10 @@ function* rootSaga() {
         call(watchSyncTask),
         call(watchCreatePlan),
         call(watchModifyPlan),
+        call(watchSyncAllLearnedDays),
+        call(watchSynFinishDays),
+
+
         call(watchSyncGroup),
         call(watchChangePlayListIndex),
 

@@ -5,10 +5,12 @@ import { connect } from 'react-redux';
 import CardView from 'react-native-cardview'
 
 import * as PlanAction from './redux/action/planAction'
+import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import styles from './VocaLibStyle'
 import gstyles from "../../style";
 import _util from '../../common/util'
 import PlanSelectTemplate from "./component/PlanSelectTemplate";
+import { BY_REAL_TASK } from "./common/constant";
 
 
 
@@ -56,11 +58,13 @@ class VocaLibPage extends Component {
 
     /**确认提交计划 */
     _putPlan = ({ bookId, taskCount, taskWordCount, reviewWordCount, totalDays }) => {
+
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
             const isExacted = true
             // await _util.checkLocalTime() #todo:检查时间
             if (isExacted) {
+                // 修改单词书
                 this.props.changeVocaBook({
                     plan: {
                         bookId,
@@ -68,9 +72,25 @@ class VocaLibPage extends Component {
                         taskWordCount,
                         reviewWordCount,
                         totalDays,
+                        curBookId: this.props.plan.plan.bookId,
+                        allLearnedCount: this.props.plan.allLearnedCount
                     },
 
                 })
+
+                // 同步：累计学习天数
+                const { leftDays, learnedTodayFlag, allLearnedDays } = this.props.plan
+                const today = _util.getDayTime(0)
+                if (learnedTodayFlag !== today && leftDays >= 0) {
+                    console.log('plan:同步天数')
+                    this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
+                }
+
+                //清空Play
+                if (this.props.normalType === BY_REAL_TASK) {
+                    this.props.clearPlay()
+                }
+
             }
         }
 
@@ -151,12 +171,16 @@ VocaLibPage.propTypes = {
 const mapStateToProps = state => ({
     app: state.app,
     plan: state.plan,
-    home: state.home
+    home: state.home,
+    normalType: state.vocaPlay.normalType
 });
 
 const mapDispatchToProps = {
 
-    changeVocaBook: PlanAction.changeVocaBook
+    changeVocaBook: PlanAction.changeVocaBook,
+    synAllLearnedDays: PlanAction.synAllLearnedDays,
+
+    clearPlay: VocaPlayAction.clearPlay,
 }
 
 

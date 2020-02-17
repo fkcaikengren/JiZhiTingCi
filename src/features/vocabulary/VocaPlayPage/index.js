@@ -129,8 +129,11 @@ class VocaPlayPage extends React.Component {
             this.taskDao.modifyTask(newTask)
             this.props.updateTask({ task: newTask })
             this.props.modifyLastLearnDate({ lastLearnDate: _util.getDayTime(0) })
+
+            //返回
+            VocaUtil.goPageWithoutStack(this.props.navigation, "Home", { judgeFinishAllTasks: true })
             /*------------测试代码结束 ----------*/
-            this._goBack()
+            // this._goBack()
             return true
         })
         this._init()

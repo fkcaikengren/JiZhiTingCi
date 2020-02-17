@@ -48,7 +48,7 @@ class AuthLoadingPage extends Component {
             const articles = this.props.navigation.getParam("articles")
 
             if (loginUserInfo) {
-                const { avatarUrl, vocaGroups, vocaTasks, groupOrders } = loginUserInfo
+                const { avatarUrl, statistic, vocaGroups, vocaTasks, groupOrders } = loginUserInfo
                 //保存头像
                 if (avatarUrl) {
                     let extname = ".jpg"
@@ -65,6 +65,18 @@ class AuthLoadingPage extends Component {
                     this.props.setAvatarSource({ avatarSource })
                 }
                 // 保存vocaGroups ,groupOrders,bookWords,vocaTasks, articles
+                for (let fDay of statistic.finishDays) {
+                    Storage.save({
+                        key: 'finishDays',
+                        id: fDay,
+                        data: fDay
+                    });
+                }
+                Storage.save({
+                    key: 'finishedBooks',
+                    data: statistic.finishedBooks
+                });
+
                 if (vocaGroups && vocaGroups.length > 0) {
                     const vgDao = VocaGroupDao.getInstance()
                     vgDao.deleteAllGroups()

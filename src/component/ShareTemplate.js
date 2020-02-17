@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, Image, } from 'react-native';
-import { Button } from 'react-native-elements'
+import { Platform, StatusBar, StyleSheet, View, Text, Image, Animated, } from 'react-native';
+import Sound from 'react-native-sound'
 import ViewShot from 'react-native-view-shot';
 import SharePanel from './SharePanel'
 import AliIcon from './AliIcon'
@@ -19,13 +19,12 @@ const shareDir = fs.dirs.DocumentDir + '/' + SHARE_DIR
 
 
 
-
 /**
  * 关于CommonModal的展示模板
  */
 export default class ShareTemplate {
 
-    static _renderShareView({ commonModal, title = '', bgSource, renderContentView }) {
+    static _renderShareView({ commonModal, title = '', bgSource, renderContentView, showSeal }) {
 
 
         // 返回一个函数
@@ -36,6 +35,7 @@ export default class ShareTemplate {
                 hide,
             } = commonModal
             const qrPath = shareDir + 'share_qr.png'
+            const { sealSize } = getContentState()
             return <View style={styles.container}>
                 <View style={styles.titleBar}>
                     <Text style={gstyles.md_black}>{title}</Text>
@@ -45,6 +45,28 @@ export default class ShareTemplate {
                         }} />
 
                 </View>
+                {showSeal &&
+                    <Animated.Image
+                        source={require('../image/seal_icon.png')}
+                        style={[
+                            styles.sealIcon,
+                            {
+                                width: sealSize, height: sealSize,
+                                transform: [
+                                    {
+                                        rotate: sealSize.interpolate({ // 旋转，使用插值函数做值映射
+                                            inputRange: [120, 300],
+                                            outputRange: ['360deg', '0deg',]
+                                        })
+                                    },
+
+                                ],
+                            }
+                        ]}>
+                    </Animated.Image>
+
+
+                }
                 <ViewShot ref={comp => this.viewShot = comp} style={styles.captureView}>
                     <Image source={bgSource} style={styles.shareBg} />
 
@@ -98,17 +120,19 @@ export default class ShareTemplate {
      * @param {*} commonModal 
      */
     static show({
-        commonModal, title, bgSource, renderContentView
+        commonModal, title, bgSource, renderContentView, showSeal = false
     }) {
         const {
             show,
-            setContentState
+            setContentState,
+            getContentState
         } = commonModal
         setContentState({
             imageUrl: null,
+            sealSize: new Animated.Value(300)
         })
         show({
-            renderContent: this._renderShareView({ commonModal, title, bgSource, renderContentView }), //函数
+            renderContent: this._renderShareView({ commonModal, title, bgSource, renderContentView, showSeal }), //函数
             modalStyle: {
                 width: width,
                 height: height,
@@ -118,6 +142,26 @@ export default class ShareTemplate {
             //动画
             animationDuration: 1
         })
+
+        if (showSeal) {
+            setTimeout(() => {
+                setTimeout(() => {
+                    const musciPath = require('../audio/complete_seal.mp3');
+                    const music = new Sound(musciPath, (error) => {
+                        if (error) {
+                            console.log("播放失败。。。");
+                        }
+                        music.play()
+                    })
+                }, 1000)
+                Animated.timing(
+                    // timing方法使动画值随时间变化
+                    getContentState().sealSize,
+                    {
+                        toValue: 120, duration: 1500
+                    }).start();
+            }, 100)
+        }
     }
 }
 
@@ -175,6 +219,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         left: 0
+    },
+    sealIcon: {
+        position: 'absolute',
+        bottom: 200,
+        right: 40,
+        zIndex: 100,
     }
 });
 

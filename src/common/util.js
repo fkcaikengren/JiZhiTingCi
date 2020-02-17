@@ -95,7 +95,10 @@ export default class _util {
             var h = time.getHours();
             var m = time.getMinutes();
             var s = time.getSeconds();
-            return [y + '-' + this.addZero(M) + '-' + this.addZero(d), this.addZero(h) + ':' + this.addZero(m) + ':' + this.addZero(s)]
+            return [
+                y + '-' + this.addZero(M) + '-' + this.addZero(d),
+                this.addZero(h) + ':' + this.addZero(m) + ':' + this.addZero(s)
+            ]
         } else {
             return ['', ''];
         }

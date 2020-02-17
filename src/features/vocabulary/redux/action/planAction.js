@@ -18,6 +18,7 @@ export const SAVE_PLAN = 'SAVE_PLAN'
 // 修改上次学习时间
 export const MODIFY_LAST_LEARN_DATE = 'MODIFY_LAST_LEARN_DATE'
 
+
 //修改已学单词数
 export const CHANGE_LEARNED_WORD_COUNT = 'CHANGE_LEARNED_WORD_COUNT'
 //修改剩余天数
@@ -39,8 +40,8 @@ const fn = (payload) => {
 }
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const { savePlan, changeVocaBook, modifyPlan,
-    modifyLastLearnDate, changeLearnedWordCount, changeLeftDays,
+export const { savePlan, changeVocaBook, modifyPlan, modifyLastLearnDate,
+    changeLearnedWordCount, changeLeftDays,
     synAllLearnedDays, synFinishDays } = createActions({
         //保存计划
         [SAVE_PLAN]: fn,
