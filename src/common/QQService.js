@@ -41,6 +41,9 @@ export default class QQService {
         try {
             const result = await QQAPI.shareToQQ(shareInfo)
             console.log(result)
+            if (onSucceed) {
+                onSucceed()
+            }
         } catch (err) {
             if (err) {
                 console.log(err)
@@ -58,6 +61,9 @@ export default class QQService {
         try {
             const result = await QQAPI.shareToQzone(shareInfo)
             console.log(result)
+            if (onSucceed) {
+                onSucceed()
+            }
         } catch (err) {
             if (err) {
                 console.log(err)

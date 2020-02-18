@@ -12,7 +12,7 @@ import { VOCABULARY_DIR } from "../../common/constant";
 const fs = RNFetchBlob.fs
 const dirs = fs.dirs
 const CacheDir = dirs.CacheDir + '/'
-const DocumentDir = dirs.DocumentDir + '/'
+
 
 
 const styles = StyleSheet.create({
@@ -74,6 +74,31 @@ class DownloadManagePage extends React.Component {
     }
 
 
+    _clearPackage = (packageName, packageId) => {
+        this.props.app.confirmModal.show(`是否删除离线包:${packageName}？`, null, () => {
+            this.fileService.clearDownload(VOCABULARY_DIR + packageId).then(size => {
+                if (size <= 0) {
+                    Storage.remove({
+                        key: 'resourcePackages',
+                        id: packageId
+                    }).then(async () => {
+                        this.props.app.toast.show('删除成功', 1000)
+                        const resourcePackages = await Storage.getAllDataForKey('resourcePackages')
+                        this.setState({ resourcePackages })
+                    })
+                }
+
+            })
+        })
+    }
+
+    _clearCache = () => {
+        this.props.app.confirmModal.show('是否清空缓存？', null, () => {
+            this.fileService.clearCache().then(size => {
+                this.setState({ cacheSize: size })
+            })
+        })
+    }
 
     render() {
 
@@ -96,7 +121,7 @@ class DownloadManagePage extends React.Component {
                 <View style={{ width: '100%', marginTop: 10 }}>
                     {this.state.resourcePackages &&
                         this.state.resourcePackages.map((item, i) => {
-                            return <TouchableOpacity>
+                            return <TouchableOpacity activeOpacity={0.7} onPress={() => { this._clearPackage(item.packageName, item.packageId) }}>
                                 <View style={[gstyles.r_between, styles.itemView]} >
                                     <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
                                         {item.packageName}
@@ -106,15 +131,7 @@ class DownloadManagePage extends React.Component {
                             </TouchableOpacity>
                         })
                     }
-                    <TouchableOpacity activeOpacity={0.9} style={{ marginTop: 20 }} onPress={() => {
-                        //弹框提示是否清理
-                        this.props.app.confirmModal.show('清空缓存', null, () => {
-                            this.fileService.clearCache()
-                                .then(size => {
-                                    this.setState({ cacheSize: size })
-                                })
-                        })
-                    }}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={this._clearCache}>
                         <View style={[gstyles.r_between, styles.itemView]}>
                             <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
                                 清除缓存
@@ -125,9 +142,6 @@ class DownloadManagePage extends React.Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableWithoutFeedback>
-                    <Text style={[gstyles.lg_black, styles.clearBtn]}>全部清理</Text>
-                </TouchableWithoutFeedback>
             </View>
         );
     }

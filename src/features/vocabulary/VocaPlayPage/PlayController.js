@@ -62,6 +62,7 @@ export default class PlayController extends React.Component {
     //选择主题
     _chooseBgOption = (value) => {
         const { navigate } = this.props
+        this._pause()
         switch (value) {
             case 0:
                 navigate('BgSelector')
@@ -117,9 +118,9 @@ export default class PlayController extends React.Component {
 
     //播放暂停切换
     _togglePlay = () => {
-        const { autoPlayTimer, curIndex, task } = store.getState().vocaPlay
+        const { autoPlayTimer, curIndex, showWordInfos } = store.getState().vocaPlay
         const { changePlayTimer } = this.props;
-        if (!(task.taskWords && task.taskWords.length > 0)) {
+        if (!(showWordInfos && showWordInfos.length > 0)) {
             return
         }
         if (autoPlayTimer) {
@@ -146,7 +147,6 @@ export default class PlayController extends React.Component {
             return
         }
         if (autoPlayTimer) {
-
             BackgroundTimer.clearTimeout(autoPlayTimer)
             this.props.changePlayTimer(0)
         }

@@ -33,6 +33,7 @@ export default class FileService {
      */
 
     fetch = async (url, path) => {
+        console.log('--下载文件--' + url)
         try {
             const res = await RNFetchBlob.config({
                 fileCache: true,
@@ -66,12 +67,12 @@ export default class FileService {
             filePath = filePath.substr(1)
         }
 
-        //制定二级目录 (分类、bookCode、类型检测)
+        //制定二级目录 (分类、bookId、类型检测)
         let secondDir = ''
         switch (primaryDir) {
             case VOCABULARY_DIR:  //单词目录
-                const { bookCode } = store.getState().plan.plan
-                secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
+                const { bookId } = store.getState().plan.plan
+                secondDir = (bookId && bookId !== '') ? bookId + '/' : ''
                 break
         }
 
@@ -91,7 +92,6 @@ export default class FileService {
                 exist = true
                 realPath = downloadPath
             }
-            console.log(url)
             //2.分类型讨论
             if (filePath.match(/\.json$/)) {
                 if (exist) {
@@ -164,8 +164,8 @@ export default class FileService {
                 break
             //单词目录
             case VOCABULARY_DIR:
-                const { bookCode } = store.getState().plan.plan
-                const secondDir = (bookCode && bookCode !== '') ? bookCode + '/' : ''
+                const { bookId } = store.getState().plan.plan
+                const secondDir = (bookId && bookId !== '') ? bookId + '/' : ''
                 storeDir = DocumentDir + primaryDir + secondDir
                 break
 

@@ -327,7 +327,7 @@ class VocaPlayPage extends React.Component {
                         if (timer) {
                             console.log('清理autoPlayTimer ----- ' + timer)
                             BackgroundTimer.clearTimeout(timer)
-                            this.props.changePlayTimer(0)
+                            this.props.changePlayTimer(1)
                         }
                         BackgroundTimer.setTimeout(() => {
                             this.props.changePlayListIndex({
@@ -581,7 +581,7 @@ class VocaPlayPage extends React.Component {
     };
 
 
-    _keyExtractor = (item, index) => index;
+    _keyExtractor = (item, index) => item.word + index;
     // length: item高度； offset: item的父组件的偏移量
     _getItemLayout = (data, index) => {
         return ({ length: ITEM_H, offset: ITEM_H * index, index });
@@ -692,6 +692,24 @@ class VocaPlayPage extends React.Component {
     }
 
 
+    _share = () => {
+        const { autoPlayTimer, bgPath } = this.props.vocaPlay
+        if (autoPlayTimer) {
+            BackgroundTimer.clearTimeout(autoPlayTimer);
+            this.props.changePlayTimer(0);
+            NotificationManage.pause((e) => {
+                console.log(e)
+            }, () => null);
+        }
+        const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
+            require('../../../image/play_bg.jpg')
+        // 打开分享面板
+        ShareTemplate.show({
+            commonModal: this.props.app.commonModal,
+            bgSource: imgSource,
+            renderContentView: this._renderShareContentView()
+        })
+    }
 
     _renderShareContentView = () => {
         let { showWordInfos } = this.props.vocaPlay;
@@ -717,6 +735,7 @@ class VocaPlayPage extends React.Component {
 
 
 
+
     render() {
         let { task, themeId, themes, showWordInfos, bgPath } = this.props.vocaPlay;
         let name = task.playName
@@ -727,7 +746,11 @@ class VocaPlayPage extends React.Component {
         }
 
         this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes
-        this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
+        if (this.finishedTimes + 1 < this.totalTimes) {
+            this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
+        }
+
+
 
         const contentHeight = height - STATUSBAR_HEIGHT - 260
 
@@ -758,14 +781,7 @@ class VocaPlayPage extends React.Component {
                     centerComponent={{ text: task.taskOrder ? name : '未选择', style: gstyles.lg_white_bold }}
                     rightComponent={this.isStudyMode ?
                         <Text style={{ color: '#FFF', fontSize: 16 }}>{`${this.finishedTimes + 1}/${this.totalTimes}`}</Text> :
-                        <AliIcon name='fenxiang' size={26} color='#FFF' onPress={() => {
-                            // 打开分享面板
-                            ShareTemplate.show({
-                                commonModal: this.props.app.commonModal,
-                                bgSource: imgSource,
-                                renderContentView: this._renderShareContentView()
-                            })
-                        }} />}
+                        <AliIcon name='fenxiang' size={26} color='#FFF' onPress={this._share} />}
                     containerStyle={{
                         backgroundColor: '#FCFCFC00',
                         borderBottomColor: '#FCFCFC00',

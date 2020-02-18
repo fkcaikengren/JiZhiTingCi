@@ -19,6 +19,7 @@ const shareDir = fs.dirs.DocumentDir + '/' + SHARE_DIR
 
 
 
+
 /**
  * 关于CommonModal的展示模板
  */
@@ -92,18 +93,18 @@ export default class ShareTemplate {
                     containerStyle={styles.sharePanel}
                     share={async () => {
                         let { imageUrl } = getContentState()
+                        //要相册权限
+                        await _util.checkPermission()
                         if (!imageUrl) {
                             const uri = await this.viewShot.capture() //保存截图
                             const filename = uri.replace(/.+cache\/(.+\.[a-z]+)/, '$1')
                             const originPath = CacheDir + filename
-                            imageUrl = shareDir + filename
+                            imageUrl = fs.dirs.PictureDir + '/' + filename
                             await RNFetchBlob.fs.cp(originPath, imageUrl)
                             setContentState({
                                 imageUrl: imageUrl,
                             })
                         }
-                        //要相册权限
-                        await _util.checkPermission()
                         return {
                             type: 'imageUrl', //分享纯图片imageUrl
                             imageUrl: imageUrl

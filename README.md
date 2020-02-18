@@ -898,9 +898,9 @@ yarn add react-native-qq
 react-native link react-native-qq
 ```
 
-issue: 【fixed】**该库在分享纯图片时需要修改**
+【必读参考】： https://www.jianshu.com/p/a493f6f92b34 
 
-参考： https://www.jianshu.com/p/a493f6f92b34 
+issue: 【fixed】分享纯图片时模糊
 
 //修改QQModule.java   把下面的：
 
@@ -913,20 +913,41 @@ if (data.hasKey(RCTQQShareImageUrl)){
 修改为：
 
 ```js
- if (!type.equals(RCTQQShareTypeImage)){
+//代码移动到函数最上方---start
+String type = RCTQQShareTypeNews;
+if (data.hasKey(RCTQQShareType)) {
+    type = data.getString(RCTQQShareType);
+}
+//代码移动到函数最上方---end
+
+//修改--start
+if (!type.equals(RCTQQShareTypeImage)){
    if (data.hasKey(RCTQQShareImageUrl)){
  	bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL,data.getString(RCTQQShareImageUrl));
    }
  }
+//修改--end
 ```
 
-issue: App如果没有文件读写权限则无法唤起QQ分享
+issue:【fixed】 分享的纯图片为空
 
+解决：文件路径不正确，不能使用应用程序下的目录，最后使用
+
+issue: 【fixed】App如果没有文件读写权限则无法唤起QQ分享
+
+解决：使用react-native库的PermissionsAndroid获取权限
+
+issue:【todo】QQ未安装判断
+
+解决：在react-native-qq的index.js文件中添加
+
+```js
+export function isQQInstalledAction() {
+    return QQAPI.isQQInstalled().then((res) => {
+        () => waitForResponse("QQAuthorizeResponse")
+    })
+}
 ```
-
-```
-
-
 
 
 

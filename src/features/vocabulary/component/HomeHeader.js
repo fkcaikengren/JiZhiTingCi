@@ -52,7 +52,6 @@ export default class HomeHeader extends Component {
 
 
   onScroll = (e) => {
-    console.log(e.nativeEvent.contentOffset.y)
     this.state.shift.setValue(e.nativeEvent.contentOffset.y);
 
   }
@@ -99,15 +98,15 @@ export default class HomeHeader extends Component {
 
   _downloadPackage = () => {
     // 离线下载词库资源
-    this.props.app.confirmModal.show('是否下载离线包(40M)？', null, () => {
-      const { bookId, bookName } = this.props.plan.plan
+    const { bookId, bookName, packageSize, packageUrl } = this.props.plan.plan
+    this.props.app.confirmModal.show(`是否下载离线包(${packageSize}M)？`, null, () => {
       //开始下载
       DownloadTemplate.show({
         commonModal: this.props.app.commonModal,
-        title: '离线包下载中...(40M)',
+        title: `离线包下载中...(${packageSize}M)`,
         modalHeight: 240,
         primaryDir: VOCABULARY_DIR,
-        filePath: '/resources/test.zip',
+        filePath: packageUrl,
         onUnzipPress: () => {
           this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
         },
@@ -116,8 +115,9 @@ export default class HomeHeader extends Component {
             key: 'resourcePackages',
             id: bookId,
             data: {
+              packageId: bookId,
               packageName: bookName,
-              packageSize: 40
+              packageSize: packageSize
             },
           }).then(_ => this.setState({ showDownload: false }))
         }

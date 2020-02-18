@@ -9,6 +9,8 @@ const defaultState = {
         bookId: null,
         bookName: null,
         bookCoverUrl: null,
+        packageSize: 0,
+        packageUrl: null,
         taskCount: 0,
         taskWordCount: 0,       //每日新学词数
         reviewWordCount: 0,      //每日复习词数
