@@ -3,12 +3,14 @@ import { StyleSheet, Text, View, Image, Dimensions, TouchableNativeFeedback } fr
 import Swiper from 'react-native-swiper'
 import { PropTypes } from 'prop-types'
 import LinearGradient from 'react-native-linear-gradient';
+const Spinner = require('react-native-spinkit');
 import AudioService from '../../../common/AudioService'
 import * as CConstant from "../../../common/constant";
 import { BASE_URL } from "../../../common/constant";
 import { store } from '../../../redux/store';
+import FileService from '../../../common/FileService';
+import gstyles from '../../../style';
 const { width } = Dimensions.get('window')
-
 
 
 const styles = StyleSheet.create({
@@ -66,16 +68,23 @@ export default class ExampleCarousel extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loadQueue: [0, 0, 0]
+      loadQueue: new Array(this.props.examples.length).fill(0),
+      imgSources: new Array(this.props.examples.length).fill(null)
     }
     this.audioService = AudioService.getInstance()
+    this.fileService = FileService.getInstance()
     this.curIndex = 0
     this.shouldPlay = true
   }
 
 
+
   shouldComponentUpdate(nextProps, nextState) {
+
     if (this.state.loadQueue !== nextState.loadQueue) {
+      return true
+    }
+    if (this.state.imgSources !== nextState.imgSources) {
       return true
     }
     if (this.props.examples === nextProps.examples) {
@@ -90,13 +99,27 @@ export default class ExampleCarousel extends Component {
 
   }
 
-  _loadHandle(i) {
+  _loadHandle = async (i, pic_url) => {
     let loadQueue = this.state.loadQueue
+
     loadQueue[i] = 1
+    //下载（缓存）图片
+    const imgSource = await this.fileService.load(CConstant.VOCABULARY_DIR, pic_url)
+    const imgSources = this.state.imgSources.map((source, index) => {
+      if (i === index) {
+        return imgSource
+      } else {
+        return source
+      }
+    })
+    console.log(imgSource)
     this.setState({
-      loadQueue
+      loadQueue,
+      imgSources
     })
   }
+
+
   _renderText = (text) => {
     const s = text.split(/<em>|<\/em>/)
     return <Text style={{ color: '#FFF', fontSize: 14, fontWeight: '500' }}>
@@ -128,6 +151,8 @@ export default class ExampleCarousel extends Component {
         dotColor='#FFFFFFAA'
         activeDotColor='#FFE957'
         loop={false}
+        loadMinimal
+        loadMinimalSize={1}
         onIndexChanged={(i) => {
           this.curIndex = i
           if (!this.shouldPlay) {
@@ -139,12 +164,25 @@ export default class ExampleCarousel extends Component {
             })
           }
         }}
-        loadMinimal loadMinimalSize={1} >
+      >
         {
           this.props.examples.map((item, i) => {
             return <View key={i.toString()} style={styles.slide}>
-              <Image style={styles.image} source={{ uri: BASE_URL + item.pic_url }} />
-
+              <View>
+                <Image style={styles.image}
+                  onLoad={() => this._loadHandle(i, item.pic_url)}
+                  source={this.state.imgSources[i]} />
+              </View>
+              {this.state.loadQueue[i] == 0 &&
+                <View style={[gstyles.c_center, styles.image]}>
+                  <Spinner
+                    isVisible={true}
+                    size={40}
+                    type={'Circle'}
+                    color={gstyles.mainColor}
+                  />
+                </View>
+              }
               <TouchableNativeFeedback onPress={() => {
                 this.audioService.playSound({
                   pDir: CConstant.VOCABULARY_DIR,

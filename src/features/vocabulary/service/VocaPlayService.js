@@ -1,5 +1,5 @@
 
-import { BackHandler } from 'react-native'
+import RNExitApp from 'react-native-exit-app';
 import BackgroundTimer from 'react-native-background-timer'
 import AudioService from '../../../common/AudioService'
 import { store } from '../../../redux/store'
@@ -21,7 +21,7 @@ export default class VocaPlayService {
 
         //监听关闭通知控制条
         NotificationManage.onClose((evt) => {
-            BackHandler.exitApp();
+            RNExitApp.exitApp();
         })
 
         //监听通知控制条的暂停
@@ -32,7 +32,7 @@ export default class VocaPlayService {
                 source = this.stateRef
             }
             const { autoPlayTimer } = source
-            this.changePlayTimer(0)  //todo:要不要changePlayTimer
+            this.changePlayTimer(0)
             BackgroundTimer.clearTimeout(autoPlayTimer);
         })
 

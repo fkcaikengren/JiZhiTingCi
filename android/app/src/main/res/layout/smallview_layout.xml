@@ -21,7 +21,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="16dp"
             android:layout_weight="2"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher_round" />
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,14 +39,13 @@
                 android:id="@+id/small_word"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
-                android:text="limit"
+                android:text="aitingci.com"
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textColor="#303030"
                 android:textSize="16dp"
                 android:layout_below="@id/small_name"/>
         </RelativeLayout>
-
 
         <LinearLayout
             android:id="@+id/small_bottomBar"
@@ -58,13 +57,6 @@
             android:padding="10dp"
             android:layout_below="@id/small_topBar">
 
-            <ImageButton
-                android:id="@+id/small_playBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:src="@drawable/ic_play" />
             <ImageButton
                 android:id="@+id/small_closeBtn"
                 android:layout_width="0dp"

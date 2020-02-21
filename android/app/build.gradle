@@ -182,6 +182,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_netinfo')
     implementation project(':react-native-view-shot')
     implementation project(':react-native-exit-app')
     implementation project(':react-native-background-timer')

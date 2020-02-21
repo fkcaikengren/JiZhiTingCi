@@ -47,6 +47,13 @@ class TestVocaTranPage extends Component {
         console.disableYellowBox = true
     }
 
+    _playAudio = (pronUrl) => {
+        AudioService.getInstance().playSound({
+            pDir: CConstant.VOCABULARY_DIR,
+            fPath: pronUrl
+        })
+    }
+
     _renderContent = (taskWord, wordInfo) => {
         const word = wordInfo.word
         const pronUrl = wordInfo.pron_url
@@ -61,11 +68,7 @@ class TestVocaTranPage extends Component {
                 <View style={styles.phoneticView}>
                     <Text>{`${pronTypeText} ${phonetic}`}</Text>
                     <AliIcon name='shengyin' size={26} color='#555' style={{ marginLeft: 5 }} onPress={() => {
-                        AudioService.getInstance().playSound({
-                            pDir: CConstant.VOCABULARY_DIR,
-                            fPath: pronUrl
-                        })
-
+                        this._playAudio(pronUrl)
                     }} />
                 </View>
             }
@@ -79,7 +82,9 @@ class TestVocaTranPage extends Component {
                 {...this.props}
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.WORD_TRAN}
+                playAudio={this._playAudio}
                 renderContent={this._renderContent}
+                testTime={7}
             />
         )
     }

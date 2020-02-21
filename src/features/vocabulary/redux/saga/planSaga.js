@@ -7,7 +7,9 @@ import { LOAD_TASKS_SUCCEED, LOAD_TASKS_FAIL, LOAD_TASKS_START } from '../action
 import {
     CHANGE_VOCA_BOOK, CHANGE_VOCA_BOOK_START,
     CHANGE_VOCA_BOOK_SUCCEED, CHANGE_VOCA_BOOK_FAIL,
-    MODIFY_LAST_LEARN_DATE, MODIFY_PLAN, MODIFY_PLAN_START, MODIFY_PLAN_SUCCEED, MODIFY_PLAN_FAIL, SYN_ALL_LEARNED_DAYS, SYN_ALL_LEARNED_DAYS_START, SYN_ALL_LEARNED_DAYS_SUCCEED, SYN_FINISH_DAYS, SYN_FINISH_DAYS_SUCCEED, SYN_FINISH_DAYS_START,
+    MODIFY_LAST_LEARN_DATE, MODIFY_PLAN, MODIFY_PLAN_START, MODIFY_PLAN_SUCCEED, MODIFY_PLAN_FAIL,
+    SYN_ALL_LEARNED_DAYS, SYN_ALL_LEARNED_DAYS_START, SYN_ALL_LEARNED_DAYS_SUCCEED, SYN_ALL_LEARNED_DAYS_FAIL,
+    SYN_FINISH_DAYS, SYN_FINISH_DAYS_START, SYN_FINISH_DAYS_SUCCEED, SYN_FINISH_DAYS_FAIL
 } from '../action/planAction';
 import { CLEAR_PLAY } from '../action/vocaPlayAction';
 import VocaTaskService from '../../service/VocaTaskService';
@@ -112,19 +114,26 @@ export function* modifyPlan(action) {
 export function* syncAllLearnedDays(action) {
     const { allLearnedDays } = action.payload
     console.log('--saga---allLearnedDays:' + allLearnedDays)
-    yield put({
-        type: SYN_ALL_LEARNED_DAYS_START, payload: {
-            allLearnedDays,
-            learnedTodayFlag: _util.getDayTime(0)
+    try {
+        yield put({
+            type: SYN_ALL_LEARNED_DAYS_START, payload: {
+                allLearnedDays,
+                learnedTodayFlag: _util.getDayTime(0)
+            }
+        })
+        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        const res = yield myHttp.post('/statistic/modifyAllLearnedDays', {
+            allLearnedDays
+        })
+        if (res.status === 200) {
+            console.log(res.data)
+            yield put({ type: SYN_ALL_LEARNED_DAYS_SUCCEED })
+        } else {
+            yield put({ type: SYN_ALL_LEARNED_DAYS_FAIL })
         }
-    })
-    const myHttp = createHttp(null, { shouldRefreshToken: true })
-    const res = yield myHttp.post('/statistic/modifyAllLearnedDays', {
-        allLearnedDays
-    })
-    if (res.status === 200) {
-        console.log(res.data)
-        yield put({ type: SYN_ALL_LEARNED_DAYS_SUCCEED })
+    } catch (err) {
+        console.log(err)
+        yield put({ type: SYN_ALL_LEARNED_DAYS_FAIL })
     }
 }
 /** 统计和上传 allLearnedCount、 finishDays */
@@ -138,12 +147,6 @@ export function* synFinishDays(action) {
                 allLearnedCount: action.payload.allLearnedCount
             }
         })
-        const myHttp = createHttp(null, { shouldRefreshToken: true })
-        //1.同步已学单词总数
-        const res1 = yield myHttp.post('/statistic/modifyAllLearnedCount', {
-            allLearnedCount: action.payload.allLearnedCount,
-        })
-
         //获取全部打卡数据
         let allAddedFinishDays = yield Storage.getAllDataForKey('addedFinishDays')
         allAddedFinishDays = allAddedFinishDays.concat(fDates[0])
@@ -153,6 +156,12 @@ export function* synFinishDays(action) {
             id: fDates[0],
             data: fDates[0]
         });
+
+        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        //1.同步已学单词总数
+        const res1 = yield myHttp.post('/statistic/modifyAllLearnedCount', {
+            allLearnedCount: action.payload.allLearnedCount,
+        })
         //2.同步打卡天数
         const res2 = yield myHttp.post('/statistic/addFinishDays', {
             addedFinishDays: allAddedFinishDays,
@@ -168,6 +177,7 @@ export function* synFinishDays(action) {
                 id: fDates[0],
                 data: fDates[0]
             });
+            yield put({ type: SYN_FINISH_DAYS_FAIL })
         }
     } catch (err) {
         Storage.save({
@@ -175,10 +185,10 @@ export function* synFinishDays(action) {
             id: fDates[0],
             data: fDates[0]
         });
+        yield put({ type: SYN_FINISH_DAYS_FAIL })
     }
 
-    // allFinishDays notSynFinishDays
-    // const myHttp = createHttp(null, { shouldRefreshToken: true })
+
 }
 
 

@@ -51,6 +51,7 @@ import {
     MODIFY_QQ_SUCCEED,
     MODIFY_QQ
 } from '../action/mineAction'
+import httpBaseConfig from '../../../../common/httpBaseConfig'
 
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
@@ -174,8 +175,8 @@ function* modifyAvatar(action) {
     store.getState().app.loader.show("上传中", DURATION.FOREVER)
     const { fileName, type, data } = action.payload.result
     yield put({ type: MODIFY_AVATAR_START })
-    //上传
-    const res = yield RNFetchBlob.fetch('POST', 'http://129.211.71.111:9000/m/user/modifyAvatar', {
+    //上传 
+    const res = yield RNFetchBlob.fetch('POST', httpBaseConfig.baseURL + '/user/modifyAvatar', {
         Authorization: action.payload.accessToken,
         'Content-Type': 'multipart/form-data',
     }, [

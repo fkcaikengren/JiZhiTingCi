@@ -35,7 +35,7 @@ export function* loadTasks(action) {
         const learnedWordCount = vts.countLearnedWords()
         console.log('learnedWordCount===========================' + learnedWordCount)
         yield put({ type: CHANGE_LEARNED_WORD_COUNT, payload: { learnedWordCount } })
-        //加载成功后，修改上次学习日期lastLearnDate
+        //加载成功后，修改上次学习日期lastLearnDate 
         yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
     } catch (err) {
         console.log(err)
@@ -107,8 +107,8 @@ export function* syncTask(action) {
         }
         yield put({ type: SYNC_TASK_FAIL })
     }
-
 }
+
 
 
 /**watch saga */

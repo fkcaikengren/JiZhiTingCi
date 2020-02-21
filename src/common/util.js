@@ -1,8 +1,11 @@
-import * as CConstant from "./constant";
-import { NavigationActions, StackActions } from "react-navigation";
+
 import { Platform, PermissionsAndroid } from 'react-native'
+import { NavigationActions, StackActions } from "react-navigation";
+import NetInfo from "@react-native-community/netinfo"
+import * as CConstant from "./constant";
 import createHttp from "./http";
 import { store } from '../redux/store'
+
 
 export default class _util {
 
@@ -44,17 +47,35 @@ export default class _util {
      * @return 时间准确返回true,否则返回false
      */
     static async checkLocalTime() {
+
         //如果本地时间不对，提示修改手机时间
+        const state = await NetInfo.fetch()
+        if (!state.isConnected) {//未联网不检查
+            return true
+        }
         const myHttp = createHttp(null, { shouldRefreshToken: true })
         const res = await myHttp.get('/timestamp')
         const d = res.data.timestamp - Date.now()
         console.log('时间差：  ' + d)
-        if (d >= -10000 && d <= 10000) { //相差在10秒
+        if (d >= -30000 && d <= 30000) { //相差在30秒
             return true
         } else {
-            // store.getState().app.toast.show('手机时间不准确，请调整时间后重试！', 3000)
+            store.getState().app.toast.show('手机时间不准确，请调整时间!', 2000)
             return false
         }
+    }
+
+    /**
+     * 检查网络
+     */
+    static checkNet = (doAction) => {
+        NetInfo.fetch().then(async (state) => {
+            if (state.isConnected) {
+                doAction()
+            } else {
+                store.getState().app.toast.show('请检查网络！', 1000)
+            }
+        })
     }
 
     /**

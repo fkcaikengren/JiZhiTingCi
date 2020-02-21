@@ -1,6 +1,5 @@
 
 import Sound from 'react-native-sound'
-import * as CConstant from './constant'
 import FileService from "./FileService";
 export default class AudioService {
 
@@ -27,6 +26,7 @@ export default class AudioService {
    * @param failPlay
    */
   playSound = ({ pDir, fPath }, startPlay = null, finishPlay = null, failPlay = null) => {
+
     //先判断本地是否存在
     this.fileService.load(pDir, fPath)
       .then(audioPath => {

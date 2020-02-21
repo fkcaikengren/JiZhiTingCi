@@ -1,151 +1,173 @@
 <!DOCTYPE html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>reading</title>
-        <meta name="description" content="">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <style type="text/css">
-            @font-face{
-                font-family: 'MONACO'; 
-                src: url('../fonts/MONACO.TTF');
-            }
-            @media screen and (min-width: 320px) {
-                html {font-size: 14px;}
-            }
 
-            @media screen and (min-width: 360px) {
-                html {font-size: 16px;}
-            }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>reading</title>
+    <meta name="description" content="">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style type="text/css">
+        @font-face {
+            font-family: 'MONACO';
+            src: url('../fonts/MONACO.TTF');
+        }
 
-            @media screen and (min-width: 400px) {
-                html {font-size: 18px;}
+        @media screen and (min-width: 320px) {
+            html {
+                font-size: 14px;
             }
+        }
 
-            @media screen and (min-width: 440px) {
-                html {font-size: 20px;}
+        @media screen and (min-width: 360px) {
+            html {
+                font-size: 16px;
             }
+        }
 
-            @media screen and (min-width: 480px) {
-                html {font-size: 22px;}
+        @media screen and (min-width: 400px) {
+            html {
+                font-size: 18px;
             }
+        }
 
-            @media screen and (min-width: 640px) {
-                html {font-size: 28px;}
+        @media screen and (min-width: 440px) {
+            html {
+                font-size: 20px;
             }
+        }
 
+        @media screen and (min-width: 480px) {
+            html {
+                font-size: 22px;
+            }
+        }
 
-            *,
-            ::before,
-            ::after{
-                margin:0;
-                padding:0;
-                /*默认清除webkit点击高亮的效果，透明的*/
-                -webkit-tap-highlight-color: transparent;
-                /*设置所有的以边框开始计算宽度，默认是以内容开始计算宽度*/
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
+        @media screen and (min-width: 640px) {
+            html {
+                font-size: 28px;
             }
-
-
-            html{
-                font-family:'MONACO';
-                color: #303030;
-                overflow-x: hidden; 
-                overflow-y: auto;
-            }
-            #container{
-                /* 布局 */
-                display:flex;
-                -webkit-display:flex;
-                flex-flow:row wrap;
-                -webkit-flex-flow: row wrap;
-                flex-grow: 1;
-                -webkit-flex-grow: 1;
-                justify-content: space-between;
-                -webkit-justify-content: space-between;
-               
-                /* 字体 */
-                text-align: justify;
-                line-height: 1.8rem;
-                vertical-align:bottom;
-                padding: 16px;
-            }
-            .space{
-                margin-right: 6px;
-            }
-            .underline{
-                color:#555;
-                padding-left: 4px;
-                padding-right: 4px;
-                border-bottom:1px solid #555;
-            }
-            .selectedQuestion{
-                color:#1890FF;
-            }
-            .keyWord{
-                color:#F2753F;
-            }
-            .searchedWord{
-                color:#FFFFFF;
-                background-color:#F2753F;
-                border-radius: 3px;
-            }
+        }
 
 
-            /* 左对齐 */
-            /* 两端对齐 */
-            .horizontal-start{
-                justify-content: flex-start;
-                -webkit-justify-content: flex-start;
-                
-            }
-            .horizontal-around{
-                justify-content: space-around;
-                -webkit-justify-content: space-around;
-            }
-            .vertical-start{
-                align-items: flex-start;
-                -webkit-align-items: flex-start;
-            }
-            .vertical-center{
-                align-items: center;
-                -webkit-align-items: center;
-            }
+        *,
+        ::before,
+        ::after {
+            margin: 0;
+            padding: 0;
+            /*默认清除webkit点击高亮的效果，透明的*/
+            -webkit-tap-highlight-color: transparent;
+            /*设置所有的以边框开始计算宽度，默认是以内容开始计算宽度*/
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
 
 
-        </style>
+        html {
+            font-family: 'MONACO';
+            color: #303030;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
 
-        <script src="./js/zepto.min.js" type="text/javascript"></script>
-    </head>
-    <body>
-        <div id='container'>
-        </div>
-    </body>
-    <script src="./js/article.js" type="text/javascript"></script>
-    <script>
-        //页面加载完毕
-        Zepto(function($){
-            window.ReactNativeWebView.postMessage(JSON.stringify({command:'initStart', payload:null }));
+        #container {
+            /* 布局 */
+            display: flex;
+            -webkit-display: flex;
+            flex-flow: row wrap;
+            -webkit-flex-flow: row wrap;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+            align-items: center;
+            -webkit-align-items: center;
 
-//             var text= `##As it is, sleep is so undervalued that getting by on fewer hours has become a badge of honor. Plus, we live in a culture that 36点击答题 to the late-nighter, from 24-hour grocery stores to online shopping sites that never close. It’s no surprise, then, that more than half of American adults don’t get the 7 to 9 hours of shut-eye every night as 37点击答题 by sleep experts.
-// ##Whether or not we can catch up on sleep—on the weekend, say —is a hotly 38点击答题 topic among sleep researchers. The latest evidence suggests that while it isn’t 39点击答题 , it might help. When Liu, the UCLA sleep researcher and professor of medicine, brought 40点击答题 sleep-restricted people into the lab for a weekend of sleep during which they logged about 10 hours per night, they showed 41点击答题 in the ability of insulin（胰岛素） to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep 42点击答题 causes, which is encouraging, given how many adults don’t get the hours they need each night. Still, Liu isn’t 43点击答题 to endorse the habit of sleeping less and making up for it later.
-// ##Sleeping pills, while helpful for some, are not 44点击答题 an effective remedy either. “A sleeping pill will 45点击答题 one area of the brain, but there’s never going to be a perfect sleeping pill, because you couldn’t really replicate（复制） the different chemicals moving in and out of different parts of the brain to go through the different stages of sleep,” says Dr. Nancy Collop, director of the Emory University Sleep Center.
-// `
-//             var keywords=[  "hotly",   "presumption",    "remedy", "chemical", "adult" ]
-//             var  color = "#F7F5D6"
-//             var size  = "1rem"
-//             initPage(text, keywords, color, size)
+            /* 字体 */
+            text-align: left;
+            line-height: 1.8rem;
+            vertical-align: bottom;
+            padding: 16px;
+        }
 
-            document.getElementsByTagName('body').onbeforeunload = function(){
-                //退出页面
-                window.ReactNativeWebView.postMessage(JSON.stringify({command:'exit', payload:null }));
-            }
+        .space {
+            margin-right: 6px;
+        }
 
-        })
-        
-        
-    </script>
+        .underline {
+            color: #555;
+            padding-left: 4px;
+            padding-right: 4px;
+            border-bottom: 1px solid #555;
+        }
+
+        .selectedQuestion {
+            color: #1890FF;
+        }
+
+        .keyWord {
+            color: #F2753F;
+        }
+
+        .searchedWord {
+            color: #FFFFFF;
+            background-color: #F2753F;
+            border-radius: 3px;
+        }
+
+
+        /* 左对齐 */
+        /* 两端对齐 */
+        .horizontal-start {
+            justify-content: flex-start;
+            -webkit-justify-content: flex-start;
+
+        }
+
+        .horizontal-around {
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+        }
+
+        .vertical-start {
+            align-items: flex-start;
+            -webkit-align-items: flex-start;
+        }
+
+        .vertical-center {
+            align-items: center;
+            -webkit-align-items: center;
+        }
+    </style>
+
+    <script src="./js/zepto.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id='container'>
+    </div>
+</body>
+<script src="./js/article.js" type="text/javascript"></script>
+<script>
+    //页面加载完毕
+    Zepto(function ($) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ command: 'initStart', payload: null }));
+
+        //         var text = `##As it is, sleep is so undervalued that getting by on fewer hours has become a badge of honor. Plus, we live in a culture that 36点击答题 to the late-nighter, from 24-hour grocery stores to online shopping sites that never close. It’s no surprise, then, that more than half of American adults don’t get the 7 to 9 hours of shut-eye every night as 37点击答题 by sleep experts.
+        // ##Whether or not we can catch up on sleep—on the weekend, say —is a hotly 38点击答题 topic among sleep researchers. The latest evidence suggests that while it isn’t 39点击答题 , it might help. When Liu, the UCLA sleep researcher and professor of medicine, brought 40点击答题 sleep-restricted people into the lab for a weekend of sleep during which they logged about 10 hours per night, they showed 41点击答题 in the ability of insulin（胰岛素） to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep 42点击答题 causes, which is encouraging, given how many adults don’t get the hours they need each night. Still, Liu isn’t 43点击答题 to endorse the habit of sleeping less and making up for it later.
+        // ##Sleeping pills, while helpful for some, are not 44点击答题 an effective remedy either. “A sleeping pill will 45点击答题 one area of the brain, but there’s never going to be a perfect sleeping pill, because you couldn’t really replicate（复制） the different chemicals moving in and out of different parts of the brain to go through the different stages of sleep,” says Dr. Nancy Collop, director of the Emory University Sleep Center.
+        // `
+        //         var keywords = ["hotly", "presumption", "remedy", "chemical", "adult"]
+        //         var color = "#F7F5D6"
+        //         var size = "1rem"
+        //         initPage(text, keywords, color, size)
+
+        document.getElementsByTagName('body').onbeforeunload = function () {
+            //退出页面
+            window.ReactNativeWebView.postMessage(JSON.stringify({ command: 'exit', payload: null }));
+        }
+
+    })
+
+
+</script>
 
 </html>

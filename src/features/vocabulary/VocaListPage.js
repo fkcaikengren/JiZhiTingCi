@@ -12,6 +12,7 @@ import styles from './VocaListStyle'
 import VocaTaskService from './service/VocaTaskService'
 import VocaUtil from "./common/vocaUtil";
 import WordCell from "./component/WordCell";
+import { COMMAND_MODIFY_PASSED } from "../../common/constant";
 
 const ITEM_HEIGHT = styles.item.height;         //item的高度
 const HEADER_HEIGHT = styles.headerView.height; //分组头部的高度
@@ -29,6 +30,33 @@ export default class VocaListPage extends Component {
   }
 
   componentWillMount() {
+    this._init()
+  }
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { data, checked, isVocaModalOpen } = this.state
+    const { onEdit } = this.props.vocaList
+    if (onEdit == true && nextProps.vocaList.onEdit == false) {
+      //清理check
+      this._cancleCheck()
+      return false
+    }
+
+    if (this.props.index !== this.props.pageIndex) {
+      return false
+    }
+
+    //刷新的因素：data,checked,onEdit
+    if (data === nextState.data && checked === nextState.checked && onEdit === nextProps.vocaList.onEdit) {
+      return false
+    } else {
+      return true
+    }
+
+  }
+
+  _init = () => {
     //获取数据
     let data = []
     switch (this.props.type) {
@@ -57,29 +85,6 @@ export default class VocaListPage extends Component {
       data: data,
       stickyHeaderIndices: headers
     });
-  }
-
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { data, checked, isVocaModalOpen } = this.state
-    const { onEdit } = this.props.vocaList
-    if (onEdit == true && nextProps.vocaList.onEdit == false) {
-      //清理check
-      this._cancleCheck()
-      return false
-    }
-
-    if (this.props.index !== this.props.pageIndex) {
-      return false
-    }
-
-    //刷新的因素：data,checked,onEdit
-    if (data === nextState.data && checked === nextState.checked && onEdit === nextProps.vocaList.onEdit) {
-      return false
-    } else {
-      return true
-    }
-
   }
 
   // 取消check
@@ -138,9 +143,57 @@ export default class VocaListPage extends Component {
   };
 
 
-  _playBtn = () => {
-    if (this.props === Constant.PASS_LIST) {
 
+  _dealWords = () => {
+
+    if (this.props.type === Constant.PASS_LIST) {
+      const wordArr = []
+      const syncArr = []
+      let words = []
+      let taskOrder = null
+      for (let item of this.state.data) {
+        if (item.taskOrder !== taskOrder) {
+          //把之前的放入数组
+          if (taskOrder) {
+            wordArr.push({
+              taskOrder,
+              words
+            })
+          }
+          words = []
+          taskOrder = item.taskOrder
+        }
+        if (item.checked) {
+          words.push(item.word)
+          syncArr.push({
+            taskOrder: item.taskOrder,
+            word: item.word,
+            passed: false
+          })
+        }
+      }
+      if (taskOrder) {
+        wordArr.push({
+          taskOrder,
+          words
+        })
+      }
+      if (wordArr.length <= 0) {
+        this.props.toast.show('请选择单词', 1000)
+        return
+      }
+      //还原单词
+      if (this.vtService.dispassWords(wordArr)) {
+        //上传pass
+        this.props.syncTask({
+          command: COMMAND_MODIFY_PASSED,
+          data: syncArr
+        })
+        this.props.toast.show('还原Pass的单词成功', 1000)
+        this._init()
+      } else {
+        this.props.toast.show('还原Pass的单词失败', 1000)
+      }
     } else {
       const data = this.state.data.filter((item, index) => {
         if (item.checked === true) {
@@ -151,7 +204,7 @@ export default class VocaListPage extends Component {
       })
       const words = data.map((item, index) => item.word)
       if (words.length < Constant.MIN_PLAY_NUMBER) {
-        this.props.toast.show('当前选择不足5个，不可以播放哦')
+        this.props.toast.show('当前选择不足5个，不可以播放哦', 2000)
       } else {
         const virtualTask = VocaUtil.genVirtualTask(words, '来源：单词列表')
         // console.log(virtualTask)
@@ -231,23 +284,24 @@ export default class VocaListPage extends Component {
     const playIconColor = this.state.checked ? gstyles.mainColor : '#999'
     return (
       <View style={styles.container}>
-
-        {this.state.data.length > 0 &&
-          <FlatList
-            data={this.state.data}
-            renderItem={this._renderItem}
-            keyExtractor={this._keyExtractor}
-            stickyHeaderIndices={this.state.stickyHeaderIndices}
-            getItemLayout={this._getItemLayout}
-            extraData={this.props.vocaList.onEdit}
-          />
-        }
-        {this.state.data.length <= 0 &&
-          <View style={[gstyles.c_center, { flex: 1 }]}>
-            <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
-            <Text style={gstyles.md_black}>{noData}</Text>
-          </View>
-        }
+        <View style={{ flex: 1, marginBottom: this.props.vocaList.onEdit ? 60 : 0 }}>
+          {this.state.data.length > 0 &&
+            <FlatList
+              data={this.state.data}
+              renderItem={this._renderItem}
+              keyExtractor={this._keyExtractor}
+              stickyHeaderIndices={this.state.stickyHeaderIndices}
+              getItemLayout={this._getItemLayout}
+              extraData={this.props.vocaList.onEdit}
+            />
+          }
+          {this.state.data.length <= 0 &&
+            <View style={[gstyles.c_center, { flex: 1 }]}>
+              <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+              <Text style={gstyles.md_black}>{noData}</Text>
+            </View>
+          }
+        </View>
         {/* 按钮 */}
         {this.props.vocaList.onEdit &&
           <CardView
@@ -261,7 +315,7 @@ export default class VocaListPage extends Component {
               icon={<AliIcon name={iconName} size={26} color={playIconColor} style={{ marginRight: 10 }} />}
               title={title}
               titleStyle={[gstyles.md_black, { fontWeight: '500', lineHeight: 24 }]}
-              onPress={this._playBtn}
+              onPress={this._dealWords}
               containerStyle={{ width: '100%' }}
             >
             </Button>

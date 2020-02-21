@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         borderTopColor: '#EFEFEF',
         borderTopWidth: 1,
+        paddingVertical: 2
     },
     imgStyle: {
         width: 58,
@@ -104,9 +105,23 @@ export default class HomeFooter extends React.Component {
                         </View>
                         <View style={gstyles.r_end}>
                             <AliIcon name={autoPlayTimer === 0 ? 'bofang1' : 'zanting1'} size={22} color='#404040' style={{ paddingRight: 20 }} onPress={() => {
-                                this.togglePlay();
+                                if (this.vocaPlayService.changeCurIndexAndAutoTimer) {
+                                    this.togglePlay();
+                                } else {
+                                    this.props.navigation.navigate('VocaPlay', { mode: Constant.NORMAL_PLAY });
+                                }
                             }} />
-                            <AliIcon name='xiayige' size={20} color='#404040' style={{ paddingRight: 20 }} />
+                            <AliIcon name='xiayige' size={20} color='#404040' style={{ paddingRight: 20 }} onPress={() => {
+                                if (this.vocaPlayService.changeCurIndexAndAutoTimer) {
+                                    this.props.changePlayListIndex({
+                                        changeType: 1,
+                                        playListIndex: null
+                                    })
+                                    this.vocaPlayService.autoplay(0)
+                                } else {
+                                    this.props.navigation.navigate('VocaPlay', { mode: Constant.NORMAL_PLAY });
+                                }
+                            }} />
                         </View>
                     </Row>
                 </Col>

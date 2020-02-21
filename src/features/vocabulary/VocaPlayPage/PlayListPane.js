@@ -12,9 +12,11 @@ import VocaUtil from '../common/vocaUtil';
 import { store } from '../../../redux/store'
 import * as Constant from '../common/constant';
 import VocaGroupService from '../service/VocaGroupService';
+import NotificationManage from '../../../modules/NotificationManage';
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
+
 
 /**
  * 关于CommonModal的展示模板
@@ -71,9 +73,9 @@ export default class PlayListPane extends Component {
 
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             autoplay(0)
-            // NotificationManage.play((e)=>{
-            //     console.log(e)
-            // },()=>null);
+            NotificationManage.play((e) => {
+                console.log(e)
+            }, () => null);
             //随机切换主题
             changeTheme(VocaUtil.randomNum(0, themes.length - 1))
         }}>
@@ -133,9 +135,9 @@ export default class PlayListPane extends Component {
             })
             //顺序执行的缘故，_autoplay里面的wordCount无法立即刷新
             autoplay(0)
-            // NotificationManage.play((e)=>{
-            //     console.log(e)
-            // },()=>null);
+            NotificationManage.play((e) => {
+                console.log(e)
+            }, () => null);
             //随机切换主题
             changeTheme(VocaUtil.randomNum(0, themes.length - 1))
         }}>
@@ -169,9 +171,9 @@ export default class PlayListPane extends Component {
         const { getContentState, hide } = store.getState().app.commonModal
         return () => {
             const { pageIndex, playTasks, playGroups, isLoadingTasks, isLoadingGroups } = getContentState()
-            return <View style={[gstyles.c_start, { width: '100%', height: 440 }]}>
+            return <View style={[gstyles.c_start, { width: '100%', height: height - 200 }]}>
                 <View style={[styles.modalHeader, gstyles.r_center]}>
-                    <Text style={gstyles.md_white}>{pageIndex === 0 ? plan.bookName : '生词'}</Text>
+                    <Text style={gstyles.md_white}>{pageIndex === 1 ? '生词' : plan.bookName}</Text>
                 </View>
                 <Swiper
                     style={styles.listSize}
@@ -188,7 +190,7 @@ export default class PlayListPane extends Component {
                     {/* 任务播放列表 */}
                     <View style={[styles.listSize, gstyles.c_start]}>
                         {isLoadingTasks &&
-                            <Text style={[gstyles.md_white, { marginTop: 180 }]}>加载中...</Text>
+                            <Text style={[gstyles.md_white, { marginTop: (styles.listSize.height / 2) }]}>加载中...</Text>
                         }
                         {!isLoadingTasks && playTasks.length > 0 &&
                             <FlatList
@@ -225,11 +227,16 @@ export default class PlayListPane extends Component {
                         }
                     </View>
                 </Swiper>
-                <View style={styles.closeBtn}
-                    onStartShouldSetResponder={e => true}
-                    onResponderStart={e => hide()}>
-                    <Text style={gstyles.md_white}>关闭</Text>
-                </View>
+                <TouchableOpacity activeOpacity={0.7} style={{
+                    position: 'absolute',
+                    left: 0,
+                    bottom: 0,
+                }} onPress={hide}>
+                    <View style={styles.closeBtn}>
+                        <Text style={gstyles.md_white}>关闭</Text>
+                    </View>
+                </TouchableOpacity>
+
             </View>
         }
     }
@@ -249,12 +256,11 @@ export default class PlayListPane extends Component {
             playGroups: [],
             isLoadingGroups: true,
 
-
         })
         show({
             renderContent: this._renderPlayList(),
             modalStyle: {
-                height: 440,
+                height: height - 200,
                 borderTopLeftRadius: 12,
                 borderTopRightRadius: 12,
                 backgroundColor: '#808080EE',
@@ -303,7 +309,7 @@ const styles = StyleSheet.create({
     },
     listSize: {
         width: width,
-        height: 340
+        height: height - 300
     },
     taskItem: {
         width: '100%',
@@ -327,9 +333,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     closeBtn: {
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
         width: width,
         height: 40,
         ...gstyles.c_center

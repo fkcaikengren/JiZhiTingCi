@@ -67,13 +67,18 @@ const createHttp = (config, options = opt) => {
         if (options.showLoader) {
             store.getState().app.loader.close()
         }
-        // 统一处理错误
-        const { status, data } = err.response
-        const { errMsg } = data
-        if (status === 401) {    //accessToken无效、refreshToken无效、刷新token失败
-            logoutHandle()
+        if (err.response) {
+            // 统一处理错误
+            const { status, data } = err.response
+            const { errMsg } = data
+            if (status === 401) {    //accessToken无效、refreshToken无效、刷新token失败
+                logoutHandle()
+            }
+            store.getState().app.toast.show(errMsg, 2000)
+        } else {
+            //无网络-无响应
+            throw err
         }
-        store.getState().app.toast.show(errMsg, 2000)
         return err.response;
 
     });

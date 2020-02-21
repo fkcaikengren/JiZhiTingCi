@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Platform, NetInfo, View } from 'react-native'
+import { Platform, View } from 'react-native'
+import NetInfo from "@react-native-community/netinfo"
 import { connect } from "react-redux";
 import SplashScreen from 'react-native-splash-screen'
 import { DURATION } from 'react-native-easy-toast'
@@ -18,7 +19,7 @@ import VocaTaskService from '../vocabulary/service/VocaTaskService';
 import ArticleDao from '../reading/service/ArticleDao';
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
-const ShareQRUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/share/share_qr.png'
+const ShareQRUrl = 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/share/share_qr.jpg'
 
 class AuthLoadingPage extends Component {
 
@@ -60,9 +61,11 @@ class AuthLoadingPage extends Component {
                         extname = ".gif"
                     }
                     const res = await FileService.getInstance().fetch(avatarUrl, DocumentDir + USER_DIR + uuidv4() + extname)
-                    const avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
-                    console.log(avatarSource)
-                    this.props.setAvatarSource({ avatarSource })
+                    if (res) {
+                        const avatarSource = { uri: Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path() }
+                        console.log(avatarSource)
+                        this.props.setAvatarSource({ avatarSource })
+                    }
                 }
                 // 保存vocaGroups ,groupOrders,bookWords,vocaTasks, articles
                 for (let fDay of statistic.finishDays) {
@@ -103,7 +106,7 @@ class AuthLoadingPage extends Component {
             if (!isExist) {
                 await fs.mkdir(shareDir)      //创建目录
             }
-            res = await FileService.getInstance().fetch(ShareQRUrl, shareDir + 'share_qr.png')
+            res = await FileService.getInstance().fetch(ShareQRUrl, shareDir + 'share_qr.jpg')
             console.log(res.path())
             this.props.app.loader.close()
         }
@@ -113,8 +116,6 @@ class AuthLoadingPage extends Component {
         global.Http = createHttp(null, { showLoader: true, shouldRefreshToken: true })
         //判断是否过期
         const { accessToken, expiresIn, refreshToken } = this.props.mine.credential
-        console.log(Date.now())
-        console.log(expiresIn)
         if (accessToken && expiresIn && Date.now() < expiresIn) {
             console.log('直接进入App')
             // 直接进入App
@@ -124,8 +125,8 @@ class AuthLoadingPage extends Component {
                 this.props.navigation.navigate('LoginStack')
                 return
             }
-            NetInfo.isConnected.fetch().done(async (isConnected) => {
-                if (isConnected) { //网络正常
+            NetInfo.fetch().then(async (state) => {
+                if (state.isConnected) { //网络正常
                     const tokenHttp = createHttp()
                     const tokenRes = await tokenHttp.post("/refreshToken", { refreshToken })
                     if (tokenRes.status === 200) {

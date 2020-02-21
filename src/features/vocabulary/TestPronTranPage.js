@@ -104,6 +104,7 @@ class TestPronTranPage extends Component {
                 type={Constant.PRON_TRAN}
                 renderContent={this._renderContent}
                 playAudio={this._playAudio}
+                testTime={7}
             />
         )
     }

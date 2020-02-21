@@ -11,6 +11,7 @@ import ReadUtil from './common/readUtil'
 import WebUtil from '../../common/webUtil'
 import AliIcon from '../../component/AliIcon'
 import * as Constant from './common/constant'
+import VocaDao from '../vocabulary/service/VocaDao';
 
 
 
@@ -18,17 +19,14 @@ export default class ArticlePage extends React.Component {
 
     constructor(props) {
         super(props)
+        this.vocaDao = VocaDao.getInstance()
         this.state = {
             //是否显示答案选项面板
             showAnswerModal: false,
             //选中的问题 
-            selectedBlank: "36",
+            selectedBlank: "0",
         }
     }
-
-    componentDidMount() {
-    }
-
 
     shouldComponentUpdate(nextProps, nextState) {
         const { bgThemes, themeIndex, fontRem, showKeyWords } = this.props.article
@@ -96,7 +94,7 @@ export default class ArticlePage extends React.Component {
             backdropPressToClose={false}
             swipeToClose={true}
             position={"bottom"}
-            easing={Easing.elastic(0.2)}
+            easing={Easing.elastic(0.5)}
             ref={ref => {
                 this.answerModal = ref
             }}>
@@ -180,13 +178,20 @@ export default class ArticlePage extends React.Component {
     // 首次发送
     _sendInitMessage = () => {
         const { articleText, keyWords, bgThemes, themeIndex, fontRem } = this.props.article
+        //处理keyWords
+        let keywords = []
+        for (let kw of keyWords) {
+            keywords.push(kw)
+            const transforms = this.vocaDao.getTransforms(kw)
+            keywords = keywords.concat(transforms)
+        }
         //发送文本给Web
         this.webref.postMessage(
             //文本，关键字
             JSON.stringify({
                 command: 'initPage', payload: {
                     text: articleText,
-                    keywords: keyWords,
+                    keywords,
                     color: bgThemes[themeIndex],
                     size: fontRem + 'rem'
                 }

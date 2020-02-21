@@ -415,6 +415,26 @@ export default class VocaTaskDao {
         return this.realm.objects('TaskWord').filtered('word = "' + word + '"')
     }
 
+    /** */
+    dispassWords(wordArr) {
+        console.log(wordArr)
+        this.realm.write(() => {
+            for (let obj of wordArr) {
+                const { taskOrder, words } = obj
+                const task = this.realm.objects('VocaTask').filtered('taskOrder =' + taskOrder)[0]
+                if (task) {
+                    let dispassCount = 0
+                    for (let tw of task.taskWords) {
+                        if (words.includes(tw.word)) {
+                            dispassCount++
+                            tw.passed = false
+                        }
+                    }
+                    task.wordCount = task.wordCount + dispassCount
+                }
+            }
+        })
+    }
 
     /**
      *  清空所有任务和单词，清空数据库

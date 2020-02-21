@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, StatusBar, ImageBackground, Image, View, Text, TouchableOpacity, BackHandler } from 'react-native'
 import CardView from 'react-native-cardview'
+import NetInfo from "@react-native-community/netinfo"
 
 import AliIcon from '../../component/AliIcon'
 import { connect } from "react-redux";
@@ -8,7 +9,6 @@ import gstyles from "../../style";
 import WXService from "../../common/WXService";
 import * as MineAction from './redux/action/mineAction'
 import QQService from "../../common/QQService";
-
 
 
 const styles = StyleSheet.create({
@@ -64,14 +64,21 @@ class MainLoginPage extends Component {
                     <View
                         style={[styles.loginBtn, { backgroundColor: '#30DE76' }]}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={async (e) => {
-                            const code = await WXService.getInstance().getCode()
-                            if (code) {
-                                this.props.loginByWx({
-                                    params: { code },
-                                    navigation: this.props.navigation
-                                })
-                            }
+                        onResponderStart={(e) => {
+                            NetInfo.fetch().then(async (state) => {
+                                if (state.isConnected) {
+                                    const code = await WXService.getInstance().getCode()
+                                    if (code) {
+                                        this.props.loginByWx({
+                                            params: { code },
+                                            navigation: this.props.navigation
+                                        })
+                                    }
+                                } else {
+                                    this.props.app.toast.show('请检查网络!', 1000)
+                                }
+                            })
+
                         }}
                     >
                         <AliIcon name='weixin' size={25} color='#FFF'></AliIcon>
@@ -80,18 +87,25 @@ class MainLoginPage extends Component {
                     <View
                         style={[styles.loginBtn, { backgroundColor: '#3EC6FB' }]}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={async (e) => {
-                            const result = await QQService.getInstance().getAccess()
-                            if (result) {
-                                this.props.loginByQq({
-                                    params: {
-                                        access_token: result.access_token,
-                                        openid: result.openid,
-                                        oauth_consumer_key: result.oauth_consumer_key
-                                    },
-                                    navigation: this.props.navigation
-                                })
-                            }
+                        onResponderStart={(e) => {
+                            NetInfo.fetch().then(async (state) => {
+                                if (state.isConnected) {
+                                    const result = await QQService.getInstance().getAccess()
+                                    if (result) {
+                                        this.props.loginByQq({
+                                            params: {
+                                                access_token: result.access_token,
+                                                openid: result.openid,
+                                                oauth_consumer_key: result.oauth_consumer_key
+                                            },
+                                            navigation: this.props.navigation
+                                        })
+                                    }
+                                } else {
+                                    this.props.app.toast.show('请检查网络!', 1000)
+                                }
+                            })
+
                         }}
                     >
                         <AliIcon name='qq' size={24} color='#FFF'></AliIcon>

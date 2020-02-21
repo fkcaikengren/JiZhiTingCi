@@ -44,6 +44,7 @@ class TestTranVocaPage extends Component {
     }
 
 
+
     _renderContent = (taskWord, wordInfo) => {
         const testWrongNum = taskWord.testWrongNum
         const trans = wordInfo.trans
@@ -85,7 +86,7 @@ class TestTranVocaPage extends Component {
                 mode={this.props.navigation.getParam('mode')}
                 type={Constant.TRAN_WORD}
                 renderContent={this._renderContent}
-
+                testTime={7}
             />
         )
     }

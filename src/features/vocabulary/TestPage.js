@@ -64,7 +64,7 @@ export default class TestPage extends Component {
         this.timerArr = []          //定时器的timer
 
         //检查本地时间
-        // _util.checkLocalTime() #todo:检查本地时间
+        _util.checkLocalTime()
     }
 
 
@@ -122,7 +122,7 @@ export default class TestPage extends Component {
             this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK)
 
         //2.生成选项
-        this._genOptions(this.testWordArr[curIndex]) //todo:重写
+        this._genOptions(this.testWordArr[curIndex])
         this.setState({
             task,
             curIndex,
@@ -133,16 +133,20 @@ export default class TestPage extends Component {
 
 
         //3.开始计时
-        // this._countDown() #todo:计时
+        this._countDown()
 
-        //如果是听词选义#todo:自动发音
-        if (this.props.type === Constant.PRON_TRAN) {
-            const amPronUrl = this.allWordInfos[this.answerIndex] ? this.allWordInfos[this.answerIndex].pron_url : null
-            this.props.playAudio(amPronUrl)
-        }
+        //4.自动发音
+        this._autoPronounce()
     }
 
 
+    // 自动发音
+    _autoPronounce = () => {
+        if (this.props.type === Constant.PRON_TRAN || this.props.type === Constant.WORD_TRAN) {
+            const pron_url = this.allWordInfos[this.answerIndex] ? this.allWordInfos[this.answerIndex].pron_url : null
+            this.props.playAudio(pron_url)
+        }
+    }
 
 
     //开始倒计时
@@ -293,7 +297,7 @@ export default class TestPage extends Component {
 
 
         // 重新计时
-        // this._reCountDown()
+        this._reCountDown()
         if (isQuit) { //完成测试，退出
             console.log('----------updateTask-同时测试次数+1-------')
             const newTask = {
@@ -322,8 +326,7 @@ export default class TestPage extends Component {
                         nextRouteName: 'Home'
                     }
                 }
-                //todo:完成测试-修改params，添加judgeFinishAllTasks
-                vocaUtil.goPageWithoutStack(this.props.navigation, routeName, params)
+                vocaUtil.goPageWithoutStack(this.props.navigation, routeName, { ...params, judgeFinishAllTasks: true })
             } else {                                //普通模式下
                 this._normalTestEnd(newTask)
             }
@@ -336,6 +339,8 @@ export default class TestPage extends Component {
                 isPassed: false,
                 showAnswer: false
             })
+            //自动发音
+            this._autoPronounce()
         }
     }
 
@@ -402,7 +407,7 @@ export default class TestPage extends Component {
                     {!this.noPass &&
                         <Button
                             title={isPassed ? '' : 'Pass'}
-                            icon={isPassed ? <AliIcon name='complete' size={30} color='#FFF' /> : null}
+                            icon={isPassed ? <AliIcon name='wancheng' size={30} color='#FFF' /> : null}
                             titleStyle={{ color: '#FFF', fontSize: 16 }}
                             containerStyle={{ flex: 1, marginRight: 20 }}
                             buttonStyle={[styles.selectBtn, { backgroundColor: bgColor }]}
@@ -571,8 +576,8 @@ export default class TestPage extends Component {
                                         ...colorStyleArr
                                     ]}
                                     onPress={this.state.showAnswer ? null : () => {
-                                        if (this._judgeAnswer(option)) { //答对
-                                            // this._stopCountDown()       //停止计时
+                                        if (this._judgeAnswer(option)) { //回到
+                                            this._stopCountDown()       //停止计时
                                             this.setState({ showAnswer: true }) //显示答案
                                             let url = null
                                             if (this.props.playType === "sentence") {
@@ -602,7 +607,7 @@ export default class TestPage extends Component {
                             <Button
                                 disabled={this.state.showAnswer}
                                 title={isPassed ? '' : 'Pass'}
-                                icon={isPassed ? <AliIcon name='complete' size={30} color='#F2753F' /> : null}
+                                icon={isPassed ? <AliIcon name='wancheng' size={30} color='#F2753F' /> : null}
                                 titleStyle={{ color: '#F2753F', fontSize: 16 }}
                                 containerStyle={{ flex: 1, marginRight: 20 }}
                                 buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957', }]}
@@ -648,9 +653,10 @@ export default class TestPage extends Component {
 TestPage.propTypes = {
     mode: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    playType: PropTypes.string,  //回答正确的音频播放类型
-    testTime: PropTypes.number,  //测试实现
+    playType: PropTypes.string,     //回答正确的音频播放类型
+    testTime: PropTypes.number,     //测试实现
     renderContent: PropTypes.func, //题目内容
+    playAudio: PropTypes.func,      //音频播放
 }
 
 TestPage.defaultProps = {

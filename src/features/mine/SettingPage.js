@@ -163,7 +163,7 @@ class SettingPage extends React.Component {
 
 
                 <View style={[gstyles.r_center, styles.version]}>
-                    <Text style={{ fontSize: 20, color: '#666' }}>爱听词 v1.0.0</Text>
+                    <Text style={{ fontSize: 18, color: '#666' }}>爱听词 v1.0.0</Text>
                 </View>
 
 

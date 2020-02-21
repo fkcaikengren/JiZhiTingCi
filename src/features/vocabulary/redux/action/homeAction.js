@@ -14,6 +14,7 @@ export const SYNC_TASK_SUCCEED = 'SYNC_TASK_SUCCEED'
 export const SYNC_TASK_FAIL = 'SYNC_TASK_FAIL'
 
 
+
 //修改阅读得分
 export const UPDATE_SCORE = 'UPDATE_SCORE'
 
@@ -29,9 +30,14 @@ export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
     //更新任务
     [UPDATE_TASK]: fn,
 
+
+    // 更新分数
+    [UPDATE_SCORE]: fn,
     //上传同步任务
     [SYNC_TASK]: fn,
 
-    // 更新分数
-    [UPDATE_SCORE]: fn
+
+
+
+
 });

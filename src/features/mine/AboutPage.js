@@ -5,14 +5,15 @@ import { Header, Button } from 'react-native-elements'
 import DashSecondLine from '../../component/DashSecondLine'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
+import _util from '../../common/util';
 
 export default class AboutPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            public: "", //微信公众号
-            qqs: [],    //QQ群
+            public: "爱听词", //微信公众号
+            qqs: ['970652747'],    //QQ群
             about: ""   //关于我们介绍
         }
     }
@@ -30,11 +31,13 @@ export default class AboutPage extends React.Component {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
-    _init = async () => {
-        const res = await Http.get("/appinfo/getContack")
-        if (res.status === 200) {
-            this.setState(res.data)
-        }
+    _init = () => {
+        _util.checkNet(async () => {
+            const res = await Http.get("/appinfo/getContack")
+            if (res.status === 200) {
+                this.setState(res.data)
+            }
+        })
     }
 
     render() {
@@ -58,7 +61,7 @@ export default class AboutPage extends React.Component {
 
                 <ScrollView
                     containerStyle={{ flex: 1 }}
-                    contentContainerStyle={[gstyles.c_start]}
+                    contentContainerStyle={[gstyles.c_start, { flex: 1 }]}
                     pagingEnabled={false}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
@@ -85,12 +88,12 @@ export default class AboutPage extends React.Component {
                             {this.state.about}
                         </Text>
                     </View>
-                    <View style={[gstyles.c_center, { width: "100%", marginVertical: 20 }]}>
-                        <Text>Copyright©2020</Text>
-                        <Text>奇思妙听科技 版权所有</Text>
-                    </View>
-                </ScrollView>
 
+                </ScrollView>
+                <View style={[gstyles.c_center, { width: "100%", marginVertical: 20, position: 'absolute', left: 0, bottom: 10 }]}>
+                    <Text>Copyright©2020</Text>
+                    <Text>奇思妙听科技 版权所有</Text>
+                </View>
             </View>
         );
     }

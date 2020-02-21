@@ -105,7 +105,7 @@ public class NotificationModule extends ReactContextBaseJavaModule {
         smallView.setOnClickPendingIntent(R.id.small_closeBtn, pIntentCancel);
         //3.创建一个Notification
         notificationBuilder = new NotificationCompat.Builder(this.reactContext, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContent(smallView)
                 .setCustomBigContentView(bigView)
                 .setContentIntent(mainPendingIntent)
@@ -171,11 +171,7 @@ public class NotificationModule extends ReactContextBaseJavaModule {
             PendingIntent pIntentPause = PendingIntent.getBroadcast(getReactApplicationContext(), 3, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             this.notificationBuilder.getBigContentView().setOnClickPendingIntent(R.id.big_playBtn, pIntentPause);
             this.notificationBuilder.getBigContentView().setImageViewResource(R.id.big_playBtn, R.drawable.ic_pause);
-            if(this.notificationBuilder.getContentView() != null){
-                this.notificationBuilder.getContentView().setOnClickPendingIntent(R.id.small_playBtn, pIntentPause);
-                this.notificationBuilder.getContentView().setImageViewResource(R.id.small_playBtn, R.drawable.ic_pause);
-            }
-
+            
             this.notificationManagerCompat.notify(PALYER_TAG, 1, this.notificationBuilder.build());
             if(successCallback != null){
                 successCallback.invoke();
@@ -202,11 +198,6 @@ public class NotificationModule extends ReactContextBaseJavaModule {
             PendingIntent pIntentPlay = PendingIntent.getBroadcast(getReactApplicationContext(), 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             this.notificationBuilder.getBigContentView().setOnClickPendingIntent(R.id.big_playBtn, pIntentPlay);
             this.notificationBuilder.getBigContentView().setImageViewResource(R.id.big_playBtn, R.drawable.ic_play);
-            if(this.notificationBuilder.getContentView() != null){
-                this.notificationBuilder.getContentView().setOnClickPendingIntent(R.id.small_playBtn, pIntentPlay);
-                this.notificationBuilder.getContentView().setImageViewResource(R.id.small_playBtn, R.drawable.ic_play);
-            }
-
 
             this.notificationManagerCompat.notify(PALYER_TAG,1, this.notificationBuilder.build());
             if(successCallback != null){
@@ -247,6 +238,9 @@ public class NotificationModule extends ReactContextBaseJavaModule {
     public void updateWord(String word, Callback errorCallback, Callback successCallback) {
         try{
             this.notificationBuilder.getBigContentView().setTextViewText(R.id.big_word, word);
+            if(this.notificationBuilder.getContentView() != null){
+                this.notificationBuilder.getContentView().setTextViewText(R.id.big_word, word);
+            }
             this.notificationManagerCompat.notify(PALYER_TAG, 1, this.notificationBuilder.build());
             if(successCallback != null){
                 successCallback.invoke();

@@ -13,6 +13,7 @@ import HomeFooter from './component/HomeFooter'
 import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
+import * as VocaGroupAction from './redux/action/vocaGroupAction'
 import _util from '../../common/util'
 import { BY_REAL_TASK, TASK_VOCA_TYPE } from "./common/constant";
 import gstyles from '../../style';
@@ -27,7 +28,6 @@ class HomePage extends Component {
             modalVisible: false,
             appState: AppState.currentState
         }
-
         this.vtService = new VocaTaskService()
         console.disableYellowBox = true
     }
@@ -41,6 +41,8 @@ class HomePage extends Component {
         this._judgeFinishAllTasks()
         // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
+        // 检查时间
+        _util.checkLocalTime()
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
@@ -96,14 +98,12 @@ class HomePage extends Component {
         const today = _util.getDayTime(0)
         console.log('today --> ' + today)
         if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
-            // #fixme:退出登录第二天获取任务异常
             IsLoginToHome = false
             // 如果是任务播放，则清空VocaPlay
             if (this.props.vocaPlay.normalType === BY_REAL_TASK) {
                 this.props.clearPlay()
             }
             //获取今日任务
-            console.log('--------------home  loadTasks------------------------')
             this.props.loadTasks({
                 lastLearnDate,
                 taskCount,
@@ -232,13 +232,18 @@ class HomePage extends Component {
                         home={this.props.home}
                         plan={this.props.plan}
                         app={this.props.app}
-                        openDrawer={this._openDrawerPanel}>
+                        openDrawer={this._openDrawerPanel}
+                        syncTask={this.props.syncTask}
+                        syncGroup={this.props.syncGroup}
+                        synAllLearnedDays={this.props.synAllLearnedDays}
+                        synFinishDays={this.props.synFinishDays}
+                    >
                         {leftDays >= 0 &&
                             <Task
                                 navigation={this.props.navigation}
                                 home={this.props.home}
                                 updateTask={this.props.updateTask}
-                                toastRef={this.props.app.toast} />
+                            />
                         }
                         {leftDays < 0 &&
                             <View style={[gstyles.c_center, styles.finishView]}>
@@ -288,6 +293,9 @@ const mapDispatchToProps = {
 
     changePlayTimer: VocaPlayAction.changePlayTimer,
     clearPlay: VocaPlayAction.clearPlay,
+    changePlayListIndex: VocaPlayAction.changePlayListIndex,
+
+    syncGroup: VocaGroupAction.syncGroup
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 

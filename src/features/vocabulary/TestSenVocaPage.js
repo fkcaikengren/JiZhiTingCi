@@ -53,7 +53,7 @@ class TestSenVocaPage extends Component {
                 if (index % 2 === 0) {
                     return text
                 } else {
-                    return <Text style={[gstyles.lg_black, { color: showAnswer ? '#1890FF' : '#F2753F', }]}>{showAnswer ? text : '____'}</Text>
+                    return <Text style={[gstyles.lg_black, { color: showAnswer ? '#1890FF' : '#F2753F', }]}>{showAnswer ? text : '______'}</Text>
                 }
             })
         }
@@ -81,6 +81,7 @@ class TestSenVocaPage extends Component {
                 type={Constant.SEN_WORD}
                 playType='sentence'
                 renderContent={this._renderContent}
+                testTime={12}
             />
         )
     }

@@ -152,7 +152,7 @@ const gstyles = StyleSheet.create({
     //Modal
     modal: {
         width: width,
-        height: height - StatusBarHeight - 80,
+        height: height - StatusBarHeight - 100,
         backgroundColor: "#FDFDFD",
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5

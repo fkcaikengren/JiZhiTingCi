@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import gstyles from "../style";
 const Spinner = require('react-native-spinkit');
 import Toast, { DURATION } from 'react-native-easy-toast'
+const Dimensions = require('Dimensions');
+const { width, height } = Dimensions.get('window');
 
 export default class Loader extends React.Component {
     constructor(props) {
@@ -33,7 +35,7 @@ export default class Loader extends React.Component {
                 ref="toast"
                 style={{ backgroundColor: '#303030' }}
                 position='top'
-                positionValue={240}
+                positionValue={(height / 2) - 50}
                 fadeInDuration={0}
                 fadeOutDuration={0}
                 opacity={0.8}

@@ -6,21 +6,11 @@
 
 react-native 版本：**0.59.8**
 
-```shell
-react-native init JiZhiTingCi
+```bash
+react-native init aitingci
 ```
 
-### vscode 同步设置到github
-
-```
-
-```
-
-### vscode 同步代码到github
-
-```
-
-```
+### 同步项目到github
 
 
 
@@ -30,48 +20,41 @@ react-native init JiZhiTingCi
 
 ## 项目功能简介
 
+英语单词学习App
+
 
 
 ## 项目目录结构
 
 英语App项目目录	
-|-- project-name
+
+```
+|-- aitingci
 |    |-- src
-|    |    |-- common
-
-|    |    |    +--redux
-|    |    |    +-- dao
-|    |    |    +-- net
-|    |    |-- features
-
+|    |    +-- common
+|	 |	  +-- component
+|    |    |-- features (功能模块目录)
 |    |    |    |-- vocabulary
-|    |    |    |    |-- redux
-
-|    |    |    |    |    |--action.js 	(总的action)
-|    |    |    |    |    |--constant.js
-|    |    |    |    |    |--reducer.js	(总的reducer)
-|    |    |    |    |    |--vocaPlay.js	(某一个页面的功能集合)
-|    |    |    |    |-- VocaPlayPage.js
-|    |    |    |    |-- VocaListTabNavgator.js (导航页面)
+|    |    |    |    |-- redux (状态管理)
+|    |    |    |    |    +--action 	
+|    |    |    |    |    |--home.js	
+|    |    |    |    |    |--vocaPlay.js	
+|    |    |    |    |-- HomePage.js
 |    |    |    |    |-- dao	(realm数据库操作)
+|    |    |    |    |    |--vocaDao 	
 |    |    |    |    |    |--vocaTaskDao 	
-|    |    |    |    |-- net	(axios网络请求层)
-|    |    |    |    |    |--AudioService	
 |    |    |    +-- reading 	(阅读模块)
-|    |    |    +-- gramma （语法模块）
+|    |    |    +-- mine （我的模块）
 |    |    +-- style  (全局样式)
 |    |    +-- image （图片）
-|    |    |	  |--App.js  （图片）
+|    |--App.js 
+```
 
 
 
 
 
 ## 安装第三方组件
-
-
-
-
 
 ### 安装react-native-drawer库 
 
@@ -84,8 +67,6 @@ yarn add react-native-drawer
 ```
 yarn add react-native-easy-grid
 ```
-
-
 
 ### 安装react-navigation库
 
@@ -104,8 +85,6 @@ yarn add react-native-gesture-handler
 yarn add react-navigation-redux-helpers
 ```
 
-
-
 ### 安装react-native-vector-icons库
 
 ```
@@ -120,17 +99,11 @@ yarn add react-native-progress@3.6.0
 
 ```
 
-
-
-
-
 ### 安装 react-native-check-box
 
 ```
 yarn add react-native-check-box
 ```
-
-
 
 ### 安装react-native-calendars
 
@@ -138,19 +111,11 @@ yarn add react-native-check-box
 yarn add react-native-calendars
 ```
 
-
-
 ### 安装react-native-popup-menu
 
 ```
 yarn add react-native-popup-menu
 ```
-
-
-
-
-
-
 
 ### 安装react-native-modalbox
 
@@ -158,15 +123,11 @@ yarn add react-native-popup-menu
 yarn add react-native-modalbox@latest
 ```
 
-
-
 ### 安装prop-types
 
 ```
 yarn add prop-types
 ```
-
-
 
 ### 安装redux
 
@@ -174,15 +135,11 @@ yarn add prop-types
 yarn add redux
 ```
 
-
-
 ### 安装react-redux
 
 ```
 yarn add react-redux
 ```
-
-
 
 ### 开发依赖安装redux-devtools
 
@@ -190,29 +147,17 @@ yarn add react-redux
 yarn add redux-devtools --dev
 ```
 
-
-
 ### 安装redux-saga
 
 ```
 yarn add redux-saga
 ```
 
-
-
-
-
-
-
 ### 安装redux-actions
 
 ```
 yarn add redux-actions
 ```
-
-
-
-
 
 ### 安装react-native-sound
 
@@ -221,18 +166,12 @@ yarn add react-native-sound
 手动link
 ```
 
-
-
-
-
 ### 安装rn-fetch-blob
 
 ```
 yarn add rn-fetch-blob
 react-native link rn-fetch-blob 
 ```
-
-
 
 ### 安装react-native-storage
 
@@ -248,44 +187,11 @@ react-native link @react-native-community/async-storage
 yarn add redux-persist
 ```
 
-
-
-### 实现数据模拟-安装mockjs
-
-```
-yarn add mockjs --dev
-```
-
-
-
-
-
 ### 安装axios
 
 ```
 yarn add axios
 ```
-
-
-
-
-
-
-
-
-
-### 实现带可选索引的列表
-
-[参考：带字母检索的SectionList](<https://www.jianshu.com/p/09dd60d7b34f>)
-
-```
-方式一：如果使用scrollToIndex()需要修改SectionList和VirtualizedSectionList的代码.
-方式二：用scrollToLocation()替换scrollToIndex()
-```
-
-
-
-
 
 ### 安装realm
 
@@ -369,8 +275,6 @@ yarn add uuid
 yarn add react-native-swiper 
 ```
 
-
-
 ### 安装react-native-cardview
 
 ```jsx
@@ -378,17 +282,11 @@ yarn add react-native-cardview
 手动link
 ```
 
-
-
 ### 安装react-native-parallax-scroll-view
 
 ```
 yarn add react-native-parallax-scroll-view
 ```
-
-
-
-
 
 ### 安装react-native-svg
 
@@ -397,16 +295,12 @@ yarn add react-native-svg
 手动link
 ```
 
-
-
 ### 安装react-native-linear-gradient
 
 ```
 yarn add react-native-linear-gradient
 手动link
 ```
-
-
 
 ### 安装react-native-spinkit
 
@@ -424,27 +318,17 @@ react-native link react-native-webview
 
 ```
 
-
-
 ### 安装react-native-collapsible (手风琴)
 
 ```
 yarn add react-native-collapsible
 ```
 
-
-
 ### react-native-easy-toast
 
 ```
 yarn add react-native-easy-toast
 ```
-
-
-
-
-
-
 
 ### 图片选择器 react-native-image-picker
 
@@ -453,8 +337,6 @@ yarn add react-native-image-picker
 react-native link react-native-image-picker
 
 ```
-
-
 
 ### 滚筒选择器react-native-wheel-picker
 
@@ -479,11 +361,7 @@ compileSdkVersion 28
 buildToolsVersion "28.0.3" 
 ```
 
-
-
 ### 虚化背景@react-native-community/blur
-
-
 
 ```js
 yarn add @react-native-community/blur
@@ -491,16 +369,16 @@ react-native link @react-native-community/blur
 
 ```
 
-issue: 【fixed】//修改Module.java
+issue:android suppot 迁移到androidx 
 
-```
+【fixed】//修改Module.java
+
+```js
 import androidx.renderscript.Allocation;
 import androidx.renderscript.Element;
 import androidx.renderscript.RenderScript;
 import androidx.renderscript.ScriptIntrinsicBlur;
 ```
-
-
 
 ### 压缩包react-native-zip-archive
 
@@ -508,15 +386,11 @@ import androidx.renderscript.ScriptIntrinsicBlur;
 yarn add react-native-zip-archive
 ```
 
-
-
 ### 后台计时react-native-background-timer
 
 ```
 yarn add react-native-background-timer
 ```
-
-
 
 ### 退出Appreact-native-exit-app
 
@@ -525,15 +399,11 @@ yarn add react-native-exit-app
 react-native link react-native-exit-app
 ```
 
-
-
 ### 拖拽排序列表react-native-sortable-listview 
 
 ```
 yarn add react-native-sortable-listview
 ```
-
-
 
 ### View生成图片react-native-view-shot
 
@@ -542,13 +412,27 @@ yarn add react-native-view-shot
 react-native link react-native-view-shot
 ```
 
+### 检查网络信息@react-native-community/netinfo
 
+```
+yarn add @react-native-community/netinfo
+react-native link @react-native-community/netinfo
+```
 
 ### 用户反馈react-native-feedback
 
 ```
+//集成阿里百川的反馈模块
 yarn add react-native-feedback
-集成阿里百川的反馈模块
+```
+
+### 实现带可选索引的列表
+
+[参考：带字母检索的SectionList](<https://www.jianshu.com/p/09dd60d7b34f>)
+
+```
+方式一：如果使用scrollToIndex()需要修改SectionList和VirtualizedSectionList的代码.
+方式二：用scrollToLocation()替换scrollToIndex()
 ```
 
 
@@ -644,8 +528,6 @@ npx -p @storybook/cli sb init --type react_native
 npm run storybook
 ```
 
-
-
 问题1 :
 
 ```jsx
@@ -696,19 +578,7 @@ yarn add react-native-mock --dev
 
 不支持react16, 所以放弃react-native-mock
 
-
-
-
-
-
-
 #### Jest测试fetch异步请求
-
-
-
-
-
-
 
 
 
@@ -719,6 +589,10 @@ yarn add react-native-mock --dev
 只能换成 for in的语法
 
 
+
+### Node 测试计划模块
+
+**详情：见文档docs/测试.md**
 
 
 
@@ -762,26 +636,9 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
-
-
-
-
 ### 5.点击App出现停顿后才打开
 
-```
-import androidx.multidex.MultiDex;
-MultiDex.install(this);
-
-// 突破64K引用限制
-implementation 'androidx.multidex:multidex:2.0.1'
-
-```
-
-
-
-
-
-点击App出现停顿
+点击App出现停顿原因：加载集成的第三方模块，此时启动页未开启。
 
 解决： https://github.com/crazycodeboy/react-native-splash-screen/issues/22 
 
@@ -795,11 +652,9 @@ implementation 'androidx.multidex:multidex:2.0.1'
 
 
 
+
+
 # 集成
-
-
-
-
 
 ### 集成极光统计、极光推送
 
@@ -964,25 +819,25 @@ react-native link react-native-code-push
 
 ### 部署发布
 
-```
-//查看部署
+```bash
+#查看部署
 code-push deployment ls aitingci -k
 
-//开发环境热更新
+#开发环境热更新
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
-//生产环境热更新
+#生产环境热更新
 code-push release-react aitingci android --dev false --d Production --des "第10次生产环境更新" --m true
 
-//--m true 强制用户更新
+#说明--m true 强制用户更新
 ```
 
 
 
 ### 打包命令
 
-```
-//查看签名
+```bash
+#查看签名
 keytool -list -v -keystore aitingci.jks
 
 //进入android目录后打包

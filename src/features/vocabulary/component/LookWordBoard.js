@@ -45,14 +45,16 @@ export default class LookWordBoard extends Component {
         return false
     }
 
+    isOpen = () => {
+        return this.state.isOpen
+    }
 
-
-    _closeWordBoard = () => {
+    closeWordBoard = () => {
         this.setState({ isOpen: false })
         this.props.onStateChange(false)
     }
 
-    _openWordBoard = () => {
+    openWordBoard = () => {
         this.setState({ isOpen: true })
         this.props.onStateChange(true)
     }
@@ -62,7 +64,7 @@ export default class LookWordBoard extends Component {
         const comps = []
         if (trans) {
             for (let k in trans)
-                comps.push(<View style={[gstyles.r_start, { width: width - 70 }]}>
+                comps.push(<View style={[gstyles.r_start, { width: width - 70 }]} key={k}>
                     <Text numberOfLines={1} style={[{ width: 40, lineHeight: 22 }, gstyles.md_black]}>{k + '.'}</Text>
                     <Text numberOfLines={1} style={[gstyles.md_black, { lineHeight: 22 }]}>{trans[k]}</Text>
                 </View>)
@@ -131,8 +133,8 @@ export default class LookWordBoard extends Component {
     render() {
         return <Modal style={styles.modal}
             isOpen={this.state.isOpen}
-            onClosed={this._closeWordBoard}
-            onOpened={this._openWordBoard}
+            onClosed={this.closeWordBoard}
+            onOpened={this.openWordBoard}
             backdrop={true}
             backdropPressToClose={true}
             swipeToClose={false}
@@ -144,7 +146,7 @@ export default class LookWordBoard extends Component {
                 <View style={[gstyles.r_center, styles.dropBar]}>
                     <Text style={gstyles.lg_black}>释义  </Text>
                     <AliIcon name={'cha'} color={'#555'} size={16} style={{ position: 'absolute', right: 20 }}
-                        onPress={this._closeWordBoard} />
+                        onPress={this.closeWordBoard} />
                 </View>
                 {this.state.wordInfo &&
                     this._renderContent()

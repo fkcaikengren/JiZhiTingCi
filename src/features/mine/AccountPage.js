@@ -10,6 +10,7 @@ import gstyles from "../../style";
 import WXService from '../../common/WXService';
 import { logoutHandle } from './common/userHandler';
 import QQService from '../../common/QQService';
+import _util from '../../common/util';
 
 
 
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
 class AccountPage extends React.Component {
     constructor(props) {
         super(props);
+        this._checkNet = _util.checkNet
     }
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -67,8 +69,6 @@ class AccountPage extends React.Component {
             } else {
                 this.props.navigation.goBack()
             }
-
-
             return true
         })
     }
@@ -185,14 +185,18 @@ class AccountPage extends React.Component {
                     <GroupItem
                         title='头像'
                         rightComponent={<Image style={styles.imgStyle} source={avatarSource} />}
-                        onPress={this._changeAvatar}
+                        onPress={() => {
+                            this._checkNet(this._changeAvatar)
+                        }}
                     />
                     <GroupItem
                         title='昵称'
                         rightComponent={user.nickname}
                         onPress={() => {
-                            this.props.navigation.navigate('Nickname', {
-                                nickname: user.nickname
+                            this._checkNet(() => {
+                                this.props.navigation.navigate('Nickname', {
+                                    nickname: user.nickname
+                                })
                             })
                         }}
                     />
@@ -200,51 +204,57 @@ class AccountPage extends React.Component {
                         title='性别'
                         rightComponent={sex}
                         onPress={() => {
-                            this.props.app.commonModal.show({
-                                renderContent: this._renderSexSelector({ commonModal: this.props.app.commonModal }),
-                                modalStyle: {
-                                    width: 300,
-                                    height: 240,
-                                    borderRadius: 10,
-                                    backgroundColor: "#FFF",
-                                },
+                            this._checkNet(() => {
+                                this.props.app.commonModal.show({
+                                    renderContent: this._renderSexSelector({ commonModal: this.props.app.commonModal }),
+                                    modalStyle: {
+                                        width: 300,
+                                        height: 240,
+                                        borderRadius: 10,
+                                        backgroundColor: "#FFF",
+                                    },
+                                })
                             })
                         }}
                     />
                     <GroupItem
                         title='绑定微信'
                         rightComponent={<AliIcon name='weixin' size={26} color={user.wechat ? '#30DE76' : gstyles.gray} />}
-                        onPress={async () => {
-                            if (user.wechat) {
-                                this.props.app.confirmModal.show("已绑定微信，是否换绑？", null, async () => {
+                        onPress={() => {
+                            this._checkNet(async () => {
+                                if (user.wechat) {
+                                    this.props.app.confirmModal.show("已绑定微信，是否换绑？", null, async () => {
+                                        const code = await WXService.getInstance().getCode()
+                                        this.props.modifyWechat({ code })
+                                    })
+                                } else {
                                     const code = await WXService.getInstance().getCode()
                                     this.props.modifyWechat({ code })
-                                })
-                            } else {
-                                const code = await WXService.getInstance().getCode()
-                                this.props.modifyWechat({ code })
-                            }
+                                }
+                            })
                         }}
                     />
                     <GroupItem
                         title='绑定QQ'
                         rightComponent={<AliIcon name='qq' size={26} color={user.qq ? '#3EC6FB' : gstyles.gray} />}
-                        onPress={async () => {
-                            if (user.qq) {
-                                this.props.app.confirmModal.show("已绑定QQ，是否换绑？", null, async () => {
+                        onPress={() => {
+                            this._checkNet(async () => {
+                                if (user.qq) {
+                                    this.props.app.confirmModal.show("已绑定QQ，是否换绑？", null, async () => {
+                                        const result = await QQService.getInstance().getAccess()
+                                        this.props.modifyQq({ params: result })
+                                    })
+                                } else {
                                     const result = await QQService.getInstance().getAccess()
-                                    this.props.modifyQq({ params: result })
-                                })
-                            } else {
-                                const result = await QQService.getInstance().getAccess()
-                                this.props.modifyQq({
-                                    params: {
-                                        access_token: result.access_token,
-                                        openid: result.openid,
-                                        oauth_consumer_key: result.oauth_consumer_key
-                                    },
-                                })
-                            }
+                                    this.props.modifyQq({
+                                        params: {
+                                            access_token: result.access_token,
+                                            openid: result.openid,
+                                            oauth_consumer_key: result.oauth_consumer_key
+                                        },
+                                    })
+                                }
+                            })
                         }}
                     />
                     <GroupItem
@@ -252,20 +262,25 @@ class AccountPage extends React.Component {
                         rightComponent={user.phone ? user.phone :
                             <AliIcon name='shouji' size={26} color={gstyles.gray} />}
                         onPress={() => {
-                            this.props.navigation.navigate("Phone")
+                            this._checkNet(() => {
+                                this.props.navigation.navigate("Phone")
+                            })
                         }}
                     />
                     <GroupItem
                         title='修改密码'
                         hasBorderLine={false}
                         onPress={() => {
-                            this.props.navigation.navigate('Password')
+                            this._checkNet(() => {
+                                this.props.navigation.navigate('Password')
+                            })
                         }}
                     />
 
-
                     <TouchableOpacity activeOpacity={0.8}
-                        onPress={this._logout}
+                        onPress={() => {
+                            this._checkNet(this._logout)
+                        }}
                     >
                         <View style={[gstyles.r_center, styles.logout]}>
                             <Text style={[gstyles.lg_black, { color: 'red' }]}>退出登录</Text>

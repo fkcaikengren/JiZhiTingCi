@@ -41,9 +41,6 @@ const defaultState = {
     playTaskList: [],              //任务播放列表
     playGroupList: [],            //生词播放列表
 
-    //加载状态
-    isLoadPending: false,
-
 }
 
 export const vocaPlay = (state = defaultState, action) => {

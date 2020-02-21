@@ -25,8 +25,11 @@ const defaultState = {
     learnedTodayFlag: null,         //当天算入学习天数的标记
     finishedBooksWordCount: 0,  //已学完的单词书中学过的单词数
     allLearnedCount: 0,         //累计学习单词数
-    allLearnedDays: 0           //累计学习天数
+    allLearnedDays: 0,          //累计学习天数
 
+
+    //加载状态
+    isLoadPending: false,
 }
 
 
@@ -44,7 +47,8 @@ export const plan = (state = defaultState, action) => {
                 allLearnedDays
             };
         }
-
+        case pa.CHANGE_VOCA_BOOK_START:
+            return { ...state, isLoadPending: true }
         // 更换词汇书
         case pa.CHANGE_VOCA_BOOK_SUCCEED: {
             const { plan, leftDays, finishedBooksWordCount } = action.payload
@@ -53,9 +57,11 @@ export const plan = (state = defaultState, action) => {
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
                 leftDays,
-                finishedBooksWordCount
+                finishedBooksWordCount,
+                isLoadPending: false
             }
         }
+
         //修改计划
         case pa.MODIFY_PLAN_SUCCEED: {
             const { plan, leftDays } = action.payload

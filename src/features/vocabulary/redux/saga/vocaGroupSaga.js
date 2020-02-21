@@ -14,22 +14,26 @@ import { store } from "../../../../redux/store"
 export function* syncGroup(action) {
   const syncArr = yield Storage.getAllDataForKey('notSyncGroups')
   console.log(syncArr)
-  if (syncArr && syncArr.length > 0) {
-    yield put({ type: SYNC_GROUP_START })
-    const myHttp = createHttp(null, { showLoader: action.payload.isByHand, shouldRefreshToken: true })
-    const res = yield myHttp.post('/vocaGroup/sync', syncArr)
-    if (res.status === 200) {
-      // 删除本地
-      Storage.clearMapForKey('notSyncGroups')
-      yield put({ type: SYNC_GROUP_SUCCEED })
+  try {
+    if (syncArr && syncArr.length > 0) {
+      yield put({ type: SYNC_GROUP_START })
+      const myHttp = createHttp(null, { showLoader: action.payload.isByHand, shouldRefreshToken: true })
+      const res = yield myHttp.post('/vocaGroup/sync', syncArr)
+      if (res.status === 200) {
+        // 删除本地
+        Storage.clearMapForKey('notSyncGroups')
+        yield put({ type: SYNC_GROUP_SUCCEED })
 
+      } else {
+        yield put({ type: SYNC_GROUP_FAIL })
+      }
     } else {
-      yield put({ type: SYNC_GROUP_FAIL })
+      if (action.payload.isByHand) {
+        store.getState().app.toast.show("暂无同步数据", 1000)
+      }
     }
-  } else {
-    if (action.payload.isByHand) {
-      store.getState().app.toast.show("暂无同步数据", 1000)
-    }
+  } catch (err) {
+    yield put({ type: SYNC_GROUP_FAIL })
   }
 
 }

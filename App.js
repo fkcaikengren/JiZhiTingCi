@@ -23,9 +23,6 @@ import PushUtil from './src/modules/PushUtil'
 const Realm = require('realm')
 
 
-
-
-
 //拷贝Realm数据库，如果realm已经存在则不会重新拷贝
 Realm.copyBundledRealmFiles();
 console.log('copy realm');

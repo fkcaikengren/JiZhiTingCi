@@ -35,7 +35,7 @@ export default class ShareTemplate {
                 setContentState,
                 hide,
             } = commonModal
-            const qrPath = shareDir + 'share_qr.png'
+            const qrPath = shareDir + 'share_qr.jpg'
             const { sealSize } = getContentState()
             return <View style={styles.container}>
                 <View style={styles.titleBar}>
@@ -68,26 +68,35 @@ export default class ShareTemplate {
 
 
                 }
-                <ViewShot ref={comp => this.viewShot = comp} style={styles.captureView}>
-                    <Image source={bgSource} style={styles.shareBg} />
+                <View style={[{
+                    width: '100%',
+                    flex: 1,
+                    marginBottom: 160,
+                }, gstyles.c_center]}>
+                    <ViewShot ref={comp => this.viewShot = comp} style={styles.captureView}>
+                        <Image source={bgSource} style={styles.shareBg} />
 
-                    <View style={styles.shareLogo}>
-                        <Image source={require('../image/logo_share.png')} style={{ width: 24, height: 24, borderRadius: 5 }} />
-                        <View style={[gstyles.c_start_left, { marginLeft: 10 }]}>
-                            <Text style={{ fontSize: 14, color: '#FFF', fontWeight: '500', lineHeight: 16 }}>爱 听 词</Text>
-                            <Text style={{ fontSize: 8, color: '#FFF', lineHeight: 10 }}> aitingci.com</Text>
+                        <View style={styles.shareLogo}>
+                            <Image source={require('../image/logo_share.png')} style={{ width: 24, height: 24, borderRadius: 5 }} />
+                            <View style={[gstyles.c_start_left, { marginLeft: 10, paddingTop: 1 }]}>
+                                <Image
+                                    resizeMode={'stretch'}
+                                    source={require('../image/logo_share_text.png')}
+                                    style={{ width: 44, height: 16 }} />
+                                <Text style={{ fontSize: 8, color: '#FFF', lineHeight: 10 }}>aitingci.com</Text>
+                            </View>
                         </View>
-                    </View>
 
-                    <View style={styles.shareContent}>
-                        {renderContentView}
-                    </View>
-                    <View style={styles.shareQR}>
-                        <Image source={{ uri: Platform.OS === 'android' ? 'file://' + qrPath : qrPath }}
-                            style={{ width: 42, height: 42, borderRadius: 2, }} />
-                        <Text style={{ fontSize: 13, color: '#FFF', marginLeft: 15 }}>长按识别二维码</Text>
-                    </View>
-                </ViewShot>
+                        <View style={styles.shareContent}>
+                            {renderContentView}
+                        </View>
+                        <View style={styles.shareQR}>
+                            <Image source={{ uri: Platform.OS === 'android' ? 'file://' + qrPath : qrPath }}
+                                style={{ width: 42, height: 42, borderRadius: 2, }} />
+                            <Text style={{ fontSize: 13, color: '#FFF', marginLeft: 15 }}>长按识别二维码</Text>
+                        </View>
+                    </ViewShot>
+                </View>
 
                 <SharePanel
                     containerStyle={styles.sharePanel}
@@ -173,6 +182,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+
 
     },
     closeBtn: {

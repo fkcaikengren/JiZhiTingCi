@@ -34,8 +34,6 @@ import ShareTemplate from '../../../component/ShareTemplate';
 import VocaGroupService from '../service/VocaGroupService';
 
 
-
-
 const ITEM_H = 55;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 const Dimensions = require('Dimensions');
@@ -66,7 +64,7 @@ class VocaPlayPage extends React.Component {
         }
         //检查本地时间
         if (this.isStudyMode) {
-            // _util.checkLocalTime() #todo:检查时间
+            _util.checkLocalTime()
         }
 
         //初始化完成遍数
@@ -118,22 +116,16 @@ class VocaPlayPage extends React.Component {
     componentDidMount() {
         //监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            //todo: vocaModal隐藏
-            /*-----------测试代码开始-----  #todo: 移除代码*/
-            console.log('vocaPlayPage --测试--  更新Task')
-            const isNew = (this.state.task.status === Constant.STATUS_0)
-            const newTask = {
-                ...this.state.task,
-                progress: isNew ? Constant.IN_LEARN_FINISH : Constant.IN_REVIEW_FINISH
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else if (this.wordBoard.isOpen()) {
+                this.wordBoard.closeWordBoard()
+            } else if (this.state.isVocaModalOpen) {
+                this._closeVocaModal()
+            } else {
+                this._goBack()
             }
-            this.taskDao.modifyTask(newTask)
-            this.props.updateTask({ task: newTask })
-            this.props.modifyLastLearnDate({ lastLearnDate: _util.getDayTime(0) })
-
-            //返回
-            VocaUtil.goPageWithoutStack(this.props.navigation, "Home", { judgeFinishAllTasks: true })
-            /*------------测试代码结束 ----------*/
-            // this._goBack()
             return true
         })
         this._init()
@@ -160,17 +152,10 @@ class VocaPlayPage extends React.Component {
     }
 
     _init = () => {
-        //修改当前normalType
-        let normalType = this.props.navigation.getParam('normalType')
-        if (normalType) {
-            this.props.changeNormalType(normalType)
-        } else {
-            normalType = this.props.vocaPlay.normalType
-        }
-        this.disablePass = (this.mode === Constant.LEARN_PLAY || normalType === Constant.BY_VIRTUAL_TASK)
 
         //判断是否自动播放，task是从navigation中获取，一定存在curIndex
         if (this.isStudyMode) {
+            this.disablePass = this.mode === Constant.LEARN_PLAY
             //加载task 和word
             const task = this.props.navigation.getParam('task')
             const showWordInfos = this.vocaDao.getShowWordInfos(task.taskWords, true)
@@ -194,6 +179,14 @@ class VocaPlayPage extends React.Component {
                 this.vocaPlayService.autoplay(task.curIndex)
             }, 500);
         } else {
+            //修改当前normalType
+            let normalType = this.props.navigation.getParam('normalType')
+            if (normalType) {
+                this.props.changeNormalType(normalType)
+            } else {
+                normalType = this.props.vocaPlay.normalType
+            }
+            this.disablePass = normalType === Constant.BY_VIRTUAL_TASK
             //初始化播放列表
             this._initPlayList()
             if (normalType === Constant.BY_VIRTUAL_TASK) {
@@ -217,13 +210,11 @@ class VocaPlayPage extends React.Component {
     }
 
     _goBack = () => {
-        console.log(this.state.autoPlayTimer)
+
         if (this.isStudyMode && this.state.autoPlayTimer > 0) {
             clearTimeout(this.state.autoPlayTimer)
         }
-
         this.props.navigation.goBack()
-
     }
 
 
@@ -243,8 +234,7 @@ class VocaPlayPage extends React.Component {
                 playGroupList.push(id)
             }
         }
-        console.log('playGroupList')
-        console.log(playGroupList)
+
         if (normalType === Constant.BY_VIRTUAL_TASK && task.taskOrder) {
             for (let i in playGroupList) {
                 if (playGroupList[i] === task.taskOrder) {
@@ -260,8 +250,7 @@ class VocaPlayPage extends React.Component {
         }).map((task, _) => {
             return task.taskOrder
         })
-        console.log('playTaskList')
-        console.log(playTaskList)
+
         if (normalType === Constant.BY_REAL_TASK && task.taskOrder) {
             for (let i in playTaskList) {
                 if (playTaskList[i] === task.taskOrder) {
@@ -419,11 +408,11 @@ class VocaPlayPage extends React.Component {
         //上传pass结果
         this.props.syncTask({
             command: COMMAND_MODIFY_PASSED,
-            data: {
+            data: [{
                 word,
                 passed: true,
                 taskOrder: result.task.taskOrder
-            }
+            }]
         })
 
         return {
@@ -507,7 +496,8 @@ class VocaPlayPage extends React.Component {
     _renderItem = ({ item, index }) => {
         const isShowPassBtn = (!this.disablePass
             && this.vocaPlayService.listRef
-            && this.vocaPlayService.listRef.getOpenedRowKey() === index)
+            && this.vocaPlayService.listRef.getOpenedRowKey() === item.word + index)
+
         if (item) {
             let { task, curIndex, showWord, showTran, themes, themeId } = this.props.vocaPlay
             if (this.isStudyMode) {
@@ -751,13 +741,12 @@ class VocaPlayPage extends React.Component {
         }
 
 
-
-        const contentHeight = height - STATUSBAR_HEIGHT - 260
+        const contentHeight = height - STATUSBAR_HEIGHT - 270
 
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
             require('../../../image/play_bg.jpg')
         return (
-            <View style={{ flex: 1, }}>
+            <View style={{ flex: 1, backgroundColor: '#303030' }}>
                 <Image style={[styles.bgImage]}
                     ref={img => { this._backgroundImage = img }}
                     source={imgSource}

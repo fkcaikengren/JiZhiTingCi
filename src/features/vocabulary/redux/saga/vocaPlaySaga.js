@@ -52,6 +52,7 @@ export function* changePlayListIndex(action) {
         if (normalType === BY_REAL_TASK) {
             //加载任务播放
             nextTask = VocaTaskDao.getInstance().getTaskByOrder(playTaskList[index])
+            nextTask = VocaUtil.copyTaskDeep(nextTask, true)
             nextTask.playName = VocaUtil.genTaskName(nextTask.taskOrder)
             showWordInfos = VocaDao.getInstance().getShowWordInfos(nextTask.taskWords, true)
         } else if (normalType === BY_VIRTUAL_TASK) {

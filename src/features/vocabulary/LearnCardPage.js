@@ -54,7 +54,7 @@ class LearnCardPage extends Component {
         this.taskDao = VocaTaskDao.getInstance()
 
         //检查本地时间
-        // _util.checkLocalTime() #todo:检查本地时间
+        _util.checkLocalTime()
     }
 
     componentDidMount() {

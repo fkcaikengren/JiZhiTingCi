@@ -3,6 +3,7 @@
 'use strict';
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Animated, InteractionManager } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import { PropTypes } from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { Grid, Col, Row } from 'react-native-easy-grid'
@@ -12,12 +13,13 @@ import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
 import DownloadTemplate from '../../../component/DownloadTemplate';
 import { VOCABULARY_DIR } from '../../../common/constant';
+import VocaTaskService from '../service/VocaTaskService';
 
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
-const HEADER_HEIGHT = 290;  //头部背景高度
-const TITLE_HEIGHT = 55;    //标题栏高度
+const HEADER_HEIGHT = (height * 0.45);  //头部背景高度
+const TITLE_HEIGHT = 60;    //标题栏高度
 export default class HomeHeader extends Component {
 
 
@@ -126,9 +128,38 @@ export default class HomeHeader extends Component {
   }
 
 
+  _syncAllData = () => {
+    NetInfo.fetch().then(async (state) => {
+      if (state.isConnected) {
+        const {
+          isTaskUploadFail,
+          isGroupUploadFail,
+          isCountUploadFail,
+          isDayUploadFail
+        } = this.props.home
+        //同步数据
+        if (this.props.home.isUploadFail) {
+          if (isTaskUploadFail)
+            this.props.syncTask(null)
+          if (isGroupUploadFail)
+            this.props.syncGroup({ isByHand: false })
+          if (isCountUploadFail)
+            this.props.synAllLearnedDays({ allLearnedDays: this.props.plan.allLearnedDays + 1 })
+          if (isDayUploadFail) {
+            const { finishedBooksWordCount } = this.props.plan
+            this.props.synFinishDays({
+              allLearnedCount: finishedBooksWordCount + new VocaTaskService().countLearnedWords()
+            })
+          }
+        }
+      } else {
+        this.props.app.toast.show('貌似网络出了点问题...', 1000)
+      }
+    })
+  }
 
   renderStickyHeader = () => {
-    return <View style={{ width: width, height: TITLE_HEIGHT, backgroundColor: '#FFE957' }}></View>
+    return <View style={{ width: width, height: TITLE_HEIGHT, backgroundColor: gstyles.mainColor }}></View>
   }
   renderFixedHeader = () => {
     const { bookId, bookName } = this.props.plan.plan
@@ -144,11 +175,7 @@ export default class HomeHeader extends Component {
         <AliIcon name='wode' size={26} color='#202020' onPress={this.props.openDrawer} />
         {(this.props.home.isUploading || this.props.home.isUploadFail) &&
           <View style={{ marginLeft: 10, marginBottom: 2 }}>
-            <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={() => {
-              if (this.props.home.isUploadFail) {
-                this.props.app.toast.show('貌似网络出了点问题...')
-              }
-            }} />
+            <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={this._syncAllData} />
             <Badge
               value={isFailed ? '!' : '···'}
               status={isFailed ? 'error' : 'primary'}
@@ -179,7 +206,6 @@ export default class HomeHeader extends Component {
     const { totalDays, totalWordCount } = plan
     return (
       <View style={[styles.headerView]}>
-
         <Grid >
           {/* 内容展示 */}
           <Row style={styles.headerCenter}>
@@ -250,8 +276,18 @@ export default class HomeHeader extends Component {
       </ParallaxScrollView>
     );
   }
+}
 
-
+HomeHeader.propTypes = {
+  home: PropTypes.object.isRequired,
+  plan: PropTypes.object.isRequired,
+  app: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+  openDrawer: PropTypes.func.isRequired,
+  syncTask: PropTypes.func.isRequired,
+  syncGroup: PropTypes.func.isRequired,
+  synAllLearnedDays: PropTypes.func.isRequired,
+  synFinishDays: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -282,17 +318,17 @@ const styles = StyleSheet.create({
 
   headerView: {
     width: width,
-    height: 290,
-    backgroundColor: '#FFe957'
+    height: HEADER_HEIGHT,
+    backgroundColor: gstyles.mainColor
   },
   headerCenter: {
     position: 'absolute',
-    bottom: '45%',
+    bottom: HEADER_HEIGHT * 0.45,
     paddingHorizontal: 40,
   },
   headerBottom: {
     position: 'absolute',
-    bottom: '16%',
+    bottom: HEADER_HEIGHT * 0.16,
     paddingHorizontal: 20,
   },
 

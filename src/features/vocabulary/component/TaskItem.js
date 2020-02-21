@@ -9,6 +9,7 @@ import VocaUtil from '../../vocabulary/common/vocaUtil'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
 import { DETAIL_READ, MULTI_SELECT_READ, FOUR_SELECT_READ, EXTENSIVE_READ } from "../../reading/common/constant";
+import { store } from '../../../redux/store';
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -33,7 +34,7 @@ export default class TaskItem extends Component {
   _startStudy = () => {
     if (this.props.disable) { //
       //提示先完成新学任务
-      this.props.toastRef.show('完成新学任务才可以解锁哦')
+      store.getState().app.toast.show('完成新学任务才可以解锁哦', 1500)
     } else {
       //根据进度进行不同的跳转
       let { index, item } = this.props
@@ -141,7 +142,7 @@ export default class TaskItem extends Component {
           type = '选词填空'
           break
         case FOUR_SELECT_READ:
-          type = '四选一'
+          type = '选词填空'
           break
         case EXTENSIVE_READ:
           type = '泛读'

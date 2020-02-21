@@ -8,6 +8,7 @@ import AliIcon from "../../component/AliIcon";
 import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import PlanSelectTemplate from "./component/PlanSelectTemplate";
+import _util from "../../common/util";
 
 
 const styles = StyleSheet.create({
@@ -68,11 +69,10 @@ class VocaPlanPage extends React.Component {
 
 
     /**确认提交计划 */
-    _modifyPlan = ({ taskCount, taskWordCount, reviewWordCount, totalDays, leftDays }) => {
+    _modifyPlan = async ({ taskCount, taskWordCount, reviewWordCount, totalDays, leftDays }) => {
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
-            const isExacted = true
-            // await _util.checkLocalTime() #todo:检查时间
+            const isExacted = await _util.checkLocalTime()
             if (isExacted) {
                 this.props.modifyPlan({
                     plan: {
@@ -143,13 +143,15 @@ class VocaPlanPage extends React.Component {
                                     borderRadius: 50,
                                 }}
                                 onPress={() => {
-                                    //显示计划选择器
-                                    PlanSelectTemplate.show({
-                                        commonModal: this.props.app.commonModal,
-                                        book: book,
-                                        learnCount: taskCount * taskWordCount,
-                                        onConfirm: this._modifyPlan,
-                                        isModifyPlan: true
+                                    _util.checkNet(() => {
+                                        //显示计划选择器
+                                        PlanSelectTemplate.show({
+                                            commonModal: this.props.app.commonModal,
+                                            book: book,
+                                            learnCount: taskCount * taskWordCount,
+                                            onConfirm: this._modifyPlan,
+                                            isModifyPlan: true
+                                        })
                                     })
                                 }}
                             />
@@ -171,7 +173,9 @@ class VocaPlanPage extends React.Component {
                             borderRadius: 50,
                         }}
                         onPress={() => {
-                            this.props.navigation.navigate("VocaLibTab")
+                            _util.checkNet(() => {
+                                this.props.navigation.navigate("VocaLibTab")
+                            })
                         }}
                     />
                 </View>

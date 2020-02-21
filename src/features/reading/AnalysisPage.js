@@ -147,7 +147,7 @@ class AnalysisPage extends React.Component {
                 <Text style={gstyles.md_black}>出错了...</Text>
             </View>
         } else {
-            return <View>
+            return <View style={{ flex: 1 }}>
                 {!isLoadPending &&
                     <View style={[styles.webContainer, { backgroundColor: bgThemes[themeIndex] }]}>
                         <WebView
@@ -174,6 +174,7 @@ class AnalysisPage extends React.Component {
                 {handin &&
                     <View style={styles.bottomBar}>
                         <TouchableWithoutFeedback onPress={() => {
+                            this.props.changeUserAnswerMap(new Map())
                             _util.goPageWithoutStack(this.props.navigation, 'Home', {})
                         }}>
                             <Text style={[styles.barText, gstyles.md_black]}>退出</Text>

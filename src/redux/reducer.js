@@ -17,13 +17,14 @@ const article = require("../features/reading/redux/article");
 const homeConfig = {
     key: 'home',
     storage: AsyncStorage,
-    blacklist: ['isLoadPending', 'shouldUpload', 'isUploading']
+    blacklist: ['isUploading']
 };
 const homeReducer = persistReducer(homeConfig, home)
 
 const vocalibConfig = {
     key: 'plan',
     storage: AsyncStorage,
+    blacklist: ['isLoadPending']
 }
 const planReducer = persistReducer(vocalibConfig, plan)
 

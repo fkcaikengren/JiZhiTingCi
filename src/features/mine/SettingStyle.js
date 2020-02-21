@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   version: {
     width: "100%",
     position: 'absolute',
-    bottom: 50,
+    bottom: 30,
   }
 })
 export default styles

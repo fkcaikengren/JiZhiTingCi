@@ -78,7 +78,6 @@ class HomeDrawerPanel extends Component {
     }
   }
 
-
   render() {
     const { user, avatarSource } = this.props.mine
     const { nickname } = user
@@ -114,7 +113,9 @@ class HomeDrawerPanel extends Component {
           containerStyle={{ width: '100%' }}
           buttonStyle={[styles.btn, gstyles.r_start]}
           onPress={() => {
-            this.props.navigation.navigate('Message')
+            _util.checkNet(() => {
+              this.props.navigation.navigate('Message')
+            })
           }}
         />
         <Button type='clear'

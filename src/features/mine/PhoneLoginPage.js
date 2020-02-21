@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { TextInput, StatusBar, StyleSheet, View, Text, TouchableOpacity, BackHandler } from 'react-native'
+import NetInfo from "@react-native-community/netinfo"
 import { connect } from 'react-redux'
 import { Button, Input } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon'
@@ -67,20 +68,28 @@ class PhoneLoginPage extends Component {
 
   _login = () => {
 
-    if (this.state.mode === MODE_PWD_INPUT) {
-      const params = { phone: this.state.phone, password: this.state.password }
-      this.props.loginByPwd({
-        params,
-        navigation: this.props.navigation
-      })
-    } else if (this.state.mode === MODE_CODE_INPUT) {
-      //获取登录信息
-      const params = { phone: this.state.phone, code: this.state.verifyCode }
-      this.props.loginByCode({
-        params,
-        navigation: this.props.navigation
-      })
-    }
+    NetInfo.fetch().then(async (state) => {
+      if (state.isConnected) {
+        if (this.state.mode === MODE_PWD_INPUT) {
+          const params = { phone: this.state.phone, password: this.state.password }
+          this.props.loginByPwd({
+            params,
+            navigation: this.props.navigation
+          })
+        } else if (this.state.mode === MODE_CODE_INPUT) {
+          //获取登录信息
+          const params = { phone: this.state.phone, code: this.state.verifyCode }
+          this.props.loginByCode({
+            params,
+            navigation: this.props.navigation
+          })
+        }
+      } else {
+        this.props.app.toast.show('请检查网络!', 1000)
+      }
+    })
+
+
 
   }
 

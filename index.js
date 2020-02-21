@@ -1,5 +1,5 @@
 
-import { Platform, AppRegistry } from 'react-native';
+import { Platform, AppRegistry, Text, TextInput } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';
 
@@ -21,6 +21,12 @@ if (!__DEV__) {
         error: () => { }
     };
 }
+
+
+//字体不随系统字体变化
+TextInput.defaultProps = Object.assign({}, TextInput.defaultProps, { allowFontScaling: false })
+Text.defaultProps = Object.assign({}, Text.defaultProps, { allowFontScaling: false })
+
 
 
 AppRegistry.registerComponent(appName, () => App);

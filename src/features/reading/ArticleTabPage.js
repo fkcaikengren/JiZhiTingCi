@@ -52,7 +52,7 @@ class ArticleTabPage extends React.Component {
             } else if (this.props.app.confirmModal.isOpen()) {
                 this.props.app.confirmModal.hide()
             } else {
-                this.props.navigation.goBack()
+                this._goBack()
             }
 
             return true
@@ -71,6 +71,11 @@ class ArticleTabPage extends React.Component {
         } else if (!this.props.article.isWebLoading && prevProps.article.isWebLoading) {
             this.props.app.loader.close()
         }
+    }
+
+    _goBack = () => {
+        this.props.changeUserAnswerMap(new Map())
+        this.props.navigation.goBack()
     }
 
     _movePage = (clickIndex) => {
@@ -288,7 +293,7 @@ class ArticleTabPage extends React.Component {
                     barStyle="dark-content" // or directly
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color='#555' onPress={() => {
-                            this.props.navigation.goBack();
+                            this._goBack();
                         }} />}
                     centerComponent={this._renderHeaderCenter()}
                     rightComponent={isLoadFail ? null :
@@ -305,7 +310,7 @@ class ArticleTabPage extends React.Component {
                                 </MenuTrigger>
                                 <MenuOptions >
                                     <MenuOption onSelect={this._toggleKeyWords} style={gstyles.menuOptionView}>
-                                        <AliIcon name="cidian" size={18} color="#303030" style={{ marginRight: 10 }} />
+                                        <AliIcon name="chazhaobiaodanliebiao" size={20} color="#303030" style={{ paddingTop: 5, marginRight: 10 }} />
                                         <Text style={gstyles.menuOptionText}>{showKeyWords ? '隐藏关键词' : '显示关键词'}</Text>
                                     </MenuOption>
 

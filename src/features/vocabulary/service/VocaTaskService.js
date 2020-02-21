@@ -427,6 +427,7 @@ export default class VocaTaskService {
                         passArr.push({
                             isHeader: false,
                             checked: false,
+                            taskOrder: task.taskOrder,
                             word: words[i].word,
                         })
                         if (!hasPassedWord) {
@@ -447,6 +448,23 @@ export default class VocaTaskService {
         }
 
         return passArr
+    }
+
+    /**
+     * 还原被Pass的单词
+     * @param {*} wordArr 
+     */
+    dispassWords(wordArr) {
+        if (!wordArr) {
+            return false
+        }
+        try {
+            this.vtd.dispassWords(wordArr)
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+        return true
     }
 
 

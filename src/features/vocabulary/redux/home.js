@@ -1,5 +1,6 @@
 
 import * as ha from './action/homeAction'
+import * as pa from './action/planAction'
 import * as vga from './action/vocaGroupAction'
 import _util from "../../../common/util";
 import * as Constant from "../common/constant";
@@ -9,12 +10,17 @@ import { LOGOUT, CHANGE_CONFIG_REVIEW_PLAY_TIMES } from '../../mine/redux/action
 const defaultState = {
     //任务数组
     tasks: [],
-    //状态
-    isLoadPending: false,
+
+
     //上传同步的状态
     isUploading: false,
     //上传同步失败
     isUploadFail: false,
+
+    isTaskUploadFail: false,
+    isGroupUploadFail: false,
+    isCountUploadFail: false,
+    isDayUploadFail: false
 
 
 }
@@ -23,14 +29,10 @@ export const home = (state = defaultState, action) => {
     switch (action.type) {
         //加载任务
         case ha.LOAD_TASKS_START:
-            return { ...state, isLoadPending: true }
+            return { ...state }
         case ha.LOAD_TASKS_SUCCEED:
-
             return {
                 ...state, tasks: action.payload.tasks,
-                isLoadPending: false,
-                isUploadFail: false,
-
             };
         //更新任务
         case ha.UPDATE_TASK:
@@ -45,16 +47,24 @@ export const home = (state = defaultState, action) => {
             return { ...state, tasks }
         //上传单词任务
         case ha.SYNC_TASK_START:
-            return { ...state, isUploading: true }
-        case ha.SYNC_TASK_SUCCEED:
+            return { ...state, isUploading: true, isUploadFail: false, isTaskUploadFail: false }
+        case ha.SYNC_TASK_SUCCEED: {
             console.log('--------同步任务成功的 tasks:------------------')
-            // console.log(state.tasks)
-            return { ...state, isUploading: false, isUploadFail: false }
+            let isUploadFail = false
+            const {
+                isGroupUploadFail,
+                isCountUploadFail,
+                isDayUploadFail
+            } = state
+            if (isGroupUploadFail || isCountUploadFail || isDayUploadFail) {
+                isUploadFail = true
+            }
+            return { ...state, isUploading: false, isUploadFail, isTaskUploadFail: false }
+        }
         case ha.SYNC_TASK_FAIL:
             console.log('--------同步任务失败的 tasks: -------------')
-            // console.log(state.tasks)
-            return { ...state, isUploading: false, isUploadFail: true }
-        // 
+            return { ...state, isUploading: false, isUploadFail: true, isTaskUploadFail: true }
+        // 更新分数
         case ha.UPDATE_SCORE: {
             const { id, taskOrder, score } = action.payload.userArticle
             const newTasks = state.tasks.map((task, i) => {
@@ -63,6 +73,15 @@ export const home = (state = defaultState, action) => {
                     && task.id === id) {
                     task.score = score
                 }
+                if (task.taskType === Constant.TASK_VOCA_TYPE && task.taskOrder === taskOrder) {
+                    task.taskArticles = task.taskArticles.map((ta, _) => {
+                        if (ta.id === id) {
+                            ta.score = score
+                        }
+                        return ta
+                    })
+
+                }
                 return task
             })
             return { ...state, tasks: newTasks }
@@ -70,13 +89,58 @@ export const home = (state = defaultState, action) => {
         // 上传生词本数据
         case vga.SYNC_GROUP_START:
             console.log('------开始同步生词本-------')
-            return { ...state, isUploading: true }
-        case vga.SYNC_GROUP_SUCCEED:
+            return { ...state, isUploading: true, isUploadFail: false, isGroupUploadFail: false }
+        case vga.SYNC_GROUP_SUCCEED: {
             console.log('--------同步生词本成功: -------------')
-            return { ...state, isUploading: false, isUploadFail: false }
+            let isUploadFail = false
+            const {
+                isTaskUploadFail,
+                isCountUploadFail,
+                isDayUploadFail
+            } = state
+            if (isTaskUploadFail || isCountUploadFail || isDayUploadFail) {
+                isUploadFail = true
+            }
+            return { ...state, isUploading: false, isUploadFail, isGroupUploadFail: false }
+        }
         case vga.SYNC_GROUP_FAIL:
             console.log('--------同步生词本失败: -------------')
-            return { ...state, isUploading: false, isUploadFail: true }
+            return { ...state, isUploading: false, isUploadFail: true, isGroupUploadFail: true }
+        //同步统计数据 
+        case pa.SYN_ALL_LEARNED_DAYS_START:
+            return { ...state, isUploading: true, isUploadFail: false, isCountUploadFail: false }
+        case pa.SYN_ALL_LEARNED_DAYS_SUCCEED: {
+            let isUploadFail = false
+            const {
+                isTaskUploadFail,
+                isGroupUploadFail,
+                isDayUploadFail
+            } = state
+            if (isTaskUploadFail || isGroupUploadFail || isDayUploadFail) {
+                isUploadFail = true
+            }
+            return { ...state, isUploading: false, isUploadFail, isCountUploadFail: false }
+        }
+        case pa.SYN_ALL_LEARNED_DAYS_FAIL:
+            return { ...state, isUploading: false, isUploadFail: true, isCountUploadFail: true }
+
+        case pa.SYN_FINISH_DAYS_START:
+            return { ...state, isUploading: true, isUploadFail: false, isDayUploadFail: false }
+        case pa.SYN_FINISH_DAYS_SUCCEED: {
+            let isUploadFail = false
+            const {
+                isTaskUploadFail,
+                isGroupUploadFail,
+                isCountUploadFail
+            } = state
+            if (isTaskUploadFail || isGroupUploadFail || isCountUploadFail) {
+                isUploadFail = true
+            }
+            return { ...state, isUploading: false, isUploadFail, isDayUploadFail: false }
+        }
+        case pa.SYN_FINISH_DAYS_FAIL:
+            return { ...state, isUploading: false, isUploadFail: true, isDayUploadFail: true }
+
         // 修改配置的复习轮播遍数
         case CHANGE_CONFIG_REVIEW_PLAY_TIMES: {
             const newTasks2 = state.tasks.map((task, index) => {

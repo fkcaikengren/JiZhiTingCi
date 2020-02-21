@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     content: {
-        marginTop: 20,
-        width: '100%'
+        marginTop: 15,
+        width: '100%',
     },
     backgroundVideo: {
         position: 'absolute',

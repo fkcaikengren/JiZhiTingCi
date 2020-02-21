@@ -19,7 +19,7 @@
             android:layout_height="64dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher_round"/>
 
         <RelativeLayout
             android:layout_width="0dp"

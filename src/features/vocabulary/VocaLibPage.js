@@ -36,7 +36,7 @@ class VocaLibPage extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.home.isLoadPending === true && nextProps.home.isLoadPending === false) {
+        if (this.props.plan.isLoadPending === true && nextProps.plan.isLoadPending === false) {
             this.props.navigation.goBack()
             return false
         } else {
@@ -57,12 +57,11 @@ class VocaLibPage extends Component {
 
 
     /**确认提交计划 */
-    _putPlan = ({ bookId, taskCount, taskWordCount, reviewWordCount, totalDays }) => {
+    _putPlan = async ({ bookId, taskCount, taskWordCount, reviewWordCount, totalDays }) => {
 
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
-            const isExacted = true
-            // await _util.checkLocalTime() #todo:检查时间
+            const isExacted = await _util.checkLocalTime()
             if (isExacted) {
                 // 修改单词书
                 this.props.changeVocaBook({
@@ -75,7 +74,6 @@ class VocaLibPage extends Component {
                         curBookId: this.props.plan.plan.bookId,
                         allLearnedCount: this.props.plan.allLearnedCount
                     },
-
                 })
 
                 // 同步：累计学习天数
@@ -146,8 +144,6 @@ class VocaLibPage extends Component {
 
 
     render() {
-        //数据
-        const { isLoadPending, loadingType } = this.props.plan
         return (
             <View style={{ flex: 1 }}>
                 <FlatList
@@ -155,11 +151,7 @@ class VocaLibPage extends Component {
                     renderItem={this._renderBook}
                     keyExtractor={item => item._id}
                 />
-
-
             </View>
-
-
         );
     }
 }

@@ -62,6 +62,9 @@ export default class FileService {
      * @returns 
      */
     load = async (primaryDir, filePath) => {
+        if (!filePath) {
+            return null
+        }
         //处理格式
         if (filePath.startsWith('/')) {
             filePath = filePath.substr(1)
