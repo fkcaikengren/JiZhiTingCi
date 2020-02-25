@@ -2,7 +2,7 @@
 
 'use strict';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Animated, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, Animated, InteractionManager, Image, TouchableOpacity } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import { PropTypes } from 'prop-types';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -101,6 +101,10 @@ export default class HomeHeader extends Component {
   _downloadPackage = () => {
     // 离线下载词库资源
     const { bookId, bookName, packageSize, packageUrl } = this.props.plan.plan
+    if (packageSize <= 0) {
+      this.props.app.toast.show('当前单词书离线包不可下载', 1500)
+      return
+    }
     this.props.app.confirmModal.show(`是否下载离线包(${packageSize}M)？`, null, () => {
       //开始下载
       DownloadTemplate.show({
@@ -172,7 +176,14 @@ export default class HomeHeader extends Component {
 
     return <View style={[styles.fixedSection, gstyles.r_start]}>
       <View style={[{ flex: 1 }, gstyles.r_start_bottom]}>
-        <AliIcon name='wode' size={26} color='#202020' onPress={this.props.openDrawer} />
+        <TouchableOpacity activeOpacity={0.7} onPress={this.props.openDrawer} >
+          {this.props.hasNewMessage &&
+            <View style={gstyles.msgDot}></View>
+          }
+          <Image source={this.props.avatarSource}
+            style={{ width: 32, height: 32, borderRadius: 50, }} />
+        </TouchableOpacity>
+
         {(this.props.home.isUploading || this.props.home.isUploadFail) &&
           <View style={{ marginLeft: 10, marginBottom: 2 }}>
             <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={this._syncAllData} />
@@ -315,6 +326,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
   },
+
 
   headerView: {
     width: width,

@@ -25,7 +25,7 @@ class AnalysisPage extends React.Component {
 
 
     componentDidMount() {
-        //监听物理返回键 #todo:根据情况判断重做还是回到原始页面
+        //监听物理返回键 
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
             this.props.navigation.goBack()
             return true

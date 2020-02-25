@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
     movieImg: {
+        marginTop: 10,
         height: 200,
         width: "100%",
         borderRadius: 8,

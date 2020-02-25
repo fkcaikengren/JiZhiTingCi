@@ -5,10 +5,13 @@ import { Header, Button } from 'react-native-elements'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import { WebView } from "react-native-webview";
+import AnalyticsUtil from '../../modules/AnalyticsUtil';
 
 export default class GuideDetailPage extends React.Component {
     constructor(props) {
         super(props);
+        this.analyticsTimer = null
+        this.analyticsDuration = 0
     }
 
     componentDidMount() {
@@ -16,9 +19,25 @@ export default class GuideDetailPage extends React.Component {
             this.props.navigation.goBack()
             return true
         })
+        // 页面浏览时长计时
+        this.analyticsTimer = setInterval(() => {
+            this.analyticsDuration += 3
+        }, 3000)
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
+        if (this.analyticsTimer) {
+            const title = this.props.navigation.getParam('title')
+            clearInterval(this.analyticsTimer)
+            //统计页面留存时长
+            AnalyticsUtil.postEvent({
+                type: 'browse',
+                id: 'page_message_detail',
+                name: '消息中心',
+                contentType: title,
+                duration: this.analyticsDuration
+            })
+        }
     }
 
     render() {

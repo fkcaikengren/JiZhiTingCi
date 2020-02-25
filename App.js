@@ -139,7 +139,7 @@ class App extends React.Component {
         //强制更新按钮文字，默认为continue
         mandatoryContinueButtonLabel: "立即更新",
         //强制更新时的信息. 默认为"An update is available that must be installed."
-        mandatoryUpdateMessage: "必须更新后才能使用",
+        // mandatoryUpdateMessage: "更新后才能使用！",
         //非强制更新时，按钮文字,默认为"ignore"
         optionalIgnoreButtonLabel: '稍后',
         //非强制更新时，确认按钮文字. 默认为"Install"
@@ -154,37 +154,17 @@ class App extends React.Component {
 
   /**极光推送 */
   initPush() {
-    PushUtil.setLoggerEnable(true)   //#todo:生产环境为false
+    PushUtil.setLoggerEnable(false)
     PushUtil.init()
-    //连接状态
-    PushUtil.addConnectEventListener(result => {
-      console.log("connectListener:" + JSON.stringify(result))
-    });
-    //通知回调
-    PushUtil.addNotificationListener(result => {
-      console.log("notificationListener:" + JSON.stringify(result))
-    });
-    //本地通知回调
-    PushUtil.addLocalNotificationListener(result => {
-      console.log("localNotificationListener:" + JSON.stringify(result))
-    });
-    //自定义消息回调
-    PushUtil.addCustomMessagegListener(result => {
-      console.log("customMessageListener:" + JSON.stringify(result))
-    });
-    //tag alias事件回调
-    PushUtil.addTagAliasListener(result => {
-      console.log("tagAliasListener:" + JSON.stringify(result))
-    });
   }
   componentWillMount() {
-    // CodePush.disallowRestart()          //禁止重启
-    // this.updateVersion()             //更新版本 #todo:生产环境下开启
+    CodePush.disallowRestart()
+    this.updateVersion()
     this.initPush()
   }
 
   componentDidMount() {
-    // CodePush.allowRestart()   //在加载完了，允许重启
+    CodePush.allowRestart()
   }
 
   render() {
@@ -206,5 +186,5 @@ const codePushOptions = {
   //MANUAL 手动检查
   checkFrequency: CodePush.CheckFrequency.ON_APP_START
 };
-// export default CodePush(codePushOptions)(App)
-export default App
+export default CodePush(codePushOptions)(App)
+// export default App

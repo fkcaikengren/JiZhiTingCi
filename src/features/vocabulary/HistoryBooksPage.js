@@ -5,6 +5,7 @@ import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 
 import CardView from 'react-native-cardview'
+import { BASE_URL } from "../../common/constant";
 
 const styles = StyleSheet.create({
     bookView: {
@@ -117,7 +118,7 @@ export default class HistoryBooksPage extends Component {
                                         cardMaxElevation={5}
                                         style={styles.imgCard}
                                     >
-                                        <Image source={{ uri: item.coverUrl }} style={styles.img} />
+                                        <Image source={{ uri: BASE_URL + item.coverUrl }} style={styles.img} />
                                     </CardView>
                                     <View style={[styles.bookContent, gstyles.c_between_left]}>
                                         <View style={[{ height: '70%' }, gstyles.c_start_left]}>

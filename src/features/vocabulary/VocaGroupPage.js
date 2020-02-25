@@ -53,6 +53,8 @@ class VocaGroupPage extends Component {
             return true
         })
         this._init()
+        //提示
+        this.props.app.toast.show('长按可以拖动排序', 1000)
     }
 
     componentWillUnmount() {

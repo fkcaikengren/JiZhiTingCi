@@ -8,11 +8,19 @@ import gstyles from "../../style";
 import libStyles from './VocaLibStyle'
 import styles from './VocaLibPayStyle'
 import PayTemplate from "../../component/PayTemplate";
+import AnalyticsUtil from "../../modules/AnalyticsUtil";
+import { BASE_URL } from "../../common/constant";
 
 
 class VocaLibPayPage extends Component {
     constructor(props) {
         super(props)
+        this.analyticsTimer = null
+        this.analyticsDuration = 0
+
+        this.state = {
+            bookPayInfo: null
+        }
     }
 
     componentDidMount() {
@@ -26,16 +34,65 @@ class VocaLibPayPage extends Component {
             }
             return true
         })
+        this._init()
+        // 页面浏览时长计时
+        this.analyticsTimer = setInterval(() => {
+            this.analyticsDuration += 1
+        }, 1000)
     }
 
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress')
+        if (this.analyticsTimer) {
+            const book = this.props.navigation.getParam('book')
+            clearInterval(this.analyticsTimer)
+            //统计页面留存时长
+            AnalyticsUtil.postEvent({
+                type: 'browse',
+                id: 'page_voca_lib_pay',
+                name: '词库付费页面',
+                contentType: book.name,
+                duration: this.analyticsDuration
+            })
+        }
+    }
+
+    _init = async () => {
+        const book = this.props.navigation.getParam('book')
+        const res = await Http.get('/vocaBook/getPayInfo?id=' + book._id)
+        if (res.status === 200) {
+            const bookPayInfo = {
+                ...res.data,
+                displayWords: res.data.displayWords ? JSON.parse(res.data.displayWords) : {}
+            }
+            this.setState({
+                bookPayInfo
+            })
+        }
+    }
+
+    _renderDisplayWords = () => {
+        const { displayWords } = this.state.bookPayInfo
+        if (displayWords) {
+            const comps = []
+            for (let key in displayWords) {
+                comps.push(
+                    <View style={[gstyles.r_start]} key={key}>
+                        <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>{key}</Text>
+                        <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>{displayWords[key]}</Text>
+                    </View>
+                )
+            }
+            return comps
+        }
+
     }
 
     render() {
 
         const book = this.props.navigation.getParam('book')
         const loadBooks = this.props.navigation.getParam('loadBooks')
+        const { bookPayInfo } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <Header
@@ -53,86 +110,82 @@ class VocaLibPayPage extends Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <ScrollView
-                    style={{ flex: 1, }}
-                    pagingEnabled={false}
-                    automaticallyAdjustContentInsets={false}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                >
-                    {/* 词汇书 */}
-                    <View style={[gstyles.r_start, libStyles.bookView]} >
-                        <CardView
-                            cardElevation={5}
-                            cardMaxElevation={5}
-                            style={libStyles.imgCard}
-                        >
-                            <Image source={{ uri: book.coverUrl }} style={libStyles.img} />
-                        </CardView>
+                {bookPayInfo &&
+                    <ScrollView
+                        style={{ flex: 1 }}
+                        pagingEnabled={false}
+                        automaticallyAdjustContentInsets={false}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {/* 词汇书 */}
+                        <View style={[gstyles.r_start, libStyles.bookView]} >
+                            <CardView
+                                cardElevation={5}
+                                cardMaxElevation={5}
+                                style={libStyles.imgCard}
+                            >
+                                <Image source={{ uri: BASE_URL + book.coverUrl }} style={libStyles.img} />
+                            </CardView>
 
-                        <View style={[libStyles.bookContent, gstyles.c_between_left]}>
-                            <View style={[{ height: '70%' }, gstyles.c_start_left]}>
-                                <Text style={libStyles.bookname}>{book.name}</Text>
-                                <Text numberOfLine={2} style={libStyles.note}>{book.desc}</Text>
-                                {book.price > 0 &&
-                                    <Text style={libStyles.price}>{`￥${book.price.toFixed(2)}`}</Text>
+                            <View style={[libStyles.bookContent, gstyles.c_between_left]}>
+                                <View style={[{ height: '70%' }, gstyles.c_start_left]}>
+                                    <Text style={libStyles.bookname}>{book.name}</Text>
+                                    <Text numberOfLine={2} style={libStyles.note}>{book.desc}</Text>
+                                    {book.price > 0 &&
+                                        <Text style={libStyles.price}>{`￥${book.price.toFixed(2)}`}</Text>
+                                    }
+                                </View>
+                                <Text style={libStyles.wordCount}>共<Text style={[libStyles.wordCount, { color: '#F29F3F' }]}>{book.count}</Text>个单词</Text>
+                            </View>
+
+                        </View>
+                        {/* 特点一 */}
+                        <View style={[gstyles.c_start_left, styles.featureView]}>
+                            <View style={[gstyles.r_start, styles.featureTab]}>
+                                <AliIcon name='kaoshi' size={18} color={gstyles.emColor}></AliIcon>
+                                <Text style={styles.tabFont}>高分必备</Text>
+                            </View>
+                            <View style={[gstyles.c_start_left, styles.featureBox]}>
+                                <Text style={[styles.boxFont, { marginBottom: 10 }]}>
+                                    {bookPayInfo.intro}
+                                </Text>
+                                {
+                                    this._renderDisplayWords()
                                 }
                             </View>
-                            <Text style={libStyles.wordCount}>共<Text style={[libStyles.wordCount, { color: '#F29F3F' }]}>{book.count}</Text>个单词</Text>
                         </View>
-
-                    </View>
-                    {/* 特点一 */}
-                    <View style={[gstyles.c_start_left, styles.featureView]}>
-                        <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='kaoshi' size={18} color={gstyles.emColor}></AliIcon>
-                            <Text style={styles.tabFont}>高分必备</Text>
-                        </View>
-                        <View style={[gstyles.c_start_left, styles.featureBox]}>
-                            <Text style={[styles.boxFont, { marginBottom: 10 }]}>
-                                词组在历年高考真题中占比20~30分,该书收录了高中阶段出现的858个词组。
-                            </Text>
-                            <View style={[gstyles.r_start]}>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>account for </Text>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>对…负有责任/解释</Text>
+                        <View style={[gstyles.c_start_left, styles.featureView]}>
+                            <View style={[gstyles.r_start, styles.featureTab]}>
+                                <AliIcon name='yingshi' size={18} color={gstyles.emColor}></AliIcon>
+                                <Text style={styles.tabFont}>影视例句</Text>
                             </View>
-                            <View style={[gstyles.r_start]}>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>turn into </Text>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>变成，进入</Text>
-                            </View>
-
-                            <View style={[gstyles.r_start]}>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>rise up </Text>
-                                <Text numberOfLines={1} style={{ flex: 1, lineHeight: 20 }}>上升，起义，叛变</Text>
-                            </View>
-
-                        </View>
-                    </View>
-                    <View style={[gstyles.c_start_left, styles.featureView]}>
-                        <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='yingshi' size={18} color={gstyles.emColor}></AliIcon>
-                            <Text style={styles.tabFont}>影视例句</Text>
-                        </View>
-                        <View style={[gstyles.c_start_left, styles.featureBox]}>
-                            <Text style={styles.boxFont}>
-                                精选影视中的例句，帮助你深入理解词组含义，学的更有趣、更轻松。
+                            <View style={[gstyles.c_start_left, styles.featureBox]}>
+                                <Text style={styles.boxFont}>
+                                    精选影视中的例句，帮助你深入理解单词含义，学的更有趣、更轻松。
                              </Text>
-                            <Image source={{ uri: "https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/vocabook/movie.png" }} style={styles.movieImg} />
+                                <Image source={{ uri: BASE_URL + bookPayInfo.moviePicUrl }} style={styles.movieImg} />
+                            </View>
                         </View>
-                    </View>
-                    <View style={[gstyles.c_start_left, styles.featureView]}>
-                        <View style={[gstyles.r_start, styles.featureTab]}>
-                            <AliIcon name='zhineng' size={18} color={gstyles.emColor}></AliIcon>
-                            <Text style={styles.tabFont}>滚动复习</Text>
-                        </View>
-                        <View style={[gstyles.c_start_left, styles.featureBox]}>
-                            <Text style={styles.boxFont}>
-                                词组在历年高考中占比10%~20%,在近10年的真题中，xxxxxxxxxxxxxxxxxxxxxxxxx
+                        <View style={[gstyles.c_start_left, styles.featureView]}>
+                            <View style={[gstyles.r_start, styles.featureTab]}>
+                                <AliIcon name='zhineng' size={18} color={gstyles.emColor}></AliIcon>
+                                <Text style={styles.tabFont}>滚动复习</Text>
+                            </View>
+                            <View style={[gstyles.c_start_left, styles.featureBox]}>
+                                <Text style={styles.boxFont}>
+                                    人们对反复出现的东西给予重视，潜意识的记住它。利用这个原理，通过类似音乐的播放学习，极大提高对单词的接触频率，让记忆深刻牢固！
                                 </Text>
+                            </View>
                         </View>
+                        <View style={{ marginBottom: 50 }}></View>
+                    </ScrollView>
+                }
+                {!bookPayInfo &&
+                    <View style={[{ flex: 1 }, gstyles.c_center]}>
+                        <Text style={gstyles.md_gray}>请检查网络重试...</Text>
                     </View>
-                    <View style={{ marginBottom: 40 }}></View>
-                </ScrollView>
+                }
                 <View style={[gstyles.r_start, styles.bottomBar]}>
                     <View style={[{ flex: 1, marginLeft: 15 }, gstyles.r_start]}>
                         <Text style={[styles.payNum, { fontSize: 20, paddingTop: 3 }]}>￥</Text>
@@ -160,6 +213,8 @@ class VocaLibPayPage extends Component {
                         }}
                     />
                 </View>
+
+
             </View >
         );
     }

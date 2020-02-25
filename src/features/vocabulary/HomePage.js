@@ -5,6 +5,7 @@ import Drawer from 'react-native-drawer'
 import { Button } from 'react-native-elements'
 import SplashScreen from 'react-native-splash-screen';
 
+import PushUtil from '../../modules/PushUtil'
 import styles from './HomeStyle'
 import HomeDrawerPanel from './component/HomeDrawerPanel'
 import HomeHeader from './component/HomeHeader'
@@ -14,6 +15,7 @@ import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import * as VocaGroupAction from './redux/action/vocaGroupAction'
+import * as MineAction from '../mine/redux/action/mineAction'
 import _util from '../../common/util'
 import { BY_REAL_TASK, TASK_VOCA_TYPE } from "./common/constant";
 import gstyles from '../../style';
@@ -43,22 +45,12 @@ class HomePage extends Component {
         AppState.addEventListener('change', this._handleAppStateChange);
         // 检查时间
         _util.checkLocalTime()
+        //监听极光推送
+        this._listenPush()
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
         AppState.removeEventListener('change', this._handleAppStateChange);
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-
-        const { task, autoPlayTimer, bgPath } = this.props.vocaPlay
-        //vocaPlay的task 下标不变，不重绘
-        if (nextProps.vocaPlay.autoPlayTimer === autoPlayTimer
-            && nextProps.vocaPlay.bgPath === bgPath
-            && nextProps.home === this.props.home
-            && nextProps.plan === this.props.plan) {
-            return false
-        }
-        return true
     }
 
     _onBackButtonPressAndroid = () => {
@@ -78,6 +70,21 @@ class HomePage extends Component {
             }
         }
     }
+    /**极光推送 */
+    _listenPush() {
+        //通知回调
+        PushUtil.addNotificationListener(result => {
+            console.log("notificationListener:" + JSON.stringify(result))
+            const { msgType } = result.extras
+            console.log(result.extras)
+            if (msgType === 'ArticleMessage') {
+                //改变hasNewMessage
+                this.props.changeHasNewMessage({
+                    hasNewMessage: true
+                })
+            }
+        });
+    }
 
     _handleAppStateChange = (nextAppState) => {
         if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
@@ -92,6 +99,7 @@ class HomePage extends Component {
 
 
     _init = async () => {
+
         // 加载今日数据
         const { plan, leftDays, allLearnedDays, learnedTodayFlag } = this.props.plan
         const { lastLearnDate, taskCount, taskWordCount } = plan
@@ -169,7 +177,7 @@ class HomePage extends Component {
                 <View style={[gstyles.r_center, styles.userAvatar]}>
                     <Image source={this.props.avatarSource} style={{ width: 40, height: 40, borderRadius: 100, }} />
                 </View>
-                <Text style={gstyles.lg_black}>{this.props.user.nickname}</Text>
+                <Text style={gstyles.md_black}>{this.props.user.nickname}</Text>
                 <View style={[gstyles.r_between, { width: '100%', marginVertical: 8 }]}>
                     <View style={gstyles.c_start}>
                         <Text style={gstyles.xl_black}>{learnedWordCount}</Text>
@@ -232,6 +240,8 @@ class HomePage extends Component {
                         home={this.props.home}
                         plan={this.props.plan}
                         app={this.props.app}
+                        avatarSource={this.props.avatarSource}
+                        hasNewMessage={this.props.hasNewMessage}
                         openDrawer={this._openDrawerPanel}
                         syncTask={this.props.syncTask}
                         syncGroup={this.props.syncGroup}
@@ -242,7 +252,9 @@ class HomePage extends Component {
                             <Task
                                 navigation={this.props.navigation}
                                 home={this.props.home}
+                                autoPlayTimer={this.props.vocaPlay.autoPlayTimer}
                                 updateTask={this.props.updateTask}
+                                changePlayTimer={this.props.changePlayTimer}
                             />
                         }
                         {leftDays < 0 &&
@@ -279,6 +291,7 @@ const mapStateToProps = state => ({
 
     avatarSource: state.mine.avatarSource,
     user: state.mine.user,
+    hasNewMessage: state.mine.hasNewMessage
 })
 
 
@@ -295,7 +308,8 @@ const mapDispatchToProps = {
     clearPlay: VocaPlayAction.clearPlay,
     changePlayListIndex: VocaPlayAction.changePlayListIndex,
 
-    syncGroup: VocaGroupAction.syncGroup
+    syncGroup: VocaGroupAction.syncGroup,
+    changeHasNewMessage: MineAction.changeHasNewMessage,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 

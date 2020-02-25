@@ -8,12 +8,21 @@ import AnalyticsUtil from "../../../modules/AnalyticsUtil"
 export const loginHandle = (data, navigation) => {
     const { credential, user, words, articles } = data
     const success = (data != null && user != null && credential.accessToken != null)
-    /*极光统计*/
+
+    /*极光统计:登录事件*/
     AnalyticsUtil.postEvent({
         type: 'login',
         method: "loginHandle",
         success
     })
+    //统计注册事件
+    if (user && (user.plan === null || user.plan.bookId == null)) {
+        AnalyticsUtil.postEvent({
+            type: 'register',
+            method: "loginHandle",
+            success
+        })
+    }
     if (!success) {
         return
     }
@@ -53,7 +62,6 @@ export const loginHandle = (data, navigation) => {
 
 export const logoutHandle = () => {
 
-    // todo: 上传数据
     //1.清空Storage 
     Storage.clearMapForKey('notSyncTasks')
 

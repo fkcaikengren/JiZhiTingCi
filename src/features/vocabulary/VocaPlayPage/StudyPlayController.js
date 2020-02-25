@@ -64,34 +64,27 @@ export default class StudyPlayController extends React.Component {
 
         return (
             //  底部控制
-            <Grid style={{ width: width, position: 'absolute', bottom: 0 }}>
-                {/* 功能按钮 */}
-                <Row style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingHorizontal: 22,
-                    marginBottom: 16,
-                }}>
-                    {/* 英文单词按钮 */}
+            <View style={{ width: width, height: 160, paddingBottom: 10 }}>
+                <Grid >
+                    {/* 功能按钮 */}
+                    <Row style={[gstyles.r_between, { paddingHorizontal: 22 }]}>
+                        {/* 英文单词按钮 */}
 
-                    <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
-                        onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._toggleWord() }}>
-                        en
+                        <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
+                            onStartShouldSetResponder={() => true}
+                            onResponderStart={(e) => { this._toggleWord() }}>
+                            en
                     </Text>
 
-                    {/* 中文按钮 */}
-                    <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
-                        onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._toggleTran() }}>
-                        zh
+                        {/* 中文按钮 */}
+                        <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
+                            onStartShouldSetResponder={() => true}
+                            onResponderStart={(e) => { this._toggleTran() }}>
+                            zh
                     </Text>
-                </Row>
-
-                {/* 进度条 */}
-                <Row style={[{ marginBottom: 5 }, gstyles.r_center]}>
-                    <View style={gstyles.r_center}>
+                    </Row>
+                    {/* 进度条 */}
+                    <View style={[gstyles.r_center, { marginBottom: 10 }]}>
                         <Text style={{ color: '#fff', marginRight: 5 }}>{wordCount == 0 ? 0 : curIndex + 1}</Text>
                         <Progress.Bar
                             progress={wordCount == 0 ? 0 : progressNum}
@@ -102,52 +95,52 @@ export default class StudyPlayController extends React.Component {
                             borderWidth={0} />
                         <Text style={{ color: '#fff', marginLeft: 10 }}>{wordCount}</Text>
                     </View>
-                </Row>
+                    {/*  */}
+                    <Row style={[{
+                        paddingHorizontal: 30,
+                        marginBottom: 10,
+                    }, gstyles.r_around]}>
+                        {/* 返回 */}
+                        <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
+                            //更新任务
+                            this.props.updateTask({ task })
+                            this.props.goBack()
+                        }} />
+                        {/* 控制播放 */}
+                        <View style={[{ width: width * (1 / 2) }, gstyles.r_around]}>
+                            <TouchableWithoutFeedback onPress={this._togglePlay}>
+                                <View style={[styles.bigRoundBtn, { paddingLeft: autoPlayTimer ? 0 : 5 }, { backgroundColor: Theme.themeColor }]}>
+                                    <AliIcon name={autoPlayTimer ? 'zanting1' : 'play'} size={22} color='#FFF'></AliIcon>
+                                </View>
+                            </TouchableWithoutFeedback>
 
-                {/*  */}
-                <Row style={[{
-                    paddingHorizontal: 30,
-                    marginBottom: 10,
-                }, gstyles.r_around]}>
-                    {/* 返回 */}
-                    <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
-                        //更新任务
-                        this.props.updateTask({ task })
-                        this.props.goBack()
-                    }} />
-                    {/* 控制播放 */}
-                    <View style={[{ width: width * (1 / 2) }, gstyles.r_around]}>
-                        <TouchableWithoutFeedback onPress={this._togglePlay}>
-                            <View style={[styles.bigRoundBtn, { paddingLeft: autoPlayTimer ? 0 : 5 }, { backgroundColor: Theme.themeColor }]}>
-                                <AliIcon name={autoPlayTimer ? 'zanting1' : 'play'} size={22} color='#FFF'></AliIcon>
-                            </View>
-                        </TouchableWithoutFeedback>
+                        </View>
+                        {/* 控制间隔 */}
+                        <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+                            <MenuTrigger
+                                text={Math.floor(interval) + 's'}
+                                customStyles={{ triggerText: styles.studyIntervalButton }} />
+                            <MenuOptions>
+                                <MenuOption style={gstyles.haireBottom} value={4.0}>
+                                    <Text style={popStyle}>4.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={3.0}>
+                                    <Text style={popStyle}>3.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={2.0}>
+                                    <Text style={popStyle}>2.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={1.4}>
+                                    <Text style={popStyle}>1.0s</Text>
+                                </MenuOption>
 
-                    </View>
-                    {/* 控制间隔 */}
-                    <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger
-                            text={Math.floor(interval) + 's'}
-                            customStyles={{ triggerText: styles.studyIntervalButton }} />
-                        <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                <Text style={popStyle}>4.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={3.0}>
-                                <Text style={popStyle}>3.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={2.0}>
-                                <Text style={popStyle}>2.0s</Text>
-                            </MenuOption>
-                            <MenuOption value={1.4}>
-                                <Text style={popStyle}>1.0s</Text>
-                            </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                    </Row>
 
-                        </MenuOptions>
-                    </Menu>
-                </Row>
+                </Grid>
 
-            </Grid>
+            </View>
 
         );
     }

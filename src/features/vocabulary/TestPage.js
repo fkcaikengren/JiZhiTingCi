@@ -530,110 +530,112 @@ export default class TestPage extends Component {
                 {
                     this.props.renderContent(this.state.task.taskWords[this.answerIndex], this.allWordInfos[this.answerIndex], this.state.showAnswer)
                 }
-
-                <Grid style={{ padding: 10 }}>
-                    {this.options.length > 0 &&
-                        this.options.map((option, index) => {
-                            let showText = ''
-                            let alignStyle = { textAlign: 'center' }
-                            switch (this.props.type) {
-                                case Constant.WORD_TRAN:
-                                case Constant.PRON_TRAN:
-                                    showText = this.allWordInfos[option] ? this.allWordInfos[option].translation : ''
-                                    alignStyle = { textAlign: 'left' }
-                                    break;
-                                case Constant.TRAN_WORD:
-                                case Constant.SEN_WORD:
-                                    showText = this.allWordInfos[option] ? this.allWordInfos[option].word : ''
-                                    break;
-                            }
-                            // 选项
-                            const colorStyleArr = [
-                                (option === this.answerIndex && selected) ?
-                                    { borderColor: '#1890FF', borderWidth: 1 } : null,
-                                (option === selectedIndex && selectWrong) ?
-                                    { borderColor: '#EC6760', borderWidth: 1 } : null
-                            ]
-                            return <Row key={index} style={gstyles.r_center}>
-                                <Button
-                                    title={showText}
-                                    titleStyle={[
-                                        {
-                                            width: '90%',
-                                            fontSize: 16,
-                                            color: this.state.showAnswer ? '#555' : '#202020'
-                                        },
-                                        alignStyle,
-                                        (option === this.answerIndex && selected) ? { color: '#1890FF', } : null,
-                                        (option === selectedIndex && selectWrong) ? { color: '#EC6760', } : null
-                                    ]}
-                                    titleProps={{ numberOfLines: 1 }}
-                                    containerStyle={[
-                                        { width: '100%' },
-                                    ]}
-                                    buttonStyle={[
-                                        styles.selectBtn,
-                                        ...colorStyleArr
-                                    ]}
-                                    onPress={this.state.showAnswer ? null : () => {
-                                        if (this._judgeAnswer(option)) { //回到
-                                            this._stopCountDown()       //停止计时
-                                            this.setState({ showAnswer: true }) //显示答案
-                                            let url = null
-                                            if (this.props.playType === "sentence") {
-                                                url = this.allWordInfos[this.answerIndex].sen_pron_url
-                                            } else {
-                                                url = this.allWordInfos[this.answerIndex].pron_url
+                <View style={{ width: width, height: 370 }}>
+                    <Grid style={{ padding: 10, paddingBottom: 35 }}>
+                        {this.options.length > 0 &&
+                            this.options.map((option, index) => {
+                                let showText = ''
+                                let alignStyle = { textAlign: 'center' }
+                                switch (this.props.type) {
+                                    case Constant.WORD_TRAN:
+                                    case Constant.PRON_TRAN:
+                                        showText = this.allWordInfos[option] ? this.allWordInfos[option].translation : ''
+                                        alignStyle = { textAlign: 'left' }
+                                        break;
+                                    case Constant.TRAN_WORD:
+                                    case Constant.SEN_WORD:
+                                        showText = this.allWordInfos[option] ? this.allWordInfos[option].word : ''
+                                        break;
+                                }
+                                // 选项
+                                const colorStyleArr = [
+                                    (option === this.answerIndex && selected) ?
+                                        { borderColor: '#1890FF', borderWidth: 1 } : null,
+                                    (option === selectedIndex && selectWrong) ?
+                                        { borderColor: '#EC6760', borderWidth: 1 } : null
+                                ]
+                                return <Row key={index} style={gstyles.r_center}>
+                                    <Button
+                                        title={showText}
+                                        titleStyle={[
+                                            {
+                                                width: '90%',
+                                                fontSize: 16,
+                                                color: this.state.showAnswer ? '#555' : '#202020'
+                                            },
+                                            alignStyle,
+                                            (option === this.answerIndex && selected) ? { color: '#1890FF', } : null,
+                                            (option === selectedIndex && selectWrong) ? { color: '#EC6760', } : null
+                                        ]}
+                                        titleProps={{ numberOfLines: 1 }}
+                                        containerStyle={[
+                                            { width: '100%' },
+                                        ]}
+                                        buttonStyle={[
+                                            styles.selectBtn,
+                                            ...colorStyleArr
+                                        ]}
+                                        onPress={this.state.showAnswer ? null : () => {
+                                            if (this._judgeAnswer(option)) { //回到
+                                                this._stopCountDown()       //停止计时
+                                                this.setState({ showAnswer: true }) //显示答案
+                                                let url = null
+                                                if (this.props.playType === "sentence") {
+                                                    url = this.allWordInfos[this.answerIndex].sen_pron_url
+                                                } else {
+                                                    url = this.allWordInfos[this.answerIndex].pron_url
+                                                }
+                                                this.audioService.playSound({
+                                                    pDir: VOCABULARY_DIR,
+                                                    fPath: url
+                                                }, null, () => {
+                                                    this.timerArr.push(setTimeout(this._nextWord, 500))
+                                                }, () => {
+                                                    this.timerArr.push(setTimeout(this._nextWord, 500))
+                                                })
+                                            } else {                        //答错
+                                                this._openAnsweredModal()
                                             }
-                                            this.audioService.playSound({
-                                                pDir: VOCABULARY_DIR,
-                                                fPath: url
-                                            }, null, () => {
-                                                this.timerArr.push(setTimeout(this._nextWord, 500))
-                                            }, () => {
-                                                this.timerArr.push(setTimeout(this._nextWord, 500))
-                                            })
-                                        } else {                        //答错
-                                            this._openAnsweredModal()
+
+                                        }} />
+                                </Row>
+                            })
+                        }
+
+                        <Row style={gstyles.r_between}>
+                            {!this.noPass &&
+                                <Button
+                                    disabled={this.state.showAnswer}
+                                    title={isPassed ? '' : 'Pass'}
+                                    icon={isPassed ? <AliIcon name='wancheng' size={30} color='#F2753F' /> : null}
+                                    titleStyle={{ color: '#F2753F', fontSize: 16 }}
+                                    containerStyle={{ flex: 1, marginRight: 20 }}
+                                    buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957', }]}
+                                    onPress={() => {
+                                        if (this.state.task.wordCount <= 2) {
+                                            store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
+                                            return
                                         }
-
-                                    }} />
-                            </Row>
-                        })
-                    }
-
-                    <Row style={gstyles.r_between}>
-                        {!this.noPass &&
+                                        this._passWord(this.allWordInfos[this.answerIndex].word)
+                                        this.timerArr.push(setTimeout(this._nextWord, 500))
+                                    }} //pass
+                                />
+                            }
                             <Button
                                 disabled={this.state.showAnswer}
-                                title={isPassed ? '' : 'Pass'}
-                                icon={isPassed ? <AliIcon name='wancheng' size={30} color='#F2753F' /> : null}
+                                title={`${this.state.leftTime}s  想不起来了，查看提示`}
                                 titleStyle={{ color: '#F2753F', fontSize: 16 }}
-                                containerStyle={{ flex: 1, marginRight: 20 }}
-                                buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957', }]}
+                                containerStyle={{ flex: 4 }}
+                                buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957' }]}
                                 onPress={() => {
-                                    if (this.state.task.wordCount <= 2) {
-                                        store.getState().app.toast.show('超出Pass数量限制，不能再Pass了', 1000)
-                                        return
-                                    }
-                                    this._passWord(this.allWordInfos[this.answerIndex].word)
-                                    this.timerArr.push(setTimeout(this._nextWord, 500))
-                                }} //pass
+                                    this.hasSeenDetail = true
+                                    this._openDetailModal()
+                                }}
                             />
-                        }
-                        <Button
-                            disabled={this.state.showAnswer}
-                            title={`${this.state.leftTime}s  想不起来了，查看提示`}
-                            titleStyle={{ color: '#F2753F', fontSize: 16 }}
-                            containerStyle={{ flex: 4 }}
-                            buttonStyle={[styles.selectBtn, { backgroundColor: '#FFE957' }]}
-                            onPress={() => {
-                                this.hasSeenDetail = true
-                                this._openDetailModal()
-                            }}
-                        />
-                    </Row>
-                </Grid>
+                        </Row>
+                    </Grid>
+
+                </View>
 
                 {
                     this._createDetailModal(false)

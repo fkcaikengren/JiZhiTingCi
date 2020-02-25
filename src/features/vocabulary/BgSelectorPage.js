@@ -43,14 +43,14 @@ class BgSelectorPage extends Component {
     }
 
 
-
     _init = async () => {
+
         this.props.app.loader.show("加载中...", DURATION.FOREVER)
-        const myHttp = createHttp(null, { shouldRefreshToken: true });
-        const res = await myHttp.get('/appinfo/getPlayBgs')
-        const bgUrls = res.data
         let bgPaths = await Storage.getAllDataForKey('playBgs')
         if (bgPaths.length <= 0) { //不存在，先下载
+            const myHttp = createHttp(null, { shouldRefreshToken: true });
+            const res = await myHttp.get('/appinfo/getPlayBgs')
+            const bgUrls = res.data
             for (let url of bgUrls) {
                 const fname = url.match(/[^\/]+(\.(jpg)|(png))$/)[0]
                 const path = RootPath + fname

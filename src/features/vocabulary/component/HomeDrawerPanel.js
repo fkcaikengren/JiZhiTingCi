@@ -14,6 +14,8 @@ import * as VocaPlayAction from '../redux/action/vocaPlayAction'
 import * as TimingAction from '../../../redux/action/timingAction'
 import _util from '../../../common/util';
 import TimingService from '../service/TimingService';
+import AnalyticsUtil from '../../../modules/AnalyticsUtil';
+import { store } from '../../../redux/store';
 
 const STATUSBAR_HEIGHT = StatusBar.currentHeight
 const Dimensions = require('Dimensions');
@@ -24,7 +26,6 @@ class HomeDrawerPanel extends Component {
   constructor(props) {
     super(props)
     this.timeOptions = [0, 10, 20, 30, 60] // [0,10,20,30,60]
-
     this.timingService = TimingService.getInstance()
     this.timingService.changeWholeSeconds = ({ timeIndex, wholeSeconds }) => { this.props.changeWholeSeconds({ timeIndex, wholeSeconds }) }
     this.timingService.decreaseSecond = () => { this.props.decreaseSecond() }
@@ -64,6 +65,11 @@ class HomeDrawerPanel extends Component {
               onPress={() => {
                 this.timingService.setContentState = setContentState
                 this.timingService.countDown(i, item)
+                // 统计“定时关闭”功能使用次数
+                AnalyticsUtil.postEvent({
+                  type: 'count',
+                  id: 'function_timing_out'
+                })
               }}>
               <View style={[gstyles.r_between, styles.TimingItemWrap, noBorder]}>
                 <Text style={[gstyles.md_lightBlack, selectedStyle]}>{item === 0 ? '关闭' : `${item}分钟`}</Text>
@@ -107,7 +113,14 @@ class HomeDrawerPanel extends Component {
         </TouchableWithoutFeedback>
 
         <Button type='clear'
-          icon={<AliIcon name='xinxi' size={24} color={gstyles.gray} />}
+          icon={
+            <View >
+              {store.getState().mine.hasNewMessage &&
+                <View style={[gstyles.msgDot, { top: -1, right: -2 }]}></View>
+              }
+              <AliIcon name='xinxi' size={24} color={gstyles.gray} />
+            </View>
+          }
           title={'消息中心'}
           titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
           containerStyle={{ width: '100%' }}
@@ -160,7 +173,7 @@ class HomeDrawerPanel extends Component {
           titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
           containerStyle={{ width: '100%' }}
           buttonStyle={[styles.btn, gstyles.r_start]}
-          onPress={this.props.closeDrawer}
+          onPress={() => { this.props.app.toast.show('暂不支持', 1000) }}
         />
         <Button type='clear'
           icon={<AliIcon name='guanyuwomen' size={24} color={gstyles.gray} />}

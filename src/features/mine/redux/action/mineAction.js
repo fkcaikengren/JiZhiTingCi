@@ -85,6 +85,8 @@ export const CHANGE_CONFIG_M_TRANS = 'CHANGE_CONFIG_M_TRANS'
 
 // 消息
 export const ADD_MESSAGES = 'ADD_MESSAGES'
+export const READ_MESSAGE = 'READ_MESSAGE'
+export const CHANGE_HAS_NEW_MESSAGE = 'CHANGE_HAS_NEW_MESSAGE'
 
 const fn = (payload) => {
     return payload
@@ -94,7 +96,7 @@ export const { loginByCode, loginByPwd, loginByWx, loginByQq,
     modifyNickname, modifySex, modifyPassword, modifyAvatar, modifyWechat, modifyQq, modifyPhone,
     setAvatarSource, logout,
     changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans,
-    addMessages } = createActions({
+    addMessages, readMessage, changeHasNewMessage } = createActions({
         [LOGIN_BY_CODE]: fn,
         [LOGIN_BY_PWD]: fn,
         [LOGIN_BY_WX]: fn,
@@ -114,6 +116,7 @@ export const { loginByCode, loginByPwd, loginByWx, loginByQq,
         // 设置头像
         [SET_AVATAR_SOURCE]: fn,
 
+
         // 退出登录
         [LOGOUT]: fn,
 
@@ -132,5 +135,9 @@ export const { loginByCode, loginByPwd, loginByWx, loginByQq,
         },
 
         //添加消息
-        [ADD_MESSAGES]: fn
+        [ADD_MESSAGES]: fn,
+        //已读消息
+        [READ_MESSAGE]: fn,
+        //修改hasNewMessage
+        [CHANGE_HAS_NEW_MESSAGE]: fn
     })

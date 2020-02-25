@@ -36,12 +36,20 @@ class MainLoginPage extends Component {
 
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            //todo:双击退出
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            this.props.app.toast.show('再按一次退出应用', 1000);
+            return true;
         })
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
+
+
 
     render() {
         return (

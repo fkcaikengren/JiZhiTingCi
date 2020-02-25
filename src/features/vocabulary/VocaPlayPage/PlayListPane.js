@@ -208,7 +208,6 @@ export default class PlayListPane extends Component {
                                 <Text style={gstyles.md_white}>暂无学习过的单词</Text>
                             </View>
                         }
-
                     </View>
                     {/* 生词播放列表 */}
                     <View style={[styles.listSize, gstyles.c_start]}>

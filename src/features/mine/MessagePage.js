@@ -29,13 +29,21 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         fontWeight: '500',
         fontSize: 18,
-        color: '#888'
+        color: '#333'
     },
     intro: {
         width: '100%',
         paddingHorizontal: 10,
         fontSize: 16,
         color: '#999'
+    },
+    notReadDot: {
+        height: 8,
+        width: 8,
+        borderRadius: 10,
+        backgroundColor: gstyles.emColor,
+        marginRight: 4,
+        marginTop: 60
     }
 
 });
@@ -57,13 +65,30 @@ class MessagePage extends React.Component {
     }
 
     _init = async () => {
-        //没有数据，请求数据 #todo: 修改接口，每次请求带上第一个的时间戳
-        const res = await Http.get("/message/list")
+        //获取最新消息
+        let requestUrl = null
+        const { messages } = this.props
+        if (messages && messages.length > 0) {
+            requestUrl = "/message/getNew?createTime=" + messages[0].createTime
+        } else {
+            requestUrl = "/message/list"
+        }
+
+        const res = await Http.get(requestUrl)
         if (res.status === 200) {
+            const newMessages = []
+            for (let msg of res.data) {
+                msg.isNewMessage = true
+                newMessages.push(msg)
+            }
             this.props.addMessages({
-                messages: res.data
+                messages: newMessages
             })
         }
+        // 修改hasNewMessage
+        this.props.changeHasNewMessage({
+            hasNewMessage: false
+        })
     }
 
 
@@ -89,38 +114,47 @@ class MessagePage extends React.Component {
 
                 <ScrollView
                     containerStyle={{ flex: 1 }}
-                    style={[{ width: '100%' }, { backgroundColor: '#F2F2F2' }]}
+                    style={[{ width: '100%', backgroundColor: '#F2F2F2' }]}
+                    contentContainerStyle={{ paddingVertical: 20 }}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                 >
                     {
                         this.props.messages.map((item, index) => {
-                            return <View style={[{ paddingHorizontal: 20, marginTop: 20 }]}>
+                            return <View style={[{ paddingHorizontal: 20, marginBottom: 20 }]} key={item.title + index}>
                                 <Text style={[gstyles.md_gray, { width: '100%', textAlign: 'center', marginBottom: 10 }]}>
                                     {_util.formateTimestamp(item.createTime)[0]}
                                 </Text>
-                                <TouchableWithoutFeedback onPress={() => {
-                                    this.props.navigation.navigate('MessageDetail', {
-                                        title: item.title,
-                                        url: item.contentUrl
-                                    })
-                                }}>
-                                    <View style={[gstyles.c_start]}>
-                                        <Image style={styles.itemThumb} source={{ uri: item.thumbUrl }} />
-                                        <View style={[styles.itemContent, gstyles.c_start_left]}>
-                                            <Text numberOfLines={1} style={styles.title}>
-                                                {item.title}
-                                            </Text>
-                                            <Text numberOfLines={2} style={styles.intro}>
-                                                {item.intro}
-                                            </Text>
-                                            <Text style={[{ fontSize: 14, color: '#999', position: 'absolute', right: 5, bottom: 10 }]}>
-                                                {item.note}
-                                            </Text>
+                                <View style={gstyles.r_start_top}>
+                                    {item.isNewMessage &&
+                                        <View style={styles.notReadDot}></View>
+                                    }
+                                    <TouchableWithoutFeedback onPress={() => {
+                                        this.props.readMessage({
+                                            msgId: item._id
+                                        })
+                                        this.props.navigation.navigate('MessageDetail', {
+                                            title: item.title,
+                                            url: item.contentUrl
+                                        })
+                                    }}>
+                                        <View style={[{ flex: 1 }, gstyles.c_start]}>
+                                            <Image style={styles.itemThumb} source={{ uri: item.thumbUrl }} />
+                                            <View style={[styles.itemContent, gstyles.c_start_left]}>
+                                                <Text numberOfLines={1} style={styles.title}>
+                                                    {item.title}
+                                                </Text>
+                                                <Text numberOfLines={2} style={styles.intro}>
+                                                    {item.intro}
+                                                </Text>
+                                                <Text style={[{ fontSize: 14, color: '#999', position: 'absolute', right: 10, bottom: 10 }]}>
+                                                    {item.note}
+                                                </Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                </TouchableWithoutFeedback>
+                                    </TouchableWithoutFeedback>
+                                </View>
                             </View>
                         })
                     }
@@ -137,6 +171,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-    addMessages: MineAction.addMessages
+    addMessages: MineAction.addMessages,
+    readMessage: MineAction.readMessage,
+    changeHasNewMessage: MineAction.changeHasNewMessage
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MessagePage)

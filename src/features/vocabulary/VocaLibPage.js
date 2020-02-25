@@ -11,6 +11,8 @@ import gstyles from "../../style";
 import _util from '../../common/util'
 import PlanSelectTemplate from "./component/PlanSelectTemplate";
 import { BY_REAL_TASK } from "./common/constant";
+import { BASE_URL } from "../../common/constant";
+
 
 
 
@@ -23,6 +25,7 @@ class VocaLibPage extends Component {
         this.state = {
             books: []
         }
+
     }
 
     componentDidMount() {
@@ -53,6 +56,7 @@ class VocaLibPage extends Component {
                 books: res.data
             })
         }
+
     }
 
 
@@ -95,6 +99,7 @@ class VocaLibPage extends Component {
     }
 
     _renderBook = ({ item, index }) => {
+
         return <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
@@ -119,7 +124,7 @@ class VocaLibPage extends Component {
                     cardMaxElevation={5}
                     style={styles.imgCard}
                 >
-                    <Image source={{ uri: item.coverUrl }} style={styles.img} />
+                    <Image source={{ uri: BASE_URL + item.coverUrl }} style={styles.img} />
                     {item.payed &&
                         <View style={styles.payedBadge}>
                             <Text style={{ fontSize: 8, color: '#FFF', fontWeight: '500' }}>已购买</Text>

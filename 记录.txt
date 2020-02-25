@@ -29,7 +29,6 @@
 
 
 
-ip: 129.211.71.111
 
 
 ## 12月5-12月8 -----------
@@ -429,12 +428,13 @@ janalytics-react-native
 jpush-react-native 
 
 
-3.极光统计 
-	CountEvent(计数事件)	=>  统计播放次数
-	RegisterEvent(注册事件) =>  ？
+3.极光统计  【ok】
+	CountEvent(计数事件)	=>  统计播放次数、分享次数、统计定时功能使用次数；
+	RegisterEvent(注册事件) =>  注册
 	LoginEvent(登录事件) =>  统计登录
-	BrowseEvent(浏览事件) => 统计攻略浏览、统计阅读页面、统计定时功能
+	BrowseEvent(浏览事件) => 统计攻略浏览、统计阅读页面、支付页面浏览
 	
+
 	
 
 4.极光推送 【ok】

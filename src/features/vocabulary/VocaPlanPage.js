@@ -9,6 +9,8 @@ import * as HomeAction from './redux/action/homeAction'
 import * as PlanAction from './redux/action/planAction'
 import PlanSelectTemplate from "./component/PlanSelectTemplate";
 import _util from "../../common/util";
+import FileService from "../../common/FileService";
+import { VOCABULARY_DIR } from "../../common/constant";
 
 
 const styles = StyleSheet.create({
@@ -44,6 +46,9 @@ const styles = StyleSheet.create({
 class VocaPlanPage extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            bookCoverSource: null
+        }
     }
 
     componentDidMount() {
@@ -57,6 +62,7 @@ class VocaPlanPage extends React.Component {
             }
             return true
         })
+
     }
 
     componentWillUnmount() {
@@ -118,7 +124,7 @@ class VocaPlanPage extends React.Component {
                         justifyContent: 'space-around',
                     }}
                 />
-                <View style={[gstyles.c_start, { width: '100%', marginTop: 60 }]} >
+                <View style={[gstyles.c_center, { flex: 1, width: '100%' }]} >
                     {bookId &&
                         <View style={[gstyles.c_start]}>
                             <CardView
@@ -126,9 +132,16 @@ class VocaPlanPage extends React.Component {
                                 cardMaxElevation={5}
                                 style={{ marginBottom: 20 }}
                             >
-                                {bookCoverUrl &&
-                                    <Image source={{ uri: bookCoverUrl }} style={styles.img} />
-                                }
+                                <Image
+                                    onLoad={() => {
+                                        FileService.getInstance().load(VOCABULARY_DIR, bookCoverUrl).then(bookCoverSource => {
+                                            this.setState({
+                                                bookCoverSource
+                                            })
+                                        })
+                                    }}
+                                    source={this.state.bookCoverSource} style={styles.img} />
+
                             </CardView>
                             <Text style={gstyles.lg_black_bold}>{bookName}</Text>
                             <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount * taskCount}词，复习{reviewWordCount}词</Text>
@@ -159,8 +172,8 @@ class VocaPlanPage extends React.Component {
                     }
                     {!bookId &&
                         <View style={[gstyles.c_start, { marginTop: 50 }]}>
-                            <AliIcon name='no-data' size={100} color='#AAA'></AliIcon>
-                            <Text style={{ fontSize: 16, color: '#AAA', marginTop: 15 }}>无学习计划</Text>
+                            <AliIcon name='no-data' size={100} color={gstyles.gray}></AliIcon>
+                            <Text style={{ fontSize: 16, color: gstyles.gray, marginTop: 15 }}>无学习计划</Text>
                         </View>
                     }
 

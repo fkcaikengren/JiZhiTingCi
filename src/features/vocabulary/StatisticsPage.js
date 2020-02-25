@@ -113,18 +113,18 @@ export default class StatisticsPage extends Component {
                                 <View style={[{ width: '100%', paddingVertical: 5, paddingHorizontal: 10 }]}>
                                     <View style={[{ flex: 1 }, gstyles.r_between]}>
                                         <Text style={[{ flex: 1 }, gstyles.md_black]}>已学习单词:
-                                        <Text style={{ color: gstyles.emColor }}> {learnedWordCount}</Text>
+                                        <Text style={{ color: gstyles.emColor }}> {learnedWordCount}个</Text>
                                         </Text>
                                         <Text style={[{ flex: 1 }, gstyles.md_black]}>已掌握单词:
-                                        <Text style={{ color: gstyles.emColor }}> {this.state.masteredWordCount}</Text>
+                                        <Text style={{ color: gstyles.emColor }}> {this.state.masteredWordCount}个</Text>
                                         </Text>
                                     </View>
                                     <View style={[{ flex: 1 }, gstyles.r_between]}>
                                         <Text style={[{ flex: 1 }, gstyles.md_black]}>总单词数:
-                                        <Text style={{ color: gstyles.emColor }}> {plan.totalWordCount}</Text>
+                                        <Text style={{ color: gstyles.emColor }}> {plan.totalWordCount}个</Text>
                                         </Text>
                                         <Text style={[{ flex: 1 }, gstyles.md_black]}>学习天数:
-                                        <Text style={{ color: gstyles.emColor }}> {plan.totalDays - leftDays + 1}</Text>
+                                        <Text style={{ color: gstyles.emColor }}> {plan.totalDays - leftDays + 1}天</Text>
                                         </Text>
                                     </View>
                                 </View>
@@ -138,10 +138,10 @@ export default class StatisticsPage extends Component {
                             </Text>
                             <View style={[{ paddingVertical: 5, paddingHorizontal: 10 }]}>
                                 <Text style={gstyles.md_black} >累计学习单词:
-                                    <Text style={{ color: gstyles.emColor }}> {allLearnedCount}</Text>
+                                    <Text style={{ color: gstyles.emColor }}> {allLearnedCount}个</Text>
                                 </Text>
                                 <Text style={gstyles.md_black} >累计学习天数:
-                                    <Text style={{ color: gstyles.emColor }}> {allLearnedDays}</Text>
+                                    <Text style={{ color: gstyles.emColor }}> {allLearnedDays}天</Text>
                                 </Text>
                             </View>
                         </View>

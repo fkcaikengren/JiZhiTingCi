@@ -79,6 +79,11 @@ class AccountPage extends React.Component {
 
     // 退出登录
     _logout = () => {
+        // 判断数据是否同步
+        if (this.props.isUploadFail) {
+            this.props.app.toast.show('你还存在未同步的学习数据，请同步！', 2000)
+            return
+        }
         this.props.app.confirmModal.show("确认退出登录！", null, () => {
             //退出登录处理
             logoutHandle()
@@ -293,7 +298,8 @@ class AccountPage extends React.Component {
 }
 const mapStateToProps = state => ({
     app: state.app,
-    mine: state.mine
+    mine: state.mine,
+    isUploadFail: state.home.isUploadFail
 })
 
 const mapDispatchToProps = {

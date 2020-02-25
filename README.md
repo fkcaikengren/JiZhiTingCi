@@ -652,6 +652,24 @@ App启动崩溃 -> 改包名,使用脚本修改，脚本地址：https://gist.gi
 
 
 
+### 6.打正式包时，出现错误verifyReleaseResources  FAILED
+
+**"Build failed" when i go genarate de apk file "./gradlew assembleRelease"**
+
+需要修改的库：
+
+```
+react-native-wheel-picker
+react-native-qq
+```
+
+修改 build.gradle 文件
+
+```js
+compileSdkVersion 28 
+buildToolsVersion "28.0.3"
+```
+
 
 
 # 集成
@@ -827,7 +845,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 #生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "第10次生产环境更新" --m true
+code-push release-react aitingci android --dev false --d Production --des "爱听词 v1.0.0" --m true
 
 #说明--m true 强制用户更新
 ```

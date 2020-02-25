@@ -108,7 +108,7 @@ class VocaLibTabPage extends Component {
                     loop={false}
                     onIndexChanged={this._onIndexChanged}
                     index={this.state.pageIndex}
-                    loadMinimal loadMinimalSize={3}
+                    loadMinimal loadMinimalSize={2}
                 >
                     <VocaLibPage {...this.props}
                         index={0}

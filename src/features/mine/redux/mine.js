@@ -25,9 +25,11 @@ import {
     MODIFY_PHONE_SUCCEED,
     MODIFY_PHONE_FAIL,
     MODIFY_CREDENTIAL,
-    ADD_MESSAGES,
     MODIFY_QQ_SUCCEED,
     MODIFY_QQ_FAIL,
+    ADD_MESSAGES,
+    READ_MESSAGE,
+    CHANGE_HAS_NEW_MESSAGE
 
 } from "./action/mineAction"
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from "../../vocabulary/common/constant"
@@ -37,7 +39,8 @@ const defaultState = {
     credential: {},
     user: {},
     avatarSource: null,
-    messages: [],
+    messages: [],           //消息
+    hasNewMessage: false,   //有新消息
 
     //学习设置
     configVocaPronType: VOCA_PRON_TYPE_EN,  //发音类型
@@ -121,7 +124,20 @@ export const mine = (state = defaultState, action) => {
 
         //消息
         case ADD_MESSAGES:
-            return { ...state, messages: state.messages.concat(action.payload.messages) }
+            return { ...state, messages: action.payload.messages.concat(state.messages) }
+        //已读消息
+        case READ_MESSAGE: {
+            const nowMessages = state.messages.map((item, _) => {
+                if (action.payload.msgId === item._id) {
+                    item.isNewMessage = false
+                }
+                return item
+            })
+            return { ...state, messages: nowMessages }
+        }
+        //是否有新消息
+        case CHANGE_HAS_NEW_MESSAGE:
+            return { ...state, hasNewMessage: action.payload.hasNewMessage }
         // 退出登录
         case LOGOUT:
             console.log("--------------mine.js 退出登录-------------------")

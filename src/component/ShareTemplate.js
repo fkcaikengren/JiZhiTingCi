@@ -8,6 +8,7 @@ import gstyles from '../style';
 import RNFetchBlob from 'rn-fetch-blob'
 import _util from '../common/util';
 import { SHARE_DIR } from '../common/constant';
+import AnalyticsUtil from '../modules/AnalyticsUtil';
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -17,17 +18,12 @@ const shareDir = fs.dirs.DocumentDir + '/' + SHARE_DIR
 
 
 
-
-
-
 /**
  * 关于CommonModal的展示模板
  */
 export default class ShareTemplate {
 
     static _renderShareView({ commonModal, title = '', bgSource, renderContentView, showSeal }) {
-
-
         // 返回一个函数
         return () => {
             const {
@@ -44,7 +40,6 @@ export default class ShareTemplate {
                         onPress={() => {
                             hide()
                         }} />
-
                 </View>
                 {showSeal &&
                     <Animated.Image
@@ -93,7 +88,7 @@ export default class ShareTemplate {
                         <View style={styles.shareQR}>
                             <Image source={{ uri: Platform.OS === 'android' ? 'file://' + qrPath : qrPath }}
                                 style={{ width: 42, height: 42, borderRadius: 2, }} />
-                            <Text style={{ fontSize: 13, color: '#FFF', marginLeft: 15 }}>长按识别二维码</Text>
+                            <Text style={{ fontSize: 13, color: '#FFF', marginLeft: 15 }}>长按识别二维码，下载App</Text>
                         </View>
                     </ViewShot>
                 </View>
@@ -112,6 +107,18 @@ export default class ShareTemplate {
                             await RNFetchBlob.fs.cp(originPath, imageUrl)
                             setContentState({
                                 imageUrl: imageUrl,
+                            })
+                        }
+                        //统计分享事件
+                        if (showSeal) {
+                            AnalyticsUtil.postEvent({
+                                type: 'count',
+                                id: 'share_finish_tasks'
+                            })
+                        } else {
+                            AnalyticsUtil.postEvent({
+                                type: 'count',
+                                id: 'share_normal_play'
                             })
                         }
                         return {
@@ -183,7 +190,6 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
 
-
     },
     closeBtn: {
         position: "absolute",
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
     titleBar: {
         ...gstyles.r_center,
         width: '100%',
-        height: 50,
+        height: 30,
     },
     captureView: {
         width: '70%',

@@ -21,6 +21,7 @@ import * as Constant from './common/constant'
 import { TYPE_ERR_CODE_ARTICLE } from '../vocabulary/common/constant';
 import ErrorTemplate from '../../component/ErrorTemplate';
 import SharePanel from '../../component/SharePanel';
+import AnalyticsUtil from '../../modules/AnalyticsUtil';
 
 const questionSize = 10
 
@@ -37,6 +38,8 @@ class ArticleTabPage extends React.Component {
             showSettingModal: false,
 
         }
+        this.analyticsTimer = null
+        this.analyticsDuration = 0
         //隐藏黄色警告
         console.disableYellowBox = true;
     }
@@ -60,9 +63,26 @@ class ArticleTabPage extends React.Component {
         const articleInfo = this.props.navigation.getParam('articleInfo')
         console.log('---页面初始化后，加载文章----')
         this.props.loadArticle(articleInfo);
+
+        // 页面浏览时长计时
+        this.analyticsTimer = setInterval(() => {
+            this.analyticsDuration += 3
+        }, 3000)
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
+        if (this.analyticsTimer) {
+            const { type } = this.props.navigation.getParam('articleInfo')
+            clearInterval(this.analyticsTimer)
+            //统计页面留存时长
+            AnalyticsUtil.postEvent({
+                type: 'browse',
+                id: 'page_read_aritcle',
+                name: '真题阅读页面',
+                contentType: type,
+                duration: this.analyticsDuration
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -237,6 +257,11 @@ class ArticleTabPage extends React.Component {
                         webpageUrl: 'http://www.aitingci.com',
                         imageUrl: this.props.plan.bookCoverUrl
                     }
+                    //统计分享事件
+                    AnalyticsUtil.postEvent({
+                        type: 'count',
+                        id: 'share_read_article'
+                    })
                     return shareInfo
                 }}
             />

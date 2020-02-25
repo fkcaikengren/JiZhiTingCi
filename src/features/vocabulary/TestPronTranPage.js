@@ -11,15 +11,13 @@ import AudioService from '../../common/AudioService'
 import * as PlanAction from "./redux/action/planAction";
 import * as CConstant from "../../common/constant";
 import vocaUtil from "./common/vocaUtil";
+import gstyles from "../../style";
 
 const styles = StyleSheet.create({
 
     content: {
-        padding: 10,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '35%'
+        ...gstyles.c_center,
+        flex: 1
     },
     img: {
         width: 60,

@@ -32,12 +32,9 @@ import { store } from '../../../redux/store'
 import LookWordBoard from '../component/LookWordBoard';
 import ShareTemplate from '../../../component/ShareTemplate';
 import VocaGroupService from '../service/VocaGroupService';
-
+import AnalyticsUtil from '../../../modules/AnalyticsUtil';
 
 const ITEM_H = 55;
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
-const Dimensions = require('Dimensions');
-const { width, height } = Dimensions.get('window');
 
 
 /**
@@ -55,7 +52,6 @@ class VocaPlayPage extends React.Component {
         this.vocaDao = VocaDao.getInstance()
         this.taskDao = VocaTaskDao.getInstance()
         this.vgService = new VocaGroupService()
-
         //当前模式
         this.mode = this.props.navigation.getParam('mode', Constant.NORMAL_PLAY)
         this.isStudyMode = false
@@ -151,6 +147,30 @@ class VocaPlayPage extends React.Component {
         }
     }
 
+    _analyseCount = () => {
+        let playType = null
+        if (this.isStudyMode) {
+            playType = 'StudyTaskPlay'
+        } else {
+            const { normalType, task } = this.props.vocaPlay
+            if (normalType === Constant.BY_REAL_TASK) {
+                playType = 'NormalTaskPlay'
+            } else if (normalType === Constant.BY_VIRTUAL_TASK) {
+                if (task.taskOrder == Constant.VIRTUAL_TASK_ORDER) {
+                    playType = 'OtherOriginPlay'
+                } else {
+                    playType = 'VocaGroupPlay'
+                }
+            }
+        }
+        if (playType) {
+            AnalyticsUtil.postEvent({
+                type: 'count',      //计数
+                id: playType        //播放类型
+            })
+        }
+    }
+
     _init = () => {
 
         //判断是否自动播放，task是从navigation中获取，一定存在curIndex
@@ -186,7 +206,7 @@ class VocaPlayPage extends React.Component {
             } else {
                 normalType = this.props.vocaPlay.normalType
             }
-            this.disablePass = normalType === Constant.BY_VIRTUAL_TASK
+            this.disablePass = (normalType === Constant.BY_VIRTUAL_TASK)
             //初始化播放列表
             this._initPlayList()
             if (normalType === Constant.BY_VIRTUAL_TASK) {
@@ -210,9 +230,11 @@ class VocaPlayPage extends React.Component {
     }
 
     _goBack = () => {
-
-        if (this.isStudyMode && this.state.autoPlayTimer > 0) {
-            clearTimeout(this.state.autoPlayTimer)
+        if (this.isStudyMode) {
+            this.props.updateTask({ task: this.state.task })
+            if (this.state.autoPlayTimer > 0) {
+                clearTimeout(this.state.autoPlayTimer)
+            }
         }
         this.props.navigation.goBack()
     }
@@ -278,6 +300,7 @@ class VocaPlayPage extends React.Component {
             if (this.isStudyMode) {
                 this.changeState({ autoPlayTimer: timer })
             } else {
+                this.disablePass = (this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK)
                 this.props.changePlayTimer(timer)
             }
             return
@@ -293,6 +316,8 @@ class VocaPlayPage extends React.Component {
             if (leftTimes && leftTimes > 0) {
                 leftTimes--
             }
+            // 统计播放次数
+            this._analyseCount()
         }
 
         //学习模式or常规模式
@@ -303,6 +328,8 @@ class VocaPlayPage extends React.Component {
                 autoPlayTimer: timer
             })
         } else {//常规模式
+            this.disablePass = (this.props.vocaPlay.normalType === Constant.BY_VIRTUAL_TASK)
+
             const { task, normalType, howPlay } = state
             this.props.changeCurIndex({ curIndex: playIndex, listenTimes })
             this.props.changePlayTimer(timer)
@@ -741,12 +768,10 @@ class VocaPlayPage extends React.Component {
         }
 
 
-        const contentHeight = height - STATUSBAR_HEIGHT - 270
-
         const imgSource = (bgPath && bgPath !== '') ? { uri: Platform.OS === 'android' ? 'file://' + bgPath : '' + bgPath } :
             require('../../../image/play_bg.jpg')
         return (
-            <View style={{ flex: 1, backgroundColor: '#303030' }}>
+            <View style={[{ flex: 1, backgroundColor: '#303030' }, gstyles.c_start]}>
                 <Image style={[styles.bgImage]}
                     ref={img => { this._backgroundImage = img }}
                     source={imgSource}
@@ -778,10 +803,13 @@ class VocaPlayPage extends React.Component {
                 />
 
                 {/* 内容列表区 */}
-                <TouchableOpacity onPress={() => {
-                    this.props.showBlur(!this.props.vocaPlay.showBlur)
-                }}>
-                    <View style={[styles.content, { height: contentHeight }]}>
+                <TouchableOpacity
+                    activeOpacity={0.9}
+                    style={{ flex: 1, width: '100%' }}
+                    onPress={() => {
+                        this.props.showBlur(!this.props.vocaPlay.showBlur)
+                    }}>
+                    <View style={{ width: '100%', flex: 1, paddingVertical: 5 }}>
                         {task.taskOrder &&
                             <SwipeableFlatList
                                 ref={comp => {

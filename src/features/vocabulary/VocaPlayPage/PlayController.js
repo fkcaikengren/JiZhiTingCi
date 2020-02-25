@@ -182,74 +182,73 @@ export default class PlayController extends React.Component {
         const popStyle = { fontSize: 16, padding: 6, color: Theme.themeColor }
         return (
             //  底部控制
-            <Grid style={{ width: width, position: 'absolute', bottom: 0 }}>
-                {/* 功能按钮 */}
-                <Row style={[{ marginHorizontal: 10, marginBottom: 10 }, gstyles.r_around]}>
-                    {/* 英文单词按钮 */}
-                    <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
-                        onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { toggleWord() }}
-                    >en</Text>
-                    {/* 测试按钮 */}
-                    <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger text='测试' customStyles={{ triggerText: styles.triggerText, }} />
-                        <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={0}  >
-                                <Text style={popStyle}>中义选词测试</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={1}>
-                                <Text style={popStyle}>例句选词测试</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={2}>
-                                <Text style={popStyle}>词选中义测试</Text>
-                            </MenuOption>
-                            <MenuOption value={3}>
-                                <Text style={popStyle}>听音选义测试</Text>
-                            </MenuOption>
-                        </MenuOptions>
-                    </Menu>
-                    {/* 主题按钮 */}
+            <View style={{ width: width, height: 160, paddingBottom: 10 }}>
+                <Grid >
+                    {/* 功能按钮 */}
+                    <Row style={[{ marginHorizontal: 10, }, gstyles.r_around]}>
+                        {/* 英文单词按钮 */}
+                        <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
+                            onStartShouldSetResponder={() => true}
+                            onResponderStart={(e) => { toggleWord() }}
+                        >en</Text>
+                        {/* 测试按钮 */}
+                        <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+                            <MenuTrigger text='测试' customStyles={{ triggerText: styles.triggerText, }} />
+                            <MenuOptions>
+                                <MenuOption style={gstyles.haireBottom} value={0}  >
+                                    <Text style={popStyle}>中义选词测试</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={1}>
+                                    <Text style={popStyle}>例句选词测试</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={2}>
+                                    <Text style={popStyle}>词选中义测试</Text>
+                                </MenuOption>
+                                <MenuOption value={3}>
+                                    <Text style={popStyle}>听音选义测试</Text>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                        {/* 主题按钮 */}
 
-                    <Menu onSelect={this._chooseBgOption} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger text={'背景'} customStyles={{ triggerText: styles.triggerText, }} />
-                        <MenuOptions>
-                            <MenuOption value={0} style={gstyles.haireBottom} >
-                                <Text style={popStyle}>选择背景图片</Text>
-                            </MenuOption>
-                            <MenuOption value={1}  >
-                                <Text style={popStyle}>从手机相册中选择</Text>
-                            </MenuOption>
-                        </MenuOptions>
-                    </Menu>
-                    {/* 时间间隔 */}
-                    <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                        <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.triggerText, }} />
-                        <MenuOptions>
-                            <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                <Text style={popStyle}>4.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={3.0}>
-                                <Text style={popStyle}>3.0s</Text>
-                            </MenuOption>
-                            <MenuOption style={gstyles.haireBottom} value={2.0}>
-                                <Text style={popStyle}>2.0s</Text>
-                            </MenuOption>
-                            <MenuOption value={1.4}>
-                                <Text style={popStyle}>1.0s</Text>
-                            </MenuOption>
+                        <Menu onSelect={this._chooseBgOption} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+                            <MenuTrigger text={'背景'} customStyles={{ triggerText: styles.triggerText, }} />
+                            <MenuOptions>
+                                <MenuOption value={0} style={gstyles.haireBottom} >
+                                    <Text style={popStyle}>选择背景图片</Text>
+                                </MenuOption>
+                                <MenuOption value={1}  >
+                                    <Text style={popStyle}>从手机相册中选择</Text>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                        {/* 时间间隔 */}
+                        <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+                            <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.triggerText, }} />
+                            <MenuOptions>
+                                <MenuOption style={gstyles.haireBottom} value={4.0}>
+                                    <Text style={popStyle}>4.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={3.0}>
+                                    <Text style={popStyle}>3.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={2.0}>
+                                    <Text style={popStyle}>2.0s</Text>
+                                </MenuOption>
+                                <MenuOption value={1.4}>
+                                    <Text style={popStyle}>1.0s</Text>
+                                </MenuOption>
 
-                        </MenuOptions>
-                    </Menu>
-                    {/* 中文按钮 */}
-                    <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
-                        onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { toggleTran() }}
-                    >zh</Text>
-                </Row>
-
-                {/* 进度条 */}
-                <Row style={[{ marginBottom: 5 }, gstyles.r_center]}>
-                    <View style={gstyles.r_center}>
+                            </MenuOptions>
+                        </Menu>
+                        {/* 中文按钮 */}
+                        <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
+                            onStartShouldSetResponder={() => true}
+                            onResponderStart={(e) => { toggleTran() }}
+                        >zh</Text>
+                    </Row>
+                    {/* 进度条 */}
+                    <View style={[gstyles.r_center, { marginBottom: 5 }]}>
                         <Text style={{ color: '#fff', marginRight: 5 }}>{(wordCount == 0 || wordCount == undefined) ? 0 : curIndex + 1}</Text>
                         <Progress.Bar
                             progress={wordCount == 0 ? 0 : progressNum}  //
@@ -260,66 +259,62 @@ export default class PlayController extends React.Component {
                             borderWidth={0} />
                         <Text style={{ color: '#fff', marginLeft: 10 }}>{wordCount}</Text>
                     </View>
-                </Row>
 
-                {/* 播放按钮 */}
-                <Row style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingHorizontal: 14,
-                    marginBottom: 10,
-                }}>
-                    {/* 播放方式 */}
-                    <TouchableOpacity style={{ position: 'absolute', left: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
-                        if (howPlay === PLAY_WAY_SINGLE) {
-                            this.props.changeHowPlay(PLAY_WAY_LOOP)
-                        } else if (howPlay === PLAY_WAY_LOOP) {
-                            this.props.changeHowPlay(PLAY_WAY_SINGLE)
-                        }
-                    }}>
-                        <AliIcon name={howPlayIcon} size={20} color='#FFF'></AliIcon>
-                    </TouchableOpacity>
-                    <View style={[{ width: width * (1 / 2) + 30 }, gstyles.r_around]}>
-                        <TouchableWithoutFeedback onPress={() => { this._preOrNext(-1) }}>
-                            <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
-                                <AliIcon name='SanMiAppoutlinei1' size={20} color='#FFF'></AliIcon>
-                            </View>
-                        </TouchableWithoutFeedback>
+                    {/* 播放按钮 */}
+                    <Row style={[gstyles.r_center, { paddingHorizontal: 14 }]}>
+                        {/* 播放方式 */}
+                        <TouchableOpacity style={{ position: 'absolute', left: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
+                            if (howPlay === PLAY_WAY_SINGLE) {
+                                this.props.changeHowPlay(PLAY_WAY_LOOP)
+                            } else if (howPlay === PLAY_WAY_LOOP) {
+                                this.props.changeHowPlay(PLAY_WAY_SINGLE)
+                            }
+                        }}>
+                            <AliIcon name={howPlayIcon} size={20} color='#FFF'></AliIcon>
+                        </TouchableOpacity>
+                        <View style={[{ width: width * (1 / 2) + 30 }, gstyles.r_around]}>
+                            <TouchableWithoutFeedback onPress={() => { this._preOrNext(-1) }}>
+                                <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
+                                    <AliIcon name='SanMiAppoutlinei1' size={20} color='#FFF'></AliIcon>
+                                </View>
+                            </TouchableWithoutFeedback>
 
 
-                        <TouchableWithoutFeedback onPress={this._togglePlay}>
-                            <View style={[styles.bigRoundBtn, { paddingLeft: autoPlayTimer ? 0 : 5 }, { backgroundColor: Theme.themeColor }]}>
-                                <AliIcon name={autoPlayTimer ? 'zanting1' : 'play'} size={22} color='#FFF'></AliIcon>
-                            </View>
-                        </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this._togglePlay}>
+                                <View style={[styles.bigRoundBtn, { paddingLeft: autoPlayTimer ? 0 : 5 }, { backgroundColor: Theme.themeColor }]}>
+                                    <AliIcon name={autoPlayTimer ? 'zanting1' : 'play'} size={22} color='#FFF'></AliIcon>
+                                </View>
+                            </TouchableWithoutFeedback>
 
-                        <TouchableWithoutFeedback onPress={() => { this._preOrNext(1) }} >
-                            <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
-                                <AliIcon name='SanMiAppoutlinei' size={20} color='#FFF'></AliIcon>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                    <TouchableOpacity style={{ position: 'absolute', right: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
-                        this.playListPane.show()
-                        this.props.syncGroup({ isByHand: false })
-                    }}>
-                        <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
-                    </TouchableOpacity>
-                </Row>
+                            <TouchableWithoutFeedback onPress={() => { this._preOrNext(1) }} >
+                                <View style={[styles.smallRoundBtn, { backgroundColor: Theme.themeColor }]}>
+                                    <AliIcon name='SanMiAppoutlinei' size={20} color='#FFF'></AliIcon>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                        <TouchableOpacity style={{ position: 'absolute', right: 28, bottom: 21 }} activeOpacity={0.6} onPress={() => {
+                            this.playListPane.show()
+                            this.props.syncGroup({ isByHand: false })
+                        }}>
+                            <AliIcon name='bofangliebiaoicon' size={20} color='#FFF'></AliIcon>
+                        </TouchableOpacity>
+                    </Row>
 
-                {/* 播放列表 */}
-                <PlayListPane
-                    ref={comp => {
-                        this.playListPane = comp
-                    }}
-                    autoplay={this.props.autoplay}
-                    changePlayTimer={this.props.changePlayTimer}
-                    changeNormalType={this.props.changeNormalType}
-                    changeTheme={this.props.changeTheme}
-                    changePlayListIndex={this.props.changePlayListIndex}
-                />
-            </Grid>
+                    {/* 播放列表 */}
+                    <PlayListPane
+                        ref={comp => {
+                            this.playListPane = comp
+                        }}
+                        autoplay={this.props.autoplay}
+                        changePlayTimer={this.props.changePlayTimer}
+                        changeNormalType={this.props.changeNormalType}
+                        changeTheme={this.props.changeTheme}
+                        changePlayListIndex={this.props.changePlayListIndex}
+                    />
+                </Grid>
+
+            </View>
+
         );
     }
 }

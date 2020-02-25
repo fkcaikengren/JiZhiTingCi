@@ -11,10 +11,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    content: {
-        marginTop: 15,
-        width: '100%',
-    },
     backgroundVideo: {
         position: 'absolute',
         top: 0,

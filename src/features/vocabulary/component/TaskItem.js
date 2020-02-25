@@ -4,12 +4,15 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, InteractionManager, TouchableOpacity } from 'react-native';
 import { PropTypes } from 'prop-types';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import BackgroundTimer from 'react-native-background-timer'
 import * as Constant from '../common/constant'
 import VocaUtil from '../../vocabulary/common/vocaUtil'
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style'
 import { DETAIL_READ, MULTI_SELECT_READ, FOUR_SELECT_READ, EXTENSIVE_READ } from "../../reading/common/constant";
 import { store } from '../../../redux/store';
+import NotificationManage from '../../../modules/NotificationManage';
+
 
 export default class TaskItem extends Component {
   static propTypes = {
@@ -24,7 +27,19 @@ export default class TaskItem extends Component {
     super(props);
   }
 
+
+  _pause = () => {
+    if (this.props.autoPlayTimer) {
+      BackgroundTimer.clearTimeout(this.props.autoPlayTimer);
+      this.props.changePlayTimer(0);
+      NotificationManage.pause((e) => {
+        console.log(e)
+      }, () => null);
+    }
+  }
+
   _startStudyInteraction = () => {
+    this._pause()
     InteractionManager.runAfterInteractions(() => {
       this._startStudy()
     })
@@ -156,11 +171,13 @@ export default class TaskItem extends Component {
   }
 
   _startRead = () => {
-    this.props.navigation.navigate('ArticleTab', { articleInfo: this.props.item })
+    this._pause()
+    InteractionManager.runAfterInteractions(() => {
+      this.props.navigation.navigate('ArticleTab', { articleInfo: this.props.item })
+    })
   }
 
   render() {
-    // console.log('-----TaskItem 绘制** -------')
 
     this.isVocaTask = (this.props.item.taskType === Constant.TASK_VOCA_TYPE)
     const { index, item, progressNum, disable } = this.props

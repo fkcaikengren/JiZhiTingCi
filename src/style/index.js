@@ -232,6 +232,17 @@ const gstyles = StyleSheet.create({
         paddingHorizontal: 4,
         paddingBottom: 4,
     },
+    // 通知消息
+    msgDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 10,
+        backgroundColor: 'red',
+        position: 'absolute',
+        top: 1,
+        right: 1,
+        zIndex: 100
+    },
 
     //灰色
     xs_lightGray: {
