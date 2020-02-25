@@ -135,11 +135,11 @@ class App extends React.Component {
         //是否显示更新描述
         appendReleaseDescription: true,
         //更新描述的前缀。 默认为"Description"
-        descriptionPrefix: "更新内容：",
+        descriptionPrefix: "",
         //强制更新按钮文字，默认为continue
         mandatoryContinueButtonLabel: "立即更新",
         //强制更新时的信息. 默认为"An update is available that must be installed."
-        // mandatoryUpdateMessage: "更新后才能使用！",
+        mandatoryUpdateMessage: "",
         //非强制更新时，按钮文字,默认为"ignore"
         optionalIgnoreButtonLabel: '稍后',
         //非强制更新时，确认按钮文字. 默认为"Install"

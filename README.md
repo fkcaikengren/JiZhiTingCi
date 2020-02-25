@@ -672,6 +672,10 @@ buildToolsVersion "28.0.3"
 
 
 
+
+
+
+
 # 集成
 
 ### 集成极光统计、极光推送
@@ -845,7 +849,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 #生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "爱听词 v1.0.0" --m true
+code-push release-react aitingci android --dev false --d Production --des "爱听词1.0版" --m true
 
 #说明--m true 强制用户更新
 ```

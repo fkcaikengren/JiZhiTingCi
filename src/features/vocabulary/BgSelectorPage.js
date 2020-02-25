@@ -13,6 +13,7 @@ import * as VocaPlayAction from './redux/action/vocaPlayAction'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import styles from './BgSelectorStyle'
+import { BASE_URL } from "../../common/constant";
 
 
 const Dimensions = require('Dimensions');
@@ -52,6 +53,7 @@ class BgSelectorPage extends Component {
             const res = await myHttp.get('/appinfo/getPlayBgs')
             const bgUrls = res.data
             for (let url of bgUrls) {
+                url = BASE_URL + url
                 const fname = url.match(/[^\/]+(\.(jpg)|(png))$/)[0]
                 const path = RootPath + fname
                 const res = await RNFetchBlob.config({
