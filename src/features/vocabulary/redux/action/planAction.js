@@ -35,6 +35,8 @@ export const SYN_FINISH_DAYS_START = 'SYN_FINISH_DAYS_START'
 export const SYN_FINISH_DAYS_SUCCEED = 'SYN_FINISH_DAYS_SUCCEED'
 export const SYN_FINISH_DAYS_FAIL = 'SYN_FINISH_DAYS_FAIL'
 
+// 加载计划的单词书封面
+export const LOAD_BOOK_COVER_SOURCE = 'LOAD_BOOK_COVER_SOURCE'
 
 
 const fn = (payload) => {
@@ -44,11 +46,12 @@ const fn = (payload) => {
 //驼峰式命名，不可以更改(与变量名必须对应)
 export const { savePlan, changeVocaBook, modifyPlan, modifyLastLearnDate,
     changeLearnedWordCount, changeLeftDays,
-    synAllLearnedDays, synFinishDays } = createActions({
+    synAllLearnedDays, synFinishDays, loadBookCoverSource } = createActions({
         //保存计划
         [SAVE_PLAN]: fn,
         //更换单词书
         [CHANGE_VOCA_BOOK]: fn,
+
         //修改计划
         [MODIFY_PLAN]: fn,
         //修改lastLeanDate
@@ -62,8 +65,9 @@ export const { savePlan, changeVocaBook, modifyPlan, modifyLastLearnDate,
         //同步累计学习天数
         [SYN_ALL_LEARNED_DAYS]: fn,
         //同步完成任务打卡数据(包括累计学习单词数)
-        [SYN_FINISH_DAYS]: fn
+        [SYN_FINISH_DAYS]: fn,
 
+        [LOAD_BOOK_COVER_SOURCE]: fn
 
     });
 

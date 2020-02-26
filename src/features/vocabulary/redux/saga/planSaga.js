@@ -16,13 +16,14 @@ import VocaTaskService from '../../service/VocaTaskService';
 import VocaUtil from "../../common/vocaUtil";
 import _util from '../../../../common/util';
 import createHttp from '../../../../common/http';
+import FileService from '../../../../common/FileService';
+import { VOCABULARY_DIR } from '../../../../common/constant';
 
 
 
 /** 创建单词计划 */
 export function* createPlan(action) {
-    yield put({ type: CHANGE_VOCA_BOOK_START })
-    yield put({ type: LOAD_TASKS_START })
+
     try {
         const res = yield Http.post("/plan/create", action.payload.plan)
         if (res.status === 200) {
@@ -42,43 +43,53 @@ export function* createPlan(action) {
             //清空先前数据，存储新数据到realm
             const vtd = VocaTaskDao.getInstance()
             const artDao = ArticleDao.getInstance()
+            console.log('dao 初始化ok')
             vtd.deleteAll()
             artDao.deleteAllArticles()
+            console.log('dao 删除数据ok')
             vtd.saveBookWords(words)
             artDao.saveArticles(articles)
+            console.log('dao 保存数据ok')
             //清空未同步任务
             Storage.clearMapForKey('notSyncTasks')
 
             const vts = new VocaTaskService()
             //加载今日数据 
             const tasks = vts.getTodayTasks(null, plan.taskCount, plan.taskWordCount)
+            // console.log(tasks)
             //构建文章任务
             const articleTasks = VocaUtil.genArticleTasksByVocaTasks(
                 tasks.filter((item, i) => item.status === Constant.STATUS_0)
             )
             // 计算剩余天数
             const leftDays = vts.countLeftDays(plan.taskCount, plan.taskWordCount)
-
+            console.log('计算剩余天数ok')
 
             if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
                 yield put({ type: CLEAR_PLAY })
             }
             yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
+            const bookCoverSource = yield FileService.getInstance().load(VOCABULARY_DIR, plan.bookCoverUrl)
+            console.log(bookCoverSource)
             yield put({
                 type: CHANGE_VOCA_BOOK_SUCCEED,
                 payload: {
                     plan,
                     leftDays,
-                    finishedBooksWordCount: allLearnedCount
+                    finishedBooksWordCount: allLearnedCount,
+                    bookCoverSource,
                 }
             })
+
             //加载成功后，修改lastLearnDate
             yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
+
+            //回调
+            action.payload.callback()
         } else {
             yield put({ type: CHANGE_VOCA_BOOK_FAIL })
             yield put({ type: LOAD_TASKS_FAIL })
         }
-
 
     } catch (err) {
         console.log(err)

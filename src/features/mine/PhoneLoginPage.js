@@ -107,12 +107,12 @@ class PhoneLoginPage extends Component {
     this.setState({ mode: MODE_CODE_INPUT })
     //服务器发送验证码
     let param = { phone: this.state.phone }
-    // Http.post('/user/signUp', param)
-    //   .then(response => {
-    //     return response.data.data
-    //   })
+    Http.post('/user/getCode', param).then(res => {
+      if (res.status === 200) {
+        this.props.app.toast.show('发送成功')
+      }
+    })
   }
-
 
 
 

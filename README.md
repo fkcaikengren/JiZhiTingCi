@@ -672,7 +672,16 @@ buildToolsVersion "28.0.3"
 
 
 
+7.android9无法发送网络请求
 
+​	注意：千万不要修改targetSdkVersion
+
+​	修改AndroidManifist.xml 
+
+```js
+//在Application中添加 
+android:usesCleartextTraffic="true"
+```
 
 
 
@@ -842,6 +851,10 @@ react-native link react-native-code-push
 ### 部署发布
 
 ```bash
+#添加部署
+code-push deployment add aitingci Production
+code-push deployment add aitingci Staging
+
 #查看部署
 code-push deployment ls aitingci -k
 
@@ -850,6 +863,10 @@ code-push release-react aitingci android --dev true --d Staging --des "第一次
 
 #生产环境热更新
 code-push release-react aitingci android --dev false --d Production --des "爱听词1.0版" --m true
+
+#删除部署
+code-push deployment rm aitingci Production
+code-push deployment rm aitingci Staging
 
 #说明--m true 强制用户更新
 ```
@@ -874,5 +891,9 @@ keytool -list -v -keystore aitingci.jks
 
 
 
+### 注意：更新问题
 
+```
+更新App，进入App后操作，App会在后台更新，更新完成后导致App重启
+```
 

@@ -21,6 +21,7 @@
       android:theme="@style/AppTheme"
       android:hardwareAccelerated="true" 
       tools:replace="android:allowBackup"
+      android:usesCleartextTraffic="true"
       >
       <meta-data android:name="JPUSH_APPKEY" android:value="${JPUSH_APPKEY}"/>
       <meta-data android:name="JPUSH_CHANNEL" android:value="${JPUSH_CHANNEL}"/>

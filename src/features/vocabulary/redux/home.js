@@ -29,7 +29,7 @@ export const home = (state = defaultState, action) => {
     switch (action.type) {
         //加载任务
         case ha.LOAD_TASKS_START:
-            return { ...state }
+            return state
         case ha.LOAD_TASKS_SUCCEED:
             return {
                 ...state, tasks: action.payload.tasks,

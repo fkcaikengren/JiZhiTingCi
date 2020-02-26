@@ -85,5 +85,4 @@ const createHttp = (config, options = opt) => {
     return instance
 }
 
-
 export default createHttp

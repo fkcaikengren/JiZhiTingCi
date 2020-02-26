@@ -15,7 +15,6 @@ import { BASE_URL } from "../../common/constant";
 
 
 
-
 class VocaLibPage extends Component {
 
     constructor(props) {
@@ -38,15 +37,6 @@ class VocaLibPage extends Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.plan.isLoadPending === true && nextProps.plan.isLoadPending === false) {
-            this.props.navigation.goBack()
-            return false
-        } else {
-            return true
-        }
-    }
-
     _loadBooks = async () => {
         //加载书籍
         const res = await Http.get("/vocaBook/list?type=" + this.props.vocaBookType)
@@ -62,11 +52,12 @@ class VocaLibPage extends Component {
 
     /**确认提交计划 */
     _putPlan = async ({ bookId, taskCount, taskWordCount, reviewWordCount, totalDays }) => {
-
+        console.log('提交计划：' + bookId)
+        console.log('提交计划：' + taskCount)
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
-            const isExacted = await _util.checkLocalTime()
-            if (isExacted) {
+            // const isExacted = await _util.checkLocalTime()
+            if (true) {
                 // 修改单词书
                 this.props.changeVocaBook({
                     plan: {
@@ -78,13 +69,16 @@ class VocaLibPage extends Component {
                         curBookId: this.props.plan.plan.bookId,
                         allLearnedCount: this.props.plan.allLearnedCount
                     },
+                    callback: () => {
+                        this.props.navigation.goBack()
+                    }
                 })
 
                 // 同步：累计学习天数
                 const { leftDays, learnedTodayFlag, allLearnedDays } = this.props.plan
                 const today = _util.getDayTime(0)
                 if (learnedTodayFlag !== today && leftDays >= 0) {
-                    console.log('plan:同步天数')
+                    console.log('plan:同步天数 ')
                     this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
                 }
 
@@ -111,7 +105,7 @@ class VocaLibPage extends Component {
                     })
                     return
                 }
-                //显示计划选择器
+                // 显示计划选择器
                 PlanSelectTemplate.show({
                     commonModal: this.props.app.commonModal,
                     book: item,
@@ -176,7 +170,6 @@ const mapDispatchToProps = {
 
     changeVocaBook: PlanAction.changeVocaBook,
     synAllLearnedDays: PlanAction.synAllLearnedDays,
-
     clearPlay: VocaPlayAction.clearPlay,
 }
 

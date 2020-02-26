@@ -2,7 +2,7 @@
 import { Platform } from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob'
 import { DURATION } from 'react-native-easy-toast'
-import { put, call, takeLatest } from 'redux-saga/effects'
+import { put, takeLatest } from 'redux-saga/effects'
 import { SAVE_PLAN } from '../../../vocabulary/redux/action/planAction'
 import { loginHandle, logoutHandle } from '../../common/userHandler'
 import { USER_DIR } from '../../../../common/constant'
@@ -12,15 +12,12 @@ const uuidv4 = require('uuid/v4');
 import {
     // 验证码登录
     LOGIN_BY_CODE,
-    LOGIN_BY_CODE_START,
     LOGIN_BY_CODE_SUCCEED,
     // 微信登录
     LOGIN_BY_WX,
-    LOGIN_BY_WX_START,
     LOGIN_BY_WX_SUCCEED,
     // QQ登录
     LOGIN_BY_QQ,
-    LOGIN_BY_QQ_START,
     LOGIN_BY_QQ_SUCCEED,
     // 昵称
     MODIFY_NICKNAME,
@@ -49,7 +46,8 @@ import {
     LOGIN_BY_PWD,
     MODIFY_QQ_START,
     MODIFY_QQ_SUCCEED,
-    MODIFY_QQ
+    MODIFY_QQ,
+    LOGIN_BY_PWD_SUCCEED
 } from '../action/mineAction'
 import httpBaseConfig from '../../../../common/httpBaseConfig'
 
@@ -61,8 +59,9 @@ const DocumentDir = fs.dirs.DocumentDir + '/'
 
 /**验证码登录 */
 function* loginByCode(action) {
-    yield put({ type: LOGIN_BY_CODE_START })
+
     const res = yield Http.post('/user/loginByCode', action.payload.params)
+    console.log(res)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
@@ -82,7 +81,7 @@ function* loginByCode(action) {
 
 /**密码登录 */
 function* loginByPwd(action) {
-    yield put({ type: LOGIN_BY_CODE_START })
+    console.log(action.payload.params)
     const res = yield Http.post('/user/loginByPwd', action.payload.params)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
@@ -94,14 +93,13 @@ function* loginByPwd(action) {
                 }
             })
         }
-        yield put({ type: LOGIN_BY_CODE_SUCCEED, payload: { credential, user } }) //保存user
+        yield put({ type: LOGIN_BY_PWD_SUCCEED, payload: { credential, user } }) //保存user
     }
 }
 
 
 /**微信登录 */
 function* loginByWX(action) {
-    yield put({ type: LOGIN_BY_WX_START })
     const res = yield Http.post('/user/loginByWX', action.payload.params)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
@@ -118,11 +116,8 @@ function* loginByWX(action) {
 }
 
 
-
 /**QQ登录 */
 function* loginByQQ(action) {
-    console.log(action.payload.params)
-    yield put({ type: LOGIN_BY_QQ_START })
     const res = yield Http.post('/user/loginByQQ', action.payload.params)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)

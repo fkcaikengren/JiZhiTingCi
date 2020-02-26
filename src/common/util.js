@@ -57,7 +57,7 @@ export default class _util {
         const res = await myHttp.get('/timestamp')
         const d = res.data.timestamp - Date.now()
         console.log('时间差：  ' + d)
-        if (d >= -30000 && d <= 30000) { //相差在30秒
+        if (d >= -300000 && d <= 300000) { //相差在5min
             return true
         } else {
             store.getState().app.toast.show('手机时间不准确，请调整时间!', 2000)

@@ -129,6 +129,7 @@ export default class PlanSelectTemplate {
                                 return
                             }
                         }
+                        console.log('planSelectorTemplate------params')
                         console.log(params)
                         onConfirm(params)
                     }}

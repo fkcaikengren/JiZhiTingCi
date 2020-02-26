@@ -18,6 +18,7 @@ const defaultState = {
         totalDays: 0,           //总天数
         lastLearnDate: null      //上次学习时间
     },
+    bookCoverSource: null,
     learnedWordCount: 0,   // 已学单词数
     leftDays: 0,           // 剩余学习天数
 
@@ -27,11 +28,7 @@ const defaultState = {
     allLearnedCount: 0,         //累计学习单词数
     allLearnedDays: 0,          //累计学习天数
 
-
-    //加载状态
-    isLoadPending: false,
 }
-
 
 export const plan = (state = defaultState, action) => {
 
@@ -47,18 +44,17 @@ export const plan = (state = defaultState, action) => {
                 allLearnedDays
             };
         }
-        case pa.CHANGE_VOCA_BOOK_START:
-            return { ...state, isLoadPending: true }
+
         // 更换词汇书
         case pa.CHANGE_VOCA_BOOK_SUCCEED: {
-            const { plan, leftDays, finishedBooksWordCount } = action.payload
+            const { plan, leftDays, finishedBooksWordCount, bookCoverSource } = action.payload
             return {
                 ...state,
                 plan: { ...state.plan, ...plan },
                 learnedWordCount: 0,
                 leftDays,
                 finishedBooksWordCount,
-                isLoadPending: false
+                bookCoverSource
             }
         }
 
@@ -71,7 +67,7 @@ export const plan = (state = defaultState, action) => {
                     ...state.plan,
                     ...plan,
                 },
-                leftDays: leftDays,
+                leftDays: leftDays
             }
         }
         case pa.MODIFY_LAST_LEARN_DATE:
@@ -96,6 +92,8 @@ export const plan = (state = defaultState, action) => {
         case pa.SYN_FINISH_DAYS_START: {
             return { ...state, allLearnedCount: action.payload.allLearnedCount }
         }
+        case pa.LOAD_BOOK_COVER_SOURCE:
+            return { ...state, bookCoverSource: action.payload.bookCoverSource }
 
         //退出登录
         case LOGOUT:

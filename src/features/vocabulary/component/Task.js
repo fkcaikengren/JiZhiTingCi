@@ -24,7 +24,7 @@ export default class Task extends Component {
 
 
   _navVocaLib = () => {
-    this.props.navigation.navigate('plan')
+    this.props.navigation.navigate('VocaPlan')
   }
 
   render() {

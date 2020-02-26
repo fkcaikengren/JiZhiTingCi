@@ -45,70 +45,7 @@ import PhonePage from '../features/mine/PhonePage';
 import VocaPlanPage from '../features/vocabulary/VocaPlanPage';
 
 
-const article1 = {
-  id: 1,
-  articleUrl: '/cet-6/1995-1-3-article.txt',
-  optionUrl: '/cet-6/1995-1-3-option.json',
-  answerUrl: '/cet-6/1995-1-3-answer.json',
-  analysisUrl: '/cet-6/1995-1-3-analysis.txt',
-  name: '六级阅读1',
-  note: '1995年1月份真题',
-  keyWords: ["reverse", "data", "opportunity"],
-  type: 'R1'
-}
 
-const article2 = {
-  name: "六级阅读37",
-  note: "2015年12月份真题",
-  articleUrl: "/cet-6/2015-12-(三)-1-article.txt",
-  optionUrl: "/cet-6/2015-12-(三)-1-option.json",
-  answerUrl: "/cet-6/2015-12-(三)-1-answer.json",
-  analysisUrl: "/cet-6/2015-12-(三)-1-analysis.txt",
-  keyWords: [
-    "hotly",
-    "presumption",
-    "remedy",
-    "chemical",
-    "adult"
-  ],
-  type: "R2"
-}
-
-const article3 = {
-  name: "六级阅读8",
-  note: "2005年6月份真题",
-  articleUrl: "/cet-6/2005-6-5-article.txt",
-  optionUrl: "/cet-6/2005-6-5-option.json",
-  answerUrl: "/cet-6/2005-6-5-answer.json",
-  analysisUrl: "/cet-6/2005-6-5-analysis.txt",
-  keyWords: [
-    "handicap",
-    "execution",
-    "enlarge",
-    "disable",
-    "estimate",
-    "company"
-  ],
-  type: "R3"
-}
-
-const article4 = {
-  name: "六级阅读25",
-  note: "2015年12月份真题",
-  articleUrl: "/cet-6/2015-12-(一)-2-article.txt",
-  optionUrl: null,
-  answerUrl: null,
-  analysisUrl: null,
-  keyWords: [
-    "admittance",
-    "apart",
-    "launch",
-    "elite",
-    "campus",
-    "access"
-  ],
-  type: "R4"
-}
 
 const VocaHomeStackNav = createStackNavigator({
   // 首页

@@ -485,6 +485,7 @@ export default class TestPage extends Component {
     _goBack = () => {
         const curIndexWhenBack = this.state.curIndex - this.perPassWordArr.length
         const newTask = { ...this.state.task, curIndex: curIndexWhenBack }
+
         if (this.props.mode === 'study') { //更新上传任务
             this.props.updateTask({ task: newTask })
             this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
@@ -494,7 +495,6 @@ export default class TestPage extends Component {
         }
         this.audioService.releaseSound()
     }
-
 
     render() {
         const { selectedStatus, selectedIndex, curIndex, isPassed } = this.state

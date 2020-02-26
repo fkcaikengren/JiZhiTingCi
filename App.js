@@ -145,7 +145,7 @@ class App extends React.Component {
         //非强制更新时，确认按钮文字. 默认为"Install"
         optionalInstallButtonLabel: '后台更新',
         //非强制更新时，检查到更新的消息文本
-        optionalUpdateMessage: '有新版本了，是否更新？',
+        optionalUpdateMessage: '',
         //Alert窗口的标题
         title: '更新提示'
       }

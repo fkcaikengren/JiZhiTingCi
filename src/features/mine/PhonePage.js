@@ -58,8 +58,13 @@ class PhonePage extends Component {
     //发送验证码
     _requestCode = () => {
         this.setState({ codeMode: true })
+        let param = { phone: this.state.phone }
         //服务器发送验证码
-        const param = { phone: this.state.phone }
+        Http.post('/user/getCode', param).then(res => {
+            if (res.status === 200) {
+                this.props.app.toast.show('发送成功')
+            }
+        })
     }
 
 

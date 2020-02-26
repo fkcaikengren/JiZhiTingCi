@@ -46,9 +46,7 @@ const styles = StyleSheet.create({
 class VocaPlanPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            bookCoverSource: null
-        }
+
     }
 
     componentDidMount() {
@@ -63,14 +61,28 @@ class VocaPlanPage extends React.Component {
             return true
         })
 
+        // 初始化
+        this._init()
     }
 
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress')
     }
+
+    _init = async () => {
+        //加载单词书封面
+        const { plan, bookCoverSource } = this.props.plan
+        if (plan && plan.bookCoverUrl && !bookCoverSource) {
+            const bookCoverSource = await FileService.getInstance().load(VOCABULARY_DIR, plan.bookCoverUrl)
+            this.props.loadBookCoverSource({
+                bookCoverSource
+            })
+        }
+    }
+
     _goBack = () => {
-        this.props.navigation.goBack();
         this.props.syncTask(null)
+        this.props.navigation.goBack();
     }
 
 
@@ -98,7 +110,6 @@ class VocaPlanPage extends React.Component {
         const {
             bookId,
             bookName,
-            bookCoverUrl,
             taskCount,
             taskWordCount,
             reviewWordCount,
@@ -132,16 +143,7 @@ class VocaPlanPage extends React.Component {
                                 cardMaxElevation={5}
                                 style={{ marginBottom: 20 }}
                             >
-                                <Image
-                                    onLoad={() => {
-                                        FileService.getInstance().load(VOCABULARY_DIR, bookCoverUrl).then(bookCoverSource => {
-                                            this.setState({
-                                                bookCoverSource
-                                            })
-                                        })
-                                    }}
-                                    source={this.state.bookCoverSource} style={styles.img} />
-
+                                <Image source={this.props.plan.bookCoverSource} style={styles.img} />
                             </CardView>
                             <Text style={gstyles.lg_black_bold}>{bookName}</Text>
                             <Text style={[gstyles.md_black, { marginTop: 5 }]}>每日新学{taskWordCount * taskCount}词，复习{reviewWordCount}词</Text>
@@ -205,7 +207,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     syncTask: HomeAction.syncTask,
-    modifyPlan: PlanAction.modifyPlan
+    modifyPlan: PlanAction.modifyPlan,
+    loadBookCoverSource: PlanAction.loadBookCoverSource
 }
 
 
