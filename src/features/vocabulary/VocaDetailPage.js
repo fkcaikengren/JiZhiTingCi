@@ -21,7 +21,7 @@ export default class VocaDetailPage extends Component {
     componentDidMount() {
         //监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            this._goBack()
+            this.props.navigation.goBack()
             return true
         })
         const word = this.props.navigation.getParam('word')
