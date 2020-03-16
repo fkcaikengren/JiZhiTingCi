@@ -4,6 +4,7 @@ import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, Dimensions }
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { PropTypes } from 'prop-types';
 import * as Progress from 'react-native-progress';
+import BackgroundTimer from 'react-native-background-timer'
 import gstyles from '../../../style'
 import AliIcon from '../../../component/AliIcon'
 import VocaUtil from '../common/vocaUtil';
@@ -113,6 +114,14 @@ export default class HomeFooter extends React.Component {
                             }} />
                             <AliIcon name='xiayige' size={20} color='#404040' style={{ paddingRight: 20 }} onPress={() => {
                                 if (this.vocaPlayService.changeCurIndexAndAutoTimer) {
+                                    const { autoPlayTimer, task } = this.props.vocaPlay
+                                    if (!(task.taskWords && task.taskWords.length > 0)) {
+                                        return
+                                    }
+                                    if (autoPlayTimer) {
+                                        BackgroundTimer.clearTimeout(autoPlayTimer)
+                                        this.props.changePlayTimer(0)
+                                    }
                                     this.props.changePlayListIndex({
                                         changeType: 1,
                                         playListIndex: null
