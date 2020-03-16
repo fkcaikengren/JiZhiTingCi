@@ -120,7 +120,7 @@ export default class VocaSearchPage extends Component {
             </View>
             {/* 清空图标 */}
             {this.state.showClearBtn &&
-              <AliIcon name='guanbi' size={16} color='#666' style={styles.clearIcon}
+              <AliIcon name='guanbi' size={18} color='#666' style={styles.clearIcon}
                 onPress={this._clear} />
             }
           </View>

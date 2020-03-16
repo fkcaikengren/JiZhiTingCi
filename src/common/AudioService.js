@@ -53,11 +53,18 @@ export default class AudioService {
             return;
           }
           //播放成功
-          this.sound.play(() => {
-            if (finishPlay) {
-              finishPlay()  //完成播放
+          if (this.sound) {
+            this.sound.play(() => {
+              if (finishPlay) {
+                finishPlay()  //完成播放
+              }
+            });
+          } else {
+            if (failPlay) {
+              failPlay() //播放失败
             }
-          });
+            return;
+          }
         })
       })
       .catch(e => {

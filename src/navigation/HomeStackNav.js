@@ -37,7 +37,7 @@ import DownloadManagePage from '../features/mine/DownloadManagePage'
 import MessagePage from '../features/mine/MessagePage'
 import MessageDetailPage from '../features/mine/MessageDetailPage'
 
-import FileTest from "../FileTest";
+
 import SettingPage from '../features/mine/SettingPage';
 import AboutPage from '../features/mine/AboutPage';
 import DictPage from '../features/vocabulary/DictPage';
@@ -189,10 +189,6 @@ const VocaHomeStackNav = createStackNavigator({
     screen: SettingPage
   },
 
-  //测试
-  FileTest: {
-    screen: FileTest
-  }
 
 }, {
   initialRouteName: 'Home',

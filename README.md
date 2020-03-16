@@ -672,7 +672,7 @@ buildToolsVersion "28.0.3"
 
 
 
-7.android9无法发送网络请求
+### 7.android9无法发送网络请求
 
 ​	注意：千万不要修改targetSdkVersion
 
@@ -681,6 +681,44 @@ buildToolsVersion "28.0.3"
 ```js
 //在Application中添加 
 android:usesCleartextTraffic="true"
+```
+
+
+
+### 8.部分android手机出现Text文字显示不完全
+
+原因：fontWeight属性引起字体显示不完全
+
+【参考】： https://blog.csdn.net/zwkkkk1/article/details/86642529 
+
+【参考】： https://blog.csdn.net/qq_36538734/article/details/90641888 
+
+在index.js入口文件添加代码：
+
+```js
+const defaultFontFamily = {
+	...Platform.select({
+		android: { fontFamily: 'Roboto' }
+	})
+};
+
+const oldRender = Text.render;
+Text.render = function(...args) {
+	const origin = oldRender.call(this, ...args);
+	return React.cloneElement(origin, {
+		style: [defaultFontFamily, origin.props.style]
+	});
+};
+
+
+```
+
+### 9.android9手机Text过长，换行后显示不全
+
+【参考】： https://juejin.im/post/5d3ebfc15188255d660e1002 
+
+```js
+//设置text的行高
 ```
 
 

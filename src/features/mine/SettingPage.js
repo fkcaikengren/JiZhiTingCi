@@ -26,7 +26,7 @@ class SettingPage extends React.Component {
     }
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
+            this._goBack()
             return true
         })
     }
@@ -34,8 +34,10 @@ class SettingPage extends React.Component {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
-    _renderItem = ({ title, rightComponent }) => {
-        return <View style={[gstyles.r_between, styles.itemView]} >
+    _renderItem = ({ title, rightComponent, onPress = _ => { } }) => {
+        return <View style={[gstyles.r_between, styles.itemView]}
+            onStartShouldSetResponder={e => true}
+            onResponderStart={onPress}>
             <Text numberOfLines={1} style={[gstyles.md_black_bold, { marginLeft: 20 }]}>
                 {title}
             </Text>
@@ -55,14 +57,16 @@ class SettingPage extends React.Component {
         this.setState({ selectedIndex })
     }
 
-    //修改复习轮播遍数
-    _changeReviewPlayTimes = () => {
+
+    _goBack = () => {
+        //修改复习轮播遍数
         if (this.props.mine.configReviewPlayTimes !== this.state.times) { //发生改变
             console.log(this.state.times)
             this.props.changeConfigReviewPlayTimes(this.state.times)
         }
-    }
 
+        this.props.navigation.goBack();
+    }
 
     render() {
         const { selectedIndex } = this.state
@@ -75,8 +79,8 @@ class SettingPage extends React.Component {
                     barStyle='dark-content'
                     leftComponent={
                         <AliIcon name='fanhui' size={26} color={gstyles.black} onPress={() => {
-                            this._changeReviewPlayTimes()
-                            this.props.navigation.goBack();
+                            this._goBack()
+
                         }} />}
                     centerComponent={{ text: '设置', style: gstyles.lg_black_bold }}
                     containerStyle={{
@@ -160,6 +164,33 @@ class SettingPage extends React.Component {
 
                 </View>
 
+
+
+                <View style={{ width: '100%', marginTop: 20 }}>
+                    {
+                        this._renderItem({
+                            title: '联系我们',
+                            rightComponent: <View style={[gstyles.r_start, { marginRight: 10 }]}>
+                                <AliIcon name='youjiantou' size={26} color={gstyles.gray} />
+                            </View>,
+                            onPress: () => {
+                                this.props.navigation.navigate('About')
+                            }
+                        })
+                    }
+                    {
+                        this._renderItem({
+                            title: '给个好评',
+                            rightComponent: <View style={[gstyles.r_start, { marginRight: 10 }]}>
+                                <AliIcon name='youjiantou' size={26} color={gstyles.gray} />
+                            </View>,
+                            onPress: () => {
+                                this.props.app.toast.show('暂不支持')
+                            }
+                        })
+                    }
+
+                </View>
 
 
                 <View style={[gstyles.r_center, styles.version]}>

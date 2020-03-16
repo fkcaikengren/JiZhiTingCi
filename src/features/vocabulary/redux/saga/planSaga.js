@@ -27,7 +27,11 @@ export function* createPlan(action) {
     try {
         const res = yield Http.post("/plan/create", action.payload.plan)
         if (res.status === 200) {
+            store.getState().app.toast.show('保存数据中...', 1500)
+            const vts = new VocaTaskService()
+            const { plan, words, articles } = res.data
             const { curBookId, allLearnedCount } = action.payload.plan
+
             // 学过的单词书+1，已学单词书中学过的单词数量
             if (curBookId) {
                 Storage.load({ key: 'finishedBooks' }).then(finishedBooks => {
@@ -39,11 +43,17 @@ export function* createPlan(action) {
                 }).catch(err => console.log(err))
             }
 
-            const { plan, words, articles } = res.data
-            //清空先前数据，存储新数据到realm
+            //加载今日数据 并且设置登录进入首页变量=false
+            if (IsLoginToHome) {
+                IsLoginToHome = false
+            }
+
+
+
+            //1.保存数据
             const vtd = VocaTaskDao.getInstance()
             const artDao = ArticleDao.getInstance()
-            console.log('dao 初始化ok')
+            //清空先前数据，存储新数据到realm
             vtd.deleteAll()
             artDao.deleteAllArticles()
             console.log('dao 删除数据ok')
@@ -53,24 +63,24 @@ export function* createPlan(action) {
             //清空未同步任务
             Storage.clearMapForKey('notSyncTasks')
 
-            const vts = new VocaTaskService()
-            //加载今日数据 
+
+
+
+
+            // 2.获取今日数据
             const tasks = vts.getTodayTasks(null, plan.taskCount, plan.taskWordCount)
-            // console.log(tasks)
             //构建文章任务
             const articleTasks = VocaUtil.genArticleTasksByVocaTasks(
                 tasks.filter((item, i) => item.status === Constant.STATUS_0)
             )
-            // 计算剩余天数
-            const leftDays = vts.countLeftDays(plan.taskCount, plan.taskWordCount)
-            console.log('计算剩余天数ok')
-
             if (store.getState().vocaPlay.task.normalType === Constant.BY_REAL_TASK) {
                 yield put({ type: CLEAR_PLAY })
             }
-            yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
+
+
+            // 3.改变计划状态
+            const leftDays = vts.countLeftDays(plan.taskCount, plan.taskWordCount)  // 计算剩余天数
             const bookCoverSource = yield FileService.getInstance().load(VOCABULARY_DIR, plan.bookCoverUrl)
-            console.log(bookCoverSource)
             yield put({
                 type: CHANGE_VOCA_BOOK_SUCCEED,
                 payload: {
@@ -80,12 +90,14 @@ export function* createPlan(action) {
                     bookCoverSource,
                 }
             })
+            //回调
+            action.payload.callback()
 
+            yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
             //加载成功后，修改lastLearnDate
             yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
 
-            //回调
-            action.payload.callback()
+
         } else {
             yield put({ type: CHANGE_VOCA_BOOK_FAIL })
             yield put({ type: LOAD_TASKS_FAIL })

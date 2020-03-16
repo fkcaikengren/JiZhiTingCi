@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        height: '35%'
+        width: '100%',
+        flex: 1
     },
     senFont: {
         flex: 10,

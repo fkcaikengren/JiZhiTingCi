@@ -54,7 +54,13 @@ class GroupVocaPage extends Component {
     componentDidMount() {
         //监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
+            if (this.state.onEdit) {
+                this.setState({
+                    onEdit: false
+                })
+            } else {
+                this.props.navigation.goBack()
+            }
             return true
         })
         this._formatData()
@@ -311,7 +317,7 @@ class GroupVocaPage extends Component {
                 }
                 {this.state.flatData.length <= 0 &&
                     <View style={[gstyles.c_center, { flex: 1 }]}>
-                        <AliIcon name={'no-data'} size={100} color={gstyles.gray} />
+                        <AliIcon name={'no-data'} size={60} color={gstyles.gray} />
                         <Text style={gstyles.md_gray}>暂无生词</Text>
                     </View>
                 }

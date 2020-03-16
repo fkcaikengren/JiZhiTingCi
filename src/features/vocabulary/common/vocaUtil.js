@@ -196,31 +196,6 @@ export default class VocaUtil {
     }
 
 
-    /**
-     *  生成Task的名词
-     * @param taskOrder
-     * @returns {string}
-     */
-    static genTaskName(taskOrder) {
-        if (taskOrder === Constant.VIRTUAL_TASK_ORDER) {
-            return '爱听词'
-        }
-        if (taskOrder) {
-            let name = ''
-            if (taskOrder < 10) {
-                name = '00' + taskOrder
-            } else if (taskOrder < 100) {
-                name = '0' + taskOrder
-            } else {
-                name = '' + taskOrder
-            }
-            return 'List-' + name
-        } else {
-            return ''
-        }
-
-    }
-
 
     /**
      * @description 生成一个minNum到maxMum间的随机数 (含头含尾)

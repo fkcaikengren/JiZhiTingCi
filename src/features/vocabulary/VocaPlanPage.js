@@ -174,7 +174,7 @@ class VocaPlanPage extends React.Component {
                     }
                     {!bookId &&
                         <View style={[gstyles.c_start, { marginTop: 50 }]}>
-                            <AliIcon name='no-data' size={100} color={gstyles.gray}></AliIcon>
+                            <AliIcon name='no-data' size={60} color={gstyles.gray}></AliIcon>
                             <Text style={{ fontSize: 16, color: gstyles.gray, marginTop: 15 }}>无学习计划</Text>
                         </View>
                     }

@@ -26,8 +26,10 @@ function includeKeyWord(keyWords, word) {
 //初始化页面
 function initPage(text, keyWords, color, size) {
     //初始化背景色和字号
-    $('html').css({ backgroundColor: color })
-    $('html').css({ fontSize: size })
+    $('html').css({ backgroundColor: color, fontSize: size })
+    if (color == '#222222') {
+        $('html').css({ color: '#CCC' })
+    }
 
     //分割文本
     var contents = text.match(SEPERATOR_REG)

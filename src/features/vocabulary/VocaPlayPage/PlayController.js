@@ -190,7 +190,7 @@ export default class PlayController extends React.Component {
                         <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
                             onResponderStart={(e) => { toggleWord() }}
-                        >en</Text>
+                        >英</Text>
                         {/* 测试按钮 */}
                         <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
                             <MenuTrigger text='测试' customStyles={{ triggerText: styles.triggerText, }} />
@@ -245,7 +245,7 @@ export default class PlayController extends React.Component {
                         <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
                             onResponderStart={(e) => { toggleTran() }}
-                        >zh</Text>
+                        >中</Text>
                     </Row>
                     {/* 进度条 */}
                     <View style={[gstyles.r_center, { marginBottom: 5 }]}>

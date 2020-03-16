@@ -73,14 +73,14 @@ export default class StudyPlayController extends React.Component {
                         <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
                             onResponderStart={(e) => { this._toggleWord() }}>
-                            en
+                            英
                     </Text>
 
                         {/* 中文按钮 */}
                         <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
                             onResponderStart={(e) => { this._toggleTran() }}>
-                            zh
+                            中
                     </Text>
                     </Row>
                     {/* 进度条 */}

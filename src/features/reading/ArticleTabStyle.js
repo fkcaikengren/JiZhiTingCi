@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 
     floatBtn: {
         position: 'absolute',
-        bottom: 260,
+        bottom: height / 2 - 50,
         right: 1,
         width: 35,
         height: 60,

@@ -105,7 +105,6 @@ export default class VocaCard extends Component {
         } else {
             return <Text numberOfLines={1} style={gstyles.md_black}>{translation}</Text>
         }
-
     }
 
 
@@ -155,9 +154,10 @@ export default class VocaCard extends Component {
                             </Row>
                             {/* 音标 */}
                             {hasEnAmPhonetic &&
-                                <Row style={[gstyles.r_start,]}>
+                                <Row style={[gstyles.r_start, { flexWrap: 'wrap' }]}>
                                     {wordInfo.en_phonetic &&
-                                        <View style={[gstyles.r_start,]}>
+                                        <View style={[gstyles.r_start, { marginRight: 10 }]}>
+                                            <Text style={styles.grayFont}>英</Text>
                                             <Text style={styles.grayFont}>{wordInfo.en_phonetic}</Text>
                                             <AliIcon name='shengyin' size={26} color={'#FA6360'} style={{ marginLeft: 10 }} onPress={() => {
                                                 this.audioService.playSound({
@@ -168,7 +168,8 @@ export default class VocaCard extends Component {
                                         </View>
                                     }
                                     {wordInfo.am_phonetic &&
-                                        <View style={[gstyles.r_start, { marginLeft: 10 }]}>
+                                        <View style={[gstyles.r_start]}>
+                                            <Text style={styles.grayFont}>美</Text>
                                             <Text style={styles.grayFont}>{wordInfo.am_phonetic}</Text>
                                             <AliIcon name='shengyin' size={26} color={'#4693DB'} style={{ marginLeft: 10 }} onPress={() => {
                                                 this.audioService.playSound({
@@ -241,6 +242,7 @@ export default class VocaCard extends Component {
                     <TouchableWithoutFeedback onPress={this._showAll}>
                         <View style={styles.clickView}>
                             <Text style={styles.clickText}>点击显示</Text>
+                            <Text>（中文释义+影视例句）</Text>
                         </View>
                     </TouchableWithoutFeedback>
                 }

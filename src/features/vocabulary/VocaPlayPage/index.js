@@ -652,7 +652,7 @@ class VocaPlayPage extends React.Component {
             onClosed={this._closeVocaModal}
             onOpened={this._openVocaModal}
             backdrop={true}
-            backdropPressToClose={false}
+            backdropPressToClose={true}
             swipeToClose={false}
             position={"bottom"}
             ref={ref => {
@@ -751,15 +751,13 @@ class VocaPlayPage extends React.Component {
     }
 
 
-
-
     render() {
-        let { task, themeId, themes, showWordInfos, bgPath } = this.props.vocaPlay;
+        let { task, showWordInfos, bgPath } = this.props.vocaPlay;
         let name = task.playName
         if (this.isStudyMode) {
             task = this.state.task
             showWordInfos = this.state.showWordInfos
-            name = VocaUtil.genTaskName(task.taskOrder)
+            name = task.taskWords[0] ? task.taskWords[0].word : '任务'
         }
 
         this.totalTimes = this.mode === Constant.LEARN_PLAY ? Constant.LEARN_PLAY_TIMES : store.getState().mine.configReviewPlayTimes

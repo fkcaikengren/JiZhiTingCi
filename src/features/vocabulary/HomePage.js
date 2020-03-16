@@ -45,8 +45,7 @@ class HomePage extends Component {
         AppState.addEventListener('change', this._handleAppStateChange);
         // 检查时间
         _util.checkLocalTime()
-        //监听极光推送
-        this._listenPush()
+
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
@@ -70,21 +69,7 @@ class HomePage extends Component {
             }
         }
     }
-    /**极光推送 */
-    _listenPush() {
-        //通知回调
-        PushUtil.addNotificationListener(result => {
-            console.log("notificationListener:" + JSON.stringify(result))
-            const { msgType } = result.extras
-            console.log(result.extras)
-            if (msgType === 'ArticleMessage') {
-                //改变hasNewMessage
-                this.props.changeHasNewMessage({
-                    hasNewMessage: true
-                })
-            }
-        });
-    }
+
 
     _handleAppStateChange = (nextAppState) => {
         if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
@@ -105,8 +90,12 @@ class HomePage extends Component {
         const { lastLearnDate, taskCount, taskWordCount } = plan
         const today = _util.getDayTime(0)
         console.log('today --> ' + today)
-        if (lastLearnDate && (today !== lastLearnDate || IsLoginToHome)) {  //任务过期or登录进入
-            IsLoginToHome = false
+
+        if (lastLearnDate && (today > (lastLearnDate + 1000) || IsLoginToHome)) {  //任务过期or登录进入
+            // 设置登录进入首页变量=false
+            if (IsLoginToHome) {
+                IsLoginToHome = false
+            }
             // 如果是任务播放，则清空VocaPlay
             if (this.props.vocaPlay.normalType === BY_REAL_TASK) {
                 this.props.clearPlay()
@@ -124,10 +113,26 @@ class HomePage extends Component {
                 console.log('同步天数')
                 this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
             }
+            //监听极光推送
+            this._listenPush()
 
         }
     }
-
+    /**极光推送 */
+    _listenPush() {
+        //通知回调
+        PushUtil.addNotificationListener(result => {
+            console.log("notificationListener:" + JSON.stringify(result))
+            const { msgType } = result.extras
+            console.log(result.extras)
+            if (msgType === 'ArticleMessage') {
+                //改变hasNewMessage
+                this.props.changeHasNewMessage({
+                    hasNewMessage: true
+                })
+            }
+        });
+    }
 
     _judgeFinishAllTasks = () => {
         const judgeFinishAllTasks = this.props.navigation.getParam('judgeFinishAllTasks', false)
@@ -210,20 +215,21 @@ class HomePage extends Component {
         const DrawerPanel = <HomeDrawerPanel navigation={this.props.navigation}
             plan={this.props.plan.plan} closeDrawer={this._closeDrawerPanel} />
 
-
         return (
             <Drawer
                 ref={(ref) => this._drawer = ref}
                 type="static"
                 content={DrawerPanel}
                 captureGestures={true}
+                negotiatePan={true} //该属性保证右滑打开
                 panOpenMask={0.4}
                 panCloseMask={0.2}
                 openDrawerOffset={0.2} // 20% gap on the right side of drawer
+                tapToClose={true}
                 styles={{
                     mainOverlay: { backgroundColor: '#AAA', opacity: 0 },
                 }}
-                tweenDuration={350}
+                tweenDuration={250}
                 tweenHandler={(ratio) => {
                     return {
                         mainOverlay: { opacity: ratio * 0.6 }

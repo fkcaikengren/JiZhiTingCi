@@ -87,9 +87,9 @@ export default class LookWordBoard extends Component {
                     <VocaOperator wordInfo={wordInfo} navigation={this.props.navigation} />
                 </View>
                 {/*y音标*/}
-                <View style={[{ width: '100%', marginTop: 10 }, gstyles.r_start]}>
+                <View style={[{ width: '100%', marginTop: 10, flexWrap: 'wrap' }, gstyles.r_start]}>
                     {wordInfo.am_phonetic &&
-                        <View style={gstyles.r_start}>
+                        <View style={[gstyles.r_start, { marginRight: 10 }]}>
                             <Text style={gstyles.sm_gray}>美</Text>
                             <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
                             <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
@@ -102,7 +102,7 @@ export default class LookWordBoard extends Component {
                     }
                     {wordInfo.en_phonetic &&
                         <View style={gstyles.r_start}>
-                            <Text style={[gstyles.sm_gray, { marginLeft: 10 }]}>英</Text>
+                            <Text style={[gstyles.sm_gray]}>英</Text>
                             <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
                             <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
                                 this.audioService.playSound({

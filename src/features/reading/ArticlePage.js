@@ -28,6 +28,8 @@ export default class ArticlePage extends React.Component {
         }
     }
 
+
+
     shouldComponentUpdate(nextProps, nextState) {
         const { bgThemes, themeIndex, fontRem, showKeyWords } = this.props.article
         const nextThemeIndex = nextProps.article.themeIndex

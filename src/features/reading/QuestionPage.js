@@ -67,13 +67,19 @@ class QuestionPage extends React.Component {
         })
       }
     }
+    const { bgThemes, themeIndex } = this.props.article
+    let fontColor = '#303030'
+    if (bgThemes[themeIndex] === '#222222') {
+      fontColor = '#CCC'
+    }
     return (
       <View style={styles.content}>
-        <Text style={styles.question}>{q.no + '. ' + q.question}</Text>
+        <Text style={[styles.question, { color: fontColor }]}>{q.no + '. ' + q.question}</Text>
         <OptionRadio
           options={options}
           onChange={this._onChangeOption}
           bgColor={'#CCC'}
+          fontColor={fontColor}
         />
       </View>
     );
@@ -95,6 +101,7 @@ class QuestionPage extends React.Component {
 
   render() {
     const { bgThemes, themeIndex } = this.props.article
+
     return (
       <View style={{ flex: 1, backgroundColor: bgThemes[themeIndex] }}>
         <Accordion

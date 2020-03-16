@@ -147,8 +147,8 @@ class ArticleManagePage extends Component {
                 />
                 {this.state.articles.length <= 0 &&
                     <View style={[gstyles.c_center, { flex: 1 }]}>
-                        <AliIcon name={'no-data'} size={100} color={gstyles.gray} />
-                        <Text style={gstyles.md_gray}>学过的阅读真题会出现在这里</Text>
+                        <AliIcon name={'no-data'} size={60} color={gstyles.gray} />
+                        <Text style={gstyles.md_gray}>暂无已学的阅读真题</Text>
                     </View>
                 }
                 {this.state.articles.length > 0 &&

@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
 
     content: {
         ...gstyles.c_center,
-        flex: 1
+        flex: 1,
+        width: '100%'
     },
     img: {
         width: 60,

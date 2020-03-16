@@ -36,7 +36,7 @@ export default class PlayListPane extends Component {
     // 渲染任务列表
     _renderTaskItem = ({ item, index }) => {
         const { autoplay, changePlayTimer, changeNormalType, changeTheme, changePlayListIndex } = this.props
-        let name = VocaUtil.genTaskName(item.taskOrder)
+
         const listenTimes = item.listenTimes
         const testTimes = item.testTimes
         const label = item.status === Constant.STATUS_200 ? '掌握' : '学习'
@@ -86,7 +86,7 @@ export default class PlayListPane extends Component {
                         <View style={[styles.statusDot, { backgroundColor: dotColor }]} />
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={gstyles.lg_white}>{name}</Text>
+                        <Text style={gstyles.lg_white}>{item.taskName}</Text>
                         <View style={[gstyles.r_start]}>
                             <Text style={[gstyles.labelText]}>{label}</Text>
                             <Text style={[gstyles.noteText, { color: '#FFF' }]}>{`共${item.wordCount}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>
@@ -204,7 +204,7 @@ export default class PlayListPane extends Component {
                         }
                         {!isLoadingTasks && playTasks.length <= 0 &&
                             <View style={[gstyles.c_center, { marginTop: 120 }]}>
-                                <AliIcon name={'no-data'} size={80} color='#DFDFDF' />
+                                <AliIcon name={'no-data'} size={60} color='#DFDFDF' />
                                 <Text style={gstyles.md_white}>暂无学习过的单词</Text>
                             </View>
                         }
@@ -279,7 +279,8 @@ export default class PlayListPane extends Component {
                 status: task.status,
                 listenTimes: task.listenTimes,
                 testTimes: task.testTimes,
-                wordCount: task.wordCount
+                wordCount: task.wordCount,
+                taskName: task.taskWords[0] ? task.taskWords[0].word : '任务' //显示名称
             }
         })
         setContentState({

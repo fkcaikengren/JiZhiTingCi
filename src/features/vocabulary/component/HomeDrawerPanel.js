@@ -167,24 +167,7 @@ class HomeDrawerPanel extends Component {
             FeedbackModule.openFeedbackActivity(phone)
           }}
         />
-        <Button type='clear'
-          icon={<AliIcon name='haopinghua0' size={24} color={gstyles.gray} />}
-          title={'给个好评'}
-          titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
-          containerStyle={{ width: '100%' }}
-          buttonStyle={[styles.btn, gstyles.r_start]}
-          onPress={() => { this.props.app.toast.show('暂不支持', 1000) }}
-        />
-        <Button type='clear'
-          icon={<AliIcon name='guanyuwomen' size={24} color={gstyles.gray} />}
-          title={'联系我们'}
-          titleStyle={[gstyles.lg_black, { marginLeft: 20 }]}
-          containerStyle={{ width: '100%' }}
-          buttonStyle={[styles.btn, gstyles.r_start]}
-          onPress={() => {
-            this.props.navigation.navigate('About')
-          }}
-        />
+
         <View
           ref={comp => this.timingService.timingRef = comp}
           style={{ width: '100%' }} >

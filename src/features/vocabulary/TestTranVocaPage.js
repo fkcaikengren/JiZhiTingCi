@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '35%'
+        width: '100%',
+        flex: 1
     },
     tranFont: {
         width: '70%',

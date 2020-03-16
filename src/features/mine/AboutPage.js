@@ -60,6 +60,7 @@ export default class AboutPage extends React.Component {
                 />
 
                 <ScrollView
+                    style={{ flex: 1 }}
                     containerStyle={{ flex: 1 }}
                     contentContainerStyle={[gstyles.c_start, { flex: 1 }]}
                     pagingEnabled={false}
@@ -84,17 +85,17 @@ export default class AboutPage extends React.Component {
                     </View>
                     <View style={[gstyles.c_center, { padding: 12, marginTop: 5 }]}>
                         <Text style={gstyles.md_black_bold}>关于我们</Text>
-                        <Text style={{ fontSize: 15, color: '#333', marginTop: 20 }}>
+                        <Text style={{ fontSize: 15, color: '#333', marginTop: 20, lineHeight: 20 }}>
                             {this.state.about}
                         </Text>
                     </View>
 
                 </ScrollView>
-                <View style={[gstyles.c_center, { width: "100%", marginVertical: 20, position: 'absolute', left: 0, bottom: 10 }]}>
+                <View style={[gstyles.c_center, { width: "100%", position: 'absolute', left: 0, bottom: 10 }]}>
                     <Text>Copyright©2020</Text>
                     <Text>奇思妙听科技 版权所有</Text>
                 </View>
-            </View>
+            </View >
         );
     }
 }

@@ -53,7 +53,7 @@ export function* changePlayListIndex(action) {
             //加载任务播放
             nextTask = VocaTaskDao.getInstance().getTaskByOrder(playTaskList[index])
             nextTask = VocaUtil.copyTaskDeep(nextTask, true)
-            nextTask.playName = VocaUtil.genTaskName(nextTask.taskOrder)
+            nextTask.playName = nextTask.taskWords[0] ? nextTask.taskWords[0].word : '任务'
             showWordInfos = VocaDao.getInstance().getShowWordInfos(nextTask.taskWords, true)
         } else if (normalType === BY_VIRTUAL_TASK) {
             //加载生词播放

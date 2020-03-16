@@ -184,7 +184,7 @@ export default class TaskItem extends Component {
     //任务名
     let name = '', label = '', note = ''
     if (this.isVocaTask) {
-      name = VocaUtil.genTaskName(item.taskOrder)
+      name = item.taskWords[0] ? item.taskWords[0].word : '任务'
       label = (item.status === Constant.STATUS_0 ? '新学' : '复习')
       note = `共${item.wordCount}词，已完成${progressNum}%`
     } else {

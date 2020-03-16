@@ -51,6 +51,7 @@ class BgSelectorPage extends Component {
         if (bgPaths.length <= 0) { //不存在，先下载
             const myHttp = createHttp(null, { shouldRefreshToken: true });
             const res = await myHttp.get('/appinfo/getPlayBgs')
+            this.props.app.toast.show('正在缓存中，请稍等...', 1500)
             const bgUrls = res.data
             for (let url of bgUrls) {
                 url = BASE_URL + url
@@ -90,9 +91,10 @@ class BgSelectorPage extends Component {
             const selectStyle = isSelected ? {
                 backgroundColor: gstyles.mainColor
             } : null
-            return <View style={[{
-                width: '50%', height: 1.3 * (width / 2),
-            }, gstyles.r_center]}>
+            return <View key={item}
+                style={[{
+                    width: '50%', height: 1.3 * (width / 2),
+                }, gstyles.r_center]} >
                 <TouchableOpacity activeColor={0.9} onPress={() => {
                     this.props.changeBg(item)
                 }}>

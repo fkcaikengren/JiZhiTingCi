@@ -67,12 +67,12 @@ export default class OptionRadio extends Component {
                                         borderRadius: 60,
                                         marginRight: 10,
                                     }, selectedStyle]}>
-                                    <Text style={[styles.optionText, { lineHeight: this.props.size, }]}>
+                                    <Text style={[styles.optionText, { lineHeight: this.props.size }]}>
                                         {option.identifier}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
-                            <Text style={[styles.optionText, { paddingTop: 4 }]}>{option.content}</Text>
+                            <Text style={[styles.optionText, { paddingTop: 4, color: this.props.fontColor }]}>{option.content}</Text>
                         </View>
                     })
                 }
@@ -86,6 +86,7 @@ OptionRadio.propTypes = {
     options: PropTypes.array.isRequired,
     selectedIndex: PropTypes.number,
     bgColor: PropTypes.string,
+    fontColor: PropTypes.string,
     activeBgColor: PropTypes.string,
     size: PropTypes.number,
     containerStyle: PropTypes.object,
@@ -96,6 +97,7 @@ OptionRadio.defaultProps = {
     onChange: (index, option) => { console.log(option) },
     selectedIndex: -1,
     bgColor: '#EEE',
+    fontColor: '#303030',
     activeBgColor: '#FFE957',
     size: 30,
     containerStyle: {}

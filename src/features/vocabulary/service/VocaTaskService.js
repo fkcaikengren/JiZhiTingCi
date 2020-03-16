@@ -435,7 +435,7 @@ export default class VocaTaskService {
                         }
                     }
                 }
-                header.title = `${VocaUtil.genTaskName(task.taskOrder)}, 共${count}词`
+                header.title = `${this._genTaskName(task.taskOrder)}, 共${count}词`
                 //任务中没有passed 单词
                 if (!hasPassedWord) {
                     passArr.pop()
@@ -481,7 +481,7 @@ export default class VocaTaskService {
                 const header = {
                     isHeader: true,
                     checked: false,
-                    title: `${VocaUtil.genTaskName(task.taskOrder)}, 共${words.length}词`
+                    title: `${this._genTaskName(task.taskOrder)}, 共${words.length}词`
                 }
                 learnedArr.push(header)
 
@@ -606,5 +606,25 @@ export default class VocaTaskService {
     */
     deleteAll() {
         this.vtd.deleteAll()
+    }
+
+
+
+
+    _genTaskName(taskOrder) {
+
+        if (taskOrder) {
+            let name = ''
+            if (taskOrder < 10) {
+                name = '00' + taskOrder
+            } else if (taskOrder < 100) {
+                name = '0' + taskOrder
+            } else {
+                name = '' + taskOrder
+            }
+            return 'List-' + name
+        } else {
+            return ''
+        }
     }
 }

@@ -107,7 +107,9 @@ class LearnCardPage extends Component {
 
     _goBack = () => {
         //更新、上传task
+
         const newTask = { ...this.state.task }
+        console.log(newTask)
         this.props.updateTask({ task: newTask })
         this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
         VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')

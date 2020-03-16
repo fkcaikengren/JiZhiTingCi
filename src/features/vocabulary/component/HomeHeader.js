@@ -14,6 +14,7 @@ import gstyles from '../../../style'
 import DownloadTemplate from '../../../component/DownloadTemplate';
 import { VOCABULARY_DIR } from '../../../common/constant';
 import VocaTaskService from '../service/VocaTaskService';
+import _util from '../../../common/util';
 
 
 const Dimensions = require('Dimensions');
@@ -101,7 +102,7 @@ export default class HomeHeader extends Component {
   _downloadPackage = () => {
     // 离线下载词库资源
     const { bookId, bookName, packageSize, packageUrl } = this.props.plan.plan
-    if (packageSize <= 0) {
+    if (!packageSize || packageSize <= 0) {
       this.props.app.toast.show('当前单词书离线包不可下载', 1500)
       return
     }
@@ -201,7 +202,9 @@ export default class HomeHeader extends Component {
       <View style={[{ flex: 2 }, gstyles.r_center]}>
         <Text style={[gstyles.md_black, { fontWeight: '700' }]}>{bookName ? bookName : '爱听词'}</Text>
         {this.state.showDownload &&
-          <AliIcon name='xiazai1' size={18} color='#303030' style={{ marginLeft: 10 }} onPress={this._downloadPackage} />
+          <AliIcon name='xiazai1' size={18} color='#303030' style={{ marginLeft: 10 }} onPress={() => {
+            _util.checkNet(this._downloadPackage)
+          }} />
         }
 
       </View>
@@ -271,7 +274,7 @@ export default class HomeHeader extends Component {
 
     return (
       <ParallaxScrollView
-        backgroundColor='#FFE957'
+        backgroundColor={gstyles.mainColor}
         contentBackgroundColor='#F9F9F9'
         parallaxHeaderHeight={HEADER_HEIGHT}
         stickyHeaderHeight={TITLE_HEIGHT}

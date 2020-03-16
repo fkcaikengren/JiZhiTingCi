@@ -35,7 +35,11 @@ export default class WebUtil {
                         }
                     })
                 }else if(data.command === 'changeBgtheme'){          //改变背景色
-                    $('html').css({backgroundColor:data.payload.color})
+                    if(data.payload.color == '#222222'){
+                        $('html').css({backgroundColor:data.payload.color,color:'#CCC'})
+                    }else{
+                        $('html').css({backgroundColor:data.payload.color,color:'#303030'})
+                    }
                 }else if(data.command === 'changeFontSize'){          //改变字号
                     $('html').css({fontSize:data.payload.size})
                 }

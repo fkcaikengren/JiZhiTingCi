@@ -35,16 +35,20 @@ export const home = (state = defaultState, action) => {
                 ...state, tasks: action.payload.tasks,
             };
         //更新任务
-        case ha.UPDATE_TASK:
+        case ha.UPDATE_TASK: {
             const task = action.payload.task
             const tasks = state.tasks.map((item, i) => {
                 if (item.taskOrder === task.taskOrder && item.status === task.status) { //要更新的
+                    console.log('--update --------------')
+                    console.log(task)
                     return task
                 } else {
                     return item
                 }
             })
             return { ...state, tasks }
+        }
+
         //上传单词任务
         case ha.SYNC_TASK_START:
             return { ...state, isUploading: true, isUploadFail: false, isTaskUploadFail: false }

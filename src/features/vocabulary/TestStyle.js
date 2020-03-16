@@ -2,10 +2,6 @@ import { StyleSheet } from 'react-native';
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FEFEFE',
-    },
     content: {
         padding: 10,
         flexDirection: 'column',
@@ -30,7 +26,7 @@ const styles = StyleSheet.create({
     },
     modalBottom: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 10,
         width: '100%',
         height: 60,
         flex: 1,
