@@ -186,8 +186,10 @@ export default class HomeHeader extends Component {
         </TouchableOpacity>
 
         {(this.props.home.isUploading || this.props.home.isUploadFail) &&
-          <View style={{ marginLeft: 10, marginBottom: 2 }}>
-            <AliIcon name='tongbu' size={22} color={gstyles.gray} onPress={this._syncAllData} />
+          <View style={{ marginLeft: 10, marginBottom: 2 }}
+            onStartShouldSetResponder={e => true}
+            onResponderStart={this._syncAllData}>
+            <AliIcon name='tongbu' size={22} color={gstyles.gray} />
             <Badge
               value={isFailed ? '!' : '···'}
               status={isFailed ? 'error' : 'primary'}

@@ -60,17 +60,17 @@ export const loginHandle = (data, navigation) => {
     return mineState
 }
 
-export const logoutHandle = () => {
+export const logoutHandle = async () => {
 
     //1.清空Storage 
-    Storage.clearMapForKey('notSyncTasks')
+    await Storage.clearMapForKey('notSyncTasks')
 
-    Storage.clearMapForKey('addedFinishDays')
-    Storage.clearMapForKey('finishDays')
-    Storage.remove({ key: 'finishedBooks' })
+    await Storage.clearMapForKey('addedFinishDays')
+    await Storage.clearMapForKey('finishDays')
+    await Storage.remove({ key: 'finishedBooks' })
 
-    Storage.clearMapForKey('notSyncGroups')
-    Storage.remove({ key: 'groupOrdersString' })
+    await Storage.clearMapForKey('notSyncGroups')
+    await Storage.remove({ key: 'groupOrdersString' })
 
     //2.清空token和user
     store.dispatch({ type: LOGOUT })
