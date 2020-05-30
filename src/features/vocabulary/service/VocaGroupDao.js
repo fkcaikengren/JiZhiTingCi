@@ -313,69 +313,17 @@ export default class VocaGroupDao {
     /**
      * 添加生词到默认生词本
      * @param groupWord
-     * @param groupWord
      */
     addWordToDefault = (groupWord) => {
         let result = {}
         this.realm.write(() => {
             console.log(`开始添加生词到默认生词本，单词：${groupWord.word}`)
-            //判断groupWord 所在的分组（即判断第一个字母）
-            let isSaved = false
-            let firstChar = groupWord.word[0].toUpperCase()
             let defaultGroup = this.realm.objects('VocaGroup').filtered('isDefault = true')[0];
-            result.groupId = defaultGroup.id
-            //如果默认生词本不存在，创建一个默认生词本
-            if (!defaultGroup) {
-                let group = {
-                    id: _util.generateMixed(3) + Date.now(),
-                    groupName: '默认生词本',
-                    count: 0,
-                    createTime: new Date().getTime(),
-                    isDefault: true,            //设置是默认生词本
-                    sections: []
-                }
-                defaultGroup = this.realm.create('VocaGroup', group);
-                console.log(`创建了默认生词本`)
-            }
-            for (let key in defaultGroup.sections) {
-                let s = defaultGroup.sections[key];
-                if (s.section === firstChar) {
-                    console.log(`生词${groupWord.word} 存入生词本 ${defaultGroup.groupName} 的section: ${s.section} 中`)
-                    //如果单词已经存在, 返回false,添加失败
-                    for (let key2 in s.words) {
-                        if (s.words[key2].word === groupWord.word) {
-                            console.log('单词已存在，存入失败')
-                            success = false
-                            //这里的return 是结束realm.write函数
-                            return false
-                        }
-                    }
-                    s.words.push({ ...groupWord, id: uuidv4() })
-                    defaultGroup.count++;
-                    isSaved = true
-                    result.addWord = groupWord.word
-                    console.log('单词存入成功')
-
-                    break
-                }
-            }
-
-            if (!isSaved) {
-                console.log(`不存在Section, 创建了一个Section: ${firstChar}`)
-                //创建分组，并存入
-                let newSection = {
-                    id: uuidv4(),
-                    section: firstChar,
-                    words: [{ ...groupWord, id: uuidv4() }]
-                }
-                defaultGroup.sections.push(newSection);
-                defaultGroup.count++;
-                result.addWord = groupWord.word
-                console.log('单词存入成功')
-            }
+            result = this._addWord(groupWord, defaultGroup)
         })
         return result
     }
+
 
     /**
      * 判断单词是否在默认生词本
@@ -406,6 +354,126 @@ export default class VocaGroupDao {
         }
         return isExist
     }
+    /**
+    * 判断单词是否在生词本中
+    * @param word
+    * @param goalGroup
+    * @returns {boolean}
+    */
+    _isExistInGroup = (word, goalGroup) => {
+        if (!word) {
+            return false
+        }
+        let isExist = false;
+        try {
+            if (goalGroup) {
+                for (let s of goalGroup.sections) {
+                    for (let w of s.words) {
+                        if (w.word === word) {
+                            //如果存在
+                            isExist = true
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            isExist = false
+            console.log(e)
+        }
+        return isExist
+    }
+
+    /**
+     * 批量添加生词到生词本
+     * @param groupWords
+     * @param groupName
+     */
+    batchAddWords = (groupWords, groupName) => {
+        let results = []
+        this.realm.write(() => {
+            const goalGroup = this.realm.objects('VocaGroup').filtered('groupName = "' + groupName + '"')[0];
+            if (!goalGroup) {
+                throw new Error("目标生词本不存在！")
+            } else {
+                const gWords = []
+                for (let groupWord of groupWords) {
+                    if (!this._isExistInGroup(groupWord.word, goalGroup)) {
+                        gWords.push(groupWord)
+                    } else {
+                        console.log(`重复：${groupWord.word}`)
+                    }
+                }
+                for (let groupWord of gWords) {
+                    const r = this._addWord(groupWord, goalGroup)
+                    if (r.groupId) {
+                        results.push(r)
+                    }
+                }
+            }
+        })
+        return results
+    }
+
+    /**
+    * 添加生词到生词本的操作
+    * @param groupWord
+    * @param goalGroup
+    */
+    _addWord = (groupWord, goalGroup) => {
+        let result = {}
+        //判断groupWord 所在的分组（即判断第一个字母）
+        let isSaved = false
+        let firstChar = groupWord.word[0].toUpperCase()
+        result.groupId = goalGroup.id
+        //如果默认生词本不存在，创建一个默认生词本
+        if (!goalGroup) {
+            throw new Error("目标生词本不存在！")
+        }
+        for (let key in goalGroup.sections) {
+            let s = goalGroup.sections[key];
+            if (s.section === firstChar) {
+                console.log(`生词${groupWord.word} 存入生词本 ${goalGroup.groupName} 的section: ${s.section} 中`)
+                //如果单词已经存在, 返回false,添加失败
+                for (let key2 in s.words) {
+                    if (s.words[key2].word === groupWord.word) {
+                        console.log('单词已存在，存入失败')
+                        success = false
+                        //这里的return 是结束realm.write函数
+                        return false
+                    }
+                }
+                s.words.push({ ...groupWord, id: uuidv4() })
+                goalGroup.count++;
+                isSaved = true
+                result.addWord = groupWord.word
+                console.log('单词存入成功')
+
+                break
+            }
+        }
+
+        if (!isSaved) {
+            console.log(`不存在Section, 创建了一个Section: ${firstChar}`)
+            //创建分组，并存入
+            let newSection = {
+                id: uuidv4(),
+                section: firstChar,
+                words: [{ ...groupWord, id: uuidv4() }]
+            }
+            goalGroup.sections.push(newSection);
+            goalGroup.count++;
+            result.addWord = groupWord.word
+            console.log('单词存入成功')
+        }
+        return result
+    }
+
+
+
+
+
+
 
     /**
      *  从默认生词本移除单词

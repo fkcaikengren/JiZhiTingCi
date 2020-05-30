@@ -121,8 +121,14 @@ export default class StudyPlayController extends React.Component {
                                 text={Math.floor(interval) + 's'}
                                 customStyles={{ triggerText: styles.studyIntervalButton }} />
                             <MenuOptions>
-                                <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                    <Text style={popStyle}>4.0s</Text>
+                                <MenuOption style={gstyles.haireBottom} value={10.0}>
+                                    <Text style={popStyle}>10s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={8.0}>
+                                    <Text style={popStyle}>8.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={6.0}>
+                                    <Text style={popStyle}>6.0s</Text>
                                 </MenuOption>
                                 <MenuOption style={gstyles.haireBottom} value={3.0}>
                                     <Text style={popStyle}>3.0s</Text>

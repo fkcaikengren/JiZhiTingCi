@@ -38,12 +38,12 @@ import MessagePage from '../features/mine/MessagePage'
 import MessageDetailPage from '../features/mine/MessageDetailPage'
 
 
-import SettingPage from '../features/mine/SettingPage';
+
+import VocaPlanPage from '../features/vocabulary/VocaPlanPage';
 import AboutPage from '../features/mine/AboutPage';
 import DictPage from '../features/vocabulary/DictPage';
 import PhonePage from '../features/mine/PhonePage';
-import VocaPlanPage from '../features/vocabulary/VocaPlanPage';
-
+import SettingPage from '../features/mine/SettingPage';
 
 
 
@@ -188,6 +188,7 @@ const VocaHomeStackNav = createStackNavigator({
   Setting: {
     screen: SettingPage
   },
+
 
 
 }, {

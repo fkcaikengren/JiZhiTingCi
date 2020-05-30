@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Platform, View } from 'react-native'
-import NetInfo from "@react-native-community/netinfo"
 import { connect } from "react-redux";
 import SplashScreen from 'react-native-splash-screen'
 import { DURATION } from 'react-native-easy-toast'
@@ -12,9 +11,7 @@ import VocaGroupDao from '../vocabulary/service/VocaGroupDao';
 import FileService from '../../common/FileService';
 import { USER_DIR, SHARE_DIR } from '../../common/constant';
 import * as MineAction from '../mine/redux/action/mineAction';
-import { store } from '../../redux/store';
-import { logoutHandle } from './common/userHandler';
-import httpBaseConfig from '../../common/httpBaseConfig';
+
 import VocaTaskService from '../vocabulary/service/VocaTaskService';
 import ArticleDao from '../reading/service/ArticleDao';
 const fs = RNFetchBlob.fs
@@ -110,41 +107,18 @@ class AuthLoadingPage extends Component {
             console.log(res.path())
             this.props.app.loader.close()
         }
-
-
         // 定义全局请求对象
-        global.Http = createHttp(null, { showLoader: true, shouldRefreshToken: true })
-        //判断是否过期
+        global.Http = createHttp(null, { showLoader: true })
+
+        //判断是否登录
         const { accessToken, expiresIn, refreshToken } = this.props.mine.credential
-        if (accessToken && expiresIn && Date.now() < expiresIn) {
-            console.log('直接进入App')
-            // 直接进入App
+        if (accessToken && expiresIn && refreshToken) {
+            // 已登录
             this.props.navigation.navigate('HomeStack')
         } else {
-            if (!refreshToken || refreshToken === "") { //安装后第一次打开App
-                this.props.navigation.navigate('LoginStack')
-                return
-            }
-            NetInfo.fetch().then(async (state) => {
-                if (state.isConnected) { //网络正常
-                    const tokenHttp = createHttp()
-                    const tokenRes = await tokenHttp.post("/refreshToken", { refreshToken })
-                    if (tokenRes.status === 200) {
-                        console.log("--------------auth 刷新token-------------------")
-                        const credential = tokenRes.data
-                        //修改Http的Authorization
-                        Http.defaults.headers.common['Authorization'] = credential.accessToken
-                        //修改redux
-                        store.dispatch({ type: MineAction.MODIFY_CREDENTIAL, payload: { credential } })
-                        this.props.navigation.navigate('HomeStack')
-                    }
-                } else {   //无网络
-                    logoutHandle()
-                }
-            })
+            //   未登录
+            this.props.navigation.navigate('LoginStack')
         }
-
-
     };
 
     render() {

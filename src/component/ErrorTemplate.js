@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
         borderColor: '#EFEFEF',
         borderRadius: 6,
         fontSize: 16,
+        textAlignVertical: 'top'
     }
 });
 

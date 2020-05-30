@@ -54,18 +54,13 @@ class TestTranVocaPage extends Component {
 
 
         if (trans) {
-            let i = 0
             if (this.word != wordInfo.word) {
                 this.word = wordInfo.word
-                this.transNum = VocaUtil.randomNum(0, Object.keys(trans).length - 1)
             }
             for (let k in trans) {
-                if (i === this.transNum) {
-                    property = k
-                    translation = trans[k]
-                    break
-                }
-                i++
+                property = k
+                translation = trans[k]
+                break
             }
         }
         translation = translation ? translation : wordInfo.translation

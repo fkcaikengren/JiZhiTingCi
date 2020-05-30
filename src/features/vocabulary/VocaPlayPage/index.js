@@ -81,7 +81,7 @@ class VocaPlayPage extends React.Component {
             showWordInfos: [],
             curIndex: 0,
             autoPlayTimer: 0,
-            interval: 1.4,
+            interval: 2,
             showWord: true,
             showTran: true,
 
@@ -184,9 +184,8 @@ class VocaPlayPage extends React.Component {
             this.finishedTimes = task.leftTimes ? this.totalTimes - task.leftTimes : 0
 
             //设置单词、释义可见性
-            if ((this.mode === Constant.LEARN_PLAY || this.mode === Constant.REVIEW_PLAY) && this.finishedTimes <= 0) {
+            if (this.mode === Constant.REVIEW_PLAY) {
                 this._toggleTran(false)
-                this._toggleWord(true)
             }
 
             //改变状态

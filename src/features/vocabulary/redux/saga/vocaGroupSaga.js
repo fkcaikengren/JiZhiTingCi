@@ -17,7 +17,7 @@ export function* syncGroup(action) {
   try {
     if (syncArr && syncArr.length > 0) {
       yield put({ type: SYNC_GROUP_START })
-      const myHttp = createHttp(null, { showLoader: action.payload.isByHand, shouldRefreshToken: true })
+      const myHttp = createHttp(null, { showLoader: action.payload.isByHand })
       const res = yield myHttp.post('/vocaGroup/sync', syncArr)
       if (res.status === 200) {
         // 删除本地

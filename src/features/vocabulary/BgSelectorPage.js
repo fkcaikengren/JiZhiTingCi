@@ -49,7 +49,7 @@ class BgSelectorPage extends Component {
         this.props.app.loader.show("加载中...", DURATION.FOREVER)
         let bgPaths = await Storage.getAllDataForKey('playBgs')
         if (bgPaths.length <= 0) { //不存在，先下载
-            const myHttp = createHttp(null, { shouldRefreshToken: true });
+            const myHttp = createHttp(null);
             const res = await myHttp.get('/appinfo/getPlayBgs')
             this.props.app.toast.show('正在缓存中，请稍等...', 1500)
             const bgUrls = res.data

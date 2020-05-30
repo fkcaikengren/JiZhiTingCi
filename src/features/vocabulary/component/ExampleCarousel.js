@@ -90,6 +90,12 @@ export default class ExampleCarousel extends Component {
     if (this.props.examples === nextProps.examples) {
       return false
     } else {
+
+      this.setState({
+        loadQueue: new Array(nextProps.examples.length).fill(0),
+        imgSources: new Array(nextProps.examples.length).fill(null)
+      })
+
       if (this._swiper && this.curIndex !== 0) {
         this._swiper.scrollBy(0 - this.curIndex, false)
         this.shouldPlay = false

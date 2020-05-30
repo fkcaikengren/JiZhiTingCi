@@ -108,17 +108,22 @@ class AccountPage extends React.Component {
             } else if (result.customButton) {
                 console.log('User tapped custom button: ', result.customButton);
             } else {
-                //modifyAvatar
-                this.props.modifyAvatar({
-                    ...this.props.mine.credential,
-                    result: result
-                })
-
+                this._modifyAvatar(result)
             }
         });
     }
 
-
+    _modifyAvatar = async (result) => {
+        // 如果过期，先刷新token
+        const { expiresIn } = this.props.mine.credential
+        if (expiresIn && Date.now() >= expiresIn) {
+            await _util.checkLocalTime()
+        }
+        this.props.modifyAvatar({
+            ...this.props.mine.credential,
+            result: result
+        })
+    }
 
     _renderSexSelector = ({ commonModal }) => {
         return () => {

@@ -136,8 +136,8 @@ export default class HistoryBooksPage extends Component {
                 }
                 {!hasData &&
                     <View style={[gstyles.c_center, { flex: 1 }]}>
-                        <AliIcon name={'no-data'} size={100} color={gstyles.gray} />
-                        <Text style={gstyles.md_gray}>暂无学过的单词书</Text>
+                        <AliIcon name={'no-data'} size={60} color={gstyles.gray} />
+                        <Text style={{ fontSize: 16, color: gstyles.gray, marginTop: 15 }}>暂无学过的单词书</Text>
                     </View>
                 }
             </View >

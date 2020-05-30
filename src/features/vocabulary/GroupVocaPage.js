@@ -17,6 +17,7 @@ import styles from './GroupVocaStyle'
 import gstyles from '../../style'
 import AudioService from "../../common/AudioService";
 import VocaGroupService from "./service/VocaGroupService";
+import AddVocaTemplate from "./component/AddVocaTemplate";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -54,7 +55,10 @@ class GroupVocaPage extends Component {
     componentDidMount() {
         //监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.state.onEdit) {
+            const { isOpen, hide } = this.props.app.commonModal
+            if (isOpen()) {
+                hide()
+            } else if (this.state.onEdit) {
                 this.setState({
                     onEdit: false
                 })
@@ -200,6 +204,7 @@ class GroupVocaPage extends Component {
         const result = this.vgService.deleteWords(groupId, words)
         if (result.success) {
             this.props.app.toast.show(`成功删除${result.deletedWords.length}个生词`, 1000);
+
             //刷新
             const flatData = this.state.flatData.filter((item, index) => {
                 let deleted = false
@@ -226,6 +231,9 @@ class GroupVocaPage extends Component {
             //不刷新
         }
     }
+
+
+
 
     _playBtn = () => {
         const words = this.state.checkedIndex.map((itemIndex, i) => {
@@ -292,7 +300,27 @@ class GroupVocaPage extends Component {
                         }} />}
                     centerComponent={{ text: groupName, style: [gstyles.lg_black_bold, { width: '70%', textAlign: 'center' }] }}
                     rightComponent={
-                        editBtn
+                        <View style={gstyles.r_start}>
+                            {!this.state.onEdit &&
+                                <AliIcon name='piliangtianjia' size={24} color={gstyles.black} style={{ marginRight: 15 }} onPress={() => {
+                                    AddVocaTemplate.show({
+                                        commonModal: this.props.app.commonModal,
+                                        title: "批量添加生词",
+                                        groupName: groupName,
+                                        modalHeight: 400,
+                                        onSucceed: () => {
+                                            //刷新
+                                            this._formatData()
+                                            this.props.navigation.state.params.refreshGroup()
+                                        }
+                                    })
+                                }} />
+                            }
+                            {
+                                editBtn
+                            }
+                        </View>
+
                     }
                     containerStyle={{
                         backgroundColor: gstyles.mainColor,
@@ -388,7 +416,11 @@ class GroupVocaPage extends Component {
         const itemPaddingLeft = this.state.onEdit ? 0 : 20
         const bodyWidth = this.state.onEdit ? width - 60 : width - 40
         const itemChecked = this.state.checkedIndex.includes(index)
-        const pronTypeText = (this.props.mine.configVocaPronType === Constant.VOCA_PRON_TYPE_EN) ? '英' : '美'
+        let pronTypeText = ""
+        if (item.word && !(item.word.includes(' ') || item.word.includes("…"))) {//非短语
+            pronTypeText = (this.props.mine.configVocaPronType === Constant.VOCA_PRON_TYPE_EN) ? '英' : '美'
+
+        }
         return (
             flag
                 ? <View key={'h' + index} style={styles.headerView}>
@@ -407,17 +439,18 @@ class GroupVocaPage extends Component {
                         />
                     }
                     <View key={'w' + index} style={[gstyles.c_center, { width: bodyWidth }]}>
-                        <View style={[gstyles.r_between, { width: '100%' }]}>
-                            <View style={[gstyles.r_start]}>
-                                <Text style={{ fontSize: 16, color: '#303030' }}>{item.word}</Text>
-                                <Text style={{ fontSize: 12, color: '#AAA', fontWeight: '300', marginLeft: 10 }}>{`${pronTypeText} ${item.phonetic}`}</Text>
-                            </View>
-                            <AliIcon name='shengyin' size={24} color='#666' onPress={() => {
-                                this.audioService.playSound({
-                                    pDir: CConstant.VOCABULARY_DIR,
-                                    fPath: item.pronUrl
-                                })
-                            }} />
+                        <View style={[gstyles.r_start, { width: '100%' }]}>
+                            <Text style={{ fontSize: 16, color: '#303030' }}>{item.word}</Text>
+                            <Text style={{ fontSize: 12, color: '#AAA', fontWeight: '300', marginLeft: 10 }}>{`${pronTypeText} ${item.phonetic}`}</Text>
+
+                            <AliIcon name='shengyin' size={24} color='#666'
+                                style={{ position: 'absolute', top: 0, right: 0 }}
+                                onPress={() => {
+                                    this.audioService.playSound({
+                                        pDir: CConstant.VOCABULARY_DIR,
+                                        fPath: item.pronUrl
+                                    })
+                                }} />
                         </View>
                         <View style={[gstyles.r_start, { width: '100%' }]}>
                             <Text numberOfLines={1} style={{ fontSize: 14, color: '#666', }}>{item.translation}</Text>

@@ -75,7 +75,7 @@ export function* syncTask(action) {
         //3. 成功则清空
         if (uploadedTasks && uploadedTasks.length > 0) {
             yield put({ type: SYNC_TASK_START })
-            const myHttp = createHttp(null, { shouldRefreshToken: true })
+            const myHttp = createHttp(null)
             const res = yield myHttp.post("/vocaTask/sync", uploadedTasks)
             if (res.status === 200) { //清空
                 Storage.clearMapForKey('notSyncTasks');

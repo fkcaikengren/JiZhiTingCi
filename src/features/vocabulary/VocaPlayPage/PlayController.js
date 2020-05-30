@@ -99,7 +99,6 @@ export default class PlayController extends React.Component {
     _chooseInterval = (interval) => {
         const { changeInterval } = this.props;
         changeInterval(interval);
-
     }
 
     _pause = () => {
@@ -226,8 +225,14 @@ export default class PlayController extends React.Component {
                         <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
                             <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.triggerText, }} />
                             <MenuOptions>
-                                <MenuOption style={gstyles.haireBottom} value={4.0}>
-                                    <Text style={popStyle}>4.0s</Text>
+                                <MenuOption style={gstyles.haireBottom} value={10.0}>
+                                    <Text style={popStyle}>10s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={8.0}>
+                                    <Text style={popStyle}>8.0s</Text>
+                                </MenuOption>
+                                <MenuOption style={gstyles.haireBottom} value={6.0}>
+                                    <Text style={popStyle}>6.0s</Text>
                                 </MenuOption>
                                 <MenuOption style={gstyles.haireBottom} value={3.0}>
                                     <Text style={popStyle}>3.0s</Text>

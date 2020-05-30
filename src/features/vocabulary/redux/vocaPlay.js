@@ -17,7 +17,7 @@ const defaultState = {
     //是否播放, <=0表示暂停，>0表示播放
     autoPlayTimer: 0,
     //时间间隔
-    interval: 1.4,
+    interval: 2,
     //是否显示英文单词
     showWord: true,
     //是否显示中文释义

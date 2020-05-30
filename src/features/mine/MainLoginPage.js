@@ -26,7 +26,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 10,
     },
-
+    emText: {
+        textDecorationLine: 'underline',
+        color: '#202020',
+    }
 })
 
 class MainLoginPage extends Component {
@@ -127,6 +130,27 @@ class MainLoginPage extends Component {
                         </TouchableOpacity>
 
                     </View>
+                </View>
+                <View style={[gstyles.r_center, { marginBottom: 10 }]}>
+                    <Text>登录即代表阅读并同意</Text>
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                        this.props.navigation.navigate('H5', {
+                            'title': '服务条款',
+                            'url': 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/app/service.html'
+                        })
+                    }}>
+                        <Text style={styles.emText}>服务条款</Text>
+                    </TouchableOpacity>
+                    <Text>和</Text>
+                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                        this.props.navigation.navigate('H5', {
+                            'title': '隐私政策',
+                            'url': 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/app/privacy.html'
+                        })
+                    }}>
+                        <Text style={styles.emText}>隐私政策</Text>
+                    </TouchableOpacity>
+
                 </View>
             </ImageBackground >
         )

@@ -121,7 +121,7 @@ class SettingPage extends React.Component {
                                     <Text >{this.state.times}</Text>
                                 </View>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                    if (this.state.times <= 19) {
+                                    if (this.state.times <= 14) {
                                         this.setState({ times: this.state.times + 1 })
                                     }
 

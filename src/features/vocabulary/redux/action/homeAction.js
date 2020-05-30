@@ -28,9 +28,9 @@ export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
     [LOAD_TASKS]: fn,
     //更新任务
     [UPDATE_TASK]: fn,
-    // 更新分数
-    [UPDATE_SCORE]: fn,
     //上传同步任务
     [SYNC_TASK]: fn,
+    // 更新分数
+    [UPDATE_SCORE]: fn,
 
 });

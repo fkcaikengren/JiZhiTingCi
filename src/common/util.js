@@ -53,7 +53,7 @@ export default class _util {
         if (!state.isConnected) {//未联网不检查
             return true
         }
-        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        const myHttp = createHttp(null)
         const res = await myHttp.get('/timestamp')
         const d = res.data.timestamp - Date.now()
         console.log('时间差：  ' + d)

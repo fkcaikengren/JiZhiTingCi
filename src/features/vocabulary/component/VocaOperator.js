@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
+import { PropTypes } from 'prop-types';
 
 import AliIcon from '../../../component/AliIcon'
 import VocaGroupService from '../service/VocaGroupService'
@@ -137,11 +138,13 @@ class VocaOperator extends Component {
             }}>
                 <Text style={styles.errBtn}>报错</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={this._openDict}>
-                <Text style={styles.dictBtn}>
-                    词典
+            {this.props.showDict &&
+                <TouchableOpacity onPress={this._openDict}>
+                    <Text style={styles.dictBtn}>
+                        词典
                 </Text>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            }
             {this.state.added && //从生词本移除
                 <AliIcon name='pingfen' size={22} color={gstyles.secColor}
                     style={{ marginRight: 12 }}
@@ -155,6 +158,16 @@ class VocaOperator extends Component {
 
         </View>
     }
+}
+
+VocaOperator.propTypes = {
+    wordInfo: PropTypes.object.isRequired,
+    showDict: PropTypes.bool
+
+}
+
+VocaOperator.defaultProps = {
+    showDict: true
 }
 
 

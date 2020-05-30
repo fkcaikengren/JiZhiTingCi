@@ -40,6 +40,19 @@ export default class VocaDao {
         }
     }
 
+    /**查询单词的相关短语 */
+    getPhrasesOfWord(word, limit) {
+        const wordInfos = this.realm.objects('PhraseInfo').filtered('phrase CONTAINS "' + word + '"');
+        const phrs = []
+        for (let i = 0; i < wordInfos.length; i++) {
+            if (i >= limit) {
+                break;
+            }
+            phrs.push(wordInfos[i])
+        }
+        return phrs
+    }
+
     /**
      * @function  查词（模糊查询匹配的前8个单词）
      *            分3种查询：用单词查询，用短语查询；用中文查询；
@@ -55,9 +68,10 @@ export default class VocaDao {
         let isPhr = false
         // 英文查询
         if (word[0].match(/[a-zA-Z]/)) {
-            isPhr = word.includes(' ')
+            isPhr = word.includes(' ') || word.includes("…")
+
             if (isPhr) {//短语
-                wordInfos = this.realm.objects('PhraseInfo').filtered('phrase CONTAINS "' + word + '"');
+                wordInfos = this.realm.objects('PhraseInfo').filtered('phrase CONTAINS "' + word.trim() + '"');
             } else {            //单词
                 wordInfos = this.realm.objects('WordInfo').filtered('word BEGINSWITH "' + word + '"');
             }
@@ -117,7 +131,7 @@ export default class VocaDao {
             }
 
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             console.log('VocaDao : lookWordInfo() Error')
         }
         return wordObj
@@ -149,7 +163,7 @@ export default class VocaDao {
             return null
         }
         word = word.trim()
-        const isPhr = word.includes(' ')
+        const isPhr = word.includes(' ') || word.includes("…")
         const queryKey = isPhr ? 'phrase="' : 'word="'
         const queryField = isPhr ? 'PhraseInfo' : 'WordInfo'
         let obj = null
@@ -176,7 +190,7 @@ export default class VocaDao {
         }
         // 词汇类型判断/是否是短语
         const arr = []
-        const isPhr = words[0].includes(' ')
+        const isPhr = words[0].includes(' ') || words[0].includes("…")
         const queryKey = isPhr ? 'phrase="' : 'word="'
         const queryField = isPhr ? 'PhraseInfo' : 'WordInfo'
 
@@ -301,6 +315,7 @@ export default class VocaDao {
             console.log(err)
         }
         const data = {
+            isPhrase: isPhr,
             word: isPhr ? obj.phrase : obj.word,             //单词
             //默认音标和发音
             phonetic: isPhr ? obj.phonetic : (isEnPron ? obj.en_phonetic : obj.am_phonetic),

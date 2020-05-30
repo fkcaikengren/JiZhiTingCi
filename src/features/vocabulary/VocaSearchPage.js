@@ -60,11 +60,13 @@ export default class VocaSearchPage extends Component {
       <View style={styles.item}>
         <View style={gstyles.r_start}>
           <Text style={[styles.contentText, { fontSize: 16, color: '#404040' }]}>{item.word}</Text>
-          <Text style={[styles.contentText, { fontSize: 12, color: '#999999' }]}>{item.phonetic}</Text>
+          {item.word && item.word.length < 20 &&
+            < Text style={[styles.contentText, { fontSize: 12, color: '#999999' }]}>{item.phonetic}</Text>
+          }
         </View>
         <Text numberOfLines={1} style={[styles.contentText, { fontSize: 12, color: '#606060' }]}>{item.translation}</Text>
       </View>
-    </TouchableOpacity>
+    </TouchableOpacity >
 
 
   }

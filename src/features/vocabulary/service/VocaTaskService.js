@@ -114,8 +114,7 @@ export default class VocaTaskService {
         }
         //2. 获取今日任务
         const storedTasks = this.vtd.getTasksByDay(n)
-        console.log('----获取今日任务，长度：-----')
-        console.log(storedTasks.length)
+
         let copyTasks = []
         let reviewTasks = []
         //3. 包装（包括深拷贝）

@@ -144,7 +144,7 @@ export function* syncAllLearnedDays(action) {
                 learnedTodayFlag: _util.getDayTime(0)
             }
         })
-        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        const myHttp = createHttp(null)
         const res = yield myHttp.post('/statistic/modifyAllLearnedDays', {
             allLearnedDays
         })
@@ -180,7 +180,7 @@ export function* synFinishDays(action) {
             data: fDates[0]
         });
 
-        const myHttp = createHttp(null, { shouldRefreshToken: true })
+        const myHttp = createHttp(null)
         //1.同步已学单词总数
         const res1 = yield myHttp.post('/statistic/modifyAllLearnedCount', {
             allLearnedCount: action.payload.allLearnedCount,

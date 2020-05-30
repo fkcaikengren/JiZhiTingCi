@@ -164,21 +164,52 @@ export default class VocaGroupService {
     return this.vgDao.isExistInDefault(word)
   }
 
+  /**
+   * 添加生词
+   */
   addWordToDefault = (groupWord) => {
     const result = this.vgDao.addWordToDefault(groupWord)
-    Storage.save({
-      key: 'notSyncGroups',
-      id: uuidv4(),
-      data: {
-        command: COMMAND_GROUP_ADD_WORDS,
+    if (result && result.groupId) {
+      Storage.save({
+        key: 'notSyncGroups',
+        id: uuidv4(),
         data: {
-          groupId: result.groupId,
-          words: [{ word: result.addWord, isHidden: false }]
+          command: COMMAND_GROUP_ADD_WORDS,
+          data: {
+            groupId: result.groupId,
+            words: [{ word: result.addWord, isHidden: false }]
+          }
         }
-      }
-    })
+      })
+    }
     return result
   }
+
+  /**
+   * 批量添加生词
+   */
+  batchAddWords = (groupWords, groupName) => {
+    const results = this.vgDao.batchAddWords(groupWords, groupName)
+    if (results[0] && results[0].groupId) {
+      const words = []
+      for (let result of results) {
+        words.push({ word: result.addWord, isHidden: false })
+      }
+      Storage.save({
+        key: 'notSyncGroups',
+        id: uuidv4(),
+        data: {
+          command: COMMAND_GROUP_ADD_WORDS,
+          data: {
+            groupId: results[0].groupId,
+            words
+          }
+        }
+      })
+    }
+    return results
+  }
+
 
   /**
    * @description 移除生词

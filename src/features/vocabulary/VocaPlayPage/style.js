@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     itemEnText: {
         fontSize: 18,
         color: '#FFFFFFDD',
+        textAlign: 'center'
     },
     itemZhText: {
         fontSize: 14,

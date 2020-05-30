@@ -63,8 +63,18 @@ export default class StatisticsPage extends Component {
         })
     }
 
+    _genCurDate = () => {
+        const d = new Date()
+        let m = d.getMonth() + 1
+        if (m < 10) {
+            m = '0' + m
+        }
+        return `${d.getFullYear()}-${m}-01`
+    }
+
     render() {
         const { plan, leftDays, learnedWordCount, allLearnedCount, allLearnedDays } = store.getState().plan
+
         return (
             <View style={{ flex: 1, backgroundColor: '#EFEFEF' }}>
                 {/* 头部 */}
@@ -154,7 +164,7 @@ export default class StatisticsPage extends Component {
                         </Text>
                         <Calendar
                             // 月份数据
-                            current={'2020-02-01'}
+                            current={this._genCurDate()}
                             minDate={'2020-01-01'}
                             maxDate={'2090-01-30'}
                             onDayPress={(day) => { console.log('selected day', day) }}
