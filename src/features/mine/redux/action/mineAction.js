@@ -82,6 +82,7 @@ export const CHANGE_CONFIG_VOCA_PRON_TYPE = 'CHANGE_CONFIG_VOCA_PRON_TYPE'
 export const CHANGE_CONFIG_REVIEW_PLAY_TIMES = 'CHANGE_CONFIG_REVIEW_PLAY_TIMES'
 export const CHANGE_CONFIG_N_TRANS = 'CHANGE_CONFIG_N_TRANS'
 export const CHANGE_CONFIG_M_TRANS = 'CHANGE_CONFIG_M_TRANS'
+export const CHANGE_CONFIG_AUTO_PLAY_SEN = 'CHANGE_CONFIG_AUTO_PLAY_SEN'
 
 // 消息
 export const ADD_MESSAGES = 'ADD_MESSAGES'
@@ -95,7 +96,7 @@ const fn = (payload) => {
 export const { loginByCode, loginByPwd, loginByWx, loginByQq,
     modifyNickname, modifySex, modifyPassword, modifyAvatar, modifyWechat, modifyQq, modifyPhone,
     setAvatarSource, logout,
-    changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans,
+    changeConfigVocaPronType, changeConfigReviewPlayTimes, changeConfigNTrans, changeConfigMTrans, changeConfigAutoPlaySen,
     addMessages, readMessage, changeHasNewMessage } = createActions({
         [LOGIN_BY_CODE]: fn,
         [LOGIN_BY_PWD]: fn,
@@ -132,6 +133,9 @@ export const { loginByCode, loginByPwd, loginByWx, loginByQq,
         },
         [CHANGE_CONFIG_M_TRANS]: (configShowMTrans) => {
             return { configShowMTrans }
+        },
+        [CHANGE_CONFIG_AUTO_PLAY_SEN]: (configAutoPlaySen) => {
+            return { configAutoPlaySen }
         },
 
         //添加消息

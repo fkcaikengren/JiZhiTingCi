@@ -20,7 +20,8 @@ export default class TaskItem extends Component {
     item: PropTypes.object,
     separator: PropTypes.any,
     progressNum: PropTypes.number,
-    disable: PropTypes.bool
+    disable: PropTypes.bool,
+    bookType: PropTypes.number
   };
 
   constructor(props) {
@@ -68,6 +69,7 @@ export default class TaskItem extends Component {
           this.props.updateTask({ task: item })
         }
       }
+
       switch (item.progress) {
         case Constant.IN_LEARN_PLAY:
           this.props.navigation.navigate('VocaPlay', { task: item, mode: Constant.LEARN_PLAY, nextRouteName: 'LearnCard' })
@@ -77,22 +79,42 @@ export default class TaskItem extends Component {
             task: item,
             showAll: false,
             playWord: true,      //自动播放单词
-            playSentence: true,  //自动播放例句
             nextRouteName: 'TestVocaTran'
           })
           break;
-        case Constant.IN_LEARN_TEST_1:
-          this.props.navigation.navigate('TestVocaTran', { task: item, isRetest: false, nextRouteName: 'TestSenVoca' })
+        case Constant.IN_LEARN_TEST_1: {
+          let nextRouteName = 'TestSenVoca'
+          if (this.props.bookType === Constant.TYPE_VOCA_BOOK_PHRASE) {
+            nextRouteName = 'TestTranVoca'
+          }
+          this.props.navigation.navigate('TestVocaTran', { task: item, isRetest: false, nextRouteName })
           break;
-        case Constant.IN_LEARN_RETEST_1:
-          this.props.navigation.navigate('TestVocaTran', { task: item, isRetest: true, nextRouteName: 'TestSenVoca' })
+        }
+        case Constant.IN_LEARN_RETEST_1: {
+          let nextRouteName = 'TestSenVoca'
+          if (this.props.bookType === Constant.TYPE_VOCA_BOOK_PHRASE) {
+            nextRouteName = 'TestTranVoca'
+          }
+          this.props.navigation.navigate('TestVocaTran', { task: item, isRetest: true, nextRouteName })
           break;
-        case Constant.IN_LEARN_TEST_2:
-          this.props.navigation.navigate('TestSenVoca', { task: item, isRetest: false, nextRouteName: 'Home' })
+        }
+        case Constant.IN_LEARN_TEST_2: {
+          let goalPage = 'TestSenVoca'
+          if (this.props.bookType === Constant.TYPE_VOCA_BOOK_PHRASE) {
+            goalPage = 'TestTranVoca'
+          }
+          this.props.navigation.navigate(goalPage, { task: item, isRetest: false, nextRouteName: 'Home' })
           break;
-        case Constant.IN_LEARN_RETEST_2:
-          this.props.navigation.navigate('TestSenVoca', { task: item, isRetest: true, nextRouteName: 'Home' })
+        }
+        case Constant.IN_LEARN_RETEST_2: {
+          let goalPage = 'TestSenVoca'
+          if (this.props.bookType === Constant.TYPE_VOCA_BOOK_PHRASE) {
+            goalPage = 'TestTranVoca'
+          }
+          this.props.navigation.navigate(goalPage, { task: item, isRetest: true, nextRouteName: 'Home' })
           break;
+        }
+
 
         //复习
         case Constant.IN_REVIEW_PLAY:
@@ -205,12 +227,12 @@ export default class TaskItem extends Component {
         onPress={this.isVocaTask ? this._startStudyInteraction : this._startRead}>
         <View style={[{ paddingHorizontal: 12 }]}>
           <View style={[this.props.separator, styles.container]}>
-            <View style={gstyles.r_start}>
+            <View style={[gstyles.r_start, { flex: 1 }]}>
               <View style={[gstyles.c_center, { marginRight: 10 }]}>
                 <Text style={gstyles.serialText}>{index < 10 ? '0' + index : index}</Text>
               </View>
               <View stye={{ flex: 1 }}>
-                <Text style={[gstyles.md_black, { fontWeight: '500' }]}>{name}</Text>
+                <Text numberOfLines={1} style={[gstyles.md_black, { fontWeight: '500' }]}>{name}</Text>
                 <View style={gstyles.r_start}>
                   <Text style={gstyles.labelText}>{label}</Text>
                   <Text style={gstyles.noteText}>{note}</Text>
@@ -242,8 +264,9 @@ const styles = StyleSheet.create({
 
   playView: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    width: 110
   },
 
   finishIcon: {

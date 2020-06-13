@@ -29,7 +29,6 @@ export default class ArticlePage extends React.Component {
     }
 
 
-
     shouldComponentUpdate(nextProps, nextState) {
         const { bgThemes, themeIndex, fontRem, showKeyWords } = this.props.article
         const nextThemeIndex = nextProps.article.themeIndex
@@ -179,7 +178,7 @@ export default class ArticlePage extends React.Component {
 
     // 首次发送
     _sendInitMessage = () => {
-        const { articleText, keyWords, bgThemes, themeIndex, fontRem } = this.props.article
+        const { articleText, keyWords, bgThemes, themeIndex, fontRem, userAnswerMap, options } = this.props.article
         //处理keyWords
         let keywords = []
         for (let kw of keyWords) {

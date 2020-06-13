@@ -86,7 +86,8 @@ export default class PlayListPane extends Component {
                         <View style={[styles.statusDot, { backgroundColor: dotColor }]} />
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={gstyles.lg_white}>{item.taskName}</Text>
+
+                        <Text numberOfLines={1} style={gstyles.lg_white}>{item.taskName}</Text>
                         <View style={[gstyles.r_start]}>
                             <Text style={[gstyles.labelText]}>{label}</Text>
                             <Text style={[gstyles.noteText, { color: '#FFF' }]}>{`共${item.wordCount}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>
@@ -148,7 +149,7 @@ export default class PlayListPane extends Component {
                         <View style={[styles.statusDot, { backgroundColor: dotColor }]} />
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text style={gstyles.lg_white}>{item.groupName}</Text>
+                        <Text numberOfLines={1} style={gstyles.lg_white}>{item.groupName}</Text>
                         <View style={[gstyles.r_start]}>
                             <Text style={[gstyles.labelText]}>{label}</Text>
                             <Text style={[gstyles.noteText, { color: '#FFF' }]}>{`共${item.count}词，已听${listenTimes}遍，已测试${testTimes}次`} </Text>

@@ -258,6 +258,7 @@ class HomePage extends Component {
                             <Task
                                 navigation={this.props.navigation}
                                 home={this.props.home}
+                                bookType={this.props.plan.plan.bookType}
                                 autoPlayTimer={this.props.vocaPlay.autoPlayTimer}
                                 updateTask={this.props.updateTask}
                                 changePlayTimer={this.props.changePlayTimer}

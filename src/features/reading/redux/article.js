@@ -26,7 +26,9 @@ const defaultState = {
     rightAnswers: null,      //正确答案（对象）
 
     userAnswerMap: new Map(), //用户的答案 （Map）
-    isLoadPending: false,      //加载状态
+    isLoadPending: false,      //article加载状态
+    isAnalysisLoadPending: false,      //analysis加载状态
+
     isLoadFail: false,        //数据加载失败
     isWebLoading: false       //网页是否正加载
 }
@@ -56,20 +58,19 @@ export const article = handleActions({
     //加载解析和正确答案
     [aAction.LOAD_ANALYSIS_START]: (state, action) => ({
         ...state,
-        isLoadPending: true,
+        isAnalysisLoadPending: true,
         isWebLoading: true
     }),
     [aAction.LOAD_ANALYSIS_SUCCEED]: (state, action) => ({
         ...state,
         analysisText: action.analysisText,
         rightAnswers: action.rightAnswers,
-        isLoadPending: false
+        isAnalysisLoadPending: false
     }),
     [aAction.LOAD_ANALYSIS_FAIL]: (state, action) => ({
         ...state,
-        isLoadPending: false,
+        isAnalysisLoadPending: false,
         isWebLoading: false,
-        isLoadFail: true
     }),
 
     //改变加载状态

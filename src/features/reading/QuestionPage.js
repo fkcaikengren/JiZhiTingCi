@@ -10,6 +10,7 @@ import gstyles from '../../style'
 import AliIcon from '../../component/AliIcon'
 import * as ArticleAction from './redux/action/articleAction'
 import { VOCABULARY_DIR } from "../../common/constant";
+import ReadUtil from './common/readUtil';
 
 // 暂时目录
 const articlesDir = 'article'
@@ -23,7 +24,7 @@ class QuestionPage extends React.Component {
     this.state = {
       activeSections: [0],
       questionNo: "",  //修改
-      questions: []
+      questions: [],
     };
 
 
@@ -35,7 +36,8 @@ class QuestionPage extends React.Component {
 
   // 加载问题选项
   _loadOption = async () => {
-    const { articleInfo } = this.props
+    const { articleInfo, article } = this.props
+    console.log('-----加载 QuestionPage ----')
     try {
       const questions = await this.fileService.load(VOCABULARY_DIR, articlesDir + articleInfo.optionUrl)
       this.setState({ questions, questionNo: questions[0].no })
@@ -57,6 +59,7 @@ class QuestionPage extends React.Component {
 
   // 手风琴的内容
   _renderContent = q => {
+    const { bgThemes, themeIndex, userAnswerMap } = this.props.article
     const options = []
     //对象转数组
     for (let k in q) {
@@ -67,7 +70,6 @@ class QuestionPage extends React.Component {
         })
       }
     }
-    const { bgThemes, themeIndex } = this.props.article
     let fontColor = '#303030'
     if (bgThemes[themeIndex] === '#222222') {
       fontColor = '#CCC'
@@ -76,6 +78,7 @@ class QuestionPage extends React.Component {
       <View style={styles.content}>
         <Text style={[styles.question, { color: fontColor }]}>{q.no + '. ' + q.question}</Text>
         <OptionRadio
+          selectedIndex={ReadUtil.letterToIndex(userAnswerMap.get(q.no))}
           options={options}
           onChange={this._onChangeOption}
           bgColor={'#CCC'}
@@ -88,10 +91,8 @@ class QuestionPage extends React.Component {
 
   _onChangeOption = (index, option) => {
     const userAnswerMap = new Map(this.props.article.userAnswerMap)
-    console.log(typeof userAnswerMap)
     userAnswerMap.set(this.state.questionNo, option.identifier)
     this.props.changeUserAnswerMap(userAnswerMap)
-
   }
 
   _updateSections = activeSections => {

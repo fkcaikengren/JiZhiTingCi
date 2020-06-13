@@ -103,7 +103,6 @@ class VocaPlanPage extends React.Component {
                 })
             }
         }
-
     }
 
     render() {

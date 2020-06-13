@@ -17,6 +17,7 @@ export default class Task extends Component {
     navigation: PropTypes.object,
     updateTask: PropTypes.func,
     home: PropTypes.object,
+    bookType: PropTypes.number
   };
   constructor(props) {
     super(props);
@@ -88,6 +89,7 @@ export default class Task extends Component {
             progressNum={progressNum}
             separator={separator}
             disable={disable}
+            bookType={this.props.bookType}
           />
         );
       })

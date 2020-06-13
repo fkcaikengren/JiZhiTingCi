@@ -88,8 +88,20 @@ export default class LookWordBoard extends Component {
                 </View>
                 {/*y音标*/}
                 <View style={[{ width: '100%', marginTop: 10, flexWrap: 'wrap' }, gstyles.r_start]}>
-                    {wordInfo.am_phonetic &&
+                    {wordInfo.en_phonetic &&
                         <View style={[gstyles.r_start, { marginRight: 10 }]}>
+                            <Text style={[gstyles.sm_gray]}>英</Text>
+                            <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
+                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
+                                this.audioService.playSound({
+                                    pDir: CConstant.VOCABULARY_DIR,
+                                    fPath: wordInfo.en_pron_url
+                                })
+                            }} />
+                        </View>
+                    }
+                    {wordInfo.am_phonetic &&
+                        <View style={[gstyles.r_start]}>
                             <Text style={gstyles.sm_gray}>美</Text>
                             <Text style={gstyles.sm_gray}>{wordInfo.am_phonetic}</Text>
                             <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
@@ -100,19 +112,7 @@ export default class LookWordBoard extends Component {
                             }} />
                         </View>
                     }
-                    {wordInfo.en_phonetic &&
-                        <View style={gstyles.r_start}>
-                            <Text style={[gstyles.sm_gray]}>英</Text>
-                            <Text style={gstyles.sm_gray}>{wordInfo.en_phonetic}</Text>
-                            <AliIcon name='shengyin' size={24} color={gstyles.secColor} style={{ marginLeft: 6 }} onPress={() => {
-                                this.audioService.playSound({
-                                    pDir: CConstant.VOCABULARY_DIR,
-                                    fPath: wordInfo.en_pron_url
-                                })
 
-                            }} />
-                        </View>
-                    }
                 </View>
                 {/*  释义*/}
                 <View style={{ width: '100%', marginTop: 10 }}>

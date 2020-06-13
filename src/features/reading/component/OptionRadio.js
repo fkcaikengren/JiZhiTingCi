@@ -30,10 +30,6 @@ const styles = StyleSheet.create({
 export default class OptionRadio extends Component {
     constructor(props, context) {
         super(props, context)
-
-        this.state = {
-            selectedIndex: this.props.selectedIndex,
-        }
     }
 
 
@@ -41,18 +37,20 @@ export default class OptionRadio extends Component {
      * @description 选择后自动调用改函数
      */
     onChange = (index, option) => {
-        this.setState({ selectedIndex: index })
+
+        this.props.selectedIndex = index
         this.props.onChange(index, option)
     }
 
 
     render() {
+
         return (
-            <View style={[styles.container, this.props.containerStyle]}>
+            <View style={[styles.container, this.props.containerStyle]} >
                 {
                     this.props.options.map((option, index) => {
                         let selectedStyle = {}
-                        if (index === this.state.selectedIndex) {
+                        if (index === this.props.selectedIndex) {
                             selectedStyle = {
                                 backgroundColor: this.props.activeBgColor,
                             }
@@ -90,7 +88,6 @@ OptionRadio.propTypes = {
     activeBgColor: PropTypes.string,
     size: PropTypes.number,
     containerStyle: PropTypes.object,
-
 }
 
 OptionRadio.defaultProps = {
@@ -100,5 +97,6 @@ OptionRadio.defaultProps = {
     fontColor: '#303030',
     activeBgColor: '#FFE957',
     size: 30,
-    containerStyle: {}
+    containerStyle: {},
+
 }

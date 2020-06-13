@@ -70,7 +70,7 @@ class SettingPage extends React.Component {
 
     render() {
         const { selectedIndex } = this.state
-        const { configShowNTrans, configShowMTrans, configEnableNotice, configEnableLearnNotice, configLearnNoticeTime } = this.props.mine
+        const { configShowNTrans, configShowMTrans, configAutoPlaySen } = this.props.mine
         return (
             <View style={[{ flex: 1, backgroundColor: '#EFEFEF' }, gstyles.c_start]}>
                 {/* 头部 */}
@@ -161,6 +161,20 @@ class SettingPage extends React.Component {
                             </View>
                         })
                     }
+                    {
+                        this._renderItem({
+                            title: '自动播放例句',
+                            rightComponent: <View style={{ marginRight: 12 }}>
+                                <Switch
+                                    value={configAutoPlaySen}
+                                    onValueChange={(value) => {
+                                        this.props.changeConfigAutoPlaySen(value)
+                                    }}
+                                    thumbColor={gstyles.secColor}
+                                    trackColor={{ false: '#DDD', true: gstyles.secColor + '66' }} />
+                            </View>
+                        })
+                    }
 
                 </View>
 
@@ -213,6 +227,7 @@ const mapDispatchToProps = {
     changeConfigVocaPronType: MineAction.changeConfigVocaPronType,
     changeConfigNTrans: MineAction.changeConfigNTrans,
     changeConfigMTrans: MineAction.changeConfigMTrans,
+    changeConfigAutoPlaySen: MineAction.changeConfigAutoPlaySen,
     changeConfigReviewPlayTimes: MineAction.changeConfigReviewPlayTimes
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SettingPage)

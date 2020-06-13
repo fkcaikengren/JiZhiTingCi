@@ -153,9 +153,8 @@ class LearnCardPage extends Component {
                         wordInfo={showWordInfos[curIndex]}
                         showAll={getParam('showAll', true)}
                         playWord={getParam('playWord', true)}
-                        playSentence={getParam('playSentence', true)}
+                        playSentence={this.props.configAutoPlaySen}
                         lookWord={this.wordBoard.lookWord}
-
                     />
                 }
                 {this.state.showNext &&
@@ -178,6 +177,7 @@ class LearnCardPage extends Component {
 }
 
 const mapStateToProps = state => ({
+    configAutoPlaySen: state.mine.configAutoPlaySen,
     home: state.home
 })
 

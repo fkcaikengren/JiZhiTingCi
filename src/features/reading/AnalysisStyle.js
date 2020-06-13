@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     },
     bottomBar: {
         width: width,
-        height: 40,
+        height: 45,
         backgroundColor: '#FFE957',
         position: 'absolute',
         bottom: 0,
@@ -29,9 +29,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    barText: {
-        width: '50%',
-        textAlign: 'center'
+    bottomBtn: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     seperator: {
         width: 1,

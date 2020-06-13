@@ -60,10 +60,10 @@ export default class WordCell extends Component {
                             />
                         }
                         <TouchableOpacity activeOpacity={0.6} onPress={() => {
-                            const wi = VocaDao.getInstance().lookWordInfo(item.word)
+                            const wi = VocaDao.getInstance().getWordInfo(item.word)
                             AudioService.getInstance().playSound({
                                 pDir: CConstant.VOCABULARY_DIR,
-                                fPath: wi.am_pron_url
+                                fPath: wi.pron_url
                             })
                         }}>
                             <Text style={[styles.word, { marginLeft: onEdit ? 0 : 10 }]}>

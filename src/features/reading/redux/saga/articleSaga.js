@@ -41,8 +41,10 @@ export function* loadAnalysis(articleInfo) {
         const analysisText = yield fileService.load(VOCABULARY_DIR, articlesDir + articleInfo.analysisUrl)
         //正确答案
         const rightAnswers = yield fileService.load(VOCABULARY_DIR, articlesDir + articleInfo.answerUrl)
-        if (analysisText === null || rightAnswers === null) {
+        if (rightAnswers === null) {
             yield put({ type: LOAD_ANALYSIS_FAIL })
+        } else if (analysisText === null) {
+            yield put({ type: LOAD_ANALYSIS_SUCCEED, analysisText: "【无解析】", rightAnswers })
         } else {
             yield put({ type: LOAD_ANALYSIS_SUCCEED, analysisText, rightAnswers })
         }

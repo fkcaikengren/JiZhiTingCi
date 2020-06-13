@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, BackHandler } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, BackHandler, TouchableOpacity } from 'react-native';
 import { Header } from 'react-native-elements'
 import { WebView } from 'react-native-webview';
 import { connect } from 'react-redux';
 
 import Loader from '../../component/Loader'
+import { DURATION } from 'react-native-easy-toast'
 import * as ArticleAction from './redux/action/articleAction'
 import AliIcon from '../../component/AliIcon'
 import * as Constant from './common/constant'
@@ -27,9 +28,14 @@ class AnalysisPage extends React.Component {
     componentDidMount() {
         //监听物理返回键 
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            this.props.navigation.goBack()
+            if (!this.props.navigation.getParam('handin', false)) {
+                this.props.navigation.goBack()
+            }
             return true
         })
+
+        // 加载解析
+        this.props.loadAnalysis(this.props.navigation.getParam('articleInfo'));
     }
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
@@ -139,16 +145,16 @@ class AnalysisPage extends React.Component {
     }
 
     _renderContent = () => {
-        const { bgThemes, themeIndex, isLoadPending, isLoadFail } = this.props.article
+        const { bgThemes, themeIndex, isAnalysisLoadPending, isLoadFail } = this.props.article
         const handin = this.props.navigation.getParam('handin')
         if (isLoadFail) {
             return <View style={[gstyles.c_center, { flex: 1 }]}>
-                <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
-                <Text style={gstyles.md_black}>出错了...</Text>
+                <AliIcon name={'nodata_icon'} size={60} color={gstyles.black} />
+                <Text style={gstyles.md_black}>无解析...</Text>
             </View>
         } else {
             return <View style={{ flex: 1 }}>
-                {!isLoadPending &&
+                {!isAnalysisLoadPending &&
                     <View style={[styles.webContainer, { backgroundColor: bgThemes[themeIndex] }]}>
                         <WebView
                             ref={r => (this.webref = r)}
@@ -173,19 +179,19 @@ class AnalysisPage extends React.Component {
                 }
                 {handin &&
                     <View style={styles.bottomBar}>
-                        <TouchableWithoutFeedback onPress={() => {
+                        <TouchableOpacity style={styles.bottomBtn} onPress={() => {
                             this.props.changeUserAnswerMap(new Map())
                             _util.goPageWithoutStack(this.props.navigation, 'Home', {})
                         }}>
-                            <Text style={[styles.barText, gstyles.md_black]}>退出</Text>
-                        </TouchableWithoutFeedback>
+                            <Text style={[gstyles.md_black]}>退出</Text>
+                        </TouchableOpacity>
                         <View style={styles.seperator}></View>
-                        <TouchableWithoutFeedback onPress={() => {
+                        <TouchableOpacity style={styles.bottomBtn} onPress={() => {
                             this.props.changeUserAnswerMap(new Map())
                             this.props.navigation.goBack()
                         }}>
-                            <Text style={[styles.barText, gstyles.md_black]}>重做</Text>
-                        </TouchableWithoutFeedback>
+                            <Text style={[gstyles.md_black]}>重做</Text>
+                        </TouchableOpacity>
                     </View>
                 }
             </View>

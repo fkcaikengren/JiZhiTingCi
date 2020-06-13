@@ -7,6 +7,7 @@ const defaultState = {
     //当前计划
     plan: {
         bookId: null,
+        bookType: null,
         bookName: null,
         bookCoverUrl: null,
         packageSize: 0,

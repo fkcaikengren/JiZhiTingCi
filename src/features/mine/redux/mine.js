@@ -13,6 +13,7 @@ import {
     CHANGE_CONFIG_REVIEW_PLAY_TIMES,
     CHANGE_CONFIG_N_TRANS,
     CHANGE_CONFIG_M_TRANS,
+    CHANGE_CONFIG_AUTO_PLAY_SEN,
     CHANGE_CONFIG_VOCA_PRON_TYPE,
 
     SET_AVATAR_SOURCE,
@@ -47,6 +48,7 @@ const defaultState = {
     configReviewPlayTimes: 8,              //复习轮播次数
     configShowNTrans: true,
     configShowMTrans: true,
+    configAutoPlaySen: true
 
 }
 
@@ -121,6 +123,8 @@ export const mine = (state = defaultState, action) => {
             return { ...state, configShowNTrans: action.payload.configShowNTrans }
         case CHANGE_CONFIG_M_TRANS:
             return { ...state, configShowMTrans: action.payload.configShowMTrans }
+        case CHANGE_CONFIG_AUTO_PLAY_SEN:
+            return { ...state, configAutoPlaySen: action.payload.configAutoPlaySen }
 
         //消息
         case ADD_MESSAGES:

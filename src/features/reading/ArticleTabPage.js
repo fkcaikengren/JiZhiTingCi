@@ -61,7 +61,6 @@ class ArticleTabPage extends React.Component {
             return true
         })
         const articleInfo = this.props.navigation.getParam('articleInfo')
-        console.log('---页面初始化后，加载文章----')
         this.props.loadArticle(articleInfo);
 
         // 页面浏览时长计时
@@ -99,6 +98,11 @@ class ArticleTabPage extends React.Component {
     }
 
     _movePage = (clickIndex) => {
+        const { isLoadPending, isLoadFail } = this.props.article
+        if (isLoadPending || isLoadFail) {
+            return
+        }
+
         this.swiperRef.scrollBy(clickIndex - this.state.pageIndex, true)
     }
 
@@ -219,8 +223,6 @@ class ArticleTabPage extends React.Component {
 
     _handinToAnalysis = () => {
         const articleInfo = this.props.navigation.getParam('articleInfo')
-        //提交，先加载数据再跳转
-        this.props.loadAnalysis(articleInfo);
         //跳到解析页面
         this.props.navigation.navigate('Analysis', {
             handin: true,
@@ -290,20 +292,13 @@ class ArticleTabPage extends React.Component {
                         index={this.state.pageIndex}
                         onIndexChanged={(index) => { this.setState({ pageIndex: index }) }}>
                         <ArticlePage {...this.props} articleInfo={articleInfo} />
-                        <QuestionPage {...this.props} articleInfo={articleInfo} />
+                        <QuestionPage articleInfo={articleInfo} />
                     </Swiper>
                 } else {
-                    return <Swiper
-                        showsPagination={false}
-                        loop={false}
-                        onIndexChanged={(index) => { this.setState({ pageIndex: index }) }}>
-                        <ArticlePage {...this.props} articleInfo={articleInfo} />
-                    </Swiper>
+                    return <ArticlePage {...this.props} articleInfo={articleInfo} />
                 }
             }
         }
-
-
     }
 
 
@@ -402,8 +397,6 @@ class ArticleTabPage extends React.Component {
                 {/* 答悬浮按钮 */}
                 {!isLoadFail && !(articleInfo.type === Constant.EXTENSIVE_READ) &&
                     <TouchableNativeFeedback onPress={() => {
-                        //先加载数据再跳转
-                        this.props.loadAnalysis(articleInfo);
                         //跳转
                         this.props.navigation.navigate('Analysis', {
                             handin: false,
@@ -437,7 +430,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     loadArticle: ArticleAction.loadArticle,
-    loadAnalysis: ArticleAction.loadAnalysis,
     changeWebLoading: ArticleAction.changeWebLoading,
     changeBgtheme: ArticleAction.changeBgtheme,
     changeFontSize: ArticleAction.changeFontSize,

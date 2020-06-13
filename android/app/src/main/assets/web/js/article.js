@@ -57,12 +57,9 @@ function initPage(text, keyWords, color, size) {
                 node.addClass('keyWord')
             }
         } else {                          //如果是非单词
-            if (item === '##') {
-                node = $('<span>&nbsp&nbsp</span>')
-            } else if (item === '##“') {
-                node = $('<span>&nbsp&nbsp“</span>')
-            } else if (item === '##"') {
-                node = $('<span>&nbsp&nbsp"</span>')
+            if (item.startsWith("##") && !item.match(/\d+点击答题$/)) { //item === '##' || item === '##“' || item === '##"'
+                var tail = item.replace('##', '')
+                node = $('<span>&nbsp&nbsp&nbsp&nbsp</span>' + tail)
             } else if (item.match(/\d+点击答题/)) {        //【题型2】点击答题
                 var questionNum = item.match(/\d+/)[0]
                 numNode = $('<sapn>(' + questionNum + ')</sapn>')

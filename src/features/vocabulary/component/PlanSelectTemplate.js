@@ -44,7 +44,32 @@ const planOptions = [{
     reviewCount: 180,
     taskCount: 3,
     taskWordCount: 12,
-},]
+},
+//1000词以上可选
+{
+    value: '新学52 复习260',
+    learnCount: 52,
+    reviewCount: 260,
+    taskCount: 4,
+    taskWordCount: 13,
+},
+//1800词以上可选 
+{
+    value: '新学96 复习480',
+    learnCount: 96,
+    reviewCount: 480,
+    taskCount: 8,
+    taskWordCount: 12,
+},
+// 2200词以上可选
+{
+    value: '新学130 复习650',
+    learnCount: 130,
+    reviewCount: 650,
+    taskCount: 10,
+    taskWordCount: 13,
+},
+]
 
 
 /**
@@ -144,7 +169,7 @@ export default class PlanSelectTemplate {
 
 
     /**
-     * 显示分享模板
+     * 显示计划选择模板
      * @param {*} commonModal 
      */
     static show({
@@ -154,11 +179,21 @@ export default class PlanSelectTemplate {
             setContentState,
             show
         } = commonModal
+        let curPlanOptions = []
+        if (book.count >= 2200) {
+            curPlanOptions = planOptions
+        } else if (book.count >= 1800) {
+            curPlanOptions = planOptions.slice(0, planOptions.length - 1)
+        } else if (book.count >= 1000) {
+            curPlanOptions = planOptions.slice(0, planOptions.length - 2)
+        } else {
+            curPlanOptions = planOptions.slice(0, planOptions.length - 3)
+        }
         //判断selectedItem
         let i = 0
         let selectedItem = 0
         if (learnCount > 0) {
-            for (let option of planOptions) {
+            for (let option of curPlanOptions) {
                 if (option.learnCount === learnCount) {
                     selectedItem = i
                 }
@@ -167,7 +202,7 @@ export default class PlanSelectTemplate {
         }
         setContentState({
             selectedItem: selectedItem,
-            itemList: planOptions
+            itemList: curPlanOptions
         })
         show({
             renderContent: this._renderPlanSelector({ commonModal, book, onConfirm, isModifyPlan }),

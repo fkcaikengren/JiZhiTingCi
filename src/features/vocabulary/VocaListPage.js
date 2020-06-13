@@ -297,7 +297,7 @@ export default class VocaListPage extends Component {
           }
           {this.state.data.length <= 0 &&
             <View style={[gstyles.c_center, { flex: 1 }]}>
-              <AliIcon name={'nodata_icon'} size={100} color={gstyles.black} />
+              <AliIcon name={'nodata_icon'} size={60} color={gstyles.black} />
               <Text style={gstyles.md_black}>{noData}</Text>
             </View>
           }
