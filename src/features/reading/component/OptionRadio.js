@@ -56,7 +56,7 @@ export default class OptionRadio extends Component {
                             }
                         }
                         return <View style={styles.optionRow} key={index.toString()}>
-                            <TouchableOpacity activeOpacity={0.8} onPress={() => { this.onChange(index, option) }}>
+                            <TouchableOpacity onPress={() => { this.onChange(index, option) }}>
                                 <View
                                     style={[gstyles.r_center, {
                                         width: this.props.size,

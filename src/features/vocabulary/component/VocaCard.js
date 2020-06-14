@@ -70,7 +70,7 @@ export default class VocaCard extends Component {
             }
             // 刷新短语
             if (nextProps.wordInfo.word && !nextProps.wordInfo.isPhrase) {
-                this.phrases = VocaDao.getInstance().getPhrasesOfWord(nextProps.wordInfo.word, 6)
+                this.phrases = VocaDao.getInstance().getPhrasesOfWord(nextProps.wordInfo.word, 5)
             }
 
             // 滑动到顶端

@@ -226,7 +226,8 @@ class ArticleTabPage extends React.Component {
         //跳到解析页面
         this.props.navigation.navigate('Analysis', {
             handin: true,
-            articleInfo
+            articleInfo,
+            sendInitMessage: this.articleRef ? this.articleRef.sendInitMessage : null
         })
     }
 
@@ -295,7 +296,10 @@ class ArticleTabPage extends React.Component {
                         <QuestionPage articleInfo={articleInfo} />
                     </Swiper>
                 } else {
-                    return <ArticlePage {...this.props} articleInfo={articleInfo} />
+                    return <ArticlePage
+                        ref={ref => this.articleRef = ref}
+                        {...this.props}
+                        articleInfo={articleInfo} />
                 }
             }
         }

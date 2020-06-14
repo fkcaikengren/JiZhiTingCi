@@ -113,7 +113,7 @@ export default class VocaSearchPage extends Component {
                 ref={ref => this._inputRef = ref}
                 style={[{ height: 45, width: '80%' }, gstyles.md_black]}
                 value={this.state.searchText}
-                placeholder="请输入英文/中文"
+                placeholder="请输入单词/短语"
                 onChangeText={this._changeText}
                 clearButtonMode='while-editing'
                 onFocus={this._onFocus}

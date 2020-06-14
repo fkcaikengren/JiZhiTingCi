@@ -188,6 +188,10 @@ class AnalysisPage extends React.Component {
                         <View style={styles.seperator}></View>
                         <TouchableOpacity style={styles.bottomBtn} onPress={() => {
                             this.props.changeUserAnswerMap(new Map())
+                            const sendInitMessage = this.props.navigation.getParam("sendInitMessage")
+                            if (sendInitMessage) {
+                                sendInitMessage()
+                            }
                             this.props.navigation.goBack()
                         }}>
                             <Text style={[gstyles.md_black]}>重做</Text>

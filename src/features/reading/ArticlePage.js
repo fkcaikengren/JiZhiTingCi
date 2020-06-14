@@ -82,9 +82,12 @@ export default class ArticlePage extends React.Component {
                         identifier: k,
                         content: obj[k]
                     })
+                    console.log(`))))))----${k}--${obj[k]}`)
                 }
             }
         }
+
+
         // 获取任务列表数据
         const { showAnswerModal } = this.state
         return <ModalBox style={[styles.answerModal]}
@@ -177,7 +180,7 @@ export default class ArticlePage extends React.Component {
 
 
     // 首次发送
-    _sendInitMessage = () => {
+    sendInitMessage = () => {
         const { articleText, keyWords, bgThemes, themeIndex, fontRem, userAnswerMap, options } = this.props.article
         //处理keyWords
         let keywords = []
@@ -206,7 +209,7 @@ export default class ArticlePage extends React.Component {
         switch (data.command) {
             case 'initStart':
                 console.log('--------initStart > sendFirst ---------')
-                this._sendInitMessage()
+                this.sendInitMessage()
                 break;
             case 'initFinish':
                 console.log('--------initFinish > changeWebLoading ---------')

@@ -98,7 +98,7 @@ class LearnCardPage extends Component {
             VocaUtil.goPageWithoutStack(this.props.navigation, routeName, {
                 task: finalTask,
                 showWordInfos: this.state.showWordInfos,
-                nextRouteName: 'TestSenVoca'
+                nextRouteName: (this.props.bookType === Constant.TYPE_VOCA_BOOK_PHRASE) ? 'TestTranVoca' : 'TestSenVoca'
             })
             this.audioService.releaseSound()
         }
@@ -178,7 +178,8 @@ class LearnCardPage extends Component {
 
 const mapStateToProps = state => ({
     configAutoPlaySen: state.mine.configAutoPlaySen,
-    home: state.home
+    home: state.home,
+    bookType: state.plan.plan.bookType,
 })
 
 const mapDispatchToProps = {
