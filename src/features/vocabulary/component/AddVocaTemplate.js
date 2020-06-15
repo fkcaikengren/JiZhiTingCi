@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, Text, StyleSheet, TextInput, } from 'react-native';
+import { Alert, View, Text, StyleSheet, TextInput, } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements'
 
 import AliIcon from '../../../component/AliIcon';
@@ -87,7 +87,7 @@ export default class AddVocaTemplate {
                         }
                         const results = new VocaGroupService().batchAddWords(groupWords, groupName)
                         const showText = notFoundWords.length > 0 ? `未添加${notFoundWords.length}词 ：${notFoundWords.join(', ')}。` : '无添加失败。'
-                        alert(`成功添加${results.length}词, ${showText}`)
+                        Alert.alert('结果', `成功添加${results.length}词, ${showText}`);
                         if (onSucceed) {
                             onSucceed()
                         }

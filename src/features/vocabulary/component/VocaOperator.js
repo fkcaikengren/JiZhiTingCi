@@ -118,6 +118,12 @@ class VocaOperator extends Component {
 
     render() {
 
+        const added = this.vgService.isExistInDefault(this.props.wordInfo.word)
+        if (added !== this.state.added) {
+            this.setState({
+                added
+            })
+        }
 
         return <View style={gstyles.r_end}>
             <TouchableOpacity onPress={() => {

@@ -267,7 +267,7 @@ export default class VocaCard extends Component {
                                                             })
                                                         }} />
                                                     </View>
-                                                    <Text style={[gstyles.md_black, { position: 'absolute', top: 22, left: 1 }]}>{item.tran}</Text>
+                                                    <Text numberOfLines={1} style={[gstyles.md_black, { width: '90%', position: 'absolute', top: 22, left: 1 }]}>{item.tran}</Text>
                                                 </View>
                                             })
                                         }{this.phrases.length <= 0 &&
@@ -325,7 +325,8 @@ VocaCard.defaultProps = {
 
 const styles = StyleSheet.create({
     contentContainer: {
-        paddingVertical: 16,
+        paddingTop: 16,
+        paddingBottom: 35,
         backgroundColor: '#F9F9F9',
     },
     grid: {
