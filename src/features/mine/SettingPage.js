@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, TouchableOpacity, Text, Switch, BackHandler } from 'react-native';
+import { View, TouchableOpacity, Text, Switch, BackHandler } from 'react-native';
 import { Header, ButtonGroup } from 'react-native-elements'
 import { connect } from 'react-redux';
 
@@ -8,6 +8,8 @@ import gstyles from "../../style";
 import styles from './SettingStyle'
 import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from '../vocabulary/common/constant';
 import * as MineAction from './redux/action/mineAction'
+
+
 
 class SettingPage extends React.Component {
     constructor(props) {

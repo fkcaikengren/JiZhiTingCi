@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Text, ScrollView, BackHandler } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 
 import DashSecondLine from '../../component/DashSecondLine'
 import AliIcon from '../../component/AliIcon';
 import gstyles from "../../style";
 import _util from '../../common/util';
+
+const styles = StyleSheet.create({
+    emText: {
+        textDecorationLine: 'underline',
+        color: '#1890FF',
+    }
+})
+
 
 export default class AboutPage extends React.Component {
     constructor(props) {
@@ -92,9 +100,29 @@ export default class AboutPage extends React.Component {
 
                 </ScrollView>
                 <View style={[gstyles.c_center, { width: "100%", position: 'absolute', left: 0, bottom: 10 }]}>
-                    <Text>Copyright©2020</Text>
-                    <Text>奇思妙听科技 版权所有</Text>
+
+                    <View style={[gstyles.r_center, { marginBottom: 10 }]}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.props.navigation.navigate('Privacy', {
+                                'title': '服务协议',
+                                'url': 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/app/service.html'
+                            })
+                        }}>
+                            <Text style={styles.emText}>服务条款</Text>
+                        </TouchableOpacity>
+                        <View style={{ width: 2, height: 16, backgroundColor: '#1890FF', marginHorizontal: 10 }}></View>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                            this.props.navigation.navigate('Privacy', {
+                                'title': '隐私政策',
+                                'url': 'https://jzyy-1259360612.cos.ap-chengdu.myqcloud.com/resources/app/privacy.html'
+                            })
+                        }}>
+                            <Text style={styles.emText}>隐私政策</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Text>Copyright©2020 奇思妙听科技 版权所有</Text>
                 </View>
+
             </View >
         );
     }

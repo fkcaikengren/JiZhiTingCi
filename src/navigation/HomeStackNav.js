@@ -44,6 +44,7 @@ import AboutPage from '../features/mine/AboutPage';
 import DictPage from '../features/vocabulary/DictPage';
 import PhonePage from '../features/mine/PhonePage';
 import SettingPage from '../features/mine/SettingPage';
+import H5Page from '../features/mine/H5Page';
 
 
 
@@ -189,7 +190,9 @@ const VocaHomeStackNav = createStackNavigator({
     screen: SettingPage
   },
 
-
+  Privacy: {
+    screen: H5Page
+  }
 
 }, {
   initialRouteName: 'Home',
