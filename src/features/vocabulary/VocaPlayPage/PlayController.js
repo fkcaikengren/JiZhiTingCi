@@ -187,8 +187,7 @@ export default class PlayController extends React.Component {
                     <Row style={[{ marginHorizontal: 10, }, gstyles.r_around]}>
                         {/* 英文单词按钮 */}
                         <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
-                            onStartShouldSetResponder={() => true}
-                            onResponderStart={(e) => { toggleWord() }}
+                            onPress={() => { toggleWord() }}
                         >英</Text>
                         {/* 测试按钮 */}
                         <Menu onSelect={this._chooseTest} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
@@ -223,7 +222,7 @@ export default class PlayController extends React.Component {
                         </Menu>
                         {/* 时间间隔 */}
                         <Menu onSelect={this._chooseInterval} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-                            <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: styles.triggerText, }} />
+                            <MenuTrigger text={Math.floor(interval) + 's'} customStyles={{ triggerText: [styles.triggerText, { width: 30 }] }} />
                             <MenuOptions>
                                 <MenuOption style={gstyles.haireBottom} value={10.0}>
                                     <Text style={popStyle}>10s</Text>
@@ -246,6 +245,11 @@ export default class PlayController extends React.Component {
 
                             </MenuOptions>
                         </Menu>
+                        {/* 查词 */}
+                        <AliIcon name='chazhao' size={22} color='#FFF' onPress={() => {
+                            this._pause()
+                            this.props.navigate('VocaSearch');
+                        }} />
                         {/* 中文按钮 */}
                         <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}

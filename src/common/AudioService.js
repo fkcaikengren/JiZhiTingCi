@@ -26,7 +26,13 @@ export default class AudioService {
    * @param failPlay
    */
   playSound = ({ pDir, fPath }, startPlay = null, finishPlay = null, failPlay = null) => {
-
+    //路径错误（不存在）
+    if (fPath === null || fPath === undefined || pDir === null || pDir === undefined) {
+      if (failPlay) {
+        failPlay()
+      }
+      return;
+    }
     //先判断本地是否存在
     this.fileService.load(pDir, fPath)
       .then(audioPath => {

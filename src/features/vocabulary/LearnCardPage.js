@@ -107,13 +107,13 @@ class LearnCardPage extends Component {
 
     _goBack = () => {
         //更新、上传task
-
         const newTask = { ...this.state.task }
-        console.log(newTask)
         this.props.updateTask({ task: newTask })
         this.props.syncTask({ command: COMMAND_MODIFY_TASK, data: newTask })
+
         VocaUtil.goPageWithoutStack(this.props.navigation, 'Home')
         this.audioService.releaseSound()
+
     }
 
 
@@ -140,6 +140,11 @@ class LearnCardPage extends Component {
                                 <Text style={{ fontSize: 10, position: 'absolute', left: (width - 120) / 2, top: -2, }}>{`${curIndex + 1}/${wordCount}`}</Text>
                             </Progress.Bar>
                         </View>
+                    }
+                    rightComponent={
+                        <AliIcon name='chazhao' size={22} color='#555' style={{ marginRight: 10 }} onPress={() => {
+                            this.props.navigation.navigate('VocaSearch');
+                        }} />
                     }
                     containerStyle={{
                         backgroundColor: '#FCFCFC00',

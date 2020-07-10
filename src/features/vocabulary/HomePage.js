@@ -113,10 +113,11 @@ class HomePage extends Component {
                 console.log('同步天数')
                 this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
             }
-            //监听极光推送
-            this._listenPush()
 
         }
+
+        //监听极光推送
+        this._listenPush()
     }
     /**极光推送 */
     _listenPush() {

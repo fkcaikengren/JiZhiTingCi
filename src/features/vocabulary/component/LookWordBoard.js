@@ -26,9 +26,8 @@ export default class LookWordBoard extends Component {
 
     lookWord = (text) => {
         const reg = /[a-z]+[\-’]?[a-z]*/i
-        const res = text.match(reg)
-
-        if (res[0]) {
+        const res = text.match(reg) //如果不匹配，返回null
+        if (res && res[0]) {
             const wordInfo = this.vocaDao.lookWordInfo(res[0])
             if (wordInfo) {
                 //判断是否存在
@@ -37,8 +36,11 @@ export default class LookWordBoard extends Component {
                 return true
             }
         }
+        if (!text || text === '') {
+            return false
+        }
         const notFoundWordInfo = {
-            word: res[0] ? res[0] : ''
+            word: (res && res[0]) ? res[0] : ''
         }
         this.setState({ isOpen: true, wordInfo: notFoundWordInfo })
         this.props.onStateChange(true)

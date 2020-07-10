@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, } from 'react-native';
 import { PropTypes } from 'prop-types';
 import VocaDao from '../service/VocaDao'
 import VocaUtil from '../common/vocaUtil';
+import gstyles from '../../../style';
 
 export default class TogglePanel extends Component {
 
@@ -21,9 +22,14 @@ export default class TogglePanel extends Component {
     if (content) {
       content = null
     } else {
-      const wordInfo = this.vocaDao.getWordInfo(this.props.word)
-      content = wordInfo ? wordInfo.translation : null
+      if (this.props.isWord) {
+        const wordInfo = this.vocaDao.getWordInfo(this.props.word)
+        content = wordInfo ? wordInfo.translation : null
+      } else {
+        content = this.props.word ? this.props.word : ' '
+      }
     }
+
     this.setState({ content })
   }
 
@@ -31,15 +37,19 @@ export default class TogglePanel extends Component {
     const coverStyle = {
       backgroundColor: this.props.coverColor
     }
+    console.log(coverStyle)
     return (
-      <View style={[styles.container,
-      this.props.containerStyle,
-      this.state.content ? null : coverStyle]}
+      <View style={[
+        { flex: 1, width: '100%', borderRadius: 2 },
+        gstyles.r_start,
+        this.props.containerStyle,
+        this.state.content ? null : coverStyle]}
         onStartShouldSetResponder={() => true}
-        onResponderStart={(e) => { this._toggleWord() }}
+        onResponderRelease={(e) => { this._toggleWord() }}
+
       >
         {this.state.content &&
-          <Text numberOfLines={1}>{this.state.content}</Text>
+          <Text style={this.props.textStyle} numberOfLines={1}>{this.state.content}</Text>
         }
       </View>
     );
@@ -47,25 +57,19 @@ export default class TogglePanel extends Component {
 
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  text: {
 
-  }
-});
 
 TogglePanel.propTypes = {
   word: PropTypes.string.isRequired,
   containerStyle: PropTypes.object,
+  textStyle: PropTypes.object,
   coverColor: PropTypes.string,
+  isWord: PropTypes.bool
 };
 
 TogglePanel.defaultProps = {
   containerStyle: null,
-  coverColor: '#AAA',
+  textStyle: null,
+  coverColor: '#BFBFBF',
+  isWord: true
 };

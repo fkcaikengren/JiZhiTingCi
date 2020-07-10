@@ -1,6 +1,5 @@
 
 
-'use strict';
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Animated, InteractionManager, Image, TouchableOpacity } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
@@ -88,7 +87,6 @@ export default class HomeHeader extends Component {
     InteractionManager.runAfterInteractions(() => {
       this.props.navigation.navigate('VocaSearch');
     })
-
   }
 
   /**导航到文章管理页面 */

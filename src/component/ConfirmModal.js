@@ -71,7 +71,7 @@ export default class ConfirmModal extends Component {
             animationDuration={1}
         >
             <View style={[gstyles.c_center, { height: '69%', paddingHorizontal: 10 }]}>
-                <Text style={[gstyles.lg_black_bold]}>
+                <Text style={[gstyles.md_black_bold]}>
                     {this.state.title}
                 </Text>
             </View>

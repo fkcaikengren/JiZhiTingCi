@@ -18,6 +18,7 @@ import gstyles from '../../style'
 import AudioService from "../../common/AudioService";
 import VocaGroupService from "./service/VocaGroupService";
 import AddVocaTemplate from "./component/AddVocaTemplate";
+import TogglePanel from "./component/TogglePanel";
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -329,7 +330,7 @@ class GroupVocaPage extends Component {
                 />
 
                 {this.state.flatData.length > 0 &&
-                    <View style={{ flex: 1, marginBottom: 60 }}>
+                    <View style={{ flex: 1, marginBottom: this.state.onEdit ? 60 : 0 }}>
                         <FlatList
                             ref={ref => this._list = ref}
                             data={this.state.flatData}
@@ -349,33 +350,33 @@ class GroupVocaPage extends Component {
                         <Text style={gstyles.md_gray}>暂无生词</Text>
                     </View>
                 }
-
-                <CardView
-                    cardElevation={5}
-                    cardMaxElevation={5}
-                    cornerRadius={20}
-                    style={gstyles.footer}>
-                    <View style={gstyles.r_around}>
-                        <Button
-                            disabled={!this.state.checked}
-                            type="clear"
-                            icon={<AliIcon name='shanchu' size={26} color={delIconColor} />}
-                            title='删除'
-                            titleStyle={[gstyles.md_black_bold, { paddingBottom: 2, lineHeight: 20 }]}
-                            onPress={this._deleteWords}>
-                        </Button>
-                        <View style={{ width: 1, height: 20, backgroundColor: '#999' }}></View>
-                        <Button
-                            disabled={!this.state.checked}
-                            type="clear"
-                            icon={<AliIcon name='Home_tv_x' size={26} color={playIconColor} />}
-                            title='播放'
-                            titleStyle={[gstyles.md_black_bold, { paddingBottom: 2, lineHeight: 20 }]}
-                            onPress={this._playBtn}>
-                        </Button>
-                    </View>
-                </CardView>
-
+                {this.state.onEdit &&
+                    <CardView
+                        cardElevation={5}
+                        cardMaxElevation={5}
+                        cornerRadius={20}
+                        style={gstyles.footer}>
+                        <View style={gstyles.r_around}>
+                            <Button
+                                disabled={!this.state.checked}
+                                type="clear"
+                                icon={<AliIcon name='shanchu' size={26} color={delIconColor} />}
+                                title='删除'
+                                titleStyle={[gstyles.md_black_bold, { paddingBottom: 2, lineHeight: 20 }]}
+                                onPress={this._deleteWords}>
+                            </Button>
+                            <View style={{ width: 1, height: 20, backgroundColor: '#999' }}></View>
+                            <Button
+                                disabled={!this.state.checked}
+                                type="clear"
+                                icon={<AliIcon name='Home_tv_x' size={26} color={playIconColor} />}
+                                title='播放'
+                                titleStyle={[gstyles.md_black_bold, { paddingBottom: 2, lineHeight: 20 }]}
+                                onPress={this._playBtn}>
+                            </Button>
+                        </View>
+                    </CardView>
+                }
             </View>
         );
     }
@@ -438,12 +439,12 @@ class GroupVocaPage extends Component {
                             checkedColor={gstyles.secColor}
                         />
                     }
-                    <View key={'w' + index} style={[gstyles.c_center, { width: bodyWidth }]}>
-                        <View style={[gstyles.r_start, { width: '100%' }]}>
-                            <Text style={{ fontSize: 16, color: '#303030' }}>{item.word}</Text>
+                    <View key={'w' + index} style={[gstyles.c_center_left, { width: bodyWidth }]}>
+                        <View style={[gstyles.r_start_bottom, { width: '100%' }]}>
+                            <Text style={{ fontSize: 16, color: '#303030', fontWeight: '500' }}>{item.word}</Text>
                             <Text style={{ fontSize: 12, color: '#AAA', fontWeight: '300', marginLeft: 10 }}>{`${pronTypeText} ${item.phonetic}`}</Text>
 
-                            <AliIcon name='shengyin' size={24} color='#666'
+                            <AliIcon name='shengyin' size={24} color='#555'
                                 style={{ position: 'absolute', top: 0, right: 0 }}
                                 onPress={() => {
                                     this.audioService.playSound({
@@ -452,9 +453,12 @@ class GroupVocaPage extends Component {
                                     })
                                 }} />
                         </View>
-                        <View style={[gstyles.r_start, { width: '100%' }]}>
-                            <Text numberOfLines={1} style={{ fontSize: 14, color: '#666', }}>{item.translation}</Text>
-                        </View>
+                        {/* item.translation */}
+                        <TogglePanel word={item.translation} isWord={false}
+                            containerStyle={{ height: 18, marginTop: 3, marginBottom: 5 }}
+                            textStyle={{ fontSize: 14, color: '#555', lineHeight: 16 }}
+                        />
+
                     </View>
                 </View>
 

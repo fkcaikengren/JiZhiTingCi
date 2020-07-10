@@ -45,7 +45,7 @@ const defaultState = {
 
     //学习设置
     configVocaPronType: VOCA_PRON_TYPE_EN,  //发音类型
-    configReviewPlayTimes: 8,              //复习轮播次数
+    configReviewPlayTimes: 5,              //复习轮播次数
     configShowNTrans: true,
     configShowMTrans: true,
     configAutoPlaySen: true

@@ -124,19 +124,27 @@ export default class VocaCard extends Component {
         hasEnAmPhonetic = (wordInfo.en_phonetic !== null || wordInfo.am_phonetic !== null)
         let sentence = null
         if (wordInfo.sentence && wordInfo.sentence !== '') {
-            const s = wordInfo.sentence.split(/<em>|<\/em>/)
-            sentence = s.map((text, index) => {
-                if (index % 2 === 0) {
-                    const words = text.split(' ')
-                    return words.map((word, i) => <Text
-                        key={word + index + i}
-                        onStartShouldSetResponder={e => true}
-                        onResponderStart={e => this.props.lookWord(word)}
-                    >{word} </Text>)
-                } else {
-                    return <Text key={text + index} style={{ color: gstyles.emColor, }}>{text}</Text>
-                }
-            })
+            if (wordInfo.sentence.includes('<em>') && wordInfo.sentence.includes('</em>')) {
+                const s = wordInfo.sentence.split(/<em>|<\/em>/)
+                sentence = s.map((text, index) => {
+                    if (index % 2 === 0) {
+                        const words = text.split(' ')
+                        return words.map((word, i) => <Text
+                            key={word + index + i}
+                            onPress={() => this.props.lookWord(word)}
+                        >{word} </Text>)
+                    } else {
+                        return <Text key={text + index} style={{ color: gstyles.emColor, }}>{text}</Text>
+                    }
+                })
+            } else {
+                const words = wordInfo.sentence.split(' ')
+                sentence = words.map((word, i) => <Text
+                    key={word + index + i}
+                    onPress={() => this.props.lookWord(word)}
+                >{word} </Text>)
+
+            }
         }
         const { configShowNTrans } = store.getState().mine
 

@@ -10,7 +10,6 @@ import { VOCA_PRON_TYPE_AM, VOCA_PRON_TYPE_EN } from '../vocabulary/common/const
 import * as MineAction from './redux/action/mineAction'
 
 
-
 class SettingPage extends React.Component {
     constructor(props) {
         super(props);
@@ -110,7 +109,7 @@ class SettingPage extends React.Component {
                             title: '复习播放遍数',
                             rightComponent: <View style={[gstyles.r_center, { marginRight: 20 }]}>
                                 <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                    if (this.state.times >= 6) {
+                                    if (this.state.times >= 4) {
                                         this.setState({ times: this.state.times - 1 })
                                     }
                                 }}>
@@ -210,7 +209,7 @@ class SettingPage extends React.Component {
 
 
                 <View style={[gstyles.r_center, styles.version]}>
-                    <Text style={{ fontSize: 18, color: '#666' }}>爱听词 v1.0.0</Text>
+                    <Text style={{ fontSize: 18, color: '#666' }}>爱听词 v1.0.1</Text>
                 </View>
 
 

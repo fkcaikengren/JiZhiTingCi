@@ -1,13 +1,15 @@
 
 import React, { Component } from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Grid, Col, Row, } from 'react-native-easy-grid'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 import { PropTypes } from 'prop-types';
+import BackgroundTimer from 'react-native-background-timer'
 import * as Progress from 'react-native-progress';
 import AliIcon from '../../../component/AliIcon'
 import gstyles from '../../../style';
 import styles from './style'
+
 
 const Dimensions = require('Dimensions');
 const { width, height } = Dimensions.get('window');
@@ -46,7 +48,16 @@ export default class StudyPlayController extends React.Component {
     _toggleTran = () => {
         this.props.toggleTran()
     }
-
+    // 停止播放
+    _pause = () => {
+        const { autoPlayTimer, task } = this.props.playState;
+        const { changePlayTimer } = this.props;
+        if (autoPlayTimer) {
+            //暂停
+            clearTimeout(autoPlayTimer);
+            changePlayTimer(0);
+        }
+    }
 
     render() {
         const { task, autoPlayTimer, showWord, showTran, interval } = this.props.playState
@@ -72,14 +83,14 @@ export default class StudyPlayController extends React.Component {
 
                         <Text style={[styles.textIcon, showWord ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
-                            onResponderStart={(e) => { this._toggleWord() }}>
+                            onResponderRelease={(e) => { this._toggleWord() }}>
                             英
                     </Text>
 
                         {/* 中文按钮 */}
                         <Text style={[styles.textIcon, showTran ? selected : styles.unSelected]}
                             onStartShouldSetResponder={() => true}
-                            onResponderStart={(e) => { this._toggleTran() }}>
+                            onResponderRelease={(e) => { this._toggleTran() }}>
                             中
                     </Text>
                     </Row>
@@ -100,11 +111,10 @@ export default class StudyPlayController extends React.Component {
                         paddingHorizontal: 30,
                         marginBottom: 10,
                     }, gstyles.r_around]}>
-                        {/* 返回 */}
-                        <AliIcon name='iconfontshouye' size={26} color='#FFF' onPress={() => {
-                            //更新任务
-                            this.props.updateTask({ task })
-                            this.props.goBack()
+                        {/* 查词 */}
+                        <AliIcon name='chazhao' size={24} color='#FFF' onPress={() => {
+                            this._pause()
+                            this.props.navigation.navigate('VocaSearch');
                         }} />
                         {/* 控制播放 */}
                         <View style={[{ width: width * (1 / 2) }, gstyles.r_around]}>
@@ -142,6 +152,7 @@ export default class StudyPlayController extends React.Component {
 
                             </MenuOptions>
                         </Menu>
+
                     </Row>
 
                 </Grid>

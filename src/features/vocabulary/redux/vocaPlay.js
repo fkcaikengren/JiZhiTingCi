@@ -25,7 +25,7 @@ const defaultState = {
     //背景图地址
     bgPath: '',
     //显示blur
-    showBlur: false,
+    showBlur: true,
     //主题数组
     themes: Themes,
     //当前主题id

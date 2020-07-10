@@ -93,14 +93,15 @@ export default class VocaPlayService {
             }
             //2.更新通知栏的单词
             if (this.stateRef === null) {
-                NotificationManage.updateWord(showWordInfos[index].word, (e) => { console.log(e) },
+                const word = showWordInfos[index] ? showWordInfos[index].word : '~'
+                NotificationManage.updateWord(word, (e) => { console.log(e) },
                     () => { })
             }
 
             //3.播放单词音频
             this.audioService.playSound({
                 pDir: CConstant.VOCABULARY_DIR,
-                fPath: showWordInfos[index].pron_url
+                fPath: showWordInfos[index] ? showWordInfos[index].pron_url : null
             })
 
 
@@ -149,6 +150,5 @@ export default class VocaPlayService {
             this.autoplay(index);
         }
     }
-
 
 }

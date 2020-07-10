@@ -86,25 +86,25 @@ class VocaListTabPage extends Component {
                 <View style={gstyles.tabBar}>
                     <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._movePage(0) }}
+                        onResponderRelease={(e) => { this._movePage(0) }}
                     >
                         <Text style={[gstyles.sm_gray, gstyles.tabText, index === 0 ? selectTextStyle : null]}>错词</Text>
                     </View>
                     <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._movePage(1) }}
+                        onResponderRelease={(e) => { this._movePage(1) }}
                     >
                         <Text style={[gstyles.sm_gray, gstyles.tabText, index === 1 ? selectTextStyle : null]}>PASS</Text>
                     </View>
                     <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._movePage(2) }}
+                        onResponderRelease={(e) => { this._movePage(2) }}
                     >
                         <Text style={[gstyles.sm_gray, gstyles.tabText, index === 2 ? selectTextStyle : null]}>已学</Text>
                     </View>
                     <View style={gstyles.tabBtn}
                         onStartShouldSetResponder={() => true}
-                        onResponderStart={(e) => { this._movePage(3) }}
+                        onResponderRelease={(e) => { this._movePage(3) }}
                     >
                         <Text style={[gstyles.sm_gray, gstyles.tabText, index === 3 ? selectTextStyle : null]}>未学</Text>
                     </View>

@@ -122,7 +122,7 @@ export default class StatisticsPage extends Component {
                             {plan.bookId &&
                                 <View style={[{ width: '100%', paddingVertical: 5, paddingHorizontal: 10 }]}>
                                     <View style={[{ flex: 1 }, gstyles.r_between]}>
-                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>已学习单词:
+                                        <Text style={[{ flex: 1 }, gstyles.md_black]}>已学单词:
                                         <Text style={{ color: gstyles.emColor }}> {learnedWordCount}个</Text>
                                         </Text>
                                         <Text style={[{ flex: 1 }, gstyles.md_black]}>已掌握单词:

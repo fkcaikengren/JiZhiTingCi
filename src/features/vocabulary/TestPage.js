@@ -420,7 +420,7 @@ export default class TestPage extends Component {
                                 } else if (isDetailModalOpen) {
                                     this._closeDetailModal()
                                 }
-                                BackgroundTimer.setTimeout(this._nextWord, 500)
+                                BackgroundTimer.setTimeout(this._nextWord, 300)
                             }} //pass 
                         />
                     }
@@ -589,9 +589,9 @@ export default class TestPage extends Component {
                                                         pDir: VOCABULARY_DIR,
                                                         fPath: url
                                                     }, null, () => {
-                                                        BackgroundTimer.setTimeout(this._nextWord, 500)
+                                                        BackgroundTimer.setTimeout(this._nextWord, 300)
                                                     }, () => {
-                                                        BackgroundTimer.setTimeout(this._nextWord, 500)
+                                                        BackgroundTimer.setTimeout(this._nextWord, 300)
                                                     })
                                                 } else {                        //答错
                                                     this._openAnsweredModal()
@@ -617,7 +617,7 @@ export default class TestPage extends Component {
                                                 return
                                             }
                                             this._passWord(this.allWordInfos[this.answerIndex].word)
-                                            BackgroundTimer.setTimeout(this._nextWord, 500)
+                                            BackgroundTimer.setTimeout(this._nextWord, 300)
                                         }} //pass
                                     />
                                 }

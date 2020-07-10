@@ -72,7 +72,7 @@ export default class WordCell extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.itemCenter}>
-                        <TogglePanel word={item.word} />
+                        <TogglePanel word={item.word} isWord={true} />
                     </View>
                     <View style={{ flex: 1 }} >
                         <AliIcon name='youjiantou' size={26} color='#C9C9C9' style={{ paddingLeft: 10 }} onPress={() => {

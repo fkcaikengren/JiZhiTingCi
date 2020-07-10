@@ -935,3 +935,17 @@ keytool -list -v -keystore aitingci.jks
 更新App，进入App后操作，App会在后台更新，更新完成后导致App重启
 ```
 
+
+
+### 上传商店：权限问题
+
+```js
+//取消极光推送里面的权限
+//jpush-react-native
+//janalytics-react-native
+ACCESS_COARSE_LOCATION 	//GPS定位
+ACCESS_FINE_LOCATION 	//网络大致定位
+WRITE_SETTINGS  		//修改系统设置
+//把AndroidManifest.xml中带有LOCATION的权限都注释掉
+```
+

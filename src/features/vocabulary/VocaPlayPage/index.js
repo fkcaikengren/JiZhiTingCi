@@ -787,7 +787,7 @@ class VocaPlayPage extends React.Component {
                 <Header
                     statusBarProps={{ barStyle: 'light-content' }}
                     barStyle="light-content" // or directly
-                    leftComponent={this.isStudyMode ? null :
+                    leftComponent={
                         <AliIcon name='fanhui' size={26} color='#FFF' onPress={this._goBack} />}
                     centerComponent={{ text: task.taskOrder ? name : '未选择', style: gstyles.lg_white_bold }}
                     rightComponent={this.isStudyMode ?

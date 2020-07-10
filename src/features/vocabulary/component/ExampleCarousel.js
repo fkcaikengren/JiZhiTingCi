@@ -127,23 +127,35 @@ export default class ExampleCarousel extends Component {
 
 
   _renderText = (text) => {
-    const s = text.split(/<em>|<\/em>/)
-    return <Text style={{ color: '#FFF', fontSize: 14, fontWeight: '500' }}>
-      {
-        s.map((text, index) => {
-          if (index % 2 === 0) {
-            const words = text.split(' ')
-            return words.map((word, i) => <Text
-              key={word + index + i}
-              onStartShouldSetResponder={e => true}
-              onResponderStart={e => this.props.lookWord(word)}
-            >{word} </Text>)
-          } else {
-            return <Text key={text + index} style={{ color: '#F2753F', fontSize: 14, fontWeight: '500' }}>{text}</Text>
-          }
-        })
-      }
-    </Text>
+    if (text.includes('<em>') && text.includes('</em>')) {
+      const s = text.split(/<em>|<\/em>/)
+      return <Text style={{ color: '#FFF', fontSize: 14, fontWeight: '500' }}>
+        {
+          s.map((text, index) => {
+            if (index % 2 === 0) {
+              const words = text.split(' ')
+              return words.map((word, i) => <Text
+                key={word + index + i}
+                onPress={() => this.props.lookWord(word)}
+              >{word} </Text>)
+            } else {
+              return <Text key={text + index} style={{ color: '#F2753F', fontSize: 14, fontWeight: '500' }}>{text}</Text>
+            }
+          })
+        }
+      </Text>
+    } else {
+      const words = text.split(' ')
+      return <Text style={{ color: '#FFF', fontSize: 14, fontWeight: '500' }}>
+        {
+          words.map((word, i) => <Text
+            key={word + index + i}
+            onPress={() => this.props.lookWord(word)}
+          >{word} </Text>)
+        }
+      </Text>
+
+    }
   }
 
   render() {
@@ -166,7 +178,7 @@ export default class ExampleCarousel extends Component {
           } else {
             this.audioService.playSound({
               pDir: CConstant.VOCABULARY_DIR,
-              fPath: this.props.examples[i].pron_url
+              fPath: this.props.examples[i] ? this.props.examples[i].pron_url : null
             })
           }
         }}

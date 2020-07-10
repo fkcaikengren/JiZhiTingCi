@@ -140,6 +140,7 @@ export default class VocaTaskService {
             if (t.status === Constant.STATUS_0) {
                 newTasks.push(t)
             } else {
+                t.leftTimes = store.getState().mine.configReviewPlayTimes
                 otherTasks.push(t)
             }
         }

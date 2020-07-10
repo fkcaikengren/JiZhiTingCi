@@ -11,6 +11,7 @@ import DictDao from "../service/DictDao";
 import { TYPE_ERR_CODE_VOCA } from "../common/constant";
 import ErrorTemplate from "../../../component/ErrorTemplate";
 import DownloadTemplate from "../../../component/DownloadTemplate";
+import _util from "../../../common/util";
 
 const styles = StyleSheet.create({
     errBtn: {
@@ -90,26 +91,29 @@ class VocaOperator extends Component {
             this.props.navigation.navigate('Dict', { word: this.props.wordInfo.word })
         } else {
             //提示是否下载词典
-            this.props.app.confirmModal.show('下载离线词典？', null, () => {
-                //开始下载
-                DownloadTemplate.show({
-                    commonModal: this.props.app.commonModal,
-                    title: '离线词典下载中...(150M)',
-                    modalHeight: 240,
-                    primaryDir: FILE_ROOT_DIR,
-                    filePath: '/resources/dict.zip',
-                    onUnzipPress: () => {
-                        this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
-                    },
-                    onFinishPress: () => {
-                        Storage.save({
-                            key: 'dictDownloaded',
-                            data: true
-                        })
-                        DictDao.getInstance().open()
-                    }
+            _util.checkNet(() => {
+                this.props.app.confirmModal.show('下载离线词典？', null, () => {
+                    //开始下载
+                    DownloadTemplate.show({
+                        commonModal: this.props.app.commonModal,
+                        title: '离线词典下载中...(150M)',
+                        modalHeight: 240,
+                        primaryDir: FILE_ROOT_DIR,
+                        filePath: '/resources/dict.zip',
+                        onUnzipPress: () => {
+                            this.props.app.toast.show('解压中...请稍等几秒钟', 2000)
+                        },
+                        onFinishPress: () => {
+                            Storage.save({
+                                key: 'dictDownloaded',
+                                data: true
+                            })
+                            DictDao.getInstance().open()
+                        }
+                    })
                 })
             })
+
         }
     }
 
@@ -127,20 +131,23 @@ class VocaOperator extends Component {
 
         return <View style={gstyles.r_end}>
             <TouchableOpacity onPress={() => {
-                ErrorTemplate.show({
-                    commonModal: this.props.app.commonModal,
-                    title: this.props.wordInfo.word,
-                    modalHeight: 400,
-                    errorTypes: ["单词或音标", "英英释义或普通例句", "中文释义", "影视例句"],
-                    params: {
-                        userId: this.props.mine.user._id,
-                        type: TYPE_ERR_CODE_VOCA,
-                        object: this.props.wordInfo.word,
-                    },
-                    onSucceed: () => {
-                        this.props.app.toast.show("提交成功", 1000)
-                    }
+                _util.checkNet(() => {
+                    ErrorTemplate.show({
+                        commonModal: this.props.app.commonModal,
+                        title: this.props.wordInfo.word,
+                        modalHeight: 400,
+                        errorTypes: ["单词或音标", "英英释义或普通例句", "中文释义", "影视例句"],
+                        params: {
+                            userId: this.props.mine.user._id,
+                            type: TYPE_ERR_CODE_VOCA,
+                            object: this.props.wordInfo.word,
+                        },
+                        onSucceed: () => {
+                            this.props.app.toast.show("提交成功", 1000)
+                        }
+                    })
                 })
+
             }}>
                 <Text style={styles.errBtn}>报错</Text>
             </TouchableOpacity>
