@@ -242,7 +242,6 @@ class PhoneLoginPage extends Component {
                   this.setState({ password: value })
                 }}
                 value={this.state.password}
-                keyboardType='numeric'
               />
             </View>
 

@@ -56,8 +56,8 @@ class VocaLibPage extends Component {
         console.log('提交计划：' + taskCount)
         //提交计划
         if (taskCount !== null && taskWordCount !== null) {
-            // const isExacted = await _util.checkLocalTime()
-            if (true) {
+            const isExacted = await _util.checkLocalTime()
+            if (isExacted) {
                 // 修改单词书
                 this.props.changeVocaBook({
                     plan: {

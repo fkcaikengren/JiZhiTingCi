@@ -61,7 +61,6 @@ const DocumentDir = fs.dirs.DocumentDir + '/'
 function* loginByCode(action) {
 
     const res = yield Http.post('/user/loginByCode', action.payload.params)
-    console.log(res)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
         if (plan) { //保存计划
@@ -81,7 +80,6 @@ function* loginByCode(action) {
 
 /**密码登录 */
 function* loginByPwd(action) {
-    console.log(action.payload.params)
     const res = yield Http.post('/user/loginByPwd', action.payload.params)
     if (res.status === 200) {
         const { credential, user, plan, finishedBooksWordCount, allLearnedCount, allLearnedDays } = loginHandle(res.data, action.payload.navigation)
@@ -214,7 +212,6 @@ function* modifyQQ(action) {
     yield put({ type: MODIFY_QQ_START })
     const res = yield Http.post('/user/modifyQQ', action.payload.params)
     if (res.status === 200) {
-        console.log(res.data)
         yield put({ type: MODIFY_QQ_SUCCEED, payload: res.data })
     }
 }

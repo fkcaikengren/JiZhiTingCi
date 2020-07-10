@@ -21,25 +21,25 @@ export function* loadTasks(action) {
     yield put({ type: LOAD_TASKS_START })
     try {
         const vts = new VocaTaskService()
-        // 修改今日任务
+        // 1.修改今日任务
         const tasks = vts.getTodayTasks(lastLearnDate, taskCount, taskWordCount)
         const articleTasks = VocaUtil.genArticleTasksByVocaTasks(
             tasks.filter((item, i) => item.status === STATUS_0)
         )
         yield put({ type: LOAD_TASKS_SUCCEED, payload: { tasks: tasks.concat(articleTasks) } })
-        //修改剩余学习天数
+        // 2.修改剩余学习天数
         const leftDays = vts.countLeftDays(taskCount, taskWordCount)
         console.log('leftDays==============================' + leftDays)
         yield put({ type: CHANGE_LEFT_DAYS, payload: { leftDays } })
-        //修改已学单词
+        // 3.修改已学单词
         const learnedWordCount = vts.countLearnedWords()
         console.log('learnedWordCount===========================' + learnedWordCount)
         yield put({ type: CHANGE_LEARNED_WORD_COUNT, payload: { learnedWordCount } })
-        //加载成功后，修改上次学习日期lastLearnDate 
+        // 4.加载成功后，修改上次学习日期lastLearnDate
         yield put({ type: MODIFY_LAST_LEARN_DATE, payload: { lastLearnDate: _util.getDayTime(0) } })
-    } catch (err) {
-        console.log(err)
-        yield put({ type: LOAD_TASKS_FAIL })
+
+    } catch (error) {
+        yield put({ type: LOAD_TASKS_FAIL, payload: { error } })
     }
 }
 

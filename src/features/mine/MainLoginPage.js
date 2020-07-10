@@ -86,8 +86,8 @@ class MainLoginPage extends Component {
             animationDuration={1}
         >
             <View style={[gstyles.c_center, { height: '85%', paddingHorizontal: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#AAA' }]}>
-                <Text style={[gstyles.lg_black, { lineHeight: 30 }]}> 服务协议和隐私政策</Text>
-                <Text numberOfLines={20} style={{ fontSize: 16, color: '#555' }}>
+                <Text style={[gstyles.lg_black, { lineHeight: 30, marginBottom: 10 }]}> 服务协议和隐私政策</Text>
+                <Text numberOfLines={20} style={{ fontSize: 15, color: '#444', lineHeight: 22 }}>
                     请你务必审慎阅读，充分理解“服务协议”和“隐私政策”各条款，包括但不限于，为了向你提供单词学习服务，我们需要收集你的设备信息、操作日志等个人信息，你可以在设置中查看、变更、删除个人信息并管理你的授权。你可以阅读<Text style={{ color: '#1890FF' }} onPress={() => {
                         this.props.navigation.navigate('H5', {
                             'title': '服务协议',

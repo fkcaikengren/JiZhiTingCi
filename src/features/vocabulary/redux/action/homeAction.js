@@ -5,6 +5,7 @@ export const LOAD_TASKS = 'LOAD_TASKS'                              //加载任�
 export const LOAD_TASKS_START = 'LOAD_TASKS_START'                  //加载任务
 export const LOAD_TASKS_SUCCEED = 'LOAD_TASKS_SUCCEED'              //加载任务
 export const LOAD_TASKS_FAIL = 'LOAD_TASKS_FAIL'                     //加载任务
+export const SET_ERROR_IN_LOAD_TASK = 'SET_ERROR_IN_LOAD_TASK'        //设置加载任务出错
 
 export const UPDATE_TASK = 'UPDATE_TASK'            //更新任务
 
@@ -23,9 +24,11 @@ const fn = (payload) => {
 }
 
 //驼峰式命名，不可以更改(与变量名必须对应)
-export const { loadTasks, updateTask, syncTask, updateScore } = createActions({
+export const { loadTasks, setErrorInLoadTask, updateTask, syncTask, updateScore } = createActions({
     //加载任务
     [LOAD_TASKS]: fn,
+    // 设置加载任务出错
+    [SET_ERROR_IN_LOAD_TASK]: fn,
     //更新任务
     [UPDATE_TASK]: fn,
     //上传同步任务

@@ -123,11 +123,13 @@ export function* modifyPlan(action) {
                     leftDays: action.payload.leftDays
                 }
             })
+            store.getState().app.toast.show('修改成功，计划从第二天开始生效', 2000)
         } else {
+            store.getState().app.toast.show('修改失败', 1000)
             yield put({ type: MODIFY_PLAN_FAIL })
         }
     } catch (err) {
-        console.log(err)
+        store.getState().app.toast.show('修改失败', 1000)
         yield put({ type: MODIFY_PLAN_FAIL })
     }
 
@@ -174,7 +176,7 @@ export function* synFinishDays(action) {
         let allAddedFinishDays = yield Storage.getAllDataForKey('addedFinishDays')
         allAddedFinishDays = allAddedFinishDays.concat(fDates[0])
         //存储今日打卡数据
-        Storage.save({
+        yield Storage.save({
             key: 'finishDays',
             id: fDates[0],
             data: fDates[0]

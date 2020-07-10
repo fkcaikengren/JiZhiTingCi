@@ -11,6 +11,8 @@ const defaultState = {
     //任务数组
     tasks: [],
 
+    //加载任务是否出错
+    errorInLoadTask: null,
 
     //上传同步的状态
     isUploading: false,
@@ -32,8 +34,16 @@ export const home = (state = defaultState, action) => {
             return state
         case ha.LOAD_TASKS_SUCCEED:
             return {
-                ...state, tasks: action.payload.tasks,
+                ...state, errorInLoadTask: null, tasks: action.payload.tasks,
             };
+        case ha.LOAD_TASKS_FAIL:
+            return {
+                ...state, errorInLoadTask: action.payload.error
+            }
+        case ha.SET_ERROR_IN_LOAD_TASK:
+            return {
+                ...state, errorInLoadTask: action.payload.error
+            }
         //更新任务
         case ha.UPDATE_TASK: {
             const task = action.payload.task

@@ -37,14 +37,23 @@ class HomePage extends Component {
     componentDidMount() {
         // 监听物理返回键
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPressAndroid)
-        // 初始化
-        this._init()
-        // 完成全部任务
-        this._judgeFinishAllTasks()
         // 监听App状态
         AppState.addEventListener('change', this._handleAppStateChange);
-        // 检查时间
-        _util.checkLocalTime()
+        // 检查时间 
+        _util.checkLocalTime().then((isTimeRight) => {
+            if (isTimeRight) {
+                // 初始化
+                this._init()
+                // 完成全部任务
+                this._judgeFinishAllTasks()
+            } else {
+                const timeError = new Error()
+                timeError.name = "TimeError"
+                this.props.setErrorInLoadTask({
+                    error: timeError
+                })
+            }
+        })
 
     }
     componentWillUnmount() {
@@ -84,13 +93,12 @@ class HomePage extends Component {
 
 
     _init = async () => {
-
         // 加载今日数据
         const { plan, leftDays, allLearnedDays, learnedTodayFlag } = this.props.plan
         const { lastLearnDate, taskCount, taskWordCount } = plan
         const today = _util.getDayTime(0)
-        console.log('today --> ' + today)
-
+        console.log('lastLearnDate : ' + lastLearnDate)
+        console.log('today : ' + today)
         if (lastLearnDate && (today > (lastLearnDate + 1000) || IsLoginToHome)) {  //任务过期or登录进入
             // 设置登录进入首页变量=false
             if (IsLoginToHome) {
@@ -100,20 +108,32 @@ class HomePage extends Component {
             if (this.props.vocaPlay.normalType === BY_REAL_TASK) {
                 this.props.clearPlay()
             }
-            //获取今日任务
+            // 1.获取今日任务
             this.props.loadTasks({
                 lastLearnDate,
                 taskCount,
                 taskWordCount,
             })
-            // 同步任务
+
+            // 2.同步任务
             this.props.syncTask(null)
-            //同步：累计学习天数
+            // 3.同步：累计学习天数
             if (learnedTodayFlag !== today && leftDays >= 0) {
                 console.log('同步天数')
                 this.props.synAllLearnedDays({ allLearnedDays: allLearnedDays + 1 })
             }
-
+        } else if (today === lastLearnDate) {
+            if (this.props.home.errorInLoadTask) {
+                this.props.setErrorInLoadTask({
+                    error: null
+                })
+            }
+        } else {
+            const timeError = new Error()
+            timeError.name = "TimeError"
+            this.props.setErrorInLoadTask({
+                error: timeError
+            })
         }
 
         //监听极光推送
@@ -135,7 +155,7 @@ class HomePage extends Component {
         });
     }
 
-    _judgeFinishAllTasks = () => {
+    _judgeFinishAllTasks = async () => {
         const judgeFinishAllTasks = this.props.navigation.getParam('judgeFinishAllTasks', false)
         console.log('完成任务后--judgeFinishAllTasks : ' + judgeFinishAllTasks)
 
@@ -158,8 +178,12 @@ class HomePage extends Component {
                 this.props.synFinishDays({
                     allLearnedCount: finishedBooksWordCount + this.vtService.countLearnedWords()
                 })
+                //加载打卡天数
+                const signDays = await Storage.getAllDataForKey('finishDays')
+                console.log('--signDays--')
+                console.log(signDays)
                 // 3.弹出分享页面
-                this._share(true)
+                this._share(true, signDays.length)
             }
 
         }
@@ -175,8 +199,7 @@ class HomePage extends Component {
         this.setState({ modalVisible: true })
     };
 
-    _renderShareContentView = () => {
-        const { allLearnedDays } = this.props.plan
+    _renderShareContentView = (signDaysCount) => {
         const learnedWordCount = this.vtService.countLearnedWords()
         return <View style={[gstyles.c_start, { width: '100%' }]}>
             <View style={[gstyles.c_center, styles.shareContent]}>
@@ -190,20 +213,20 @@ class HomePage extends Component {
                         <Text style={gstyles.sm_lightBlack}>学习单词/个</Text>
                     </View>
                     <View style={gstyles.c_start}>
-                        <Text style={gstyles.xl_black}>{allLearnedDays}</Text>
-                        <Text style={gstyles.sm_lightBlack}>坚持学习/天</Text>
+                        <Text style={gstyles.xl_black}>{signDaysCount}</Text>
+                        <Text style={gstyles.sm_lightBlack}>完成打卡/天</Text>
                     </View>
                 </View>
             </View>
         </View>
     }
 
-    _share = (showSeal) => {
+    _share = (showSeal, signDaysCount) => {
         const imgSource = require('../../image/share_bg.png')
         ShareTemplate.show({
             commonModal: this.props.app.commonModal,
             bgSource: imgSource,
-            renderContentView: this._renderShareContentView(),
+            renderContentView: this._renderShareContentView(signDaysCount),
             showSeal
         })
     }
@@ -307,6 +330,7 @@ const mapDispatchToProps = {
     loadTasks: HomeAction.loadTasks,
     syncTask: HomeAction.syncTask,
     updateTask: HomeAction.updateTask,
+    setErrorInLoadTask: HomeAction.setErrorInLoadTask,
 
     changeLeftDays: PlanAction.changeLeftDays,
     synAllLearnedDays: PlanAction.synAllLearnedDays,

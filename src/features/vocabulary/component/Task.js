@@ -9,6 +9,7 @@ import VocaUtil from '../../vocabulary/common/vocaUtil'
 import * as Constant from '../common/constant'
 import TaskItem from './TaskItem';
 import gstyles from '../../../style'
+import AliIcon from '../../../component/AliIcon';
 
 
 export default class Task extends Component {
@@ -28,14 +29,19 @@ export default class Task extends Component {
     this.props.navigation.navigate('VocaPlan')
   }
 
+
   render() {
+    const { errorInLoadTask, tasks } = this.props.home
     return (
       <View style={styles.taskView}>
         <View style={styles.taskList}>
-          {this.props.home.tasks.length > 0 &&
+          {errorInLoadTask &&
+            this._renderErrorTip(errorInLoadTask)
+          }
+          {errorInLoadTask === null && tasks.length > 0 &&
             this.renderTaskItems()
           }
-          {this.props.home.tasks <= 0 &&
+          {errorInLoadTask === null && tasks <= 0 &&
             <View style={[gstyles.r_center, { height: 200 }]}>
               <Button
                 title='制定计划'
@@ -56,6 +62,20 @@ export default class Task extends Component {
         </View>
       </View>
     );
+  }
+
+
+  _renderErrorTip = (error) => {
+    let tip = "加载数据发生错误，请稍后重启App"
+    if (error.name === "TimeError") {
+      tip = '手机日期(时间)设置不正确，请检查后重启App'
+
+    }
+    return <View style={[styles.taskView, gstyles.r_center, { marginTop: 40 }]}>
+      <AliIcon name='baocuo1' size={24} color={gstyles.emColor} style={{ marginRight: 10 }} />
+      <Text style={{ width: '70%', color: gstyles.emColor, fontSize: 16 }} >{tip}</Text>
+    </View>
+
   }
 
   renderTaskItems = () => {

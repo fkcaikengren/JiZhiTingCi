@@ -7,7 +7,7 @@ import _ from 'lodash'
 import * as CConstant from "../../../common/constant";
 import { store } from '../../../redux/store'
 import ArticleDao from '../../reading/service/ArticleDao';
-
+const uuidv4 = require('uuid/v4');
 /**
     在dao层进行进一步的数据格式处理, 同时把数据完全拷贝出来
  */
@@ -86,7 +86,9 @@ export default class VocaTaskService {
             console.log(d)
             if (d < 0) {
                 //VocaTask未过时 (不会调用该函数， 如果调用该函数则应该抛出异常)
-                throw new Error('getTodayTasks 错误: lastLearnDate 大于今日零点时间戳！')
+                const timeError = new Error('getTodayTasks 错误: lastLearnDate 大于今日零点时间戳！')
+                timeError.name = 'TimeError'
+                throw timeError
             } else if (d > 1 && d <= 13) {
                 //迭代模拟学习
                 for (let day = d; day >= 2; day--) {
@@ -103,8 +105,9 @@ export default class VocaTaskService {
                     }
                 })
             }
-            // d==0表示当天退出重登录
-            // d==1表示未中断过学习
+            // d==0表示今天学习过
+            // d==1表示昨天学习过
+            // d==2表示前天学习过
         }
 
 
@@ -144,6 +147,31 @@ export default class VocaTaskService {
                 otherTasks.push(t)
             }
         }
+
+        // 5.同步其他复习任务的vocaTaskDate和delayDays到 服务器
+        const synData = otherTasks.map((oTask, i) => {
+            return {
+                taskOrder: oTask.taskOrder,
+                status: oTask.status,
+                vocaTaskDate: oTask.vocaTaskDate,
+                delayDays: oTask.delayDays,
+                progress: oTask.progress,
+            }
+        })
+        console.log(synData)
+        // 把修改vocaTaskDate任务 加入存储池 
+        if (synData.length > 0) {
+            Storage.save({
+                key: 'notSyncTasks',
+                id: uuidv4(),
+                data: {
+                    command: CConstant.COMMAND_BATCH_MODIFY_TASK_DATE,
+                    data: synData
+                }
+            })
+        }
+
+
         return newTasks.concat(otherTasks).concat(reviewTasks)
     }
 
@@ -211,8 +239,9 @@ export default class VocaTaskService {
             //4. 保存VocaTask
             this.vtd.saveVocaTasks(vocaTasks)
 
-            //5. 添加至上传任务
+            //5. 上传任务数据
             for (let task of vocaTasks) {
+                // 把新建单词任务 加入存储池
                 Storage.save({
                     key: 'notSyncTasks',
                     id: CConstant.COMMAND_CREATE_TASK.split('_').join('-') + task.taskOrder,
@@ -357,6 +386,7 @@ export default class VocaTaskService {
         if (leftCount <= 1) { //任务遗留数量<=1时
             this.genNewTasks(_util.getDayTime(n), taskCount, taskWordCount)
         }
+
     }
 
 
