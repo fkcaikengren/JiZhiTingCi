@@ -140,7 +140,7 @@ export default class VocaCard extends Component {
             } else {
                 const words = wordInfo.sentence.split(' ')
                 sentence = words.map((word, i) => <Text
-                    key={word + index + i}
+                    key={word + i}
                     onPress={() => this.props.lookWord(word)}
                 >{word} </Text>)
 

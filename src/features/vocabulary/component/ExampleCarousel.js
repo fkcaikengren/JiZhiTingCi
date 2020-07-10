@@ -149,7 +149,7 @@ export default class ExampleCarousel extends Component {
       return <Text style={{ color: '#FFF', fontSize: 14, fontWeight: '500' }}>
         {
           words.map((word, i) => <Text
-            key={word + index + i}
+            key={word + i}
             onPress={() => this.props.lookWord(word)}
           >{word} </Text>)
         }
