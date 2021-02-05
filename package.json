@@ -13,7 +13,7 @@
     "@react-native-community/async-storage": "^1.4.2",
     "@react-native-community/blur": "^3.3.1",
     "@react-native-community/netinfo": "^5.5.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "janalytics-react-native": "^1.4.4",
     "jcore-react-native": "^1.7.5",
     "jpush-react-native": "^2.7.5",
