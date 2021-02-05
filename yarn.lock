@@ -7174,10 +7174,10 @@ react-native-view-shot@^3.1.2:
   resolved "https://registry.npm.taobao.org/react-native-view-shot/download/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
   integrity sha1-jI6ExnpLyLYD5pfbvVnbybT4SCU=
 
-react-native-webview@^7.5.2:
-  version "7.5.2"
-  resolved "https://registry.npm.taobao.org/react-native-webview/download/react-native-webview-7.5.2.tgz#9da3006e03636faaa9d05f3abff46cd40bfb80f9"
-  integrity sha1-naMAbgNjb6qp0F86v/Rs1Av7gPk=
+react-native-webview@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.0.0.tgz#d667cbcc772e963fe88a4156290d25fe47ed43b0"
+  integrity sha512-gzID5ebCFVNkxreuabClymo6QkJbXCLEtiIUY9QAhxY58HsDUp8x0YzDVEROYyEJ4ghL71koAOeQRDNAgNnh1w==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
