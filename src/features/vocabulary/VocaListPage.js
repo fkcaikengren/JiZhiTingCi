@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, View, Text } from "react-native";
+import { ScrollView,TouchableOpacity,FlatList, View, Text } from "react-native";
 import { Button } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import CardView from 'react-native-cardview'
@@ -13,10 +13,15 @@ import VocaTaskService from './service/VocaTaskService'
 import VocaUtil from "./common/vocaUtil";
 import WordCell from "./component/WordCell";
 import { COMMAND_MODIFY_PASSED } from "../../common/constant";
+import Accordion from "react-native-collapsible/Accordion";
 
+const GroupWordCount = 30
 const ITEM_HEIGHT = styles.item.height;         //item的高度
 const HEADER_HEIGHT = styles.headerView.height; //分组头部的高度
 const SEPARATOR_HEIGHT = 0;                     //分割线的高度
+const Dimensions = require('Dimensions');
+const { width } = Dimensions.get('window');
+
 
 export default class VocaListPage extends Component {
   constructor() {
@@ -25,6 +30,8 @@ export default class VocaListPage extends Component {
       data: [],
       stickyHeaderIndices: [],
       checked: false, //是否有被选的
+      activeSections:[],
+      newGroups: [],
     };
     this.vtService = new VocaTaskService()
   }
@@ -35,7 +42,7 @@ export default class VocaListPage extends Component {
 
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { data, checked, isVocaModalOpen } = this.state
+    const { data, checked, isVocaModalOpen,activeSections } = this.state
     const { onEdit } = this.props.vocaList
     if (onEdit == true && nextProps.vocaList.onEdit == false) {
       //清理check
@@ -48,7 +55,8 @@ export default class VocaListPage extends Component {
     }
 
     //刷新的因素：data,checked,onEdit
-    if (data === nextState.data && checked === nextState.checked && onEdit === nextProps.vocaList.onEdit) {
+    if (data === nextState.data && checked === nextState.checked 
+      && activeSections===nextState.activeSections && onEdit === nextProps.vocaList.onEdit ) {
       return false
     } else {
       return true
@@ -70,8 +78,22 @@ export default class VocaListPage extends Component {
         data = this.vtService.getLearnedList()
         break;
       case Constant.NEW_LIST:
-        data = this.vtService.getNewList()
-        break;
+        {
+          const newGroups = []
+          data = this.vtService.getNewList()
+          const max = data.length/GroupWordCount
+          for(let i=0;i<max;i++){
+            newGroups.push({checked: false, groupIndex:i})
+          }
+          for(let i=0;i<data.length;i++){
+            data[i].index=i
+          }
+          this.setState({
+            data:data,
+            newGroups
+          });
+          return
+        }
     }
 
     const headers = [];
@@ -100,7 +122,6 @@ export default class VocaListPage extends Component {
   //多选
   _selectItem = (index) => {
     console.log('change state --' + index)
-    console.log(index)
 
     const data = [...this.state.data]
     let checked = this.state.checked
@@ -139,8 +160,51 @@ export default class VocaListPage extends Component {
   _renderItem = ({ item, index }) => {
     return <WordCell item={item} index={index} onEdit={this.props.vocaList.onEdit}
       selectItem={this._selectItem} lookDetail={this._lookDetail} />
-
   };
+
+  // 
+  _renderAccordionContent = (g)=>{
+    const index = g.groupIndex
+    if(this.state.activeSections[0]!=index){
+      return <View></View>
+    }
+    const startIndex = index*GroupWordCount
+    const datas = this.state.data.slice(startIndex,startIndex+GroupWordCount)
+    const endIndex = startIndex+GroupWordCount - 1
+    console.log(g.groupIndex);
+    console.log(startIndex+'-->'+endIndex);
+    return <View >
+        {this.props.vocaList.onEdit &&
+          <TouchableOpacity activeOpacity={0.8} 
+            onPress={() => { 
+              const newData =  this.state.data.map(d=>{
+                if(d.index>=startIndex && d.index<=endIndex){
+                  d.checked = true
+                }
+                return d
+              })
+              this.setState({
+                data: newData,
+                checked: true
+              })
+            }}>
+              <Text style={{color:gstyles.infoColor,height:32,lineHeight:32,fontSize:16,backgroundColor:'#E0E0E0',paddingLeft:10}}>
+                全选
+              </Text>
+          </TouchableOpacity>
+        }
+        {datas && datas.length>0 &&
+          datas.map(item=>{
+            //item: { isHeader: false, checked: false, word: 'envy' }
+            return <WordCell  item={item} 
+                              index={item.index} 
+                              onEdit={this.props.vocaList.onEdit}
+                              selectItem={this._selectItem} 
+                              lookDetail={this._lookDetail} />
+          })
+        }
+    </View>
+  }
 
 
 
@@ -285,7 +349,7 @@ export default class VocaListPage extends Component {
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, marginBottom: this.props.vocaList.onEdit ? 60 : 0 }}>
-          {this.state.data.length > 0 &&
+          {this.state.data.length > 0 && this.props.type!=Constant.NEW_LIST &&
             <FlatList
               data={this.state.data}
               renderItem={this._renderItem}
@@ -294,6 +358,33 @@ export default class VocaListPage extends Component {
               getItemLayout={this._getItemLayout}
               extraData={this.props.vocaList.onEdit}
             />
+          }
+          {this.state.data.length > 0 && this.props.type==Constant.NEW_LIST &&
+            <ScrollView 
+              style={{ flex: 1 }}
+              contentContainerStyle={gstyles.c_start}
+              automaticallyAdjustContentInsets={false}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={true}
+            >
+              <Accordion
+                style={{width:width}}
+                activeSections={this.state.activeSections}
+                sections={this.state.newGroups}
+                renderHeader={(g)=>{
+                  const title = '未学列表-'+(g.groupIndex+1)
+                  const expand = this.state.activeSections.includes(g.groupIndex)
+                  return <View style={styles.accordionItem}>
+                    <Text style={styles.accordionTitle}>{title}</Text>
+                    <AliIcon name={expand ? 'youjiantou-copy' : 'youjiantou'} size={24} color='#888' style={{ marginRight: 16 }} />
+                  </View>
+                }}
+                renderContent={this._renderAccordionContent}
+                onChange={activeSections => {
+                  this.setState({ activeSections });
+                }}
+              />
+            </ScrollView>
           }
           {this.state.data.length <= 0 &&
             <View style={[gstyles.c_center, { flex: 1 }]}>

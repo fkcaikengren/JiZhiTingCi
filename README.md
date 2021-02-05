@@ -10,10 +10,6 @@ react-native 版本：**0.59.8**
 react-native init aitingci
 ```
 
-### 同步项目到github
-
-
-
 
 
 
@@ -900,10 +896,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 #生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "【爱听词V1.0.2版】
-修复闪退等问题，完善用户体验。
-【注意】
-本次更新将耗时30秒左右，App会在后台自动更新，更新完成后会自动重启App." --m true
+code-push release-react aitingci android --dev false --d Production --des "爱听词V1.0.4版：完善未学单词的播放体验，新增播放单词时可控制进度功能。   【注意：本次更新将耗时30秒左右，App会在后台自动更新，更新完成后会自动重启App.】" --m true
 
 #删除部署
 code-push deployment rm aitingci Production

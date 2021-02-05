@@ -16,26 +16,11 @@ export default class WordCell extends Component {
         super(props);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        const { item, onEdit, index, } = this.props
-
-        // console.log('----------cell---'+index)
-        // console.log(item === nextProps.item)
-        if (item === nextProps.item && onEdit === nextProps.onEdit) {
-            // console.log('false ----'+index)
-            return false
-        } else {
-            // console.log('true ----'+index)
-            return true
-        }
-    }
-
     _select = () => {
         this.props.selectItem(this.props.index)
     }
 
     render() {
-        // console.log('-cell------rerender-')
         const { item, onEdit, index } = this.props
 
         if (item.isHeader) {

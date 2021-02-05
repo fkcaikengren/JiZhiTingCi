@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Platform, StatusBar, View, Text, TouchableOpacity, Image, findNodeHandle, BackHandler
+    Platform, View, Text, TouchableOpacity, Image, findNodeHandle, BackHandler
 } from 'react-native';
 import { Header, Button } from 'react-native-elements'
 import { connect } from 'react-redux';
@@ -703,6 +703,8 @@ class VocaPlayPage extends React.Component {
                 changeTheme={this.props.changeTheme}
                 changePlayListIndex={this.props.changePlayListIndex}
                 syncGroup={this.props.syncGroup}
+                changeCurIndex={this.props.changeCurIndex}
+                
             />
         }
     }

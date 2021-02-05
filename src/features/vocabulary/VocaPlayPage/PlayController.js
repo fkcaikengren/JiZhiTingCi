@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { Grid, Col, Row, } from 'react-native-easy-grid'
+import { Grid,  Row, } from 'react-native-easy-grid'
 import { Menu, MenuOptions, MenuOption, MenuTrigger, renderers } from 'react-native-popup-menu';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from "rn-fetch-blob";
 import { PropTypes } from 'prop-types';
 import BackgroundTimer from 'react-native-background-timer'
+import {  Slider } from 'react-native-elements'
 
 import NotificationManage from '../../../modules/NotificationManage'
 import * as Progress from 'react-native-progress';
@@ -15,6 +16,7 @@ import gstyles from '../../../style';
 import PlayListPane from './PlayListPane';
 import { store } from '../../../redux/store';
 import { PLAY_WAY_SINGLE, PLAY_WAY_LOOP } from '../common/constant';
+import VocaPlayService from '../service/VocaPlayService';
 
 const fs = RNFetchBlob.fs
 const DocumentDir = fs.dirs.DocumentDir + '/'
@@ -24,6 +26,7 @@ const { width, height } = Dimensions.get('window');
 export default class PlayController extends React.Component {
     constructor(props) {
         super(props);
+        this.vocaPlayService = VocaPlayService.getInstance()
         this.state = {
             isModalOpen: false,
         }
@@ -157,7 +160,7 @@ export default class PlayController extends React.Component {
     }
 
     render() {
-        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex, howPlay } = store.getState().vocaPlay
+        const { task, themes, themeId, autoPlayTimer, showWord, showTran, interval, curIndex, howPlay, listenTimes } = store.getState().vocaPlay
         const { wordCount } = task
         const { toggleWord, toggleTran } = this.props;
         //播放方式
@@ -177,7 +180,10 @@ export default class PlayController extends React.Component {
             borderColor: Theme.themeColor,
             backgroundColor: Theme.themeColor,
         }
-        const progressNum = wordCount == undefined ? 0 : (curIndex + 1) / wordCount
+        // slider替换progress
+        // const progressNum = wordCount == undefined ? 0 : (curIndex + 1) / wordCount
+        const wordCountGetWrong = (wordCount == NaN || wordCount == 0 || wordCount == undefined)
+        const playPosition = wordCountGetWrong ? 0 : curIndex + 1
         const popStyle = { fontSize: 16, padding: 6, color: Theme.themeColor }
         return (
             //  底部控制
@@ -258,14 +264,37 @@ export default class PlayController extends React.Component {
                     </Row>
                     {/* 进度条 */}
                     <View style={[gstyles.r_center, { marginBottom: 5 }]}>
-                        <Text style={{ color: '#fff', marginRight: 5 }}>{(wordCount == 0 || wordCount == undefined) ? 0 : curIndex + 1}</Text>
-                        <Progress.Bar
+                        <Text style={{ color: '#fff', marginRight: 5 }}>{playPosition}</Text>
+                        {/* 使用slider代替进度条 */}
+                        {/* <Progress.Bar
                             progress={wordCount == 0 ? 0 : progressNum}  //
                             height={2}
                             width={width - 100}
                             color={Theme.themeColor}
                             unfilledColor='#DEDEDE'
-                            borderWidth={0} />
+                            borderWidth={0} /> */} 
+                            <Slider
+                                allowTouchTrack={true}
+                                style={{"width":width - 100}}
+                                trackStyle={{height:2}}
+                                value={playPosition }
+                                maximumValue = {wordCountGetWrong?100:wordCount-1}
+                                step={1}
+                                thumbTintColor={Theme.themeColor}
+                                minimumTrackTintColor={Theme.themeColor}
+                                thumbStyle={{width:12,height:12}}
+                                onValueChange={value=>{
+                                    console.log(value);
+                                    if(this.vocaPlayService.listRef && value < wordCount) {
+                                        this.vocaPlayService.listRef.scrollToIndex({ animated: true, index:value, viewPosition: 0.5 })
+                                    } 
+                                    this.props.changeCurIndex({ curIndex: value, listenTimes })
+                                }}
+                                onSlidingStart={ ()=>{
+                                    this._pause()
+                                    console.log('开始');
+                                }}
+                            />
                         <Text style={{ color: '#fff', marginLeft: 10 }}>{wordCount}</Text>
                     </View>
 
@@ -341,4 +370,5 @@ PlayController.propTypes = {
     changeTheme: PropTypes.func.isRequired,
     changePlayListIndex: PropTypes.func.isRequired,
     syncGroup: PropTypes.func.isRequired,
+    changeCurIndex: PropTypes.func.isRequired,
 }

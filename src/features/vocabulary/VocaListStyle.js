@@ -47,7 +47,25 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingVertical: 10,
     },
+    accordionItem: {
+        height: 45,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: '#e0e0e0',
+        backgroundColor: '#EFEFEF',
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        alignItems:'center'
 
+    },
+    accordionTitle:{
+        height: 45,
+        lineHeight:45,
+        width:100,
+        textAlignVertical:'center',
+        color: '#444',
+        fontSize: 16,
+        paddingLeft:10,
+    },
 
     checkBox: {
         margin: 0,
@@ -64,8 +82,6 @@ const styles = StyleSheet.create({
         width: '60%',
         height: 40,
         bottom: 10,
-        // backgroundColor:'#FFE957',
-
     }
 });
 
