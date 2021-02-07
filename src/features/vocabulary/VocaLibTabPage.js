@@ -78,12 +78,12 @@ class VocaLibTabPage extends Component {
                     >
                         <View>
                             <Text style={[gstyles.sm_gray, gstyles.tabText, index === 1 ? selectTextStyle : null]}>阅读词汇</Text>
-                            <Badge
+                            {/* <Badge
                                 status="error"
                                 value="推荐"
                                 textStyle={{ fontSize: 8, fontWeight: "bold" }}
                                 containerStyle={{ position: 'absolute', top: -8, right: -18 }}
-                            />
+                            /> */}
                         </View>
                     </View>
                     <View style={gstyles.tabBtn}
@@ -92,12 +92,13 @@ class VocaLibTabPage extends Component {
                     >
                         <View>
                             <Text style={[gstyles.sm_gray, gstyles.tabText, index === 2 ? selectTextStyle : null]}>词组</Text>
-                            <Badge
+                            {/* 取消付费 */}
+                            {/* <Badge
                                 status="error"
                                 value="付费"
                                 textStyle={{ fontSize: 8, fontWeight: "bold" }}
                                 containerStyle={{ position: 'absolute', top: -8, right: -18 }}
-                            />
+                            /> */}
                         </View>
                     </View>
                 </View>

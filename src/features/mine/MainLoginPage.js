@@ -135,7 +135,7 @@ class MainLoginPage extends Component {
                     source={require('../../image/logo_icon.png')} />
 
                 <View style={[{ flex: 1, width: "100%" }, gstyles.c_center]}>
-                    <View
+                    {/* <View
                         style={[styles.loginBtn, { backgroundColor: '#30DE76' }]}
                         onStartShouldSetResponder={() => true}
                         onResponderStart={(e) => {
@@ -157,7 +157,7 @@ class MainLoginPage extends Component {
                     >
                         <AliIcon name='weixin' size={25} color='#FFF'></AliIcon>
                         <Text style={styles.loginText}>微信登录</Text>
-                    </View>
+                    </View> */}
                     <View
                         style={[styles.loginBtn, { backgroundColor: '#3EC6FB' }]}
                         onStartShouldSetResponder={() => true}

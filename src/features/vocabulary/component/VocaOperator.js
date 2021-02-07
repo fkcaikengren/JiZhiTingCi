@@ -151,13 +151,14 @@ class VocaOperator extends Component {
             }}>
                 <Text style={styles.errBtn}>报错</Text>
             </TouchableOpacity>
-            {this.props.showDict &&
+            {/* 取消离线词典入口 */}
+            {/* {this.props.showDict &&
                 <TouchableOpacity onPress={this._openDict}>
                     <Text style={styles.dictBtn}>
                         词典
                 </Text>
                 </TouchableOpacity>
-            }
+            } */}
             {this.state.added && //从生词本移除
                 <AliIcon name='pingfen' size={22} color={gstyles.secColor}
                     style={{ marginRight: 12 }}

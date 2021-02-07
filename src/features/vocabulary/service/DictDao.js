@@ -19,8 +19,10 @@ export default class DictDao {
         try {
             if (!this.realm) {
                 this.realm = await Realm.open({ path: 'dict.realm' })
+                console.log(this.realm);
             }
         } catch (err) {
+            console.log('打开dict.realm出错');
             console.log(err)
         }
         return this.realm;
@@ -39,7 +41,9 @@ export default class DictDao {
 
     /**查询单词 */
     getHtmlByWord = (word) => {
+        console.log(this.realm);
         let infos = this.realm.objects('DictInfo').filtered('word = "' + word + '"');
+        console.log(infos);
         let html = '<div>not found </div>'
         if (infos[0]) {
             html = infos[0].content;

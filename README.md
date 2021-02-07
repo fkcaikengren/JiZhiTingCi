@@ -896,7 +896,7 @@ code-push deployment ls aitingci -k
 code-push release-react aitingci android --dev true --d Staging --des "第一次打包测试" --m true
 
 #生产环境热更新
-code-push release-react aitingci android --dev false --d Production --des "爱听词V1.0.4版：完善未学单词的播放体验，新增播放单词时可控制进度功能。   【注意：本次更新将耗时30秒左右，App会在后台自动更新，更新完成后会自动重启App.】" --m true
+code-push release-react aitingci android --dev false --d Production --des "爱听词V1.0.5版：取消微信登录，修复已知问题。   【注意：本次更新将耗时30秒左右，App会在后台自动更新，更新完成后会自动重启App，请等更新完成后再操作.】" --m true
 
 #删除部署
 code-push deployment rm aitingci Production

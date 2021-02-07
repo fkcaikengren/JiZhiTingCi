@@ -27,15 +27,26 @@ export default class DictPage extends React.Component {
             this.props.navigation.goBack()
             return true
         })
-        const word = this.props.navigation.getParam('word')
-        const html = this.dictDao.getHtmlByWord(word)
-        this.setState({ html })
+        //初始化
+        this._init()
     }
 
     componentWillUnmount() {
         this.backHandler && this.backHandler.remove('hardwareBackPress');
     }
 
+    _init = async ()=>{
+        const word = this.props.navigation.getParam('word')
+        let html = ''
+        try {
+            const realm = await this.dictDao.open()
+            console.log(realm);
+            html = this.dictDao.getHtmlByWord(word)
+        } catch (error) {
+            html = '<div>出错了，请返回重试！</div>'
+        }
+        this.setState({ html })
+    }
 
     // 首次发送
     _sendInitMessage = () => {
@@ -50,7 +61,7 @@ export default class DictPage extends React.Component {
     }
     _onMessage = (e) => {
         let data = JSON.parse(e.nativeEvent.data);
-        console.log(data)
+        // console.log(data)
         switch (data.command) {
             case 'initStart':
                 console.log('dict.html 开始初始化')
