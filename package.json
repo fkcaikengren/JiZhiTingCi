@@ -23,7 +23,7 @@
     "react-native-background-timer": "^2.1.1",
     "react-native-calendars": "^1.141.0",
     "react-native-cardview": "^2.0.3",
-    "react-native-code-push": "^6.0.0",
+    "react-native-code-push": "^7.0.5",
     "react-native-collapsible": "^1.5.1",
     "react-native-drawer": "^2.5.1",
     "react-native-easy-grid": "^0.2.1",
